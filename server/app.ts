@@ -1,4 +1,3 @@
-import cluster from 'cluster';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -53,10 +52,10 @@ app.all('*', (req: Request, _res: Response, next: NextFunction) => {
 
 app.use(globalErrorHandler);
 
-console.error(process.env.NODE_ENV);
+console.error(process.env);
 
-// eslint-disable-next-line no-console
 if (process.env.NODE_ENV.trim() === 'production') module.exports = app;
+// eslint-disable-next-line no-console
 else app.listen(PORT, () => console.log(`Server listening on port ${PORT}🚀`));
 
 process.on('unhandledRejection', (error: Error) => {
