@@ -5,7 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 
-import { ERROR_CODES, SUCCESS_CODES } from '../shared/statusCode';
+import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errorHandler';
 
 dotenv.config({
