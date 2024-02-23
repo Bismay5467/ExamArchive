@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.ts",
-  "type": "module",
   "keywords": [],
   "author": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=development && tsx watch app.ts",
-    "build": "npx tsc",
-    "start": "set NODE_ENV=production && node dist/app.cjs"
+    "build": "rm -rf dist && npx tsc",
+    "start": "set NODE_ENV=production && node dist/app.js"
   },
   "license": "ISC",
   "dependencies": {
