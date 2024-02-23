@@ -24,7 +24,12 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    optionsSuccessStatus: SUCCESS_CODES.OK,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
