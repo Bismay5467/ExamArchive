@@ -24,6 +24,9 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
+//eslint-disable-next-line no-console
+console.log(process.env.CLIENT_URL);
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
