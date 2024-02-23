@@ -24,17 +24,7 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-//eslint-disable-next-line no-console
-console.log(process.env.CLIENT_URL);
-
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: SUCCESS_CODES['NO CONTENT'],
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
