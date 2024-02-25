@@ -21,7 +21,7 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-extraneous-dependencies': 'off',
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'func-names': ['error', 'never'],
     'import/no-relative-packages': 'off',
@@ -47,6 +47,7 @@ module.exports = {
       },
     ],
     curly: ['error', 'multi-line'],
+    'object-curly-newline': 'off',
     eqeqeq: ['error', 'smart'],
     'logical-assignment-operators': [
       'error',
@@ -78,6 +79,6 @@ module.exports = {
         objects: 'always-multiline',
       },
     ],
-    'operator-linebreak': ['error', 'before'],
+    'operator-linebreak': 'off',
   },
 };
