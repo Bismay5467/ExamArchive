@@ -22,3 +22,9 @@ export const SEMESTER = Object.freeze({
   VII: 'Semester VII',
   VIII: 'Semester VIII',
 });
+
+export const RATING_TYPE = Object.freeze({
+  HELPFUL: 'helpful',
+  STANDARD: 'standard',
+  RELEVANCE: 'relevance',
+});
