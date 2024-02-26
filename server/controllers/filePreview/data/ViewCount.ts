@@ -1,6 +1,5 @@
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import Question from '../../../models/question';
-import connectDB from '../../../config/dbConfig';
 
 const ViewCount = async ({
   postId,
@@ -9,8 +8,6 @@ const ViewCount = async ({
   postId: string;
   userId: string;
 }) => {
-  await connectDB();
-
   await Question.findByIdAndUpdate(
     { _id: postId, 'noOfViews.userIds': { $ne: userId } },
     {

@@ -4,7 +4,6 @@ import { TRPCError } from '@trpc/server';
 
 import Comment from '../../../models/comment';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
-import connectDB from '../../../config/dbConfig';
 import { TCommentReact, TReaction } from '../../../types/filePreview/types';
 
 const ReactOnComments = async ({
@@ -52,8 +51,6 @@ const ReactOnComments = async ({
   }
 
   const updateOptions = { new: true, upsert: false };
-
-  await connectDB();
 
   const res = await Comment.findOneAndUpdate(
     filter,

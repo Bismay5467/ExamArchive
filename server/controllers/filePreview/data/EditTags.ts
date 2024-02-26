@@ -2,7 +2,6 @@ import { TRPCError } from '@trpc/server';
 
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import Question from '../../../models/question';
-import connectDB from '../../../config/dbConfig';
 
 const EditTags = async ({
   postId,
@@ -11,8 +10,6 @@ const EditTags = async ({
   postId: string;
   newTags: string[];
 }) => {
-  await connectDB();
-
   const res = await Question.findByIdAndUpdate(
     { _id: postId },
     { $addToSet: { tags: { $each: newTags } } },

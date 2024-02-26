@@ -10,7 +10,6 @@ import { IRatingInfo } from '../../../types/filePreview/types';
 import Question from '../../../models/question';
 import Rating from '../../../models/rating';
 import calculateRating from '../../../utils/filePreview/calculateRating';
-import connectDB from '../../../config/dbConfig';
 
 const UpdateRating = async ({
   postId,
@@ -26,7 +25,6 @@ const UpdateRating = async ({
     relevanceRating: number;
   };
 }) => {
-  await connectDB();
   const session = await mongoose.startSession();
 
   await session.withTransaction(async () => {

@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 
 import { appRouter } from './router';
+import connectDB from './config/dbConfig';
 import { createContext } from './config/trpcConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
@@ -72,7 +73,8 @@ app.all('*', (req: Request, _res: Response, next: NextFunction) => {
 
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectDB();
   // eslint-disable-next-line no-console
   console.log(`LOG: Server listening on PORT ${PORT}`);
 });

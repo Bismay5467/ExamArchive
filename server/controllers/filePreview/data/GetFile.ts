@@ -3,7 +3,6 @@ import { TRPCError } from '@trpc/server';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import Question from '../../../models/question';
 import Rating from '../../../models/rating';
-import connectDB from '../../../config/dbConfig';
 
 const GetFile = async ({
   postId,
@@ -12,7 +11,6 @@ const GetFile = async ({
   postId: string;
   userId: string;
 }) => {
-  await connectDB();
   const readFromDBPromises = [
     Question.findOne({ _id: postId })
       .populate({ path: 'uploadedBy', select: { username: 1, _id: 0 } })

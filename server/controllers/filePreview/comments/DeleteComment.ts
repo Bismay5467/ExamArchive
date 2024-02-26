@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 import Comment from '../../../models/comment';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
-import connectDB from '../../../config/dbConfig';
 
 const DeleteComment = async ({
   userId,
@@ -15,7 +14,6 @@ const DeleteComment = async ({
   userId: string;
 }) => {
   const session = await mongoose.startSession();
-  await connectDB();
 
   if (parentId && parentId === commentId) {
     throw new TRPCError({

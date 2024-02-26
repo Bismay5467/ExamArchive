@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 import Comment from '../../../models/comment';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
-import connectDB from '../../../config/dbConfig';
 
 const PostComment = async ({
   parentId,
@@ -20,7 +19,6 @@ const PostComment = async ({
 }) => {
   const sanitizedMessage = message.trim();
 
-  await connectDB();
   const session = await mongoose.startSession();
 
   let commentId: any;

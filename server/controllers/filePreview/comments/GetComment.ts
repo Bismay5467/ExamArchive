@@ -4,7 +4,6 @@ import Comment from '../../../models/comment';
 import { MAX_COMMENT_FETCH_LIMIT } from '../../../constants/constants/filePreview';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import { TComment } from '../../../types/filePreview/types';
-import connectDB from '../../../config/dbConfig';
 
 const getSanitizedComments = (
   comments: any,
@@ -108,8 +107,6 @@ const GetComments = async ({
       .lean()
       .exec(),
   ];
-
-  await connectDB();
 
   const [comments, totalComments] = await Promise.all(getDataFromDBPromises);
 
