@@ -9,7 +9,7 @@ export const verifyTokens = async ({
 }): Promise<null | JWTPayload> => {
   if (!process.env.JWT_SECRET) {
     console.error(
-      'JWT secret is missing. You need to provide one to generate a token'
+      'Error: JWT secret is missing. You need to provide one to generate a token'
     );
     return null;
   }
@@ -34,7 +34,7 @@ export const signTokens = async ({
 }): Promise<string | null> => {
   if (!process.env.JWT_SECRET) {
     console.error(
-      'JWT secret is missing. You need to provide one to generate a token'
+      'Error: JWT secret is missing. You need to provide one to generate a token'
     );
     return null;
   }
