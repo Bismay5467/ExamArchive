@@ -6,6 +6,7 @@ import { verifyTokens } from '../utils/auth/jsonwebtokens';
 
 export const createContext = async ({
   req,
+  res,
 }: trpcExpress.CreateExpressContextOptions) => {
   const verifyUser = async () => {
     if (req.headers.authorization) {
@@ -17,7 +18,7 @@ export const createContext = async ({
     return null;
   };
   const user = await verifyUser();
-  return { user };
+  return { user, req, res };
 };
 type Context = inferAsyncReturnType<typeof createContext>;
 
