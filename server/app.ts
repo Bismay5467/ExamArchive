@@ -2,12 +2,15 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { createMiddleware } from '@trigger.dev/express';
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 
+import { TriggerClient } from '@trigger.dev/sdk';
 import { appRouter } from './router';
 import connectDB from './config/dbConfig';
 import { createContext } from './config/trpcConfig';
+import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
 
@@ -23,7 +26,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 
 process.on('uncaughtException', (error) => {
-  console.error('UNCAUGHT EXCEPTION! Shutting down...');
+  console.error('Error: UNCAUGHT EXCEPTION! Shutting down...');
   console.error(error.name, error.message);
   process.exit(1);
 });
@@ -34,6 +37,7 @@ app.use(
     optionsSuccessStatus: SUCCESS_CODES.OK,
   })
 );
+app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,11 +51,9 @@ app.use(
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext,
-    onError: ({ path, error, ctx, type }) => {
+    onError: ({ path, error, type }) => {
       console.error(`Logging error : ${error}`);
-      console.error(
-        `Type of API call: ${type}, Context: ${JSON.stringify(ctx)}, path: ${path}`
-      );
+      console.error(`Type of API call: ${type}, path: ${path}`);
     },
   })
 );
@@ -76,11 +78,11 @@ app.use(globalErrorHandler);
 app.listen(PORT, async () => {
   await connectDB();
   // eslint-disable-next-line no-console
-  console.log(`LOG: Server listening on PORT ${PORT}`);
+  console.log(`Log: Server listening on PORT ${PORT}`);
 });
 
 process.on('unhandledRejection', (error: Error) => {
-  console.error('UNHANDLED REJECTION! Shutting down...');
+  console.error('Error: UNHANDLED REJECTION! Shutting down...');
   console.error(error.name, error.message);
   process.exit(1);
 });
