@@ -6,10 +6,12 @@ import {
   MONGO_WRITE_QUERY_TIMEOUT,
 } from '../../../constants/constants/shared';
 
+import { DOC_INFO_TTL_IN_SECONDS } from '../../../constants/constants/filePreview';
 import { IRatingInfo } from '../../../types/filePreview/types';
 import Question from '../../../models/question';
 import Rating from '../../../models/rating';
 import calculateRating from '../../../utils/filePreview/calculateRating';
+import redisClient from '../../../config/redisConfig';
 
 const UpdateRating = async ({
   postId,
@@ -18,12 +20,7 @@ const UpdateRating = async ({
 }: {
   postId: string;
   userId: string;
-  ratingArray: {
-    ratingArrayValues: number[];
-    helpfulRating: number;
-    standardRating: number;
-    relevanceRating: number;
-  };
+  ratingArray: { ratingArrayValues: number[] };
 }) => {
   const session = await mongoose.startSession();
 
@@ -36,7 +33,6 @@ const UpdateRating = async ({
       .session(session)
       .lean()
       .exec()) as any;
-
     if (rating === null) {
       await session.abortTransaction();
       throw new TRPCError({
@@ -44,7 +40,6 @@ const UpdateRating = async ({
         code: 'NOT_FOUND',
       });
     }
-
     rating = rating.map((item, index) => ({
       ...item,
       averageRating: calculateRating({
@@ -54,7 +49,6 @@ const UpdateRating = async ({
       }),
       totalRating: item.totalRating + ratingArray.ratingArrayValues[index],
     }));
-
     const updateDataInDBPromises = [
       Rating.findOneAndUpdate(
         { postId, userId },
@@ -77,14 +71,14 @@ const UpdateRating = async ({
         { rating },
         { upsert: false, new: true }
       )
-        .select({ _id: 1 })
         .session(session)
-        .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
+        .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
         .lean()
         .exec(),
     ];
-    const [updatedRatings] = await Promise.all(updateDataInDBPromises);
-
+    const [updatedRatings, updatedDocInfo] = await Promise.all(
+      updateDataInDBPromises
+    );
     if (updatedRatings !== null) {
       await session.abortTransaction();
       throw new TRPCError({
@@ -92,7 +86,17 @@ const UpdateRating = async ({
         code: 'CONFLICT',
       });
     }
+    const redisKey = `post:${postId}`;
+    if (redisClient) {
+      await redisClient.set(
+        redisKey,
+        JSON.stringify(updatedDocInfo),
+        'EX',
+        DOC_INFO_TTL_IN_SECONDS
+      );
+    }
   });
+  await session.endSession();
 };
 
 export default UpdateRating;
