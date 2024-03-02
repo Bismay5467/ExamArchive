@@ -13,6 +13,7 @@ import { createContext } from './config/trpcConfig';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
+import './jobs';
 
 dotenv.config({
   path:
@@ -37,14 +38,11 @@ app.use(
     optionsSuccessStatus: SUCCESS_CODES.OK,
   })
 );
-app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(compression({ level: 6, threshold: 1000 }));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(createMiddleware(triggerClient as TriggerClient));
 
 app.use(
   '/api/v1',

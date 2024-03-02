@@ -1,5 +1,6 @@
 export const MAX_COMMENT_FETCH_LIMIT = 10;
 export const MAX_COMMENT_LENGTH = 2000;
+export const DOC_INFO_TTL_IN_SECONDS = 86400;
 
 export const EXAM_TYPES = {
   INSTITUTIONAL: {
