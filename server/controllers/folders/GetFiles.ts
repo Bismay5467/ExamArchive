@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { TRPCError } from '@trpc/server';
 
 import { MAX_FILES_FETCH_LIMIT } from '../../constants/constants/uploadedFiles';

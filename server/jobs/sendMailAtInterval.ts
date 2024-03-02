@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { Resend } from '@trigger.dev/resend';
 import { TriggerClient, intervalTrigger } from '@trigger.dev/sdk';
 
