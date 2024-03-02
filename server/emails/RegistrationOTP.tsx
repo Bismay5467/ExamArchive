@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-one-expression-per-line */
 import * as React from 'react';
@@ -82,7 +83,7 @@ export function RegistrationOTPEmail({
             </Text>
             <Text style={{ ...text, textAlign: 'center', fontStyle: 'italic' }}>
               Please note that this OTP is valid for{' '}
-              {REGISTRATION_OTP_TTL_SECONDS} seconds
+              {REGISTRATION_OTP_TTL_SECONDS / 60} minutes
             </Text>
             <Hr />
             <Text style={{ ...text, fontStyle: 'italic' }}>

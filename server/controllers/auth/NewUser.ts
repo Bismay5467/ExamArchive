@@ -2,13 +2,18 @@
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
+import { render } from '@react-email/render';
 
 import {
   JWT_MAX_AGE,
   REGISTRATION_OTP_TTL_SECONDS,
 } from '../../constants/constants/auth';
 
-import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
+import {
+  MAIL_EVENT_NAME,
+  MONGO_READ_QUERY_TIMEOUT,
+} from '../../constants/constants/shared';
+
 import RegistrationOTPEmail from '../../emails/RegistrationOTP';
 import User from '../../models/user';
 import generateOTP from '../../utils/auth/generateOTP';
@@ -54,21 +59,27 @@ const NewUser = async ({
         });
       }
       let otp = generateOTP();
-      const react = RegistrationOTPEmail({
-        userFirstname: username,
-        verificationCode: otp,
-      });
+      const emailHTML = render(
+        RegistrationOTPEmail({
+          userFirstname: username,
+          verificationCode: otp,
+        }),
+        { pretty: true }
+      );
       otp = await bcrypt.hash(otp, salt);
-      const [response, data] = await Promise.all([
+      const [response, job] = await Promise.all([
         redisClient.setex(redisKey, REGISTRATION_OTP_TTL_SECONDS, otp),
         sendMail({
-          receiver: [email],
-          react,
-          subject: 'Verification code for Exam Archive account',
+          eventName: MAIL_EVENT_NAME,
+          payload: {
+            to: [email],
+            subject: 'Verification code for Exam Archive account',
+            html: emailHTML,
+          },
         }),
       ]);
-      if (response !== 'OK' || data === null || data.error) {
-        console.error(`Error: ${response}, ${JSON.stringify(data)}`);
+      if (response !== 'OK') {
+        console.error(`Error: ${response}, ${JSON.stringify(job)}`);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Something went wrong. PLease try again later',

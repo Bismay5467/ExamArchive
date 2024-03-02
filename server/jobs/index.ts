@@ -1,1 +1,2 @@
-export * from './sendMail';
+export * from './sendMailOnEventTrigger';
+export * from './sendMailAtInterval';

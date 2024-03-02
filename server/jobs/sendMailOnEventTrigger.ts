@@ -16,17 +16,18 @@ import triggerClient from '../config/triggerConfig';
     schema: z.object({
       to: z.array(z.string().email()),
       from: z.string(),
-      subject: z.string().min(1).max(30),
-      body: z.any(),
+      subject: z.string().min(1).max(100),
+      html: z.string(),
     }),
   }),
   integrations: { resend: resend as Resend },
   run: async (payload, io) => {
+    const { to, from, subject, html } = payload;
     await io.resend.emails.send('send-email', {
-      to: payload.to,
-      from: payload.from,
-      subject: payload.subject,
-      react: payload.body,
+      to,
+      from,
+      subject,
+      html,
     });
   },
 });

@@ -30,17 +30,23 @@ export const signInUserInputSchema = z.object({
     }),
 });
 
-export const resetInputSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(6)
-    .max(8)
-    .refine((password) => {
-      const digitRegex = /\d/;
-      const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
-      return digitRegex.test(password) && symbolRegex.test(password);
+const baseResetInputSchema = z.object({ email: z.string().email() });
+
+export const resetInputSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.enum(['EMAIL']) }).merge(baseResetInputSchema),
+  z
+    .object({
+      action: z.enum(['RESET']),
+      password: z
+        .string()
+        .min(6)
+        .max(8)
+        .refine((password) => {
+          const digitRegex = /\d/;
+          const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
+          return digitRegex.test(password) && symbolRegex.test(password);
+        }),
+      authToken: z.string(),
     })
-    .optional(),
-  action: z.enum(['EMAIL', 'RESET']),
-});
+    .merge(baseResetInputSchema),
+]);

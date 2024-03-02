@@ -1,7 +1,9 @@
 /* eslint-disable no-case-declarations */
+/* eslint-disable no-underscore-dangle */
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { render } from '@react-email/render';
 
 import {
   AUTH_TOKEN,
@@ -9,14 +11,16 @@ import {
   RESET_LINK_EXP_TIME,
 } from '../../constants/constants/auth';
 import {
+  MAIL_EVENT_NAME,
   MONGO_READ_QUERY_TIMEOUT,
   MONGO_WRITE_QUERY_TIMEOUT,
 } from '../../constants/constants/shared';
 
+import { IUser } from '../../types/auth/types';
 import ResetPasswordEmail from '../../emails/ResetPassword';
 import User from '../../models/user';
 import sendMail from '../../utils/emails/sendMail';
-import { signTokens } from '../../utils/auth/jsonwebtokens';
+import { signTokens, verifyTokens } from '../../utils/auth/jsonwebtokens';
 
 dotenv.config({
   path:
@@ -25,17 +29,19 @@ dotenv.config({
       : './.env.development.local',
 });
 
-const Reset = async ({
-  action,
-  email,
-  password,
-}: {
-  action: 'EMAIL' | 'RESET';
+type TAction = 'EMAIL' | 'RESET';
+
+type TResetParamsType<T extends TAction> = {
+  action: T;
   email: string;
-  password?: string;
-}) => {
-  switch (action) {
+} & (T extends 'RESET' ? { password: string; authToken: string } : {});
+
+const Reset = async (
+  params: TResetParamsType<'EMAIL'> | TResetParamsType<'RESET'>
+) => {
+  switch (params.action) {
     case 'EMAIL':
+      const { email } = params;
       const [doesUserExists, resetToken] = await Promise.all([
         User.findOne({ email })
           .select({ _id: 1, username: 1 })
@@ -67,29 +73,38 @@ const Reset = async ({
         });
       }
       const resetLink = `${process.env.DOMAIN_URL}${'/auth/reset'}?${AUTH_TOKEN}=${resetToken}`;
-      const react = ResetPasswordEmail({
-        userFirstname: (doesUserExists as any).username,
-        resetPasswordLink: resetLink,
+      const emailHTML = render(
+        ResetPasswordEmail({
+          userFirstname: (doesUserExists as any).username,
+          resetPasswordLink: resetLink,
+        }),
+        { pretty: true }
+      );
+      await sendMail({
+        eventName: MAIL_EVENT_NAME,
+        payload: {
+          to: [email],
+          subject: 'Reset your password',
+          html: emailHTML,
+        },
       });
-      const data = await sendMail({
-        receiver: [email],
-        subject: 'Reset your password',
-        react,
-      });
-      if (data === null || data.error) {
-        console.error(`Error: ${JSON.stringify(data)}`);
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong. PLease try again later',
-        });
-      }
       return undefined;
     case 'RESET':
+      const { authToken, email: userEmail, password } = params;
+      const jwtPayload = (await verifyTokens({
+        token: authToken,
+      })) as IUser | null;
+      if (jwtPayload === null || jwtPayload.email !== userEmail) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You are not authorized to reset the password',
+        });
+      }
       const saltStrength = 10;
       const salt = await bcrypt.genSalt(saltStrength);
       const hashedPassword = await bcrypt.hash(password as string, salt);
       const user = await User.findOneAndUpdate(
-        { email },
+        { email: userEmail },
         { password: hashedPassword },
         { new: true, upsert: false }
       )
@@ -105,8 +120,7 @@ const Reset = async ({
       }
       const token = await signTokens({
         payload: {
-          email,
-          // eslint-disable-next-line no-underscore-dangle
+          email: userEmail,
           userId: (user as any)._id.toString(),
           username: (user as any).username,
         },

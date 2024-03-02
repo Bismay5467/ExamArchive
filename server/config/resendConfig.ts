@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import { Resend } from '@trigger.dev/resend';
 import dotenv from 'dotenv';
 
 dotenv.config({
@@ -15,13 +15,10 @@ const configResend = () => {
     );
     return undefined;
   }
-  const resend = new Resend(process.env.RESEND_API_KEY);
-
-  // const resend = new Resend({
-  //   apiKey: process.env.RESEND_API_KEY,
-  //   id: process.env.RESEND_INTEGRATION_ID,
-  // });
-
+  const resend = new Resend({
+    apiKey: process.env.RESEND_API_KEY as string,
+    id: process.env.RESEND_INTEGRATION_ID as string,
+  });
   return resend;
 };
 
