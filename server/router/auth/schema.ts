@@ -1,6 +1,12 @@
 /* eslint-disable no-magic-numbers */
 import z from 'zod';
 
+import { ROLE } from '../../constants/constants/auth';
+
+function getValues<T extends Record<string, any>>(obj: T) {
+  return Object.values(obj) as [(typeof obj)[keyof T]];
+}
+
 export const newUserInputSchema = z.object({
   email: z.string().email(),
   username: z.string().min(1).max(10),
@@ -13,6 +19,7 @@ export const newUserInputSchema = z.object({
       const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
       return digitRegex.test(password) && symbolRegex.test(password);
     }),
+  role: z.enum(getValues(ROLE)),
   actionType: z.enum(['GENERATE', 'VERIFY']),
   enteredOTP: z.string().length(6).optional(),
 });

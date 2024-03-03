@@ -108,7 +108,7 @@ const Reset = async (
         { password: hashedPassword },
         { new: true, upsert: false }
       )
-        .select({ _id: 1, username: 1 })
+        .select({ _id: 1, username: 1, role: 1 })
         .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
         .lean()
         .exec();
@@ -123,6 +123,7 @@ const Reset = async (
           email: userEmail,
           userId: (user as any)._id.toString(),
           username: (user as any).username,
+          role: (user as any).role,
         },
         JWT_MAX_AGE,
       });

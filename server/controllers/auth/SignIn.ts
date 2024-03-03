@@ -17,7 +17,7 @@ const SignIn = async ({
   const user = await User.findOne({
     $or: [{ email }, { username }],
   })
-    .select({ _id: 1, password: 1, username: 1, email: 1 })
+    .select({ _id: 1, password: 1, username: 1, email: 1, role: 1 })
     .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
     .exec();
   if (!user) {
@@ -39,6 +39,7 @@ const SignIn = async ({
     userId: user._id.toString(),
     username: (user as any).username,
     email: (user as any).email,
+    role: (user as any).role,
   };
   const token = await signTokens({ payload, JWT_MAX_AGE });
   if (token === null) {

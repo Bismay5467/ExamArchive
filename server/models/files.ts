@@ -15,7 +15,12 @@ const FileSchema: Schema = new Schema(
     fileType: { type: String, enum: Object.values(FILE_TYPE), required: true },
     name: { type: String, required: true },
     parentId: { type: mongoose.Types.ObjectId, index: true, default: null },
-    metadata: { type: mongoose.Types.ObjectId, ref: Question, default: null },
+    metadata: {
+      type: mongoose.Types.ObjectId,
+      ref: Question,
+      default: null,
+      index: true,
+    },
     noOfFiles: { type: Number, default: 0 },
   },
   { strict: true, timestamps: true }

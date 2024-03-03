@@ -15,6 +15,7 @@ import {
 } from '../../constants/constants/shared';
 
 import RegistrationOTPEmail from '../../emails/RegistrationOTP';
+import { TRole } from '../../types/auth/types';
 import User from '../../models/user';
 import generateOTP from '../../utils/auth/generateOTP';
 import redisClient from '../../config/redisConfig';
@@ -27,12 +28,14 @@ const NewUser = async ({
   password,
   actionType,
   enteredOTP,
+  role,
 }: {
   email: string;
   username: string;
   password: string;
   actionType: 'GENERATE' | 'VERIFY';
   enteredOTP?: string;
+  role: TRole;
 }) => {
   const redisKey = `otp:${email}`;
   const saltStrength = 10;
@@ -107,8 +110,8 @@ const NewUser = async ({
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Invalid OTP' });
       }
       const userId = new mongoose.Types.ObjectId();
-      const payload = { username, email, userId: userId.toString() };
-      const user = new User({ username, email, password, _id: userId });
+      const payload = { username, email, userId: userId.toString(), role };
+      const user = new User({ username, email, password, _id: userId, role });
       const [token] = await Promise.all([
         signTokens({ payload, JWT_MAX_AGE }),
         user.save(),

@@ -7,3 +7,5 @@ export const RESET_LINK_TTL_HRS = 2;
 export const REGISTRATION_OTP_TTL_SECONDS = 600;
 
 export const TRIGGER_ID = 'exam-archive';
+
+export const ROLE = Object.freeze({ USER: 'USER', ADMIN: 'ADMIN' });
