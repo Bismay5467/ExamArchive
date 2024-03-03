@@ -1,4 +1,6 @@
+import { IUser } from '../../../types/auth/types';
 import {
+  DeleteFile,
   DownloadCount,
   EditTags,
   GetFile,
@@ -6,6 +8,7 @@ import {
   ViewCount,
 } from '../../../controllers/filePreview';
 import {
+  deleteFileInputSchema,
   editTagsInputSchema,
   getFileInputSchema,
   ratingInputSchema,
@@ -23,6 +26,13 @@ const fileRouter = router({
     const response = await GetFile(input);
     return response;
   }),
+  delete: protectedProcedures
+    .input(deleteFileInputSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { userId: ownerId, role } = ctx.user as IUser;
+      await DeleteFile({ ...input, ownerId, role });
+      return { message: 'Post was successfully removed' };
+    }),
   editTags: protectedProcedures
     .input(editTagsInputSchema)
     .mutation(async ({ input }) => {

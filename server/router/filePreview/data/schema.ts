@@ -44,3 +44,7 @@ export const ratingInputSchema = z.object({
       return { ratingArrayValues };
     }),
 });
+
+export const deleteFileInputSchema = z.object({
+  postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
+});

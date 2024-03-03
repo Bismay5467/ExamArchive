@@ -4,6 +4,7 @@ import GetComments from './comments/GetComment';
 import PostComment from './comments/PostComment';
 import ReactOnComments from './comments/ReactOnComments';
 
+import DeleteFile from './data/DeleteFile';
 import DownloadCount from './data/DownloadCount';
 import EditTags from './data/EditTags';
 import GetFile from './data/GetFile';
@@ -21,4 +22,5 @@ export {
   DownloadCount,
   ViewCount,
   UpdateRating,
+  DeleteFile,
 };
