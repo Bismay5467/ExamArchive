@@ -118,7 +118,7 @@ const DeleteFile = async ({
         eventName: MAIL_EVENT_NAME,
         payload: {
           to: [(user as any).email],
-          subject: 'Violation of code of conduct',
+          subject: 'Your post was reported',
           html: emailHTML,
         },
       });
