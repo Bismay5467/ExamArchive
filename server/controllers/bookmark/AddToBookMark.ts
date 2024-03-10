@@ -18,31 +18,36 @@ const AddToBookMarks = async ({
 }) => {
   const session = await mongoose.startSession();
   await session.withTransaction(async () => {
-    const file = new BookMarkedFile({
-      userId,
-      fileType: FILE_TYPE.FILE,
-      name: fileName,
-      parentId: folderId,
-      metadata: fileId,
-    });
-    const [isFileAdded, isFileCountIncreased] = await Promise.all([
-      file.save(),
+    const [isFileAdded] = await Promise.all([
       BookMarkedFile.findOneAndUpdate(
-        { _id: folderId, fileType: FILE_TYPE.DIRECTORY },
-        { $inc: { noOfFiles: 1 } },
-        { upsert: false, new: true }
+        {
+          metadata: fileId,
+          userId,
+          fileType: FILE_TYPE.FILE,
+        },
+        { parentId: folderId, name: fileName },
+        { upsert: true, new: false }
       )
         .select({ _id: 1 })
         .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
         .session(session)
         .lean()
         .exec(),
+      BookMarkedFile.findOneAndUpdate(
+        { _id: folderId, fileType: FILE_TYPE.DIRECTORY },
+        { $inc: { noOfFiles: 1 } },
+        { upsert: false, new: true }
+      )
+        .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
+        .session(session)
+        .lean()
+        .exec(),
     ]);
-    if (!(isFileAdded && isFileCountIncreased)) {
+    if (isFileAdded) {
       await session.abortTransaction();
       throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Something went wrong. Please try again later',
+        code: 'CONFLICT',
+        message: 'This file was bookmarked by you',
       });
     }
   });

@@ -1,33 +1,31 @@
 import mongoose, { Schema } from 'mongoose';
 
-import Question from './question';
 import User from './user';
+import { reasonsForReport } from '../constants/constants/report';
 
 const ReportSchema: Schema = new mongoose.Schema(
   {
+    docModel: {
+      type: String,
+      required: true,
+      enum: ['Comment', 'Question'],
+    },
     postId: {
       type: mongoose.Types.ObjectId,
       required: true,
       index: true,
-      ref: Question,
+      refPath: 'docModel',
     },
-    postType: { type: String, required: true, enum: ['COMMENT', 'DOC'] },
-    totalReport: { type: Number, default: 0, required: true, index: true },
-    reasons: {
-      type: [
-        {
-          reason: { type: String, required: true },
-          totalReports: { type: Number, required: true },
-          userIds: [{ type: mongoose.Types.ObjectId, ref: User }],
-        },
-      ],
-      required: true,
+    totalReport: { type: Number, default: 0, index: true },
+    reasons: [{ type: String, enum: reasonsForReport, required: true }],
+    resolved: {
+      isResolved: { type: Boolean, default: false },
+      adminId: { type: mongoose.Types.ObjectId, ref: User },
     },
-    isResolved: { type: Boolean, default: false },
   },
-  { strict: true, timestamps: true }
+  { schema: true, timestamps: true }
 );
 
-const Report = mongoose.models.rating || mongoose.model('report', ReportSchema);
+const Report = mongoose.models.report || mongoose.model('report', ReportSchema);
 
 export default Report;
