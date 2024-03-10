@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { TRPCError } from '@trpc/server';
 
 import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
