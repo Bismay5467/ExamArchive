@@ -25,11 +25,9 @@ export const getSortOrder = ({
   sortFilter?: TUserSortFilter;
 }) => {
   const sortOrder = {};
-  if (sortFilter === 'MOST RECENT') {
-    Object.assign(sortOrder, { updatedAt: 'desc' });
-  } else if (sortFilter === 'MOST VIEWS') {
+  if (sortFilter === 'MOST VIEWS') {
     Object.assign(sortOrder, { 'noOfViews.count': 'desc' });
-  }
+  } else Object.assign(sortOrder, { updatedAt: 'desc' });
   return sortOrder;
 };
 

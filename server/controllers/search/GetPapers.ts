@@ -15,16 +15,24 @@ const GetPapers = async (params: TSearchParams) => {
   const sortOrder = getSortOrder({ sortFilter });
   const project = getProjections();
 
-  const searchResults = await Question.aggregate(
-    [
-      { $match: query },
-      { $sort: sortOrder },
-      { $project: project },
-      { $skip: skipCount },
-      { $limit: MAX_SEARCH_RESULT_FETCH_LIMIT },
-    ],
-    { allowDiskUse: true, maxTimeMS: MONGO_READ_QUERY_TIMEOUT, lean: true }
-  );
+  const searchResults = await Question.find(query)
+    .select(project)
+    .sort(sortOrder)
+    .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
+    .lean()
+    .skip(skipCount)
+    .limit(MAX_SEARCH_RESULT_FETCH_LIMIT);
+
+  // const searchResults = await Question.aggregate(
+  //   [
+  //     { $match: query },
+  //     { $sort: sortOrder },
+  //     { $project: project },
+  //     { $skip: skipCount },
+  //     { $limit: MAX_SEARCH_RESULT_FETCH_LIMIT },
+  //   ],
+  //   { allowDiskUse: true, maxTimeMS: MONGO_READ_QUERY_TIMEOUT, lean: true }
+  // );
 
   return searchResults;
 };

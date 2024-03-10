@@ -20,7 +20,10 @@ const getExamTypes = () => {
 };
 
 export const searchInputSchema = z.object({
-  searchParams: z.array(z.string()).max(100),
+  searchParams: z
+    .array(z.string())
+    .max(100)
+    .refine((params) => params.map((param) => param.toLowerCase())),
   page: z.number().min(1),
   filter: z
     .object({
