@@ -41,7 +41,6 @@ const text = {
   fontWeight: '300',
   color: '#404040',
   lineHeight: '26px',
-  textAlign: 'justify',
 };
 
 export function ContentTakeDownEmail({
@@ -61,19 +60,24 @@ export function ContentTakeDownEmail({
             alt="Exam Archive"
           />
           <Section>
-            <Text style={text}>{`Hi ${userFirstname},`}</Text>
-            <Text style={{ ...text }}>
+            <Text style={{ ...text, textAlign: 'justify' }}>
+              {`Hi ${userFirstname},`}
+            </Text>
+            <Text style={{ ...text, textAlign: 'justify' }}>
               We are writing to inform you that we have received reports
               regarding inappropriate content associated with your account on
               Exam Archive. As a responsible member of our community, it is
               imperative to adhere to our guidelines and standards.
             </Text>
-            <Text style={{ ...text }}>
+            <Text style={{ ...text, textAlign: 'justify' }}>
               Upon review, it has come to our attention that the following
               content violates our terms of service:
             </Text>
             {fileLink ? (
-              <Link href={fileLink} style={{ ...text, color: 'blue' }}>
+              <Link
+                href={fileLink}
+                style={{ ...text, color: 'blue', textAlign: 'justify' }}
+              >
                 {fileLink}
               </Link>
             ) : comment ? (
@@ -85,39 +89,49 @@ export function ContentTakeDownEmail({
                     backgroundColor: '#F5F5DC',
                     padding: '10px',
                     borderRadius: '3px',
+                    textAlign: 'justify',
                   }}
                 >
                   {comment.message}
                 </Text>
-                <Text style={{ ...text }}>
+                <Text style={{ ...text, textAlign: 'justify' }}>
                   in post{' '}
                   <Link
                     href={comment.postLink}
-                    style={{ ...text, color: 'blue' }}
+                    style={{ ...text, color: 'blue', textAlign: 'justify' }}
                   >
                     {comment.postLink}
                   </Link>
                 </Text>
               </>
             ) : null}
-            <Text style={{ ...text, fontWeight: 'bold', fontStyle: 'italic' }}>
+            <Text
+              style={{
+                ...text,
+                fontWeight: 'bold',
+                fontStyle: 'italic',
+                textAlign: 'justify',
+              }}
+            >
               We want to emphasize that such content is not acceptable on our
               platform and contravenes our community guidelines. In light of
               this, we have removed the content from our platform.
             </Text>
-            <Text style={{ ...text, fontStyle: 'italic' }}>
+            <Text
+              style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
+            >
               We understand that mistakes can happen, and we encourage you to
               familiarize yourself with our guidelines to prevent similar
               occurrences in the future.
             </Text>
 
-            <Text style={text}>
+            <Text style={{ ...text, textAlign: 'justify' }}>
               If you believe this notice has been sent in error or if you have
               any questions regarding this matter, please do not hesitate to
               contact our support team.
             </Text>
-            <Text style={text}>Thank You,</Text>
-            <Text style={{ ...text, lineHeight: '3px' }}>
+            <Text style={{ ...text, textAlign: 'justify' }}>Thank You,</Text>
+            <Text style={{ ...text, lineHeight: '3px', textAlign: 'justify' }}>
               Team Exam Archive
             </Text>
           </Section>

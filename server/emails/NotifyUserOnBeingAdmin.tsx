@@ -1,23 +1,20 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-one-expression-per-line */
 import * as React from 'react';
 import {
   Body,
   Container,
   Head,
-  Hr,
   Html,
   Img,
+  Link,
   Section,
   Text,
 } from '@react-email/components';
 
-import { REGISTRATION_OTP_TTL_SECONDS } from '../constants/constants/auth';
-
-interface RegistrationOTPEmailProps {
-  userFirstname?: string;
-  verificationCode?: string;
+interface NotifyUserOnBeingAdminProps {
+  username: string;
+  email: string;
+  password: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -44,10 +41,11 @@ const text = {
   lineHeight: '26px',
 };
 
-export function RegistrationOTPEmail({
-  userFirstname,
-  verificationCode,
-}: RegistrationOTPEmailProps) {
+export function NotifyUserOnBeingAdminEmail({
+  username,
+  email,
+  password,
+}: NotifyUserOnBeingAdminProps) {
   return (
     <Html>
       <Head />
@@ -61,44 +59,64 @@ export function RegistrationOTPEmail({
           />
           <Section>
             <Text style={{ ...text, textAlign: 'justify' }}>
-              {`Hi ${userFirstname},`}
+              {`Hi ${username},`}
             </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
-              Thanks for starting the new Exam Archive account creation process.
-              We want to make sure it&apos;s really you.
+              I hope this email finds you well. As requested, I am providing you
+              with the admin login details for Exam Archive. With these
+              credentials, you will have access to the administrative functions
+              and privileges within the system.
             </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
-              Please enter the following verification code when prompted. If you
-              don&apos;t want to create an account, you can ignore this message.
+              Click <Link href="https://example.com">here</Link> to login. Below
+              are your login credentials:
             </Text>
             <Text
               style={{
                 ...text,
                 fontWeight: 'bold',
-                letterSpacing: '4px',
-                fontSize: '30px',
-                textAlign: 'center',
+                fontStyle: 'italic',
+                textAlign: 'left',
               }}
             >
-              {verificationCode}
+              Username : {username}
             </Text>
             <Text
               style={{
                 ...text,
-                textAlign: 'center',
+                fontWeight: 'bold',
                 fontStyle: 'italic',
+                textAlign: 'left',
               }}
             >
-              Please note that this OTP is valid for{' '}
-              {REGISTRATION_OTP_TTL_SECONDS / 60} minutes
+              Email : {email}
             </Text>
-            <Hr />
+            <Text
+              style={{
+                ...text,
+                fontWeight: 'bold',
+                fontStyle: 'italic',
+                textAlign: 'left',
+              }}
+            >
+              Password : {password}
+            </Text>
             <Text
               style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
             >
-              Exam Archive will never email you and ask you to disclose or
-              verify your password.
+              {`Please ensure to keep these details confidential and secure. It's
+              advisable to change your password upon your first login for added
+              security.`}
             </Text>
+            <Text style={{ ...text, textAlign: 'justify' }}>
+              Should you encounter any issues or have any questions regarding
+              the administrative functions or your account, please feel free to
+              reach out to our support team
+            </Text>
+            <Text style={{ ...text, textAlign: 'justify' }}>
+              Welcome aboard!
+            </Text>
+
             <Text style={{ ...text, textAlign: 'justify' }}>Cheers,</Text>
             <Text style={{ ...text, lineHeight: '3px', textAlign: 'justify' }}>
               Team Exam Archive
@@ -110,4 +128,4 @@ export function RegistrationOTPEmail({
   );
 }
 
-export default RegistrationOTPEmail;
+export default NotifyUserOnBeingAdminEmail;
