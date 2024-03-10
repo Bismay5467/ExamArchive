@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import mongoose from 'mongoose';
 
 import { BookMarkedFile } from '../../models/files';
-import { FILE_TYPE } from '../../constants/constants/uploadedFiles';
+import { FILE_TYPE } from '../../constants/constants/upload';
 import {
   MONGO_READ_QUERY_TIMEOUT,
   MONGO_WRITE_QUERY_TIMEOUT,

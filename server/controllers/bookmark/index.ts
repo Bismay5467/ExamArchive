@@ -1,4 +1,4 @@
-import AddToBookMarks from './addToBookMark';
-import RemoveBookMark from './removeBookMark';
+import AddToBookMarks from './AddToBookMark';
+import RemoveBookMark from './RemoveBookMark';
 
 export { AddToBookMarks, RemoveBookMark };
