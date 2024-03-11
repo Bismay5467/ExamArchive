@@ -1,4 +1,5 @@
 /* eslint-disable no-magic-numbers */
+import { Types } from 'mongoose';
 import z from 'zod';
 
 export const createFolderInputSchema = z.object({
@@ -8,7 +9,7 @@ export const createFolderInputSchema = z.object({
 
 export const deleteFolderInputSchema = z.object({
   action: z.enum(['UPLOAD', 'BOOKMARK']),
-  folderName: z.string().min(1).max(30),
+  folderId: z.string().refine((folderId) => Types.ObjectId.isValid(folderId)),
 });
 
 export const getFilesInputSchema = z.object({

@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
-import { FILE_TYPE } from '../../constants/constants/uploadedFiles';
+import { FILE_TYPE } from '../../constants/constants/upload';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
 import { TAction } from '../../types/folders/types';
 import { BookMarkedFile, UploadedFiles } from '../../models/files';

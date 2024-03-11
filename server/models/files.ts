@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-import { FILE_TYPE } from '../constants/constants/uploadedFiles';
+import { FILE_TYPE } from '../constants/constants/upload';
 import Question from './question';
 import User from './user';
 
