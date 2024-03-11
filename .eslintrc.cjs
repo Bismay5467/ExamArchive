@@ -18,6 +18,7 @@ module.exports = {
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     ],
     'linebreak-style': 'off',
+    'implicit-arrow-linebreak': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
@@ -80,5 +81,6 @@ module.exports = {
       },
     ],
     'operator-linebreak': 'off',
+    'function-paren-newline': 'off',
   },
 };
