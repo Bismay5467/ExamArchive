@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import User from './user';
 import examNames from '../utils/filePreview/examNames';
-import { EXAM_TYPES, SEMESTER } from '../constants/constants/filePreview';
+import { EXAM_TYPES, SEMESTER } from '../constants/constants/shared';
 
 const QuestionSchema: Schema = new mongoose.Schema(
   {
@@ -83,6 +83,7 @@ const QuestionSchema: Schema = new mongoose.Schema(
     branch: { type: String, index: true },
     subjectCode: { type: String, index: true },
     subjectName: { type: String, index: true },
+    isFlagged: { type: Boolean, default: false },
   },
   { timestamps: true, strict: true }
 );

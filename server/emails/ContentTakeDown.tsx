@@ -78,7 +78,7 @@ export function ContentTakeDownEmail({
                 href={fileLink}
                 style={{ ...text, color: 'blue', textAlign: 'justify' }}
               >
-                {fileLink}
+                View your post here
               </Link>
             ) : comment ? (
               <>

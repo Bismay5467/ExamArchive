@@ -1,6 +1,5 @@
 /* eslint-disable no-magic-numbers */
-/* eslint-disable function-paren-newline */
-/* eslint-disable implicit-arrow-linebreak */
+
 import { Types } from 'mongoose';
 import z from 'zod';
 
@@ -10,12 +9,16 @@ export const getFileInputSchema = z.object({
 
 export const editTagsInputSchema = z.object({
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
-  newTags: z
+  tagsToAdd: z
     .array(z.string())
     .transform((newTags) =>
       newTags.map((tag) => tag.trim().toLowerCase()).filter(Boolean)
-    )
-    .refine((newTags) => newTags.length > 0),
+    ),
+  tagsToRemove: z
+    .array(z.string())
+    .transform((newTags) =>
+      newTags.map((tag) => tag.trim().toLowerCase()).filter(Boolean)
+    ),
 });
 
 export const updateDownloadCountInputSchema = z.object({

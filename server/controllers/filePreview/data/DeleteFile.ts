@@ -12,7 +12,6 @@ import {
   Rating,
   Report,
   UploadedFiles,
-  User,
 } from '../../../models';
 import {
   MAIL_EVENT_NAME,
@@ -48,16 +47,18 @@ const DeleteFile = async ({
         });
       }
     }
-    const [question, user] = await Promise.all([
+    if (redisClient === null) {
+      await session.abortTransaction();
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Something went wrong. Please try again later',
+      });
+    }
+    const [questionInfo] = await Promise.all([
       Question.findByIdAndDelete({ _id: postId })
-        .select({ 'filename.url': 1 })
+        .populate({ path: 'uploadedBy', select: { email: 1, username: 1 } })
+        .select({ 'file.url': 1, uploadedBy: 1 })
         .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
-        .session(session)
-        .lean()
-        .exec(),
-      User.findById({ _id: ownerId })
-        .select({ username: 1, email: 1 })
-        .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
         .session(session)
         .lean()
         .exec(),
@@ -86,38 +87,34 @@ const DeleteFile = async ({
         .session(session)
         .lean()
         .exec(),
+      redisClient.del(`post:${postId}`),
     ]);
-    if (question === null || Object.keys(question).length === 0) {
+    if (questionInfo === null || Object.keys(questionInfo).length === 0) {
       await session.abortTransaction();
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Something went wrong. Plase try again later',
       });
     }
-    if (redisClient) {
-      await Promise.all([redisClient.del(`post:${postId}`)]);
-    } else {
-      await session.abortTransaction();
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Something went wrong. Please try again later',
-      });
-    }
     if (role === 'ADMIN') {
-      if (user === null) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
-      }
+      const {
+        file: { url },
+        uploadedBy: { email, username },
+      } = questionInfo as unknown as {
+        file: { url: string };
+        uploadedBy: { username: string; email: string };
+      };
       const emailHTML = render(
         ContentTakeDownEmail({
-          userFirstname: (user as any).username,
-          fileLink: (question as any).filename.url,
+          userFirstname: username,
+          fileLink: url,
         }),
         { pretty: true }
       );
       await sendMail({
         eventName: MAIL_EVENT_NAME,
         payload: {
-          to: [(user as any).email],
+          to: [email],
           subject: 'Your post was reported',
           html: emailHTML,
         },
