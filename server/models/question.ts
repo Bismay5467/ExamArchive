@@ -79,7 +79,7 @@ const QuestionSchema: Schema = new mongoose.Schema(
     },
     tags: [{ type: String, index: true }],
     institutionName: { type: String, index: true },
-    semester: { type: String, enum: Object.keys(SEMESTER), index: true },
+    semester: { type: String, enum: Object.values(SEMESTER), index: true },
     branch: { type: String, index: true },
     subjectCode: { type: String, index: true },
     subjectName: { type: String, index: true },

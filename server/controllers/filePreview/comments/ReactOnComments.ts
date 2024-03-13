@@ -19,10 +19,20 @@ const ReactOnComments = async ({
 }) => {
   const filter =
     reaction === 'UNLIKE'
-      ? { _id: commentId }
+      ? { _id: commentId, isFlagged: false, isDeleted: false }
       : action === 'DOWNVOTE'
-        ? { _id: commentId, 'downVotes.voters': { $ne: voterId } }
-        : { _id: commentId, 'upVotes.voters': { $ne: voterId } };
+        ? {
+            _id: commentId,
+            'downVotes.voters': { $ne: voterId },
+            isFlagged: false,
+            isDeleted: false,
+          }
+        : {
+            _id: commentId,
+            'upVotes.voters': { $ne: voterId },
+            isFlagged: false,
+            isDeleted: false,
+          };
 
   let updateOperator;
 
@@ -65,7 +75,8 @@ const ReactOnComments = async ({
   if (res === null) {
     throw new TRPCError({
       code: 'NOT_FOUND',
-      message: `No comments found with the given comment id: ${commentId} or the vote already exists`,
+      message:
+        'No comments found with the given comment id or the vote already exists',
     });
   }
 

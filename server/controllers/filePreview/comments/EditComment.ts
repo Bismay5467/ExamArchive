@@ -13,7 +13,7 @@ const EditComment = async ({
   userId: string;
 }) => {
   const res = await Comment.findOneAndUpdate(
-    { _id: commentId, userId },
+    { _id: commentId, userId, isFlagged: false },
     { isEdited: true, message },
     { upsert: false, new: true }
   )
@@ -22,7 +22,7 @@ const EditComment = async ({
     .lean()
     .exec();
 
-  if (!res) {
+  if (res === null) {
     throw new TRPCError({
       code: 'NOT_FOUND',
       message: `No comments found with the given comment id: ${commentId}`,

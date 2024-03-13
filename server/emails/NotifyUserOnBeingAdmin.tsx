@@ -11,15 +11,13 @@ import {
   Text,
 } from '@react-email/components';
 
+import { LOGO_URL } from '../constants/constants/shared';
+
 interface NotifyUserOnBeingAdminProps {
   username: string;
   email: string;
   password: string;
 }
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
 
 const main = {
   backgroundColor: '#f6f9fc',
@@ -51,12 +49,7 @@ export function NotifyUserOnBeingAdminEmail({
       <Head />
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src={`${baseUrl}/static/dropbox-logo.png`}
-            width="40"
-            height="33"
-            alt="Exam Archive"
-          />
+          <Img src={LOGO_URL} width="100%" height="100" alt="Exam Archive" />
           <Section>
             <Text style={{ ...text, textAlign: 'justify' }}>
               {`Hi ${username},`}

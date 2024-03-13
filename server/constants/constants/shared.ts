@@ -26,3 +26,6 @@ export const SEMESTER = Object.freeze({
   VII: 'Semester VII',
   VIII: 'Semester VIII',
 });
+
+export const LOGO_URL =
+  'https://res.cloudinary.com/dzorpsnmn/image/upload/v1710307765/EXAM:WKhU72luie:ARCHIVE/izmmduii2snt5fz5pcuk.png';
