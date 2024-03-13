@@ -13,7 +13,7 @@ import { createContext } from './config/trpcConfig';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
-import './jobs';
+// import './jobs';
 import './config/cloudinaryConfig';
 
 dotenv.config({
