@@ -13,6 +13,7 @@ import {
   Text,
 } from '@react-email/components';
 
+import { LOGO_URL } from '../constants/constants/shared';
 import { RESET_LINK_TTL_HRS } from '../constants/constants/auth';
 
 interface ResetPasswordEmailProps {
@@ -63,12 +64,7 @@ export function ResetPasswordEmail({
       <Head />
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src="/static/Logo.png"
-            width="40"
-            height="33"
-            alt="Exam Archive"
-          />
+          <Img src={LOGO_URL} width="100%" height="100" alt="Exam Archive" />
           <Section>
             <Text style={{ ...text, textAlign: 'justify' }}>
               {`Hi ${userFirstname},`}

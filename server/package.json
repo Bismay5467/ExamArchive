@@ -19,6 +19,7 @@
     "@react-email/components": "0.0.15",
     "@react-email/render": "0.0.12",
     "@trigger.dev/express": "^2.3.18",
+    "@trigger.dev/resend": "^2.3.18",
     "@trigger.dev/sdk": "^2.3.18",
     "@trpc/server": "^10.45.1",
     "bcrypt": "^5.1.1",

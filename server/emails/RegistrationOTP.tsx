@@ -15,14 +15,12 @@ import {
 
 import { REGISTRATION_OTP_TTL_SECONDS } from '../constants/constants/auth';
 
+import { LOGO_URL } from '../constants/constants/shared';
+
 interface RegistrationOTPEmailProps {
   userFirstname?: string;
   verificationCode?: string;
 }
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
 
 const main = {
   backgroundColor: '#f6f9fc',
@@ -53,12 +51,7 @@ export function RegistrationOTPEmail({
       <Head />
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src={`${baseUrl}/static/dropbox-logo.png`}
-            width="40"
-            height="33"
-            alt="Exam Archive"
-          />
+          <Img src={LOGO_URL} width="100%" height="100" alt="Exam Archive" />
           <Section>
             <Text style={{ ...text, textAlign: 'justify' }}>
               {`Hi ${userFirstname},`}

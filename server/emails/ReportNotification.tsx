@@ -12,15 +12,13 @@ import {
 
 import { reasonsForReport } from '../constants/constants/report';
 
+import { LOGO_URL } from '../constants/constants/shared';
+
 interface ReportNotificationEmailProps {
   postId: string;
   totalNoOfReports: number;
   reasons: typeof reasonsForReport;
 }
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
 
 const main = {
   backgroundColor: '#f6f9fc',
@@ -52,12 +50,7 @@ export function ReportNotificationEmail({
       <Head />
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src={`${baseUrl}/static/dropbox-logo.png`}
-            width="40"
-            height="33"
-            alt="Exam Archive"
-          />
+          <Img src={LOGO_URL} width="100%" height="100" alt="Exam Archive" />
           <Section>
             <Text style={{ ...text, textAlign: 'justify' }}>Hi Admin,</Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
