@@ -1,15 +1,15 @@
 import Logo from '../../assets/Logo.png';
-import { ModeToggle } from '../ModeToggle';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
-import { Input } from '@/components/ui/input';
-import { Button } from '../ui/button';
+} from '@/components/ui/navigation-menu.jsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Button } from '../ui/button.tsx';
+import ModeToggle from '../ModeToggle.tsx';
 
-const Navbar = () => {
+export default function Navbar() {
   return (
     <nav>
       <div className="max-w-[1280px] mx-auto py-2 flex flex-row justify-between">
@@ -38,6 +38,4 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

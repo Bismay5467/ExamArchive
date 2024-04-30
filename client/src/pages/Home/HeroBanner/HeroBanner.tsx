@@ -1,53 +1,10 @@
-import React from 'react';
+import { FaCheckCircle, FaChevronRight } from 'react-icons/fa';
+import { Button } from '@/components/ui/button.tsx';
+import { TypewriterEffect } from '@/components/ui/typewriter-effect.tsx';
+import heroImg from '../../../assets/HeroImage.jpg';
+import ChatBox from './ChatBox.tsx';
 
-import { Button } from '@/components/ui/button';
-import { TypewriterEffect } from '@/components/ui/typewriter-effect';
-import heroImg from '../../assets/HeroImage.jpg';
-import { FaCheckCircle } from 'react-icons/fa';
-import { FaChevronRight } from 'react-icons/fa';
-
-interface chatBoxComp {
-  text: string;
-  bgColor: string;
-  textColor: string;
-  borderRadius: string;
-  top?: string;
-  bottom?: string;
-  left?: string;
-  right?: string;
-}
-
-const ChatBox: React.FC<chatBoxComp> = ({
-  text,
-  bgColor,
-  textColor,
-  borderRadius,
-  top,
-  bottom,
-  left,
-  right,
-}) => {
-  let styleAttributes: { [key: string]: string } = {};
-  if (top) styleAttributes['top'] = top;
-  if (bottom) styleAttributes['bottom'] = bottom;
-  if (left) styleAttributes['left'] = left;
-  if (right) styleAttributes['right'] = right;
-
-  styleAttributes['backgroundColor'] = bgColor;
-  styleAttributes['color'] = textColor;
-  styleAttributes['border-radius'] = borderRadius;
-
-  return (
-    <div
-      className="rounded-lg p-4 absolute drop-shadow-xl"
-      style={styleAttributes}
-    >
-      {text}
-    </div>
-  );
-};
-
-const HeroBanner = () => {
+export default function HeroBanner() {
   const words = [
     {
       text: 'Exam',
@@ -100,7 +57,8 @@ const HeroBanner = () => {
               </p>
             </div>
             <Button className="max-w-[300px] rounded-3xl">
-              Get Started <FaChevronRight className="w-6" />
+              Get Started
+              <FaChevronRight className="w-6" />
             </Button>
           </div>
         </div>
@@ -149,6 +107,4 @@ const HeroBanner = () => {
       </div>
     </section>
   );
-};
-
-export default HeroBanner;
+}
