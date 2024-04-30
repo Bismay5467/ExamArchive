@@ -1,15 +1,10 @@
-import React from 'react';
 import Logo from '../../assets/Logo.png';
 import { ModeToggle } from '../ModeToggle';
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from '@/components/ui/navigation-menu';
 import { Input } from '@/components/ui/input';
 import { Button } from '../ui/button';

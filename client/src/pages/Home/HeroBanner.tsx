@@ -36,7 +36,6 @@ const ChatBox: React.FC<chatBoxComp> = ({
   styleAttributes['backgroundColor'] = bgColor;
   styleAttributes['color'] = textColor;
   styleAttributes['border-radius'] = borderRadius;
-  console.log(styleAttributes);
 
   return (
     <div
