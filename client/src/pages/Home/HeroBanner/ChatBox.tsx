@@ -17,15 +17,17 @@ export default function ChatBox({
   left?: string;
   right?: string;
 }) {
-  const styleAttributes: { [key: string]: string } = {};
-  if (top) styleAttributes.top = top;
-  if (bottom) styleAttributes.bottom = bottom;
-  if (left) styleAttributes.left = left;
-  if (right) styleAttributes.right = right;
+  const styleAttributes: { [key: string]: string } = {
+    ...(top && { top }),
+    ...(bottom && { bottom }),
+    ...(left && { left }),
+    ...(right && { right }),
+    backgroundColor: bgColor,
+    color: textColor,
+    'border-radius': borderRadius,
+  };
 
-  styleAttributes.backgroundColor = bgColor;
-  styleAttributes.color = textColor;
-  styleAttributes['border-radius'] = borderRadius;
+  console.log(styleAttributes);
 
   return (
     <div

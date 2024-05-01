@@ -38,6 +38,41 @@ export default function HeroBanner() {
     },
   ];
 
+  const chatBoxProps = [
+    {
+      bgColor: '#FFD955',
+      textColor: '#000000',
+      borderRadius: '20px 20px 0 20px',
+      text: 'Get all questions from all papers',
+      top: '150px',
+      right: '-40px',
+    },
+    {
+      bgColor: '#37D15D',
+      textColor: '#FFFFFF',
+      borderRadius: '20px 20px 20px 0',
+      text: 'AI Powered suggestions',
+      top: '250px',
+      left: '-40px',
+    },
+    {
+      bgColor: '#9149ED',
+      textColor: '#FFFFFF',
+      borderRadius: '20px 20px 0 20px',
+      text: 'Discuss with your peers in the forum',
+      top: '350px',
+      right: '-40px',
+    },
+    {
+      bgColor: '#2E9DFB',
+      textColor: '#FFFFFF',
+      borderRadius: '20px 20px 20px 0',
+      text: 'Authentic papers from all exams around',
+      top: '450px',
+      left: '-40px',
+    },
+  ];
+
   return (
     <section className=" bg-[#b1d8fc] rounded-b-[80px]">
       <div className="w-[1280px] min-h-[670px] h-full mx-auto flex flex-row">
@@ -68,41 +103,10 @@ export default function HeroBanner() {
             alt="Hero Image"
             className="rounded-tl-[80px] rounded-br-[80px]"
           />
-          <ChatBox
-            bgColor="#FFD955"
-            textColor="#000000"
-            borderRadius="20px 20px 0 20px"
-            text="Get all questions from all papers"
-            top="150px"
-            right="-40px"
-          />
 
-          <ChatBox
-            bgColor="#37D15D"
-            textColor="#FFFFFF"
-            borderRadius="20px 20px 20px 0"
-            text="AI Powered suggestions"
-            top="250px"
-            left="-40px"
-          />
-
-          <ChatBox
-            bgColor="#9149ED"
-            textColor="#FFFFFF"
-            borderRadius="20px 20px 0 20px"
-            text="Discuss with your peers in the forum"
-            top="350px"
-            right="-40px"
-          />
-
-          <ChatBox
-            bgColor="#2E9DFB"
-            textColor="#FFFFFF"
-            borderRadius="20px 20px 20px 0"
-            text="Authentic papers from all exams around"
-            top="450px"
-            left="-40px"
-          />
+          {chatBoxProps.map((props) => (
+            <ChatBox {...props} />
+          ))}
         </div>
       </div>
     </section>
