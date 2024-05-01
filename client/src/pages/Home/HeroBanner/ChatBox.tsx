@@ -27,8 +27,6 @@ export default function ChatBox({
     'border-radius': borderRadius,
   };
 
-  console.log(styleAttributes);
-
   return (
     <div
       className="rounded-lg p-4 absolute drop-shadow-xl"
