@@ -104,8 +104,8 @@ export default function HeroBanner() {
             className="rounded-tl-[80px] rounded-br-[80px]"
           />
 
-          {chatBoxProps.map((props) => (
-            <ChatBox {...props} />
+          {chatBoxProps.map((props, idx) => (
+            <ChatBox key={idx} {...props} />
           ))}
         </div>
       </div>
