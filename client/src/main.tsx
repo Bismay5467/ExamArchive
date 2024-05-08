@@ -3,21 +3,20 @@ import ReactDOM from 'react-dom/client';
 import {
   Route,
   RouterProvider,
-  createRoutesFromElements,
   createBrowserRouter,
+  createRoutesFromElements,
 } from 'react-router-dom';
 
 import './index.css';
-import Root from './Root';
-import {
-  Home,
-  DashBoard,
-  Login,
-  Search,
-  Preview,
-  Signup,
-  Error,
-} from './pages';
+import Root from './Root.tsx';
+import Error from './pages/404/Error.tsx';
+import Home from './pages/Home/Home.tsx';
+import Search from './pages/Search/Search.tsx';
+import DashBoard from './pages/DashBoard/DashBoard.tsx';
+
+const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
+const Signup = React.lazy(() => import('./pages/Signup/Signup.tsx'));
+const Login = React.lazy(() => import('./pages/Login/Login.tsx'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
