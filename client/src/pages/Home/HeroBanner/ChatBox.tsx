@@ -24,7 +24,7 @@ export default function ChatBox({
     ...(right && { right }),
     backgroundColor: bgColor,
     color: textColor,
-    'border-radius': borderRadius,
+    borderRadius,
   };
 
   return (
