@@ -1,8 +1,10 @@
 import { FaHeart } from 'react-icons/fa';
 import Logo from '../../assets/Logo.png';
-import { linkedIn } from '@/constants/socialLinks.ts';
+import { LinkedIn } from '@/constants/socialLinks.ts';
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
@@ -38,14 +40,14 @@ export default function Footer() {
         </div>
         <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
         <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © 2022{' '}
+          © {currentYear}{' '}
           <a href="#" className="hover:underline">
             ExamArchive™
           </a>
           . Made with <FaHeart className="inline text-xl text-red-600" /> by{' '}
           <a
             className="font-semibold"
-            href={linkedIn.Arkojeet}
+            href={LinkedIn.Arkojeet}
             target="_blank"
             rel="noreferrer"
           >
@@ -54,7 +56,7 @@ export default function Footer() {
           &{' '}
           <a
             className="font-semibold"
-            href={linkedIn.Bismay}
+            href={LinkedIn.Bismay}
             target="_blank"
             rel="noreferrer"
           >
