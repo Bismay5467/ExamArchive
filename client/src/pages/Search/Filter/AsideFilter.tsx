@@ -1,3 +1,3 @@
 export default function AsideFilter() {
-  return <div>AsideFilter</div>;
+  return <aside className="hidden bg-slate-300 sm:col-span-3 sm:block"></aside>;
 }
