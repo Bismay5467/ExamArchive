@@ -22,7 +22,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<Error />}>
       <Route path="" element={<Home />} />
-      <Route path="search/:query" element={<Search />} />
+      <Route path="search" element={<Search />} />
       <Route path="preview/:paperid" element={<Preview />} />
       <Route path="dashboard/:userid" element={<DashBoard />} />
       <Route path="login" element={<Login />} />
