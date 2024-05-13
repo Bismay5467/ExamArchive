@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        'login-banner': "url('/src/assets/LoginImage.jpg')",
+      },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },
