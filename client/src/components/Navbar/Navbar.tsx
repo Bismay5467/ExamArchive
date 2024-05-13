@@ -11,14 +11,17 @@ import {
   NavLink,
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
+import { useEffect } from 'react';
 
 export default function Navbar() {
-  const { register, handleSubmit } = useForm<SearchInput>();
+  const { register, handleSubmit, setValue } = useForm<SearchInput>();
   const [searchParams, setSearchParams] = useSearchParams({ query: '' });
   const navigate = useNavigate();
   const search = (query: string) => {
-    if (query.length === 0) return;
-    setSearchParams({ query: query });
+    if (query.length === 0) {
+      setSearchParams({ query: '' });
+      return;
+    }
     const url = createSearchParams({ query: query }).toString();
     navigate(`/search?${url}`);
   };
@@ -26,6 +29,11 @@ export default function Navbar() {
     search(formData.query);
   };
   const debouncedSearch = debounce((query: string) => search(query), 500);
+
+  useEffect(() => {
+    const query = searchParams.get('query') || '';
+    setValue('query', query);
+  }, [searchParams]);
 
   return (
     <nav>
@@ -39,7 +47,6 @@ export default function Navbar() {
             className="flex flex-row gap-x-4 items-center"
           >
             <Input
-              defaultValue={searchParams.get('query')!}
               placeholder="Search"
               className="w-[300px]"
               {...register('query')}
