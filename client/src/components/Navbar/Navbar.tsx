@@ -10,16 +10,23 @@ import {
   useNavigate,
   NavLink,
 } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 
 export default function Navbar() {
   const { register, handleSubmit } = useForm<SearchInput>();
   const [searchParams, setSearchParams] = useSearchParams({ query: '' });
   const navigate = useNavigate();
-  const submitHandler: SubmitHandler<SearchInput> = (formData) => {
-    setSearchParams({ query: formData.query });
-    const url = createSearchParams({ query: formData.query }).toString();
+  const search = (query: string) => {
+    if (query.length === 0) return;
+    setSearchParams({ query: query });
+    const url = createSearchParams({ query: query }).toString();
     navigate(`/search?${url}`);
   };
+  const submitHandler: SubmitHandler<SearchInput> = (formData) => {
+    search(formData.query);
+  };
+  const debouncedSearch = debounce((query: string) => search(query), 500);
+
   return (
     <nav>
       <div className="max-w-[1280px] mx-auto py-2 flex flex-row justify-between">
@@ -36,6 +43,7 @@ export default function Navbar() {
               placeholder="Search"
               className="w-[300px]"
               {...register('query')}
+              onChange={(e) => debouncedSearch(e.target.value)}
             />
             <Button type="submit">Search</Button>
           </form>
