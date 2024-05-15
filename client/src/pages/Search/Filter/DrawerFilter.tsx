@@ -5,20 +5,30 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  Drawer,
+  DrawerTrigger,
 } from '@/components/ui/drawer';
+import FilterForm from './FilterForm/FilterForm';
 
 export default function DrawerFilter() {
   return (
-    <DrawerContent>
-      <DrawerHeader>
-        <DrawerTitle>Choose your filters</DrawerTitle>
-      </DrawerHeader>
-      <DrawerFooter>
-        <Button>Apply</Button>
-        <DrawerClose asChild>
-          <Button variant="outline">Cancel</Button>
-        </DrawerClose>
-      </DrawerFooter>
-    </DrawerContent>
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button>Filter</Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Choose your filters</DrawerTitle>
+        </DrawerHeader>
+        <div>
+          <FilterForm />
+        </div>
+        <DrawerFooter>
+          <DrawerClose asChild>
+            <Button variant="outline">Close</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }

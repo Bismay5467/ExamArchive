@@ -15,14 +15,18 @@ import { useEffect } from 'react';
 
 export default function Navbar() {
   const { register, handleSubmit, setValue } = useForm<SearchInput>();
-  const [searchParams, setSearchParams] = useSearchParams({ query: '' });
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const search = (query: string) => {
+    const currentParams = Object.fromEntries(searchParams.entries());
     if (query.length === 0) {
-      setSearchParams({ query: '' });
+      setSearchParams({ ...currentParams, query: '' });
       return;
     }
-    const url = createSearchParams({ query: query }).toString();
+    const url = createSearchParams({
+      ...currentParams,
+      query: query,
+    }).toString();
     navigate(`/search?${url}`);
   };
   const submitHandler: SubmitHandler<SearchInput> = (formData) => {
