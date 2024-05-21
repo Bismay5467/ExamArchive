@@ -1,20 +1,20 @@
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SignUpFormFields } from '@/types/authTypes';
 import { useState } from 'react';
+import { UseFormRegister } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { newUserInputSchema } from '@/constants/authSchema.ts';
 
-export default function AccountForm() {
+export default function AccountForm({
+  register,
+}: {
+  register: UseFormRegister<SignUpFormFields>;
+}) {
   const [eyeOff, setEyeOff] = useState(true);
-  const { register, handleSubmit } = useForm({
-    resolver: zodResolver(newUserInputSchema),
-  });
+
   return (
-    <form className="w-full relative">
+    <>
       <div className="flex flex-col gap-y-2">
         <Label htmlFor="email-input">Email</Label>
         <Input
@@ -30,6 +30,7 @@ export default function AccountForm() {
           type="text"
           placeholder="jane doe"
           className="focus-visible:ring-0"
+          {...register('username')}
         />
         <Label htmlFor="password-input">Password</Label>
         <Input
@@ -46,9 +47,6 @@ export default function AccountForm() {
           {eyeOff ? <FaEye /> : <FaEyeSlash />}
         </span>
       </div>
-      <Button type="submit" className="w-full mt-8">
-        Sign Up
-      </Button>
-    </form>
+    </>
   );
 }

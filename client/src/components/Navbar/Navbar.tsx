@@ -9,6 +9,7 @@ import {
   createSearchParams,
   useNavigate,
   NavLink,
+  Link,
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
@@ -56,8 +57,12 @@ export default function Navbar() {
           </form>
         </div>
         <div className="flex flex-row gap-x-4 items-center">
-          <Button className="rounded-3xl">Log in</Button>
-          <Button className="rounded-3xl">Sign up</Button>
+          <Link to={'/auth/login'}>
+            <Button className="rounded-3xl">Log in</Button>
+          </Link>
+          <Link to={'/auth/signup'}>
+            <Button className="rounded-3xl">Sign up</Button>
+          </Link>
           <ModeToggle />
         </div>
       </div>

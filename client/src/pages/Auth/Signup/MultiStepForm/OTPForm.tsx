@@ -1,5 +1,20 @@
-import React from 'react';
+import { Input } from '@/components/ui/input';
+import { SignUpFormFields } from '@/types/authTypes';
 
-export default function OTPForm() {
-  return <div>OTPForm</div>;
+import { UseFormRegister } from 'react-hook-form';
+
+export default function OTPForm({
+  register,
+}: {
+  register: UseFormRegister<SignUpFormFields>;
+}) {
+  return (
+    <>
+      <Input
+        type="text"
+        className="focus-visible:ring-0"
+        {...register('enteredOTP')}
+      />
+    </>
+  );
 }

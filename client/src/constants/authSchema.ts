@@ -18,8 +18,8 @@ export const newUserInputSchema = z.object({
       const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
       return digitRegex.test(password) && symbolRegex.test(password);
     }),
-  role: z.enum(getValues(ROLE)),
-  actionType: z.enum(['GENERATE', 'VERIFY']),
+  role: z.enum(getValues(ROLE)).optional(),
+  actionType: z.enum(['GENERATE', 'VERIFY']).optional(),
   enteredOTP: z.string().length(6).optional(),
 });
 
