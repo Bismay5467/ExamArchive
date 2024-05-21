@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'login-banner': "url('/src/assets/LoginImage.jpg')",
+        'signup-banner': "url('/src/assets/SignupImage.jpg')",
       },
       keyframes: {
         'accordion-down': {

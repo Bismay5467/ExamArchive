@@ -15,8 +15,8 @@ import Search from './pages/Search/Search.tsx';
 import DashBoard from './pages/DashBoard/DashBoard.tsx';
 
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
-const Signup = React.lazy(() => import('./pages/Signup/Signup.tsx'));
-const Login = React.lazy(() => import('./pages/Login/Login.tsx'));
+const Signup = React.lazy(() => import('./pages/Auth/Signup/Signup.tsx'));
+const Login = React.lazy(() => import('./pages/Auth/Login/Login.tsx'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,8 +25,8 @@ const router = createBrowserRouter(
       <Route path="search/:query" element={<Search />} />
       <Route path="preview/:paperid" element={<Preview />} />
       <Route path="dashboard/:userid" element={<DashBoard />} />
-      <Route path="login" element={<Login />} />
-      <Route path="signup" element={<Signup />} />
+      <Route path="auth/login" element={<Login />} />
+      <Route path="auth/signup" element={<Signup />} />
     </Route>
   )
 );
