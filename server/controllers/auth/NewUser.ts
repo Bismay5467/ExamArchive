@@ -1,10 +1,13 @@
 /* eslint-disable no-case-declarations */
-import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { render } from '@react-email/render';
+import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import {
+  AUTH_TOKEN,
+  COOKIES_TTL,
   JWT_MAX_AGE,
   REGISTRATION_OTP_TTL_SECONDS,
 } from '../../constants/constants/auth';
@@ -14,29 +17,24 @@ import {
   MONGO_READ_QUERY_TIMEOUT,
 } from '../../constants/constants/shared';
 
+import { ErrorHandler } from '../../utils/errors/errorHandler';
 import RegistrationOTPEmail from '../../emails/RegistrationOTP';
-import { TRole } from '../../types/auth/types';
 import User from '../../models/user';
+import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
 import generateOTP from '../../utils/auth/generateOTP';
+import { newUserInputSchema } from '../../router/auth/schema';
 import redisClient from '../../config/redisConfig';
 import sendMail from '../../utils/emails/sendMail';
 import { signTokens } from '../../utils/auth/jsonwebtokens';
+import {
+  ERROR_CODES,
+  SERVER_ERROR,
+  SUCCESS_CODES,
+} from '../../constants/statusCode';
 
-const NewUser = async ({
-  email,
-  username,
-  password,
-  actionType,
-  enteredOTP,
-  role,
-}: {
-  email: string;
-  username: string;
-  password: string;
-  actionType: 'GENERATE' | 'VERIFY';
-  enteredOTP?: string;
-  role: TRole;
-}) => {
+const NewUser = asyncErrorHandler(async (req: Request, res: Response) => {
+  const { email, username, password, actionType, enteredOTP, role } = req.body
+    .data as z.infer<typeof newUserInputSchema>;
   const redisKey = `otp:${email}`;
   const saltStrength = 10;
   const salt = await bcrypt.genSalt(saltStrength);
@@ -50,16 +48,16 @@ const NewUser = async ({
         .lean()
         .exec();
       if (doesUserExists) {
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'Username or email already exists',
-        });
+        throw new ErrorHandler(
+          'Username or email already exists',
+          ERROR_CODES.CONFLICT
+        );
       }
       if (redisClient === null) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong. Please try again later',
-        });
+        throw new ErrorHandler(
+          'Something went wrong. Please try again later',
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
       let otp = generateOTP();
       const emailHTML = render(
@@ -81,55 +79,58 @@ const NewUser = async ({
           },
         }),
       ]);
-      if (response !== 'OK') {
+      if (response !== 'OK' || job === null) {
         console.error(`Error: ${response}, ${JSON.stringify(job)}`);
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong. PLease try again later',
-        });
+        throw new ErrorHandler(
+          'Something went wrong. Please try again later',
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
-      return undefined;
+      return res.status(SUCCESS_CODES.OK).json({ message: 'OTP generated' });
     case 'VERIFY':
       if (redisClient === null) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong. Please try again later',
-        });
+        throw new ErrorHandler(
+          'Something went wrong. Please try again later',
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
       if (enteredOTP === undefined) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Check your inbox for the OTP',
-        });
+        throw new ErrorHandler(
+          'Check your inbox for the OTP',
+          ERROR_CODES.FORBIDDEN
+        );
       }
       const storedOTP = await redisClient.get(redisKey);
       const isEnteredOTPCorrect = storedOTP
         ? bcrypt.compareSync(enteredOTP.toString(), storedOTP)
         : false;
       if (isEnteredOTPCorrect === false) {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Invalid OTP' });
+        throw new ErrorHandler('Invalid OTP', ERROR_CODES.FORBIDDEN);
       }
       const userId = new mongoose.Types.ObjectId();
       const payload = { username, email, userId: userId.toString(), role };
       const user = new User({ username, email, password, _id: userId, role });
-      const [token] = await Promise.all([
-        signTokens({ payload, JWT_MAX_AGE }),
-        user.save(),
-        redisClient.del(redisKey),
-      ]);
+      const token = await signTokens({ payload, JWT_MAX_AGE });
       if (token === null) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: "Couldn't generate a JWT Token",
-        });
+        throw new ErrorHandler(
+          "Couldn't generate a JWT token",
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
-      return token;
-    default:
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Invalid action type',
+      await Promise.all([user.save(), redisClient.del(redisKey)]);
+      res.cookie(AUTH_TOKEN, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: COOKIES_TTL,
+        path: '/',
       });
+      return res
+        .status(SUCCESS_CODES.CREATED)
+        .json({ message: 'Welcome onboard' });
+    default:
+      throw new ErrorHandler('Invalid action type', ERROR_CODES['BAD REQUEST']);
   }
-};
+});
 
 export default NewUser;

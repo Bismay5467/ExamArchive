@@ -5,17 +5,21 @@ export const getQuery = ({
   searchParams,
 }: {
   filter?: Partial<TUserFilter>;
-  searchParams: Array<string>;
+  searchParams: string;
 }) => {
-  const query = { tags: { $in: searchParams }, isFlagged: false };
+  const tags = searchParams.split(',');
+  const query = {
+    tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
+    isFlagged: false,
+  };
   if (filter) {
-    const { institutionName, subjectName, subjectCode, examType } = filter;
-    if (examType) Object.assign(query, { examType: { $in: examType } });
-    if (subjectCode) Object.assign(query, { subjectCode });
-    if (subjectName) Object.assign(query, { subjectName });
-    if (institutionName) {
-      Object.assign(query, { institutionName: { $in: institutionName } });
-    }
+    const { year, subjectName, subjectCode, examType } = filter;
+    Object.assign(query, {
+      ...(examType && { examType: { $in: examType } }),
+      ...(subjectCode && { subjectCode }),
+      ...(subjectName && { subjectName }),
+      ...(year && { year: { $in: year } }),
+    });
   }
   return query;
 };
@@ -24,10 +28,10 @@ export const getSortOrder = ({
 }: {
   sortFilter?: TUserSortFilter;
 }) => {
-  const sortOrder = {};
-  if (sortFilter === 'MOST VIEWS') {
-    Object.assign(sortOrder, { 'noOfViews.count': 'desc' });
-  } else Object.assign(sortOrder, { updatedAt: 'desc' });
+  const sortOrder =
+    sortFilter === 'MOST VIEWS'
+      ? { 'noOfViews.count': 'desc' }
+      : { updatedAt: 'desc' };
   return sortOrder;
 };
 

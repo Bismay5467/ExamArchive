@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-magic-numbers */
 import { isBase64 } from 'validator';
 import z from 'zod';
@@ -88,5 +89,11 @@ export const uploadFilesInputSchema = z.array(
   ])
 );
 
-export const addNamesInputSchema = z.string().min(1).max(100);
+export const addNamesInputSchema = z.object({
+  name: z.string().min(1).max(100),
+});
 export const getNamesInputSchema = z.string().min(1).max(100);
+export const fileUploadNotifWebhookSchema = z.object({
+  public_id: z.string(),
+  secure_url: z.string(),
+});
