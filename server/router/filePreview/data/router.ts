@@ -1,4 +1,7 @@
-import { IUser } from '../../../types/auth/types';
+import express from 'express';
+
+import validate from '../../../middlewares/validate';
+import verifyUser from '../../../middlewares/verifyUser';
 import {
   DeleteFile,
   DownloadCount,
@@ -15,48 +18,34 @@ import {
   updateDownloadCountInputSchema,
   updateViewCountInputSchema,
 } from './schema';
-import {
-  protectedProcedures,
-  publicProcedures,
-  router,
-} from '../../../config/trpcConfig';
 
-const fileRouter = router({
-  get: publicProcedures.input(getFileInputSchema).query(async ({ input }) => {
-    const response = await GetFile(input);
-    return response;
-  }),
-  delete: protectedProcedures
-    .input(deleteFileInputSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { userId: ownerId, role } = ctx.user as IUser;
-      await DeleteFile({ ...input, ownerId, role });
-      return { message: 'Post was successfully removed' };
-    }),
-  editTags: protectedProcedures
-    .input(editTagsInputSchema)
-    .mutation(async ({ input }) => {
-      await EditTags(input);
-      return { message: 'New tags were added to the post' };
-    }),
-  downloadCount: protectedProcedures
-    .input(updateDownloadCountInputSchema)
-    .mutation(async ({ input }) => {
-      await DownloadCount(input);
-      return { message: 'Download count increased' };
-    }),
-  viewCount: protectedProcedures
-    .input(updateViewCountInputSchema)
-    .mutation(async ({ input }) => {
-      await ViewCount(input);
-      return { message: 'View count increased' };
-    }),
-  rating: protectedProcedures
-    .input(ratingInputSchema)
-    .mutation(async ({ input }) => {
-      await UpdateRating(input);
-      return { message: 'Your rating was successfully recorded. Thank You!' };
-    }),
-});
+const router = express.Router();
 
-export default fileRouter;
+router.get('/get/:postId', validate(getFileInputSchema, 'PARAMS'), GetFile);
+router.delete(
+  '/delete',
+  [verifyUser, validate(deleteFileInputSchema, 'BODY')],
+  DeleteFile
+);
+router.put(
+  '/editTags',
+  [verifyUser, validate(editTagsInputSchema, 'BODY')],
+  EditTags
+);
+router.put(
+  '/downloadCount',
+  [verifyUser, validate(updateDownloadCountInputSchema, 'BODY')],
+  DownloadCount
+);
+router.put(
+  '/viewCount',
+  [verifyUser, validate(updateViewCountInputSchema, 'BODY')],
+  ViewCount
+);
+router.put(
+  '/rating',
+  [verifyUser, validate(ratingInputSchema, 'BODY')],
+  UpdateRating
+);
+
+export default router;

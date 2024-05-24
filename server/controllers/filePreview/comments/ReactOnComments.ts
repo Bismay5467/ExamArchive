@@ -1,86 +1,80 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable indent */
 /* eslint-disable no-nested-ternary */
-import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import Comment from '../../../models/comment';
+import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
-import { TCommentReact, TReaction } from '../../../types/filePreview/types';
+import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
+import { reactCommentInputSchema } from '../../../router/filePreview/comments/schema';
+import { ERROR_CODES, SUCCESS_CODES } from '../../../constants/statusCode';
 
-const ReactOnComments = async ({
-  commentId,
-  voterId,
-  action,
-  reaction,
-}: {
-  commentId: string;
-  voterId: string;
-  action: TCommentReact;
-  reaction: TReaction;
-}) => {
-  const filter =
-    reaction === 'UNLIKE'
-      ? { _id: commentId, isFlagged: false, isDeleted: false }
-      : action === 'DOWNVOTE'
-        ? {
-            _id: commentId,
-            'downVotes.voters': { $ne: voterId },
-            isFlagged: false,
-            isDeleted: false,
-          }
-        : {
-            _id: commentId,
-            'upVotes.voters': { $ne: voterId },
-            isFlagged: false,
-            isDeleted: false,
-          };
-
-  let updateOperator;
-
-  if (reaction === 'LIKE') {
-    updateOperator =
+const ReactOnComments = asyncErrorHandler(
+  async (req: Request, res: Response) => {
+    const { userId: voterId } = req.body as { userId: string };
+    const { commentId, action, reaction } = req.body.data as z.infer<
+      typeof reactCommentInputSchema
+    >;
+    const filter = { id: commentId, isFlagged: false, isDeleted: false };
+    if (reaction === 'UNLIKE') {
+      if (action === 'DOWNVOTE') {
+        Object.assign(filter, { 'downVotes.voters': { $in: [voterId] } });
+      }
+    } else {
       action === 'DOWNVOTE'
-        ? {
-            $addToSet: { 'downVotes.voters': voterId },
-            $inc: { 'downVotes.count': 1 },
-          }
-        : {
-            $addToSet: { 'upVotes.voters': voterId },
-            $inc: { 'upVotes.count': 1 },
-          };
-  } else {
-    updateOperator =
-      action === 'DOWNVOTE'
-        ? {
-            $pull: { 'downVotes.voters': voterId },
-            $inc: { 'downVotes.count': -1 },
-          }
-        : {
-            $pull: { 'upVotes.voters': voterId },
-            $inc: { 'upVotes.count': -1 },
-          };
-  }
+        ? Object.assign(filter, { 'downVotes.voters': { $ne: voterId } })
+        : Object.assign(filter, { 'upVotes.voters': { $ne: voterId } });
+    }
 
-  const updateOptions = { new: true, upsert: false };
+    let updateOperator;
 
-  const res = await Comment.findOneAndUpdate(
-    filter,
-    updateOperator,
-    updateOptions
-  )
-    .select({ _id: 1 })
-    .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
-    .lean()
-    .exec();
+    if (reaction === 'LIKE') {
+      updateOperator =
+        action === 'DOWNVOTE'
+          ? {
+              $addToSet: { 'downVotes.voters': voterId },
+              $inc: { 'downVotes.count': 1 },
+            }
+          : {
+              $addToSet: { 'upVotes.voters': voterId },
+              $inc: { 'upVotes.count': 1 },
+            };
+    } else {
+      updateOperator =
+        action === 'DOWNVOTE'
+          ? {
+              $pull: { 'downVotes.voters': voterId },
+              $inc: { 'downVotes.count': -1 },
+            }
+          : {
+              $pull: { 'upVotes.voters': voterId },
+              $inc: { 'upVotes.count': -1 },
+            };
+    }
 
-  if (res === null) {
-    throw new TRPCError({
-      code: 'NOT_FOUND',
-      message:
+    const updateOptions = { new: true, upsert: false };
+
+    const result = await Comment.findOneAndUpdate(
+      filter,
+      updateOperator,
+      updateOptions
+    )
+      .select({ _id: 1 })
+      .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
+      .lean()
+      .exec();
+
+    if (result === null) {
+      throw new ErrorHandler(
         'No comments found with the given comment id or the vote already exists',
-    });
-  }
+        ERROR_CODES['NOT FOUND']
+      );
+    }
 
-  return { hasLiked: reaction === 'LIKE' };
-};
+    return res.status(SUCCESS_CODES.OK).json({ hasLiked: reaction === 'LIKE' });
+  }
+);
 
 export default ReactOnComments;

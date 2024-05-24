@@ -14,6 +14,7 @@ const globalErrorHandler = (
   _req: Request,
   res: Response
 ) => {
+  console.error('In global');
   error.statusCode ||= 500;
   error.message ||= 'Internal Server Error';
   res.status(error.statusCode).json({ message: error.message, success: false });

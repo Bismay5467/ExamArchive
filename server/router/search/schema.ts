@@ -1,3 +1,4 @@
+/* eslint-disable newline-per-chained-call */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable import/prefer-default-export */
 import z from 'zod';
@@ -21,14 +22,15 @@ const getExamTypes = () => {
 
 export const searchInputSchema = z.object({
   searchParams: z
-    .array(z.string())
-    .max(100)
-    .refine((params) => params.map((param) => param.toLowerCase())),
-  page: z.number().min(1),
+    .string()
+    .transform((params) =>
+      params.trim().toLowerCase().split(',').filter(Boolean).join(',')
+    ),
+  page: z.string(),
   filter: z
     .object({
-      institutionName: z.array(z.string().trim()).max(10).optional(),
       subjectName: z.string().trim().max(100).optional(),
+      year: z.array(z.number()),
       subjectCode: z
         .string()
         .trim()
