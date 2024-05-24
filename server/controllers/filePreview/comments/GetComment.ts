@@ -1,9 +1,13 @@
+import { z } from 'zod';
+import { Request, Response } from 'express';
 import mongoose, { SortOrder } from 'mongoose';
 
 import Comment from '../../../models/comment';
 import { MAX_COMMENT_FETCH_LIMIT } from '../../../constants/constants/filePreview';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
-import { TComment } from '../../../types/filePreview/types';
+import { SUCCESS_CODES } from '../../../constants/statusCode';
+import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
+import { getCommentsInputSchema } from '../../../router/filePreview/comments/schema';
 
 const getSanitizedComments = (
   comments: any,
@@ -30,8 +34,8 @@ const getSanitizedComments = (
       timestamp,
       userId: {
         // eslint-disable-next-line no-underscore-dangle
-        _id: userId._id.toString(),
-        username: userId.username.toString(),
+        _id: userId?._id?.toString() ?? null,
+        username: userId?.username?.toString() ?? 'ExamArchive User',
       },
       postId: postId.toString(),
       commentId: commentId.toString(),
@@ -47,12 +51,12 @@ const getSanitizedComments = (
 
     if (isDeleted === true) {
       Object.assign(commentObj, {
-        isDeleted: true,
+        isDeleted,
         message: 'This message was deleted by the user',
       });
     } else if (isFlagged === true) {
       Object.assign(commentObj, {
-        isFlagged: true,
+        isFlagged,
         message: 'This comment was removed by the admin',
       });
     } else {
@@ -69,20 +73,11 @@ const getSanitizedComments = (
   return sanitizedComments;
 };
 
-const GetComments = async ({
-  postId,
-  userId,
-  page,
-  parentId,
-  commentType,
-}: {
-  postId: string;
-  userId: string;
-  page: number;
-  parentId?: string;
-  commentType: TComment;
-}) => {
-  const skipCount = (page - 1) * MAX_COMMENT_FETCH_LIMIT;
+const GetComments = asyncErrorHandler(async (req: Request, res: Response) => {
+  const { userId } = req.body as { userId: string };
+  const { postId, page, parentId, commentType } =
+    req.query as unknown as z.infer<typeof getCommentsInputSchema>;
+  const skipCount = (Number(page) - 1) * MAX_COMMENT_FETCH_LIMIT;
   const query =
     commentType === 'COMMENTS'
       ? { postId, parentId: undefined }
@@ -115,13 +110,13 @@ const GetComments = async ({
     new mongoose.Types.ObjectId(userId)
   );
   const totalPages = Math.ceil(Number(totalComments) / MAX_COMMENT_FETCH_LIMIT);
-  const hasMore = totalPages > page;
+  const hasMore = totalPages > Number(page);
 
-  return {
+  return res.status(SUCCESS_CODES.OK).json({
     comments: sanitizedComments,
     totalComments: Number(totalComments),
     hasMore,
-  };
-};
+  });
+});
 
 export default GetComments;

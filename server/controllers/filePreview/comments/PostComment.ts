@@ -1,22 +1,23 @@
-import { TRPCError } from '@trpc/server';
 import mongoose from 'mongoose';
+import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import Comment from '../../../models/comment';
+import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
+import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
+import { postCommentsInputSchema } from '../../../router/filePreview/comments/schema';
+import {
+  ERROR_CODES,
+  SERVER_ERROR,
+  SUCCESS_CODES,
+} from '../../../constants/statusCode';
 
-const PostComment = async ({
-  parentId,
-  postId,
-  isEdited,
-  userId,
-  message,
-}: {
-  parentId?: string;
-  postId: string;
-  isEdited?: boolean;
-  userId: string;
-  message: string;
-}) => {
+const PostComment = asyncErrorHandler(async (req: Request, res: Response) => {
+  const { userId } = req.body as { userId: string };
+  const { parentId, postId, isEdited, message } = req.body.data as z.infer<
+    typeof postCommentsInputSchema
+  >;
   const sanitizedMessage = message.trim();
 
   const session = await mongoose.startSession();
@@ -48,29 +49,29 @@ const PostComment = async ({
           .exec()
       );
     }
-    const [[res], updateRes] = await Promise.all(writeToDBPromises);
-
-    if (!updateRes) {
+    const [[response], updateRes] = await Promise.all(writeToDBPromises);
+    if (!updateRes && parentId) {
       await session.abortTransaction();
-      throw new TRPCError({
-        message: 'No comment found with the given id',
-        code: 'NOT_FOUND',
-      });
+      throw new ErrorHandler(
+        'No comment found with the given id',
+        ERROR_CODES['NOT FOUND']
+      );
     }
-    if (!res) {
+    if (!response) {
       await session.abortTransaction();
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Something went wrong. Please try again later',
-      });
+      throw new ErrorHandler(
+        'Something went wrong. Please try again later',
+        SERVER_ERROR['INTERNAL SERVER ERROR']
+      );
     }
     // eslint-disable-next-line no-underscore-dangle
-    commentId = res._id;
+    commentId = response._id;
   });
 
   await session.endSession();
-
-  return { parentId, commentId: commentId?.toString() };
-};
+  return res
+    .status(SUCCESS_CODES.CREATED)
+    .json({ parentId, commentId: commentId?.toString() });
+});
 
 export default PostComment;

@@ -1,15 +1,25 @@
-import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import { DOC_INFO_TTL_IN_SECONDS } from '../../../constants/constants/filePreview';
+import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import Question from '../../../models/question';
+import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
+import { getFileInputSchema } from '../../../router/filePreview/data/schema';
 import redisClient from '../../../config/redisConfig';
+import { ERROR_CODES, SUCCESS_CODES } from '../../../constants/statusCode';
 
-const GetFile = async ({ postId }: { postId: string }) => {
+const GetFile = asyncErrorHandler(async (req: Request, res: Response) => {
+  const { postId } = req.params as unknown as z.infer<
+    typeof getFileInputSchema
+  >;
   const redisKey = `post:${postId}`;
   if (redisClient) {
     const docInfo = await redisClient.get(redisKey);
-    if (docInfo !== null) return { docInfo: JSON.parse(docInfo) };
+    if (docInfo !== null) {
+      return res.status(SUCCESS_CODES.OK).json({ data: docInfo });
+    }
   }
   const docInfo = await Question.findOne({ _id: postId })
     .populate({ path: 'uploadedBy', select: { username: 1, _id: 0 } })
@@ -25,17 +35,16 @@ const GetFile = async ({ postId }: { postId: string }) => {
     .lean()
     .exec();
   if (!docInfo) {
-    throw new TRPCError({
-      code: 'NOT_FOUND',
-      message: 'No document found with the given postId',
-    });
+    throw new ErrorHandler(
+      'No document found with the given postId',
+      ERROR_CODES['NOT FOUND']
+    );
   }
   if ((docInfo as any).isFlagged === true) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message:
-        'The content on this page was taken down by the team due to the violation of terms',
-    });
+    throw new ErrorHandler(
+      'The content on this page was taken down by the team due to the violation of terms',
+      ERROR_CODES['BAD REQUEST']
+    );
   }
   if (redisClient) {
     await redisClient.set(
@@ -45,7 +54,7 @@ const GetFile = async ({ postId }: { postId: string }) => {
       DOC_INFO_TTL_IN_SECONDS
     );
   }
-  return { docInfo };
-};
+  return res.status(SUCCESS_CODES.OK).json({ data: docInfo });
+});
 
 export default GetFile;

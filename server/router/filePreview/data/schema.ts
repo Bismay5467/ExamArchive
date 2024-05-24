@@ -23,17 +23,14 @@ export const editTagsInputSchema = z.object({
 
 export const updateDownloadCountInputSchema = z.object({
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
-  userId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
 });
 
 export const updateViewCountInputSchema = z.object({
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
-  userId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
 });
 
 export const ratingInputSchema = z.object({
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
-  userId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
   ratingArray: z
     .array(
       z.object({
@@ -41,11 +38,7 @@ export const ratingInputSchema = z.object({
         value: z.number().min(0).max(5),
       })
     )
-    .length(3)
-    .transform((ratingArray) => {
-      const ratingArrayValues = ratingArray.map(({ value }) => value);
-      return { ratingArrayValues };
-    }),
+    .length(3),
 });
 
 export const deleteFileInputSchema = z.object({

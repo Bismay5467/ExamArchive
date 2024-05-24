@@ -1,5 +1,6 @@
-import { TRPCError } from '@trpc/server';
 import mongoose from 'mongoose';
+import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import {
   MONGO_READ_QUERY_TIMEOUT,
@@ -7,21 +8,21 @@ import {
 } from '../../../constants/constants/shared';
 
 import { DOC_INFO_TTL_IN_SECONDS } from '../../../constants/constants/filePreview';
+import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { IRatingInfo } from '../../../types/filePreview/types';
 import Question from '../../../models/question';
 import Rating from '../../../models/rating';
+import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
 import calculateRating from '../../../utils/filePreview/calculateRating';
+import { ratingInputSchema } from '../../../router/filePreview/data/schema';
 import redisClient from '../../../config/redisConfig';
+import { ERROR_CODES, SUCCESS_CODES } from '../../../constants/statusCode';
 
-const UpdateRating = async ({
-  postId,
-  userId,
-  ratingArray,
-}: {
-  postId: string;
-  userId: string;
-  ratingArray: { ratingArrayValues: number[] };
-}) => {
+const UpdateRating = asyncErrorHandler(async (req: Request, res: Response) => {
+  const { userId } = req.body as { userId: string };
+  const { postId, ratingArray } = req.body.data as z.infer<
+    typeof ratingInputSchema
+  >;
   const session = await mongoose.startSession();
 
   await session.withTransaction(async () => {
@@ -33,22 +34,26 @@ const UpdateRating = async ({
       .session(session)
       .lean()
       .exec()) as any;
-    if (rating === null) {
+    if (!rating) {
       await session.abortTransaction();
-      throw new TRPCError({
-        message: 'No document found with the given Id',
-        code: 'NOT_FOUND',
-      });
+      throw new ErrorHandler(
+        'No document found with the given Id',
+        ERROR_CODES['NOT FOUND']
+      );
     }
-    rating = rating.map((item, index) => ({
-      ...item,
-      averageRating: calculateRating({
+    rating = rating.map((item) => {
+      const newRating =
+        ratingArray.find((ele) => ele.type.toLowerCase() === item.ratingType)
+          ?.value ?? 0;
+      const averageRating = calculateRating({
         totalRating: item.totalRating,
         avgRating: item.averageRating,
-        newRating: ratingArray.ratingArrayValues[index],
-      }),
-      totalRating: item.totalRating + ratingArray.ratingArrayValues[index],
-    }));
+        newRating,
+      });
+      const totalRating = item.totalRating + newRating;
+      return { ...item, averageRating, totalRating };
+    });
+    const ratingArrayValues = ratingArray.map(({ value }) => value);
     const updateDataInDBPromises = [
       Rating.findOneAndUpdate(
         { postId, userId },
@@ -56,7 +61,7 @@ const UpdateRating = async ({
           $setOnInsert: {
             postId,
             userId,
-            rating: ratingArray.ratingArrayValues,
+            rating: ratingArrayValues,
           },
         },
         { upsert: true, new: false }
@@ -81,10 +86,10 @@ const UpdateRating = async ({
     );
     if (updatedRatings !== null) {
       await session.abortTransaction();
-      throw new TRPCError({
-        message: 'You have already rated this post',
-        code: 'CONFLICT',
-      });
+      throw new ErrorHandler(
+        'You have already rated this post',
+        ERROR_CODES.CONFLICT
+      );
     }
     const redisKey = `post:${postId}`;
     if (redisClient) {
@@ -97,6 +102,9 @@ const UpdateRating = async ({
     }
   });
   await session.endSession();
-};
+  return res
+    .status(SUCCESS_CODES.OK)
+    .json({ message: 'Thanks for rating the post' });
+});
 
 export default UpdateRating;
