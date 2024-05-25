@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import mongoose from 'mongoose';
 import { z } from 'zod';
 import { Request, Response } from 'express';

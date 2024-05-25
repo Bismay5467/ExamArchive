@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { render } from '@react-email/render';
