@@ -25,7 +25,7 @@ const sendMail = async ({
   }
   const { data, error } = await resend.emails.send({
     ...payload,
-    from: process.env.RESEND_USER,
+    from: `ExamArchive ${process.env.RESEND_USER}`,
   } as any);
   if (error) return null;
   return data;
