@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/require-default-props */
-/* eslint-disable react/jsx-one-expression-per-line */
+
 import * as React from 'react';
 import {
   Body,

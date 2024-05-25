@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import validator from 'validator';
 import mongoose, { Schema } from 'mongoose';
 
-import { ROLE } from '../constants/constants/auth';
+import { INVITATION_STATUS, ROLE } from '../constants/constants/auth';
 
 const UserSchema: Schema = new mongoose.Schema(
   {
@@ -12,6 +12,11 @@ const UserSchema: Schema = new mongoose.Schema(
       required: true,
       unique: true,
       maxLength: [10, 'Maximum length of the username should be 10'],
+    },
+    invitationStatus: {
+      type: String,
+      default: INVITATION_STATUS.ACCEPTED,
+      enum: Object.values(INVITATION_STATUS),
     },
     email: {
       type: String,
@@ -22,8 +27,8 @@ const UserSchema: Schema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minLength: [6, 'Maximum length of the password should be 6'],
-      maxLength: [8, 'Minimum length of the password should be 8'],
+      minLength: [6, 'Minimum length of the password should be 6'],
+      maxLength: [8, 'Maximum length of the password should be 8'],
       validate: {
         validator(password: string) {
           const digitRegex = /\d/;
