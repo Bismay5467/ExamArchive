@@ -38,7 +38,7 @@ const text = {
   color: '#404040',
   lineHeight: '26px',
 };
-
+const LOGIN_ROUTE = `${process.env.DOMAIN_URL}/auth/login`;
 export function NotifyUserOnBeingAdminEmail({
   username,
   email,
@@ -55,13 +55,11 @@ export function NotifyUserOnBeingAdminEmail({
               {`Hi ${username},`}
             </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
-              I hope this email finds you well. As requested, I am providing you
-              with the admin login details for Exam Archive. With these
-              credentials, you will have access to the administrative functions
-              and privileges within the system.
+              I hope this email finds you well. As requested, we are providing
+              you with the login details for Exam Archive.
             </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
-              Click <Link href="https://example.com">here</Link> to login. Below
+              Click <Link href={`${LOGIN_ROUTE}`}>here</Link> to login. Below
               are your login credentials:
             </Text>
             <Text

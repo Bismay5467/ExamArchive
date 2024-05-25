@@ -1,6 +1,6 @@
 import { AnyZodObject } from 'zod';
 import express from 'express';
-
+import { userPrivilege } from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import { NewUser, Reset, SignIn } from '../../controllers/auth';
 import {
@@ -11,7 +11,11 @@ import {
 
 const router = express.Router();
 
-router.post('/newUser', validate(newUserInputSchema, 'BODY'), NewUser);
+router.post(
+  '/newUser',
+  [validate(newUserInputSchema, 'BODY'), userPrivilege],
+  NewUser
+);
 router.post('/signIn', validate(signInUserInputSchema, 'BODY'), SignIn);
 router.put(
   '/reset',

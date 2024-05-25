@@ -14,7 +14,7 @@ export const reportContentInputSchema = z.object({
 });
 
 export const viewReportInputSchema = z.object({
-  page: z.number().min(1),
+  page: z.string(),
 });
 
 export const markAsResolvedInputSchema = z.object({
