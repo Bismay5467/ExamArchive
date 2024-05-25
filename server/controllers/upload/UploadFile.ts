@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import { v2 as cloudinary } from 'cloudinary';
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';

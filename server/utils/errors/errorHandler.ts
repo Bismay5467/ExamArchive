@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+/* eslint-disable no-unused-vars */
+import { NextFunction, Request, Response } from 'express';
 
 class ErrorHandler extends Error {
   statusCode: number;
@@ -12,9 +13,9 @@ class ErrorHandler extends Error {
 const globalErrorHandler = (
   error: ErrorHandler,
   _req: Request,
-  res: Response
+  res: Response,
+  _next: NextFunction
 ) => {
-  console.error('In global');
   error.statusCode ||= 500;
   error.message ||= 'Internal Server Error';
   res.status(error.statusCode).json({ message: error.message, success: false });

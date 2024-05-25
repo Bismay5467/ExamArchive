@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable indent */
-/* eslint-disable no-nested-ternary */
+
 import { z } from 'zod';
 import { Request, Response } from 'express';
 

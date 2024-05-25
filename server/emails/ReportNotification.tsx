@@ -6,6 +6,7 @@ import {
   Head,
   Html,
   Img,
+  Link,
   Section,
   Text,
 } from '@react-email/components';
@@ -15,7 +16,7 @@ import { reasonsForReport } from '../constants/constants/report';
 import { LOGO_URL } from '../constants/constants/shared';
 
 interface ReportNotificationEmailProps {
-  postId: string;
+  postLink: string;
   totalNoOfReports: number;
   reasons: typeof reasonsForReport;
 }
@@ -41,7 +42,7 @@ const text = {
 };
 
 export function ReportNotificationEmail({
-  postId,
+  postLink,
   totalNoOfReports,
   reasons,
 }: ReportNotificationEmailProps) {
@@ -64,14 +65,12 @@ export function ReportNotificationEmail({
               platform's reputation and user experience, I kindly request your
               immediate attention to review the content of this post.`}
             </Text>
-            <Text style={{ ...text, textAlign: 'justify' }}>
-              Here are the details :{' '}
-            </Text>
-            <Text
-              style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
+            <Link
+              href={postLink}
+              style={{ ...text, color: 'blue', textAlign: 'justify' }}
             >
-              Post ID : {postId}
-            </Text>
+              View the post here
+            </Link>
             <Text
               style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
             >
@@ -80,7 +79,7 @@ export function ReportNotificationEmail({
             <Text
               style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
             >
-              Reported Content : {reasons.join(', ')}
+              Reported Reasons : {reasons.join(', ')}
             </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
               {`As an admin, your prompt intervention and assessment of this

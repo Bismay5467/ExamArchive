@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { z } from 'zod';
 import { Request, Response } from 'express';
 

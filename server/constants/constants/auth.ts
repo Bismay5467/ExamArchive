@@ -8,4 +8,13 @@ export const REGISTRATION_OTP_TTL_SECONDS = 600;
 
 export const TRIGGER_ID = 'exam-archive';
 
-export const ROLE = Object.freeze({ USER: 'USER', ADMIN: 'ADMIN' });
+export const INVITATION_STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+});
+
+export const ROLE = Object.freeze({
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+  SUPERADMIN: 'SUPERADMIN',
+});
