@@ -9,17 +9,17 @@ export const getQuery = ({
   subjectName?: string;
   year?: Array<number>;
   examType?: Array<string>;
-  searchParams: string;
+  searchParams: Array<string>;
 }) => {
-  const tags = searchParams.split(',');
+  const tags = searchParams;
   const query = {
     tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
     isFlagged: false,
   };
   Object.assign(query, {
-    ...(examType && { examType: { $in: examType } }),
+    ...(examType && examType.length > 0 && { examType: { $in: examType } }),
     ...(subjectName && { subjectName }),
-    ...(year && { year: { $in: year } }),
+    ...(year && year.length > 0 && { year: { $in: year } }),
   });
   return query;
 };

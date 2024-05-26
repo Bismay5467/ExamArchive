@@ -1,4 +1,3 @@
-/* eslint-disable newline-per-chained-call */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable import/prefer-default-export */
 import z from 'zod';
@@ -20,11 +19,7 @@ const getExamTypes = () => {
 };
 
 export const searchInputSchema = z.object({
-  searchParams: z
-    .string()
-    .transform((params) =>
-      params.trim().toLowerCase().split(',').filter(Boolean).join(',')
-    ),
+  searchParams: z.array(z.string()),
   page: z.string().transform((page) => {
     const parsedPage = parseInt(page, 10);
     if (Number.isNaN(parsedPage) === true || parsedPage <= 0) return 1;
@@ -32,11 +27,9 @@ export const searchInputSchema = z.object({
   }),
   subjectName: z.string().trim().max(100).optional(),
   year: z
-    .string()
-    .transform((params) =>
-      params
-        .trim()
-        .split(',')
+    .array(z.string())
+    .transform((arr) =>
+      arr
         .filter(Boolean)
         .filter((year) => {
           const parsedYear = parseInt(year, 10);
