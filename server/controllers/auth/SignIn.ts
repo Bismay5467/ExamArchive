@@ -69,11 +69,6 @@ const SignIn = asyncErrorHandler(async (req: Request, res: Response) => {
       );
     }
     if (user.invitationStatus === INVITATION_STATUS.PENDING) {
-      const redisPayload = {
-        _id: user._id.toString(),
-        username: user.username,
-        email: user.email,
-      };
       await Promise.all([
         User.findOneAndUpdate(
           { email: user.email },
@@ -83,22 +78,7 @@ const SignIn = asyncErrorHandler(async (req: Request, res: Response) => {
           .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
           .lean()
           .exec(),
-        redisClient?.srem(
-          user.role,
-          JSON.stringify(
-            Object.assign(redisPayload, {
-              invitationStatus: INVITATION_STATUS.PENDING,
-            })
-          )
-        ),
-        redisClient?.sadd(
-          user.role,
-          JSON.stringify(
-            Object.assign(redisPayload, {
-              invitationStatus: INVITATION_STATUS.ACCEPTED,
-            })
-          )
-        ),
+        redisClient?.del(user.role),
       ]);
     }
     res.cookie(AUTH_TOKEN, token, {

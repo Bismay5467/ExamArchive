@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 /* eslint-disable newline-per-chained-call */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable import/prefer-default-export */
@@ -5,7 +7,6 @@ import z from 'zod';
 
 import { EXAM_TYPES } from '../../constants/constants/shared';
 import { SORT_FILTERS } from '../../constants/constants/search';
-import { sanitizeInput } from '../upload/schema';
 
 function getValues<T extends Record<string, any>>(obj: T) {
   return Object.values(obj) as [(typeof obj)[keyof T]];
@@ -26,19 +27,44 @@ export const searchInputSchema = z.object({
     .transform((params) =>
       params.trim().toLowerCase().split(',').filter(Boolean).join(',')
     ),
-  page: z.string(),
-  filter: z
-    .object({
-      subjectName: z.string().trim().max(100).optional(),
-      year: z.array(z.number()),
-      subjectCode: z
-        .string()
+  page: z.string().transform((page) => {
+    const parsedPage = parseInt(page, 10);
+    if (Number.isNaN(parsedPage) === true || parsedPage <= 0) return 1;
+    return parsedPage;
+  }),
+  subjectName: z.string().trim().max(100).optional(),
+  year: z
+    .string()
+    .transform((params) =>
+      params
         .trim()
-        .max(100)
-        .transform((subjectCode) => sanitizeInput(subjectCode))
-        .optional(),
-      examType: z.array(z.enum(getExamTypes())).optional(),
-    })
+        .split(',')
+        .filter(Boolean)
+        .filter((year) => {
+          const parsedYear = parseInt(year, 10);
+          const currYear = new Date().getFullYear();
+          if (
+            Number.isNaN(parsedYear) === false &&
+            parsedYear < currYear &&
+            parsedYear > currYear - 10
+          ) {
+            return true;
+          }
+          return false;
+        })
+        .map((year) => parseInt(year, 10))
+    )
     .optional(),
+  examType: z
+    .string()
+    .transform((params) =>
+      params
+        .trim()
+        .split(',')
+        .filter(Boolean)
+        .filter((type) => getExamTypes().includes(type))
+    )
+    .optional(),
+
   sortFilter: z.enum(SORT_FILTERS).optional(),
 });

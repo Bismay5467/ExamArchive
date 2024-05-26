@@ -14,10 +14,10 @@ import {
 } from '../../utils/search/getter';
 
 const GetPapers = asyncErrorHandler(async (req: Request, res: Response) => {
-  const { filter, searchParams, sortFilter, page } =
+  const { searchParams, sortFilter, page, subjectName, year, examType } =
     req.query as unknown as z.infer<typeof searchInputSchema>;
-  const skipCount = (parseInt(page, 10) - 1) * MAX_SEARCH_RESULT_FETCH_LIMIT;
-  const query = getQuery({ searchParams, filter });
+  const skipCount = (page - 1) * MAX_SEARCH_RESULT_FETCH_LIMIT;
+  const query = getQuery({ searchParams, subjectName, year, examType });
   const sortOrder = getSortOrder({ sortFilter });
   const project = getProjections();
 
@@ -37,7 +37,7 @@ const GetPapers = asyncErrorHandler(async (req: Request, res: Response) => {
   const totalPages = Math.ceil(
     Number(totalSearches) / MAX_SEARCH_RESULT_FETCH_LIMIT
   );
-  const hasMore = totalPages > Number(page);
+  const hasMore = totalPages > page;
   return res.status(SUCCESS_CODES.OK).json({ data: searchResults, hasMore });
 });
 
