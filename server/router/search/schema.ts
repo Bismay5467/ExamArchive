@@ -1,5 +1,3 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable consistent-return */
 /* eslint-disable newline-per-chained-call */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable import/prefer-default-export */
