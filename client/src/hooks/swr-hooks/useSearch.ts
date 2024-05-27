@@ -1,10 +1,15 @@
 import { SearchResponse } from '@/types/api-types';
+import { axiosInstance } from '@/utils/swr/fetcher';
 import useSWR from 'swr';
 
-export const useSearch = (searchPrams: string, page: number) => {
-  const paramsPaload: string = searchPrams.split(' ').join(',');
+export const useSearch = (params: Record<string, string | string[]>) => {
+  console.log(params);
 
-  return useSWR<SearchResponse>(
-    `/search?searchParams=${paramsPaload}&&page=${page}`
-  );
+  console.log(params);
+  const fetcher = (url: string) =>
+    axiosInstance({ url, params: params, method: 'GET' }).then(
+      (res) => res.data
+    );
+
+  return useSWR<SearchResponse>(['/search', params], ([url]) => fetcher(url));
 };

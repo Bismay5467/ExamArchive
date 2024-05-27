@@ -6,9 +6,9 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { SearchInput } from '@/types/index.ts';
 import {
   useSearchParams,
-  createSearchParams,
   useNavigate,
   NavLink,
+  useLocation,
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
@@ -17,17 +17,12 @@ export default function Navbar() {
   const { register, handleSubmit, setValue } = useForm<SearchInput>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const currentLocation = useLocation();
+
   const search = (query: string) => {
+    if (currentLocation.pathname === '/') navigate(`/search?`);
     const currentParams = Object.fromEntries(searchParams.entries());
-    if (query.length === 0) {
-      setSearchParams({ ...currentParams, query: '' });
-      return;
-    }
-    const url = createSearchParams({
-      ...currentParams,
-      query: query,
-    }).toString();
-    navigate(`/search?${url}`);
+    setSearchParams({ ...currentParams, query: query });
   };
   const submitHandler: SubmitHandler<SearchInput> = (formData) => {
     search(formData.query);
@@ -51,7 +46,7 @@ export default function Navbar() {
             className="flex flex-row gap-x-4 items-center"
           >
             <Input
-              placeholder="Search"
+              placeholder="Search (Comma Separated)"
               className="w-[300px]"
               {...register('query')}
               onChange={(e) => debouncedSearch(e.target.value)}
