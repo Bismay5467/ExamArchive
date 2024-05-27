@@ -1,26 +1,26 @@
-import { TUserFilter, TUserSortFilter } from '../../types/search/types';
+import { TUserSortFilter } from '../../types/search/types';
 
 export const getQuery = ({
-  filter,
+  subjectName,
+  year,
+  examType,
   searchParams,
 }: {
-  filter?: Partial<TUserFilter>;
-  searchParams: string;
+  subjectName?: string;
+  year?: Array<number>;
+  examType?: Array<string>;
+  searchParams: Array<string>;
 }) => {
-  const tags = searchParams.split(',');
+  const tags = searchParams;
   const query = {
     tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
     isFlagged: false,
   };
-  if (filter) {
-    const { year, subjectName, subjectCode, examType } = filter;
-    Object.assign(query, {
-      ...(examType && { examType: { $in: examType } }),
-      ...(subjectCode && { subjectCode }),
-      ...(subjectName && { subjectName }),
-      ...(year && { year: { $in: year } }),
-    });
-  }
+  Object.assign(query, {
+    ...(examType && examType.length > 0 && { examType: { $in: examType } }),
+    ...(subjectName && { subjectName }),
+    ...(year && year.length > 0 && { year: { $in: year } }),
+  });
   return query;
 };
 export const getSortOrder = ({

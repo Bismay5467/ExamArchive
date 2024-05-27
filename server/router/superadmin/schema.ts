@@ -18,3 +18,7 @@ export const removeInputSchema = z.object({
 export const getInputSchema = z.object({
   role: z.enum([ROLE.ADMIN, ROLE.SUPERADMIN]),
 });
+
+export const updateSchema = z.object({
+  role: z.enum([ROLE.ADMIN, ROLE.SUPERADMIN]),
+});

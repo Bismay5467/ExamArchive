@@ -22,7 +22,7 @@ const GetSubjectFilters = asyncErrorHandler(
       return res.status(SUCCESS_CODES.OK).json({ data: JSON.parse(data) });
     }
     const result = await Question.find({})
-      .select({ _id: 0, subjectCode: 1, subjectName: 1 })
+      .select({ _id: 0, subjectName: 1 })
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .exec();
