@@ -8,36 +8,61 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { newUserInputSchema } from '@/constants/authSchema';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '@/components/ui/spinner';
+import { useState } from 'react';
+import useSWR from 'swr';
+import axios, { AxiosRequestConfig } from 'axios';
+import { SUCCESS_CODES } from '@/constants/statusCodes';
+
+const fetcher = async (obj: AxiosRequestConfig<any>) => {
+  const response = await axios(obj);
+  return response;
+};
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [data, setData] = useState<SignUpFormFields>();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<SignUpFormFields>({
     resolver: zodResolver(newUserInputSchema),
   });
   const { next, isFirstStep, step } = useMultiStepForm([
-    <AccountForm register={register} />,
-    <OTPForm register={register} />,
+    <AccountForm register={register} errors={errors} />,
+    <OTPForm register={register} errors={errors} />,
   ]);
-
-  const onSubmit: SubmitHandler<SignUpFormFields> = async (formData) => {
-    const payload: SignUpFormFields = {
-      ...formData,
-      role: 'USER',
-      actionType: 'GENERATE',
+  const getAxiosObj = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const url = BASE_URL.concat('auth/newUser');
+    const axiosObj = {
+      url,
+      data: { data },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
     };
 
+    return axiosObj;
+  };
+
+  const { data: user, isValidating } = useSWR(
+    data ? getAxiosObj() : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const onSubmit: SubmitHandler<SignUpFormFields> = async (formData) => {
+    // TODO: Need to the body of user to get status code
     if (isFirstStep()) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log(payload, 'OTP Generated!');
-      next();
+      setData({ ...formData, role: 'USER', actionType: 'GENERATE' });
+      if (user && user.status === SUCCESS_CODES.OK) next();
     } else {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log(payload, 'OTP Verified!');
-      navigate('/auth/login');
+      setData({ ...formData, role: 'USER', actionType: 'VERIFY' });
+      if (user && user.status === SUCCESS_CODES.CREATED)
+        navigate('/auth/login');
     }
   };
 
@@ -62,11 +87,14 @@ export default function Signup() {
           <form className="w-full relative" onSubmit={handleSubmit(onSubmit)}>
             {step}
             <Button
-              disabled={isSubmitting}
+              disabled={isSubmitting || isValidating}
               type="submit"
               className="w-full mt-8"
             >
               {isFirstStep() ? `Next` : `Sign Up!`}
+              {(isSubmitting || isValidating) && (
+                <Spinner className={`w-4 h-4 ml-3 `} />
+              )}
             </Button>
           </form>
           <div className="flex flex-row gap-x-2">

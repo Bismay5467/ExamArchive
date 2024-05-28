@@ -2,14 +2,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SignUpFormFields } from '@/types/authTypes';
 import { useState } from 'react';
-import { UseFormRegister } from 'react-hook-form';
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
 
 export default function AccountForm({
   register,
+  errors,
 }: {
   register: UseFormRegister<SignUpFormFields>;
+  errors: FieldErrors<SignUpFormFields>;
 }) {
   const [eyeOff, setEyeOff] = useState(true);
 
@@ -24,6 +26,9 @@ export default function AccountForm({
           className="focus-visible:ring-0"
           {...register('email')}
         />
+        {errors && (
+          <p className="text-red-500 text-sm">{errors.email?.message}</p>
+        )}
         <Label htmlFor="username-input">Username</Label>
         <Input
           id="username-input"
@@ -32,6 +37,9 @@ export default function AccountForm({
           className="focus-visible:ring-0"
           {...register('username')}
         />
+        {errors && (
+          <p className="text-red-500 text-sm">{errors.username?.message}</p>
+        )}
         <Label htmlFor="password-input">Password</Label>
         <Input
           id="password-input"
@@ -39,9 +47,12 @@ export default function AccountForm({
           className="focus-visible:ring-0"
           {...register('password')}
         />
+        {errors && (
+          <p className="text-red-500 text-sm">{errors.password?.message}</p>
+        )}
         <MdOutlineEmail className="absolute text-xl opacity-60 right-2 top-[32px]" />
         <span
-          className="absolute text-xl opacity-60 right-2 top-[172px] cursor-pointer "
+          className="absolute text-xl opacity-60 right-2 top-[187px] cursor-pointer "
           onClick={() => setEyeOff((prev) => !prev)}
         >
           {eyeOff ? <FaEye /> : <FaEyeSlash />}

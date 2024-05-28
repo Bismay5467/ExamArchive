@@ -6,9 +6,57 @@ import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useState } from 'react';
+import Spinner from '@/components/ui/spinner';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { signInUserInputSchema } from '@/constants/authSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SignInFormFields } from '@/types/authTypes';
+import useSWR from 'swr';
+import axios, { AxiosRequestConfig } from 'axios';
+
+const fetcher = async (obj: AxiosRequestConfig<any>) => {
+  const response = await axios(obj);
+  return response;
+};
 
 export default function Login() {
-  const [eyeOff, setEyeOff] = useState(true);
+  const [eyeOff, setEyeOff] = useState<boolean>(true);
+  const [data, setData] = useState<SignInFormFields>();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<SignInFormFields>({
+    resolver: zodResolver(signInUserInputSchema),
+  });
+
+  const getAxiosObj = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const url = BASE_URL.concat('auth/signIn');
+    const axiosObj = {
+      url,
+      data: { data },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    return axiosObj;
+  };
+
+  const { data: user, isValidating } = useSWR(
+    data ? getAxiosObj() : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+  console.log(user);
+
+  const onSubmit: SubmitHandler<SignInFormFields> = async (formData) => {
+    setData(formData);
+  };
+
   return (
     <div className="p-4 h-full lg:grid lg:grid-cols-2 lg:gap-x-4">
       <div className="h-full lg:col-span-1 py-12 ">
@@ -24,14 +72,15 @@ export default function Login() {
               </h3>
             </div>
           </div>
-          <form className="w-full relative">
+          <form className="w-full relative" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-2">
-              <Label htmlFor="email-input">Email</Label>
+              <Label htmlFor="username-input">Email</Label>
               <Input
-                id="email-input"
-                type="email"
-                placeholder="jane.doe@domain.com"
+                id="username-input"
+                type="text"
+                placeholder="Username/Email"
                 className="focus-visible:ring-0"
+                {...register('username')}
               />
               <MdOutlineEmail className="absolute text-xl opacity-60 right-2 top-[32px]" />
               <Label htmlFor="password-input">Password</Label>
@@ -39,7 +88,13 @@ export default function Login() {
                 id="password-input"
                 type={`${eyeOff ? `password` : `text`}`}
                 className="focus-visible:ring-0"
+                {...register('password')}
               />
+              {errors && (
+                <p className="text-red-500 text-sm">
+                  {errors.password?.message}
+                </p>
+              )}
               <span
                 className="absolute text-xl opacity-60 right-2 top-[102px] cursor-pointer "
                 onClick={() => setEyeOff((prev) => !prev)}
@@ -62,8 +117,15 @@ export default function Login() {
                 </span>
               </div>
             </div>
-            <Button type="submit" className="w-full mt-8">
-              Log in
+            <Button
+              type="submit"
+              className="w-full mt-8"
+              disabled={isSubmitting || isValidating}
+            >
+              Log in{' '}
+              {(isSubmitting || isValidating) && (
+                <Spinner className={`w-4 h-4 ml-3 `} />
+              )}
             </Button>
           </form>
           <div className="flex flex-row gap-x-2">
