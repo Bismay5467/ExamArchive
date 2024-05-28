@@ -1,3 +1,3 @@
-import { SearchResponse, SearchData } from './search';
+import { SearchData } from './search';
 
-export type { SearchResponse, SearchData };
+export type { SearchData };
