@@ -31,9 +31,18 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
+const whitelist = [
+  process.env.PROD_CLIENT_URL,
+  process.env.DEV_CLIENT_URL,
+  process.env.STAGE_CLIENT_URL,
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+      if (whitelist.includes(origin)) callback(null, true);
+      else callback(new Error('Not allowed by CORS'));
+    },
     optionsSuccessStatus: SUCCESS_CODES.OK,
   })
 );
