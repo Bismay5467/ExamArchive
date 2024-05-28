@@ -32,11 +32,6 @@ export default function Search() {
   };
 
   const { data, setSize, mutate } = useSWRInfinite(getKey, fetcher);
-  axiosInstance({
-    method: 'POST',
-    url: '/auth/signIn',
-    data: { email: 'arkojeet.dev@gmail.com', password: 'osQ=&-*2' },
-  }).then((res) => console.log(res));
 
   useEffect(() => {
     mutate();
