@@ -32,6 +32,11 @@ export default function Search() {
   };
 
   const { data, setSize, mutate } = useSWRInfinite(getKey, fetcher);
+  axiosInstance({
+    method: 'POST',
+    url: '/auth/signIn',
+    data: { email: 'arkojeet.dev@gmail.com', password: 'osQ=&-*2' },
+  }).then((res) => console.log(res));
 
   useEffect(() => {
     mutate();
@@ -46,7 +51,7 @@ export default function Search() {
       <div className="p-4 flex flex-col gap-y-4 sm:col-span-7">
         {data?.map((value) => {
           const data: SearchResponse = value.data;
-          return data?.data.map((res) => {
+          return data?.data?.map((res) => {
             return (
               <Link to={`/preview/${res._id}`} target="_blank" key={res._id}>
                 <ResultCard
