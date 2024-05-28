@@ -20,6 +20,7 @@ module.exports = {
       backgroundImage: {
         'login-banner': "url('/src/assets/LoginImage.jpg')",
         'signup-banner': "url('/src/assets/SignupImage.jpg')",
+        'reset-banner': "url('/src/assets/ResetImage.jpg')",
       },
       keyframes: {
         'caret-blink': {

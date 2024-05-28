@@ -17,6 +17,7 @@ import DashBoard from './pages/DashBoard/DashBoard.tsx';
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
 const Signup = React.lazy(() => import('./pages/Auth/Signup/Signup.tsx'));
 const Login = React.lazy(() => import('./pages/Auth/Login/Login.tsx'));
+const Reset = React.lazy(() => import('./pages/Auth/Reset/Reset.tsx'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
       <Route path="dashboard/:userid" element={<DashBoard />} />
       <Route path="auth/login" element={<Login />} />
       <Route path="auth/signup" element={<Signup />} />
+      <Route path="auth/reset" element={<Reset />} />
     </Route>
   )
 );

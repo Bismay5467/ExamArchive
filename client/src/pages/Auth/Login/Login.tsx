@@ -8,11 +8,12 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { useState } from 'react';
 import Spinner from '@/components/ui/spinner';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { signInUserInputSchema } from '@/constants/authSchema';
+import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignInFormFields } from '@/types/authTypes';
 import useSWR from 'swr';
 import axios, { AxiosRequestConfig } from 'axios';
+import { Link } from 'react-router-dom';
 
 const fetcher = async (obj: AxiosRequestConfig<any>) => {
   const response = await axios(obj);
@@ -112,9 +113,11 @@ export default function Login() {
                     Remember me
                   </Label>
                 </div>
-                <span className="text-sm opacity-60 self-center">
-                  Recover Password
-                </span>
+                <Link to={'/auth/reset'}>
+                  <span className="text-sm opacity-60 self-center">
+                    Recover Password
+                  </span>
+                </Link>
               </div>
             </div>
             <Button

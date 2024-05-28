@@ -45,23 +45,20 @@ export const signInUserInputSchema = z.object({
     ),
 });
 
-const baseResetInputSchema = z.object({ email: z.string().email() });
-
-export const resetInputSchema = z.discriminatedUnion('action', [
-  z.object({ action: z.enum(['EMAIL']) }).merge(baseResetInputSchema),
-  z
-    .object({
-      action: z.enum(['RESET']),
-      password: z
-        .string()
-        .min(6)
-        .max(8)
-        .refine((password) => {
-          const digitRegex = /\d/;
-          const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
-          return digitRegex.test(password) && symbolRegex.test(password);
-        }),
-      authToken: z.string(),
-    })
-    .merge(baseResetInputSchema),
-]);
+export const resetInputSchema = z.object({
+  email: z.string().email().optional(),
+  password: z
+    .string()
+    .min(6, { message: '*Password must contain atleast 6 character(s)!' })
+    .max(8, { message: '*Password must contain at most 8 character(s)!' })
+    .refine(
+      (password) => {
+        const digitRegex = /\d/;
+        const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
+        return digitRegex.test(password) && symbolRegex.test(password);
+      },
+      { message: '*Password must contain atleast one symbol and digit!' }
+    )
+    .optional(),
+  action: z.enum(['RESET', 'EMAIL']).optional(),
+});
