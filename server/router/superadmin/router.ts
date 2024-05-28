@@ -1,5 +1,7 @@
 import express from 'express';
-import { superAdminPrivilege } from '../../middlewares/previlege';
+
+import { ROLE } from '../../constants/constants/auth';
+import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import { Add, Get, Remove, UpdateCache } from '../../controllers/superadmin';
@@ -14,17 +16,21 @@ const router = express.Router();
 
 router.post(
   '/add',
-  [verifyUser, superAdminPrivilege, validate(addInputSchema, 'BODY')],
+  [verifyUser, privilege([ROLE.SUPERADMIN]), validate(addInputSchema, 'BODY')],
   Add
 );
 router.put(
   '/remove',
-  [verifyUser, superAdminPrivilege, validate(removeInputSchema, 'BODY')],
+  [
+    verifyUser,
+    privilege([ROLE.SUPERADMIN]),
+    validate(removeInputSchema, 'BODY'),
+  ],
   Remove
 );
 router.get(
   '/get',
-  [verifyUser, superAdminPrivilege, validate(getInputSchema, 'QUERY')],
+  [verifyUser, privilege([ROLE.SUPERADMIN]), validate(getInputSchema, 'QUERY')],
   Get
 );
 router.put('/update', validate(updateSchema, 'BODY'), UpdateCache);
