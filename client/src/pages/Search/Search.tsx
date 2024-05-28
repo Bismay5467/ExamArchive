@@ -5,37 +5,61 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
-import { SearchResponse } from '@/types/api-types';
-import { axiosInstance } from '@/utils/swr/fetcher';
+import { SearchData } from '@/types/api-types';
+import { AxiosRequestConfig } from 'axios';
+import { toPreview } from '@/constants/routes';
 
 export default function Search() {
   const [searchParams, _] = useSearchParams();
 
-  const fetcher = (url: string) => {
-    const entries = {} as Record<string, string | string[]>;
+  const getRequestObj = (page: number) => {
+    const params = {} as Record<string, string | string[]>;
     searchParams.forEach((value, key) => {
       if (key === 'year') {
-        entries[key] = value.split(',').map((item) => item.trim());
+        params[key] = value.split(',').map((item) => item.trim());
       } else if (key === 'query') {
-        entries['searchParams'] = value.split(',').map((item) => item.trim());
-      } else if (key) entries[key] = value;
+        params['searchParams'] = value.split(',').map((item) => item.trim());
+      } else if (key) params[key] = value;
     });
 
-    return axiosInstance({ url: url, params: entries, method: 'GET' });
+    params['page'] = String(page);
+
+    const requestObj: AxiosRequestConfig<any> = {
+      url: '/search?',
+      params,
+      method: 'GET',
+    };
+
+    return requestObj;
   };
 
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     // TODO: Content of previousPageData needs further testing
 
     if (previousPageData && !previousPageData.hasMore) return null;
-    return `/search?page=${pageIndex + 1}`;
+    return getRequestObj(pageIndex + 1);
   };
 
-  const { data, setSize, mutate } = useSWRInfinite(getKey, fetcher);
+  const {
+    data: response,
+    setSize,
+    mutate,
+  } = useSWRInfinite(getKey, {
+    revalidateOnFocus: false,
+  });
 
   useEffect(() => {
     mutate();
   }, [searchParams]);
+
+  const searchResults = response ? [].concat(...response) : [];
+  const reducedSearchResults = searchResults
+    .map(({ data }) => data)
+    .map(({ data }) => data);
+
+  const data: SearchData[] = reducedSearchResults
+    ? [].concat(...reducedSearchResults)
+    : [];
 
   return (
     <div className="max-w-[1280px] mx-auto min-h-[400px] sm:grid sm:grid-cols-10 sm:gap-x-4">
@@ -44,22 +68,17 @@ export default function Search() {
       </div>
       <AsideFilter />
       <div className="p-4 flex flex-col gap-y-4 sm:col-span-7">
-        {data?.map((value) => {
-          const data: SearchResponse = value.data;
-          return data?.data?.map((res) => {
-            return (
-              <Link to={`/preview/${res._id}`} target="_blank" key={res._id}>
-                <ResultCard
-                  id={res._id}
-                  instituteName={res.institutionName}
-                  semester={res.semester}
-                  subjectCode={res.semester}
-                  year={res.year}
-                />
-              </Link>
-            );
-          });
-        })}
+        {data?.map((res) => (
+          <Link to={toPreview(res._id)} target="_blank" key={res._id}>
+            <ResultCard
+              id={res._id}
+              instituteName={res.institutionName}
+              semester={res.semester}
+              subjectCode={res.semester}
+              year={res.year}
+            />
+          </Link>
+        ))}
         <Button
           onClick={() => {
             setSize((prev) => prev + 1);
