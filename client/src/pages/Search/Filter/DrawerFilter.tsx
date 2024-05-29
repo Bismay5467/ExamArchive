@@ -9,8 +9,16 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import FilterForm from './FilterForm/FilterForm';
+import { IFilterInputs } from '@/types/search.ts';
+import React from 'react';
 
-export default function DrawerFilter() {
+export default function DrawerFilter({
+  filters,
+  setFilters,
+}: {
+  filters: IFilterInputs;
+  setFilters: React.Dispatch<React.SetStateAction<IFilterInputs>>;
+}) {
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -21,7 +29,7 @@ export default function DrawerFilter() {
           <DrawerTitle>Choose your filters</DrawerTitle>
         </DrawerHeader>
         <div>
-          <FilterForm />
+          <FilterForm filters={filters} setFilters={setFilters} />
         </div>
         <DrawerFooter>
           <DrawerClose asChild>

@@ -1,3 +1,5 @@
-export const toPreview = (paperid: string) => {
+export const toPreviewPage = (paperid: string) => {
   return `/preview/${paperid}`;
 };
+
+export const toSearchPage = `/search?`;

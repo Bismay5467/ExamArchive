@@ -1,4 +1,14 @@
-export interface SearchData {
+export interface IFilterInputs {
+  ExamType?: string;
+  subjectName?: string;
+  year?: string;
+  sortFilter?: string;
+}
+export interface ISearchInput {
+  query: string;
+}
+
+export interface ISearchData {
   _id: string;
   year: string;
   tags: string[];

@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input.tsx';
 import { Button } from '../ui/button.tsx';
 import ModeToggle from '../ModeToggle.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { SearchInput } from '@/types/index.ts';
+import { ISearchInput } from '@/types/search.ts';
 import {
   useSearchParams,
   useNavigate,
@@ -12,19 +12,20 @@ import {
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
+import { toSearchPage } from '@/constants/routes/index.ts';
 
 export default function Navbar() {
-  const { register, handleSubmit, setValue } = useForm<SearchInput>();
+  const { register, handleSubmit, setValue } = useForm<ISearchInput>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const currentLocation = useLocation();
 
   const search = (query: string) => {
-    if (currentLocation.pathname === '/') navigate(`/search?`);
+    if (currentLocation.pathname === '/') navigate(toSearchPage);
     const currentParams = Object.fromEntries(searchParams.entries());
     setSearchParams({ ...currentParams, query: query });
   };
-  const submitHandler: SubmitHandler<SearchInput> = (formData) => {
+  const submitHandler: SubmitHandler<ISearchInput> = (formData) => {
     search(formData.query);
   };
   const debouncedSearch = debounce((query: string) => search(query), 500);

@@ -1,46 +1,35 @@
 import { Button } from '@/components/ui/button';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { FilterInputs } from '@/types';
+import React from 'react';
+import { IFilterInputs } from '@/types/search.ts';
 
-export default function FilterForm() {
-  const { register, handleSubmit, reset, setValue } = useForm<FilterInputs>();
-  const [searchParams, setSearchParams] = useSearchParams();
+export default function FilterForm({
+  filters,
+  setFilters,
+}: {
+  filters: IFilterInputs;
+  setFilters: React.Dispatch<React.SetStateAction<IFilterInputs>>;
+}) {
+  const { register, handleSubmit } = useForm<IFilterInputs>();
 
-  const submitHandler: SubmitHandler<FilterInputs> = (formData) => {
-    const newSearchParams = new URLSearchParams();
-    searchParams.forEach((value, key) => {
-      newSearchParams.set(key, value);
-    });
+  const submitHandler: SubmitHandler<IFilterInputs> = (formData) => {
+    const newFilters: IFilterInputs = {};
     Object.entries(formData).forEach(([key, value]) => {
-      if (value === '') {
-        newSearchParams.delete(key);
-      } else if (key === 'year') {
-        const currentYear = new Date().getFullYear();
-        const last = Number(value);
-        let yearString: string = '';
-        for (let i = 0; i < last; i++)
-          yearString += String(currentYear - i) + (i !== last - 1 ? ', ' : ' ');
-        newSearchParams.set(key, yearString);
-      } else newSearchParams.set(key, value);
+      newFilters[key as keyof IFilterInputs] = value;
     });
 
-    setSearchParams(newSearchParams);
+    setFilters(newFilters);
   };
-
-  useEffect(() => {
-    searchParams.forEach((value, key) => {
-      if (key === 'query') return;
-      setValue(key as keyof FilterInputs, value);
-    });
-  }, []);
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="px-4">
       <label htmlFor="examtype">Exam Type</label>
       <br />
-      <select id="examtype" {...register('ExamType')}>
+      <select
+        id="examtype"
+        {...register('ExamType')}
+        defaultValue={filters.ExamType}
+      >
         <option value="">Any</option>
         <option value="Mid Sem">Mid Sem</option>
         <option value="End Sem">End Sem</option>
@@ -49,7 +38,11 @@ export default function FilterForm() {
 
       <label htmlFor="examtype">Subject Name</label>
       <br />
-      <select id="subjectName" {...register('subjectName')}>
+      <select
+        id="subjectName"
+        {...register('subjectName')}
+        defaultValue={filters.subjectName}
+      >
         <option value="">Any</option>
         <option value="Operating Systems">Operating Systems</option>
         <option value="Computer Networks">Computer Networks</option>
@@ -57,28 +50,36 @@ export default function FilterForm() {
 
       <br />
 
-      <label htmlFor="examtype">Sort By</label>
+      <label htmlFor="sortFilter">Sort By</label>
       <br />
-      <select id="examtype" {...register('sortFilter')}>
+      <select
+        id="sortFilter"
+        {...register('sortFilter')}
+        defaultValue={filters.sortFilter}
+      >
         <option value="">Relevance</option>
         <option value="MOST RECENT">MOST RECENT</option>
         <option value="MOST VIEWS">MOST VIEWS</option>
       </select>
       <br />
       <label htmlFor="year">Year</label>
-      <select id="year" {...register('year')}>
+      <select id="year" {...register('year')} defaultValue={filters.year}>
         <option value="">Select</option>
-        <option value="3">Last 3 Years</option>
-        <option value="5">Last 5 Years</option>
-        <option value="10">Last 10 Years</option>
+        <option value="Last 3 Years">Last 3 Years</option>
+        <option value="Last 5 Years">Last 5 Years</option>
+        <option value="Last 10 Years">Last 10 Years</option>
       </select>
       <br />
-      {/* <input id="filter3" type="checkbox" {...register('filter3')} />
-      <label htmlFor="filter3">Filter-3</label> */}
       <br />
       <div className="flex flex-col gap-y-2">
         <Button type="submit">Apply</Button>
-        <Button onClick={() => reset()}>Clear all</Button>
+        <Button
+          onClick={() => {
+            setFilters({});
+          }}
+        >
+          Clear all
+        </Button>
       </div>
     </form>
   );
