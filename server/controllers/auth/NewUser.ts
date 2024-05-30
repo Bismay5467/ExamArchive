@@ -119,7 +119,6 @@ const NewUser = asyncErrorHandler(async (req: Request, res: Response) => {
       }
       await Promise.all([user.save(), redisClient.del(redisKey)]);
       res.cookie(AUTH_TOKEN, token, {
-        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: COOKIES_TTL,
