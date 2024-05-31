@@ -5,7 +5,7 @@ import Navbar from './components/Navbar/Navbar.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import Loading from './pages/Loading/Loading.tsx';
 import { SWRConfig } from 'swr';
-import fetcher from './utils/swr/fetcher.ts';
+import fetcher from './utils/fetcher/fetcher.ts';
 
 export default function Root() {
   return (
