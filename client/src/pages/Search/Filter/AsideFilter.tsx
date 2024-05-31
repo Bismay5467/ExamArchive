@@ -1,17 +1,16 @@
 import { IFilterInputs } from '@/types/search.ts';
 import FilterForm from './FilterForm/FilterForm';
-import React from 'react';
 
 export default function AsideFilter({
   filters,
-  setFilters,
+  handleFilterSubmit,
 }: {
   filters: IFilterInputs;
-  setFilters: React.Dispatch<React.SetStateAction<IFilterInputs>>;
+  handleFilterSubmit: (newFilters: IFilterInputs) => void;
 }) {
   return (
     <aside className="hidden bg-slate-300 sm:col-span-3 sm:block">
-      <FilterForm filters={filters} setFilters={setFilters} />
+      <FilterForm filters={filters} handleFilterSubmit={handleFilterSubmit} />
     </aside>
   );
 }

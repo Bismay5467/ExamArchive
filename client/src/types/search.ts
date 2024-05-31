@@ -4,6 +4,8 @@ export interface IFilterInputs {
   year?: string;
   sortFilter?: string;
 }
+
+export type TFilterInputs = 'ExamType' | 'subjectName' | 'year' | 'sortFilter';
 export interface ISearchInput {
   query: string;
 }
