@@ -1,16 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import React from 'react';
-import { IFilterInputs } from '@/types/search.ts';
+import { useEffect } from 'react';
+import { IFilterInputs, TFilterInputs } from '@/types/search.ts';
 
 export default function FilterForm({
   filters,
-  setFilters,
+  handleFilterSubmit,
 }: {
   filters: IFilterInputs;
-  setFilters: React.Dispatch<React.SetStateAction<IFilterInputs>>;
+  handleFilterSubmit: (newFilters: IFilterInputs) => void;
 }) {
-  const { register, handleSubmit } = useForm<IFilterInputs>();
+  const { register, handleSubmit, setValue, reset } = useForm<IFilterInputs>();
 
   const submitHandler: SubmitHandler<IFilterInputs> = (formData) => {
     const newFilters: IFilterInputs = {};
@@ -18,8 +18,15 @@ export default function FilterForm({
       newFilters[key as keyof IFilterInputs] = value;
     });
 
-    setFilters(newFilters);
+    handleFilterSubmit(newFilters);
   };
+
+  useEffect(() => {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (key === 'query') return;
+      setValue(key as TFilterInputs, value);
+    });
+  }, [filters]);
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="px-4">
@@ -63,7 +70,7 @@ export default function FilterForm({
       </select>
       <br />
       <label htmlFor="year">Year</label>
-      <select id="year" {...register('year')} defaultValue={filters.year}>
+      <select id="year" {...register('year')}>
         <option value="">Select</option>
         <option value="Last 3 Years">Last 3 Years</option>
         <option value="Last 5 Years">Last 5 Years</option>
@@ -75,7 +82,8 @@ export default function FilterForm({
         <Button type="submit">Apply</Button>
         <Button
           onClick={() => {
-            setFilters({});
+            handleFilterSubmit({});
+            reset();
           }}
         >
           Clear all
