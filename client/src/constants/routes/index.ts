@@ -1,5 +1,4 @@
-export const toPreviewPage = (paperid: string) => {
-  return `/preview/${paperid}`;
-};
+import { CLIENT_ROUTE } from '../route';
 
-export const toSearchPage = `/search?`;
+export const toPreviewPage = (paperid: string) =>
+  `${CLIENT_ROUTE.FILE_PREVIEW}/${paperid}`;

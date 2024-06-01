@@ -1,14 +1,17 @@
-import ResultCard from './ResultCard/ResultCard';
-import DrawerFilter from './Filter/DrawerFilter';
-import AsideFilter from './Filter/AsideFilter';
+/* eslint-disable no-underscore-dangle */
 import { Link, useSearchParams } from 'react-router-dom';
-import { useCallback, useState, useLayoutEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useCallback, useEffect, useState } from 'react';
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
-import { ISearchData } from '@/types/search.ts';
-import { toPreviewPage } from '@/constants/routes';
+
+import AsideFilter from './Filter/AsideFilter';
+import { Button } from '@/components/ui/button';
+import DrawerFilter from './Filter/DrawerFilter';
 import { IFilterInputs } from '@/types/search.ts';
+import { ISearchData } from '@/types/search.ts';
+import { QUERY_FIELDS } from '@/constants/search';
+import ResultCard from './ResultCard/ResultCard';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
+import { toPreviewPage } from '@/constants/routes';
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,21 +21,22 @@ export default function Search() {
     // TODO: Content of previousPageData needs further testing
 
     if (previousPageData && !previousPageData.hasMore) return null;
-    return getSearchRequestObj(pageIndex + 1);
+    return getSearchRequestObj({ page: pageIndex + 1, searchParams });
   };
 
   const {
     data: response,
     setSize,
     isLoading,
-  } = useSWRInfinite(getKey, {
-    revalidateOnFocus: false,
-  });
+  } = useSWRInfinite(getKey, { revalidateOnFocus: false });
 
   const handleFilterSubmit = useCallback(
     (newFilters: IFilterInputs) => {
       const newSearchParams = new URLSearchParams();
-      newSearchParams.set('query', searchParams.get('query') || '');
+      newSearchParams.set(
+        QUERY_FIELDS.QUERY,
+        searchParams.get(QUERY_FIELDS.QUERY) || ''
+      );
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value === '') return;
         newSearchParams.set(key, value);
@@ -43,16 +47,16 @@ export default function Search() {
     [filters]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const filterValues: IFilterInputs = {};
     searchParams.forEach((value, key) => {
-      if (key === 'query') return;
+      if (key === QUERY_FIELDS.QUERY) return;
       filterValues[key as keyof IFilterInputs] = value;
     });
     setFilters(filterValues);
-  }, [searchParams]);
+  }, []);
 
-  const searchResults = response ? [].concat(...response) : [];
+  const searchResults = response ? [...response] : [];
   const reducedSearchResults = searchResults
     .map(({ data }) => data)
     .map(({ data }) => data);

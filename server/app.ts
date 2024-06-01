@@ -44,6 +44,7 @@ app.use(
       else callback(new Error('Not allowed by CORS'));
     },
     optionsSuccessStatus: SUCCESS_CODES.OK,
+    credentials: true,
   })
 );
 app.use(createMiddleware(triggerClient as TriggerClient));
