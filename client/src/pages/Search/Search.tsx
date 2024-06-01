@@ -10,7 +10,6 @@ import { IFilterInputs } from '@/types/search.ts';
 import { ISearchData } from '@/types/search.ts';
 import { QUERY_FIELDS } from '@/constants/search';
 import ResultCard from './ResultCard/ResultCard';
-import fetcher from '@/utils/fetcher/fetcher';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
 import { toPreviewPage } from '@/constants/routes';
 
@@ -29,7 +28,7 @@ export default function Search() {
     data: response,
     setSize,
     isLoading,
-  } = useSWRInfinite(getKey, fetcher, { revalidateOnFocus: false });
+  } = useSWRInfinite(getKey, { revalidateOnFocus: false });
 
   const handleFilterSubmit = useCallback(
     (newFilters: IFilterInputs) => {

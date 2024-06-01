@@ -3,7 +3,6 @@
 import { SERVER_ROUTES } from '@/constants/route';
 import { QUERY_FIELDS } from '@/constants/search';
 import { AxiosRequestConfig } from 'axios';
-import { useSearchParams } from 'react-router-dom';
 
 export default ({
   page,
