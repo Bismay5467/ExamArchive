@@ -1,16 +1,18 @@
 /* eslint-disable no-underscore-dangle */
-import ResultCard from './ResultCard/ResultCard';
-import DrawerFilter from './Filter/DrawerFilter';
-import AsideFilter from './Filter/AsideFilter';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useCallback, useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useCallback, useEffect, useState } from 'react';
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
-import { ISearchData } from '@/types/search.ts';
-import { toPreviewPage } from '@/constants/routes';
+
+import AsideFilter from './Filter/AsideFilter';
+import { Button } from '@/components/ui/button';
+import DrawerFilter from './Filter/DrawerFilter';
 import { IFilterInputs } from '@/types/search.ts';
-import { getSearchRequestObj } from '@/utils/axiosReqObjects';
+import { ISearchData } from '@/types/search.ts';
+import { QUERY_FIELDS } from '@/constants/search';
+import ResultCard from './ResultCard/ResultCard';
 import fetcher from '@/utils/fetcher/fetcher';
+import { getSearchRequestObj } from '@/utils/axiosReqObjects';
+import { toPreviewPage } from '@/constants/routes';
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,12 +29,15 @@ export default function Search() {
     data: response,
     setSize,
     isLoading,
-  } = useSWRInfinite(getKey, fetcher);
+  } = useSWRInfinite(getKey, fetcher, { revalidateOnFocus: false });
 
   const handleFilterSubmit = useCallback(
     (newFilters: IFilterInputs) => {
       const newSearchParams = new URLSearchParams();
-      newSearchParams.set('query', searchParams.get('query') || '');
+      newSearchParams.set(
+        QUERY_FIELDS.QUERY,
+        searchParams.get(QUERY_FIELDS.QUERY) || ''
+      );
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value === '') return;
         newSearchParams.set(key, value);
@@ -46,7 +51,7 @@ export default function Search() {
   useEffect(() => {
     const filterValues: IFilterInputs = {};
     searchParams.forEach((value, key) => {
-      if (key === 'query') return;
+      if (key === QUERY_FIELDS.QUERY) return;
       filterValues[key as keyof IFilterInputs] = value;
     });
     setFilters(filterValues);

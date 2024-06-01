@@ -12,7 +12,7 @@ import {
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
-import { toSearchPage } from '@/constants/routes/index.ts';
+import { CLIENT_ROUTE } from '@/constants/route.ts';
 
 export default function Navbar() {
   const { register, handleSubmit, setValue } = useForm<ISearchInput>();
@@ -21,7 +21,7 @@ export default function Navbar() {
   const currentLocation = useLocation();
 
   const search = (query: string) => {
-    if (currentLocation.pathname === '/') navigate(toSearchPage);
+    if (currentLocation.pathname === '/') navigate(CLIENT_ROUTE.SEARCH);
     const currentParams = Object.fromEntries(searchParams.entries());
     setSearchParams({ ...currentParams, query: query });
   };
