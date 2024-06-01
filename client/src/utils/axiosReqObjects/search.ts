@@ -1,6 +1,6 @@
 /* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
-import { SERVER_ROUTES } from '@/constants/route';
+import { SERVER_ROUTES } from '@/constants/routes';
 import { QUERY_FIELDS } from '@/constants/search';
 import { AxiosRequestConfig } from 'axios';
 

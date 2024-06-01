@@ -11,7 +11,7 @@ import { ISearchData } from '@/types/search.ts';
 import { QUERY_FIELDS } from '@/constants/search';
 import ResultCard from './ResultCard/ResultCard';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
-import { toPreviewPage } from '@/constants/routes';
+import { CLIENT_ROUTES } from '@/constants/routes';
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,7 +54,7 @@ export default function Search() {
       filterValues[key as keyof IFilterInputs] = value;
     });
     setFilters(filterValues);
-  }, []);
+  }, [searchParams]);
 
   const searchResults = response ? [...response] : [];
   const reducedSearchResults = searchResults
@@ -82,7 +82,11 @@ export default function Search() {
       <div className="p-4 flex flex-col gap-y-4 sm:col-span-7">
         {isLoading && <p>Loading...</p>}
         {data?.map((res) => (
-          <Link to={toPreviewPage(res._id)} target="_blank" key={res._id}>
+          <Link
+            to={`${CLIENT_ROUTES.SEARCH}/${res._id}`}
+            target="_blank"
+            key={res._id}
+          >
             <ResultCard
               id={res._id}
               instituteName={res.institutionName}

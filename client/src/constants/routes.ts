@@ -1,4 +1,4 @@
-export const CLIENT_ROUTE = Object.freeze({
+export const CLIENT_ROUTES = Object.freeze({
   SEARCH: '/search',
   FILE_PREVIEW: '/filePreview',
 });
