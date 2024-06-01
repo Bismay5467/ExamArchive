@@ -1,19 +1,20 @@
-import Logo from '@/assets/Logo.png';
+/* eslint-disable react/jsx-props-no-spreading */
+import { Link } from 'react-router-dom';
+import { MdOutlineEmail } from 'react-icons/md';
+import useSWR from 'swr';
+import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import axios, { AxiosRequestConfig } from 'axios';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FaEye } from 'react-icons/fa';
-import { FaEyeSlash } from 'react-icons/fa';
-import { MdOutlineEmail } from 'react-icons/md';
-import { useState } from 'react';
-import Spinner from '@/components/ui/spinner';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
+import Logo from '@/assets/Logo.png';
 import { SignInFormFields } from '@/types/authTypes';
-import useSWR from 'swr';
-import axios, { AxiosRequestConfig } from 'axios';
-import { Link } from 'react-router-dom';
+import Spinner from '@/components/ui/spinner';
+import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
 
 const fetcher = async (obj: AxiosRequestConfig<any>) => {
   const response = await axios(obj);
@@ -22,7 +23,7 @@ const fetcher = async (obj: AxiosRequestConfig<any>) => {
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
-  const [data, setData] = useState<SignInFormFields>();
+  const [userData, setUserData] = useState<SignInFormFields>();
 
   const {
     register,
@@ -33,29 +34,24 @@ export default function Login() {
   });
 
   const getAxiosObj = () => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const url = BASE_URL.concat('auth/signIn');
+    const BASE_URL = 'http://localhost:3000';
+    const url = BASE_URL.concat('/api/v1/auth/signIn');
     const axiosObj = {
       url,
-      data: { data },
+      data: { data: userData },
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
     };
 
     return axiosObj;
   };
-
-  const { data: user, isValidating } = useSWR(
-    data ? getAxiosObj() : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-  console.log(user);
+  const { isValidating } = useSWR(userData ? getAxiosObj() : null, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const onSubmit: SubmitHandler<SignInFormFields> = async (formData) => {
-    setData(formData);
+    setUserData(formData);
   };
 
   return (
@@ -87,7 +83,7 @@ export default function Login() {
               <Label htmlFor="password-input">Password</Label>
               <Input
                 id="password-input"
-                type={`${eyeOff ? `password` : `text`}`}
+                type={`${eyeOff ? 'password' : 'text'}`}
                 className="focus-visible:ring-0"
                 {...register('password')}
               />
@@ -113,7 +109,7 @@ export default function Login() {
                     Remember me
                   </Label>
                 </div>
-                <Link to={'/auth/reset'}>
+                <Link to="/auth/reset">
                   <span className="text-sm opacity-60 self-center">
                     Recover Password
                   </span>
@@ -127,18 +123,18 @@ export default function Login() {
             >
               Log in{' '}
               {(isSubmitting || isValidating) && (
-                <Spinner className={`w-4 h-4 ml-3 `} />
+                <Spinner className="w-4 h-4 ml-3 " />
               )}
             </Button>
           </form>
           <div className="flex flex-row gap-x-2">
-            <div className="h-0.5 w-24 self-center bg-slate-200"></div>
+            <div className="h-0.5 w-24 self-center bg-slate-200" />
             <p>Or</p>
-            <div className="h-0.5 w-24 self-center bg-slate-200"></div>
+            <div className="h-0.5 w-24 self-center bg-slate-200" />
           </div>
         </div>
       </div>
-      <div className="hidden bg-login-banner bg-no-repeat bg-cover bg-right lg:block lg:col-span-1 lg:rounded-3xl"></div>
+      <div className="hidden bg-login-banner bg-no-repeat bg-cover bg-right lg:block lg:col-span-1 lg:rounded-3xl" />
     </div>
   );
 }
