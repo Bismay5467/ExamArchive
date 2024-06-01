@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SignUpFormFields } from '@/types/authTypes';
+import { SignUpFormFields } from '@/types/auth';
 import { useState } from 'react';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';

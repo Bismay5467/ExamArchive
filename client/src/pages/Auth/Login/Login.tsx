@@ -4,7 +4,6 @@ import { MdOutlineEmail } from 'react-icons/md';
 import useSWR from 'swr';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios, { AxiosRequestConfig } from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -12,14 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/assets/Logo.png';
-import { SignInFormFields } from '@/types/authTypes';
+import { SignInFormFields } from '@/types/auth';
 import Spinner from '@/components/ui/spinner';
 import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
-
-const fetcher = async (obj: AxiosRequestConfig<any>) => {
-  const response = await axios(obj);
-  return response;
-};
+import { SERVER_ROUTES } from '@/constants/routes';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
@@ -34,8 +29,7 @@ export default function Login() {
   });
 
   const getAxiosObj = () => {
-    const BASE_URL = 'http://localhost:3000';
-    const url = BASE_URL.concat('/api/v1/auth/signIn');
+    const url = SERVER_ROUTES.LOGIN;
     const axiosObj = {
       url,
       data: { data: userData },
@@ -46,16 +40,19 @@ export default function Login() {
 
     return axiosObj;
   };
-  const { isValidating } = useSWR(userData ? getAxiosObj() : null, fetcher, {
+  const { data, isValidating } = useSWR(userData ? getAxiosObj() : null, {
     revalidateOnFocus: false,
   });
+
+  console.log(data);
+  console.log(document.cookie);
 
   const onSubmit: SubmitHandler<SignInFormFields> = async (formData) => {
     setUserData(formData);
   };
 
   return (
-    <div className="p-4 h-full lg:grid lg:grid-cols-2 lg:gap-x-4">
+    <div className="p-4 h-screen lg:grid lg:grid-cols-2 lg:gap-x-4">
       <div className="h-full lg:col-span-1 py-12 ">
         <div className=" max-w-[360px] mx-auto mt-12 min-h-[100px] flex flex-col items-center gap-y-8">
           <div className="flex flex-col items-center gap-y-4">

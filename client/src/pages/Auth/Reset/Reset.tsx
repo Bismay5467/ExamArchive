@@ -5,7 +5,7 @@ import Spinner from '@/components/ui/spinner';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { resetInputSchema } from '@/constants/authSchema/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ResetFormFields } from '@/types/authTypes';
+import { ResetFormFields } from '@/types/auth';
 import useSWR from 'swr';
 import axios, { AxiosRequestConfig } from 'axios';
 import Email from './Email/Email';

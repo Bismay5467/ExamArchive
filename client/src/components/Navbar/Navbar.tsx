@@ -8,7 +8,6 @@ import {
   useSearchParams,
   useNavigate,
   NavLink,
-    Link,
   useLocation,
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
@@ -40,7 +39,7 @@ export default function Navbar() {
     <nav>
       <div className="max-w-[1280px] mx-auto py-2 flex flex-row justify-between">
         <div className="flex flex-row gap-x-4 items-center">
-          <NavLink to={'/'}>
+          <NavLink to={CLIENT_ROUTES.HOME}>
             <img src={Logo} alt="Logo" className="w-[200px]" />
           </NavLink>
           <form
@@ -57,12 +56,12 @@ export default function Navbar() {
           </form>
         </div>
         <div className="flex flex-row gap-x-4 items-center">
-          <Link to={'/auth/login'}>
+          <NavLink to={CLIENT_ROUTES.AUTH_LOGIN}>
             <Button className="rounded-3xl">Log in</Button>
-          </Link>
-          <Link to={'/auth/signup'}>
+          </NavLink>
+          <NavLink to={CLIENT_ROUTES.AUTH_SIGNUP}>
             <Button className="rounded-3xl">Sign up</Button>
-          </Link>
+          </NavLink>
           <ModeToggle />
         </div>
       </div>

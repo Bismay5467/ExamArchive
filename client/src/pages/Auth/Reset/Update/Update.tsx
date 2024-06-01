@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { ResetFormFields } from '@/types/authTypes';
+import { ResetFormFields } from '@/types/auth';
 import { Label } from '@radix-ui/react-label';
 import { useState } from 'react';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';

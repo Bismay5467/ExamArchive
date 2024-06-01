@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { SignUpFormFields } from '@/types/authTypes';
+import { SignUpFormFields } from '@/types/auth';
 
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 

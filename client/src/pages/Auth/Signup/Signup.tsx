@@ -2,7 +2,7 @@ import Logo from '@/assets/Logo.png';
 import useMultiStepForm from './MultiStepForm/useMultiStepForm';
 import AccountForm from './MultiStepForm/AccountForm';
 import OTPForm from './MultiStepForm/OTPForm';
-import { SignUpFormFields } from '@/types/authTypes';
+import { SignUpFormFields } from '@/types/auth';
 import { Button } from '@/components/ui/button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
