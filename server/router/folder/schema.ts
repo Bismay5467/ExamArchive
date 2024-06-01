@@ -17,3 +17,7 @@ export const getFilesInputSchema = z.object({
   page: z.number().min(1),
   parentId: z.union([z.string(), z.null()]),
 });
+
+export const getFolderNamesSchema = z.object({
+  action: z.enum(['UPLOAD', 'BOOKMARK']),
+});

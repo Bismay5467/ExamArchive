@@ -1,22 +1,26 @@
-import { TUserFilter, TUserSortFilter } from '../../types/search/types';
+import { TUserSortFilter } from '../../types/search/types';
 
 export const getQuery = ({
-  filter,
+  subjectName,
+  year,
+  examType,
   searchParams,
 }: {
-  filter?: Partial<TUserFilter>;
+  subjectName?: string;
+  year?: Array<number>;
+  examType?: Array<string>;
   searchParams: Array<string>;
 }) => {
-  const query = { tags: { $in: searchParams }, isFlagged: false };
-  if (filter) {
-    const { institutionName, subjectName, subjectCode, examType } = filter;
-    if (examType) Object.assign(query, { examType: { $in: examType } });
-    if (subjectCode) Object.assign(query, { subjectCode });
-    if (subjectName) Object.assign(query, { subjectName });
-    if (institutionName) {
-      Object.assign(query, { institutionName: { $in: institutionName } });
-    }
-  }
+  const tags = searchParams;
+  const query = {
+    tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
+    isFlagged: false,
+  };
+  Object.assign(query, {
+    ...(examType && examType.length > 0 && { examType: { $in: examType } }),
+    ...(subjectName && { subjectName }),
+    ...(year && year.length > 0 && { year: { $in: year } }),
+  });
   return query;
 };
 export const getSortOrder = ({
@@ -24,10 +28,10 @@ export const getSortOrder = ({
 }: {
   sortFilter?: TUserSortFilter;
 }) => {
-  const sortOrder = {};
-  if (sortFilter === 'MOST VIEWS') {
-    Object.assign(sortOrder, { 'noOfViews.count': 'desc' });
-  } else Object.assign(sortOrder, { updatedAt: 'desc' });
+  const sortOrder =
+    sortFilter === 'MOST VIEWS'
+      ? { 'noOfViews.count': 'desc' }
+      : { updatedAt: 'desc' };
   return sortOrder;
 };
 

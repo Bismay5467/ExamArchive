@@ -1,83 +1,51 @@
-/* eslint-disable camelcase */
-import { TRPCError } from '@trpc/server';
+import { AnyZodObject } from 'zod';
+import express from 'express';
 
-import { EXAM_TYPES } from '../../constants/constants/shared';
-import { IUser } from '../../types/auth/types';
-import { TUploadFile } from '../../types/upload/types';
+import { ROLE } from '../../constants/constants/auth';
+import privilege from '../../middlewares/previlege';
+import validate from '../../middlewares/validate';
+import verifyUser from '../../middlewares/verifyUser';
 import {
   AddNameToCache,
-  GetNamesFromCache,
   NotificationWebhook,
   UploadFile,
 } from '../../controllers/upload';
 import {
   addNamesInputSchema,
-  getNamesInputSchema,
+  fileUploadNotifWebhookSchema,
   uploadFilesInputSchema,
 } from './schema';
-import {
-  protectedProcedures,
-  publicProcedures,
-  router,
-} from '../../config/trpcConfig';
-// import { getDataURI } from '../../utils/upload/getFile';
 
-const uploadRoute = router({
-  upload: protectedProcedures
-    .input(uploadFilesInputSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.user as IUser;
-      // const data = [
-      //   {
-      //     examType: 'Midsem' as never,
-      //     file: { dataURI: getDataURI(), name: 'file1' },
-      //     tags: 'tag1 tag2',
-      //     year: '2023',
-      //     institution: 'National Institute of Technology',
-      //     branch: 'CSE',
-      //     semester: 'Semester I',
-      //     subjectCode: 'MA609',
-      //     subjectName: 'Operating Systems',
-      //   },
-      // ];
-      // const userId = '65ee10b25481655e46ce747d';
-      // await UploadFile(
-      //   data as Array<TUploadFile<keyof typeof EXAM_TYPES>>,
-      //   userId
-      // );
-      await UploadFile(
-        input as Array<TUploadFile<keyof typeof EXAM_TYPES>>,
-        userId
-      );
-      return { message: 'Files are uploaded successfully' };
-    }),
-  addName: protectedProcedures
-    .input(addNamesInputSchema)
-    .mutation(async ({ input }) => {
-      await AddNameToCache(input);
-      return { message: 'New institution name added to the collection' };
-    }),
-  getNames: protectedProcedures
-    .input(getNamesInputSchema)
-    .query(async ({ input }) => {
-      const searchResult = await GetNamesFromCache(input);
-      return { searchResult };
-    }),
-  webhook: publicProcedures.mutation(async ({ ctx }) => {
-    const { req } = ctx;
-    const { public_id, secure_url } = req as unknown as {
-      public_id: string;
-      secure_url: string;
-    };
-    if (!(public_id && secure_url)) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: "Couldn't update doc URL",
-      });
-    }
-    await NotificationWebhook({ publicId: public_id, url: secure_url });
-    return { message: 'Doc URL was updated successfully' };
-  }),
-});
+const router = express.Router();
 
-export default uploadRoute;
+router.post(
+  '/',
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN]),
+    validate(uploadFilesInputSchema as unknown as AnyZodObject, 'BODY'),
+  ],
+  UploadFile
+);
+router.post(
+  '/webhook',
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN]),
+    validate(fileUploadNotifWebhookSchema, 'BODY'),
+  ],
+  NotificationWebhook
+);
+router.put(
+  '/addNames',
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN]),
+    validate(addNamesInputSchema as unknown as AnyZodObject, 'BODY'),
+  ],
+  AddNameToCache
+);
+
+// TODO : create a route to get instution names for suggestions
+
+export default router;

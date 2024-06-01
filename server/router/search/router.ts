@@ -1,12 +1,12 @@
-import GetPapers from '../../controllers/search/GetPapers';
+import express from 'express';
+
 import { searchInputSchema } from './schema';
-import { publicProcedures, router } from '../../config/trpcConfig';
+import validate from '../../middlewares/validate';
+import { GetPapers, GetSubjectFilters } from '../../controllers/search';
 
-const searchRouter = router({
-  get: publicProcedures.input(searchInputSchema).query(async ({ input }) => {
-    const searchResults = await GetPapers(input);
-    return { results: searchResults };
-  }),
-});
+const router = express.Router();
 
-export default searchRouter;
+router.get('/', validate(searchInputSchema, 'QUERY'), GetPapers);
+router.get('/getSubjectFilters', GetSubjectFilters);
+
+export default router;

@@ -1,4 +1,4 @@
-import * as trpcExpress from '@trpc/server/adapters/express';
+import { TriggerClient } from '@trigger.dev/sdk';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -6,14 +6,12 @@ import { createMiddleware } from '@trigger.dev/express';
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 
-import { TriggerClient } from '@trigger.dev/sdk';
-import { appRouter } from './router';
+import AppRouter from './router';
 import connectDB from './config/dbConfig';
-import { createContext } from './config/trpcConfig';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
-// import './jobs';
+// import './jobs/sendMails';
 import './config/cloudinaryConfig';
 
 dotenv.config({
@@ -33,29 +31,31 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
+const whitelist = [
+  process.env.PROD_CLIENT_URL,
+  process.env.DEV_CLIENT_URL,
+  process.env.STAGE_CLIENT_URL,
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+      if (whitelist.includes(origin)) callback(null, true);
+      else callback(new Error('Not allowed by CORS'));
+    },
     optionsSuccessStatus: SUCCESS_CODES.OK,
+    credentials: true,
   })
 );
+app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(compression({ level: 6, threshold: 1000 }));
-app.use(createMiddleware(triggerClient as TriggerClient));
 
-app.use(
-  '/api/v1',
-  trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext,
-    onError: ({ path, error, type }) => {
-      console.error(`Logging error : ${error}`);
-      console.error(`Type of API call: ${type}, path: ${path}`);
-    },
-  })
-);
+AppRouter.forEach(({ segment, router }) => {
+  app.use(`/api/v1/${segment}`, router);
+});
 
 app.get('/', (_req: Request, res: Response) => {
   res

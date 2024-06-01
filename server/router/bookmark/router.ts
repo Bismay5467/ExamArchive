@@ -1,23 +1,21 @@
-import { IUser } from '../../types/auth/types';
+import express from 'express';
+
+import validate from '../../middlewares/validate';
+import verifyUser from '../../middlewares/verifyUser';
 import { AddToBookMarks, RemoveBookMark } from '../../controllers/bookmark';
 import { addBookmarkInputSchema, removeBookmarkInputSchema } from './schema';
-import { protectedProcedures, router } from '../../config/trpcConfig';
 
-const bookmarkRouter = router({
-  add: protectedProcedures
-    .input(addBookmarkInputSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.user as IUser;
-      await AddToBookMarks({ ...input, userId });
-      return { message: 'File added to bookmark' };
-    }),
-  remove: protectedProcedures
-    .input(removeBookmarkInputSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.user as IUser;
-      await RemoveBookMark({ ...input, userId });
-      return { message: 'File removed from bookmark' };
-    }),
-});
+const router = express.Router();
 
-export default bookmarkRouter;
+router.post(
+  '/add',
+  [verifyUser, validate(addBookmarkInputSchema, 'BODY')],
+  AddToBookMarks
+);
+router.post(
+  '/remove',
+  [verifyUser, validate(removeBookmarkInputSchema, 'BODY')],
+  RemoveBookMark
+);
+
+export default router;

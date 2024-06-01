@@ -4,7 +4,6 @@ import z from 'zod';
 
 import { EXAM_TYPES } from '../../constants/constants/shared';
 import { SORT_FILTERS } from '../../constants/constants/search';
-import { sanitizeInput } from '../upload/schema';
 
 function getValues<T extends Record<string, any>>(obj: T) {
   return Object.values(obj) as [(typeof obj)[keyof T]];
@@ -20,23 +19,43 @@ const getExamTypes = () => {
 };
 
 export const searchInputSchema = z.object({
-  searchParams: z
+  searchParams: z.array(z.string()),
+  page: z.string().transform((page) => {
+    const parsedPage = parseInt(page, 10);
+    if (Number.isNaN(parsedPage) === true || parsedPage <= 0) return 1;
+    return parsedPage;
+  }),
+  subjectName: z.string().trim().max(100).optional(),
+  year: z
     .array(z.string())
-    .max(100)
-    .refine((params) => params.map((param) => param.toLowerCase())),
-  page: z.number().min(1),
-  filter: z
-    .object({
-      institutionName: z.array(z.string().trim()).max(10).optional(),
-      subjectName: z.string().trim().max(100).optional(),
-      subjectCode: z
-        .string()
-        .trim()
-        .max(100)
-        .transform((subjectCode) => sanitizeInput(subjectCode))
-        .optional(),
-      examType: z.array(z.enum(getExamTypes())).optional(),
-    })
+    .transform((arr) =>
+      arr
+        .filter(Boolean)
+        .filter((year) => {
+          const parsedYear = parseInt(year, 10);
+          const currYear = new Date().getFullYear();
+          if (
+            Number.isNaN(parsedYear) === false &&
+            parsedYear < currYear &&
+            parsedYear > currYear - 10
+          ) {
+            return true;
+          }
+          return false;
+        })
+        .map((year) => parseInt(year, 10))
+    )
     .optional(),
+  examType: z
+    .string()
+    .transform((params) =>
+      params
+        .trim()
+        .split(',')
+        .filter(Boolean)
+        .filter((type) => getExamTypes().includes(type))
+    )
+    .optional(),
+
   sortFilter: z.enum(SORT_FILTERS).optional(),
 });

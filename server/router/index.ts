@@ -1,24 +1,23 @@
-import adminRouter from './admin/router';
 import authRouter from './auth/router';
 import bookmarkRouter from './bookmark/router';
 import commentRouter from './filePreview/comments/router';
 import fileRouter from './filePreview/data/router';
 import folderRoute from './folder/router';
 import reportRouter from './report/router';
-import { router } from '../config/trpcConfig';
 import searchRouter from './search/router';
+import superAdminRouter from './superadmin/router';
 import uploadRoute from './upload/router';
 
-export const appRouter = router({
-  comment: commentRouter,
-  file: fileRouter,
-  auth: authRouter,
-  folder: folderRoute,
-  bookmark: bookmarkRouter,
-  report: reportRouter,
-  upload: uploadRoute,
-  admin: adminRouter,
-  search: searchRouter,
-});
+const AppRouter = [
+  { segment: 'auth', router: authRouter },
+  { segment: 'bookmark', router: bookmarkRouter },
+  { segment: 'comment', router: commentRouter },
+  { segment: 'file', router: fileRouter },
+  { segment: 'folder', router: folderRoute },
+  { segment: 'report', router: reportRouter },
+  { segment: 'search', router: searchRouter },
+  { segment: 'superAdmin', router: superAdminRouter },
+  { segment: 'upload', router: uploadRoute },
+] as const;
 
-export type AppRouter = typeof appRouter;
+export default AppRouter;

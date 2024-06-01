@@ -1,24 +1,34 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-underscore-dangle */
-import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { render } from '@react-email/render';
+import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import {
   AUTH_TOKEN,
+  COOKIES_TTL,
   JWT_MAX_AGE,
   RESET_LINK_EXP_TIME,
 } from '../../constants/constants/auth';
+import {
+  ERROR_CODES,
+  SERVER_ERROR,
+  SUCCESS_CODES,
+} from '../../constants/statusCode';
 import {
   MAIL_EVENT_NAME,
   MONGO_READ_QUERY_TIMEOUT,
   MONGO_WRITE_QUERY_TIMEOUT,
 } from '../../constants/constants/shared';
 
+import { ErrorHandler } from '../../utils/errors/errorHandler';
 import { IUser } from '../../types/auth/types';
 import ResetPasswordEmail from '../../emails/ResetPassword';
 import User from '../../models/user';
+import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
+import { resetInputSchema } from '../../router/auth/schema';
 import sendMail from '../../utils/emails/sendMail';
 import { signTokens, verifyTokens } from '../../utils/auth/jsonwebtokens';
 
@@ -29,16 +39,8 @@ dotenv.config({
       : './.env.development.local',
 });
 
-type TAction = 'EMAIL' | 'RESET';
-
-type TResetParamsType<T extends TAction> = {
-  action: T;
-  email: string;
-} & (T extends 'RESET' ? { password: string; authToken: string } : {});
-
-const Reset = async (
-  params: TResetParamsType<'EMAIL'> | TResetParamsType<'RESET'>
-) => {
+const Reset = asyncErrorHandler(async (req: Request, res: Response) => {
+  const params = req.body.data as z.infer<typeof resetInputSchema>;
   switch (params.action) {
     case 'EMAIL':
       const { email } = params;
@@ -54,23 +56,20 @@ const Reset = async (
         }),
       ]);
       if (!doesUserExists) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'User not registered',
-        });
+        throw new ErrorHandler('User not registered', ERROR_CODES['NOT FOUND']);
       }
       if (resetToken === null) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong. Please try again later',
-        });
+        throw new ErrorHandler(
+          'Something went wrong. Please try again later',
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
       if (process.env.DOMAIN_URL === undefined) {
         console.error('Error: Specify your domain to generate a reset link');
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong. Please try again later',
-        });
+        throw new ErrorHandler(
+          'Something went wrong. Please try again later',
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
       const resetLink = `${process.env.DOMAIN_URL}${'/auth/reset'}?${AUTH_TOKEN}=${resetToken}`;
       const emailHTML = render(
@@ -88,17 +87,17 @@ const Reset = async (
           html: emailHTML,
         },
       });
-      return undefined;
+      return res.status(SUCCESS_CODES.OK).json({ message: 'Check your mail' });
     case 'RESET':
       const { authToken, email: userEmail, password } = params;
       const jwtPayload = (await verifyTokens({
         token: authToken,
       })) as IUser | null;
       if (jwtPayload === null || jwtPayload.email !== userEmail) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'You are not authorized to reset the password',
-        });
+        throw new ErrorHandler(
+          'You are not authorized to reset the password',
+          ERROR_CODES.FORBIDDEN
+        );
       }
       const saltStrength = 10;
       const salt = await bcrypt.genSalt(saltStrength);
@@ -113,10 +112,10 @@ const Reset = async (
         .lean()
         .exec();
       if (!user) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: "Email address doesn't exists",
-        });
+        throw new ErrorHandler(
+          "Email address doesn't exists",
+          ERROR_CODES['NOT FOUND']
+        );
       }
       const token = await signTokens({
         payload: {
@@ -128,18 +127,23 @@ const Reset = async (
         JWT_MAX_AGE,
       });
       if (token === null) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: "Couldn't generate reset token",
-        });
+        throw new ErrorHandler(
+          "Couldn't generate reset token",
+          SERVER_ERROR['INTERNAL SERVER ERROR']
+        );
       }
-      return token;
-    default:
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Invalid action type',
+      res.cookie(AUTH_TOKEN, token, {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: COOKIES_TTL,
+        path: '/',
       });
+      return res
+        .status(SUCCESS_CODES.CREATED)
+        .json({ message: 'Password successfully changed' });
+    default:
+      throw new ErrorHandler('Invalid action type', ERROR_CODES['BAD REQUEST']);
   }
-};
+});
 
 export default Reset;

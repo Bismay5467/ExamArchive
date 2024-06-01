@@ -1,38 +1,41 @@
-import { IUser } from '../../types/auth/types';
+import express from 'express';
+
+import validate from '../../middlewares/validate';
+import verifyUser from '../../middlewares/verifyUser';
 import {
   CreateFolder,
   DeleteFolder,
   GetFiles,
+  GetFolderNames,
 } from '../../controllers/folders';
 import {
   createFolderInputSchema,
   deleteFolderInputSchema,
   getFilesInputSchema,
+  getFolderNamesSchema,
 } from './schema';
-import { protectedProcedures, router } from '../../config/trpcConfig';
 
-const folderRoute = router({
-  create: protectedProcedures
-    .input(createFolderInputSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.user as IUser;
-      await CreateFolder({ ...input, userId });
-      return { message: 'New folder was created' };
-    }),
-  get: protectedProcedures
-    .input(getFilesInputSchema)
-    .query(async ({ input, ctx }) => {
-      const { userId } = ctx.user as IUser;
-      const res = await GetFiles({ ...input, userId });
-      return { ...res };
-    }),
-  delete: protectedProcedures
-    .input(deleteFolderInputSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.user as IUser;
-      await DeleteFolder({ ...input, userId });
-      return { message: 'Folder was deleted' };
-    }),
-});
+const router = express.Router();
 
-export default folderRoute;
+router.post(
+  '/create',
+  [verifyUser, validate(createFolderInputSchema, 'BODY')],
+  CreateFolder
+);
+router.get(
+  '/get',
+  [verifyUser, validate(getFilesInputSchema, 'QUERY')],
+  GetFiles
+);
+router.get(
+  '/getFolderNames',
+  [verifyUser, validate(getFolderNamesSchema, 'QUERY')],
+  GetFolderNames
+);
+router.delete(
+  '/delete',
+  [verifyUser, validate(deleteFolderInputSchema, 'BODY')],
+  DeleteFolder
+);
+
+export default router;

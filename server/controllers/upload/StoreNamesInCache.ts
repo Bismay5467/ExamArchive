@@ -1,43 +1,30 @@
-/* eslint-disable no-magic-numbers */
-import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { Request, Response } from 'express';
+
+import { ErrorHandler } from '../../utils/errors/errorHandler';
+import { addNamesInputSchema } from '../../router/upload/schema';
+import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
 import redisClient from '../../config/redisConfig';
-import { similarityScore } from '../../utils/upload/utils';
+import { SERVER_ERROR, SUCCESS_CODES } from '../../constants/statusCode';
 
 const REDIS_KEY = 'INSTITUTIONS';
 
-export const AddNameToCache = async (name: string) => {
-  if (redisClient === null) {
-    throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Something went wrong.Please try again later',
-    });
+const AddNameToCache = asyncErrorHandler(
+  async (req: Request, res: Response) => {
+    const { name } = req.body.data as z.infer<typeof addNamesInputSchema>;
+    if (redisClient === null) {
+      throw new ErrorHandler(
+        'Something went wrong.Please try again later',
+        SERVER_ERROR['INTERNAL SERVER ERROR']
+      );
+    }
+    await redisClient.sadd(REDIS_KEY, name);
+    return res
+      .status(SUCCESS_CODES.OK)
+      .json({ message: 'New institution name added' });
   }
-  await redisClient.sadd(REDIS_KEY, name);
-};
+);
 
-export const GetNamesFromCache = async (searchParams: string) => {
-  if (redisClient === null) {
-    throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Something went wrong. Please try again later',
-    });
-  }
-  const allNames = await redisClient.smembers(REDIS_KEY);
-  const scoredStrings = allNames
-    .map((str) => ({
-      string: str,
-      score: similarityScore(str, searchParams),
-    }))
-    .sort((a, b) => b.score - a.score);
-  // const scoredStrings = allNames
-  //   .map((str) => {
-  //     const score = similarityScore(
-  //       str.toUpperCase(),
-  //       searchParams.toUpperCase()
-  //     );
-  //     console.log(str, searchParams, score);
-  //     return { string: str, score };
-  //   })
-  //   .sort((a, b) => b.score - a.score);
-  return scoredStrings.slice(0, 10).map((item) => item.string);
-};
+export default AddNameToCache;
+
+// TODO : Figure out a way to show suggestions for institution names while uploading files

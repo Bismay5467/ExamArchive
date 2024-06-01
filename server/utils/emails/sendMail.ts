@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import dotenv from 'dotenv';
-import triggerClient from '../../config/triggerConfig';
+import resend from '../../config/resendConfig';
 
 dotenv.config({
   path:
@@ -15,18 +16,19 @@ const sendMail = async ({
   eventName: string;
   payload: Record<string, string | string[]>;
 }) => {
-  if (triggerClient === undefined) return null;
+  if (resend === undefined) return null;
   if (process.env.RESEND_USER === undefined) {
     console.error(
       'Error: Sender mail address is missing. Please provide a mail address with a verified domain to send a mail'
     );
     return null;
   }
-  const job = await triggerClient.sendEvent({
-    name: eventName,
-    payload: { ...payload, from: `ExamArchive ${process.env.RESEND_USER}` },
-  });
-  return job;
+  const { data, error } = await resend.emails.send({
+    ...payload,
+    from: `ExamArchive ${process.env.RESEND_USER}`,
+  } as any);
+  if (error) return null;
+  return data;
 };
 
 export default sendMail;

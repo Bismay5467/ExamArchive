@@ -26,8 +26,3 @@ export type TUploadFile<T extends keyof typeof EXAM_TYPES> = {
 export type TExamTypeExtended<T extends keyof typeof EXAM_TYPES> = Array<
   TUploadFile<T> & { userId: string }
 >;
-
-export type TCache = {
-  key: string;
-  payload: Record<string, string | string[] | number | Record<string, string>>;
-};

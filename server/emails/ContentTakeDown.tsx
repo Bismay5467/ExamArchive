@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/require-default-props */
-/* eslint-disable react/jsx-one-expression-per-line */
+
 import * as React from 'react';
 import {
   Body,
@@ -87,15 +87,12 @@ export function ContentTakeDownEmail({
                 >
                   {comment.message}
                 </Text>
-                <Text style={{ ...text, textAlign: 'justify' }}>
-                  in post{' '}
-                  <Link
-                    href={comment.postLink}
-                    style={{ ...text, color: 'blue', textAlign: 'justify' }}
-                  >
-                    {comment.postLink}
-                  </Link>
-                </Text>
+                <Link
+                  href={comment.postLink}
+                  style={{ ...text, color: 'blue', textAlign: 'justify' }}
+                >
+                  View your post here
+                </Link>
               </>
             ) : null}
             <Text
