@@ -3,30 +3,30 @@ import { Input } from '@/components/ui/input.tsx';
 import { Button } from '../ui/button.tsx';
 import ModeToggle from '../ModeToggle.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { SearchInput } from '@/types/index.ts';
+import { ISearchInput } from '@/types/search.ts';
 import {
   useSearchParams,
-  createSearchParams,
   useNavigate,
   NavLink,
-  Link,
+    Link,
+  useLocation,
 } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
+import { CLIENT_ROUTES } from '@/constants/routes.ts';
 
 export default function Navbar() {
-  const { register, handleSubmit, setValue } = useForm<SearchInput>();
-  const [searchParams, setSearchParams] = useSearchParams({ query: '' });
+  const { register, handleSubmit, setValue } = useForm<ISearchInput>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const currentLocation = useLocation();
+
   const search = (query: string) => {
-    if (query.length === 0) {
-      setSearchParams({ query: '' });
-      return;
-    }
-    const url = createSearchParams({ query: query }).toString();
-    navigate(`/search?${url}`);
+    if (currentLocation.pathname === '/') navigate(CLIENT_ROUTES.SEARCH);
+    const currentParams = Object.fromEntries(searchParams.entries());
+    setSearchParams({ ...currentParams, query: query });
   };
-  const submitHandler: SubmitHandler<SearchInput> = (formData) => {
+  const submitHandler: SubmitHandler<ISearchInput> = (formData) => {
     search(formData.query);
   };
   const debouncedSearch = debounce((query: string) => search(query), 500);
@@ -48,7 +48,7 @@ export default function Navbar() {
             className="flex flex-row gap-x-4 items-center"
           >
             <Input
-              placeholder="Search"
+              placeholder="Search (Comma Separated)"
               className="w-[300px]"
               {...register('query')}
               onChange={(e) => debouncedSearch(e.target.value)}
