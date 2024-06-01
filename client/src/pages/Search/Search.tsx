@@ -1,14 +1,16 @@
+/* eslint-disable no-underscore-dangle */
 import ResultCard from './ResultCard/ResultCard';
 import DrawerFilter from './Filter/DrawerFilter';
 import AsideFilter from './Filter/AsideFilter';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useCallback, useState, useLayoutEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
 import { ISearchData } from '@/types/search.ts';
 import { toPreviewPage } from '@/constants/routes';
 import { IFilterInputs } from '@/types/search.ts';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
+import fetcher from '@/utils/fetcher/fetcher';
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,16 +20,14 @@ export default function Search() {
     // TODO: Content of previousPageData needs further testing
 
     if (previousPageData && !previousPageData.hasMore) return null;
-    return getSearchRequestObj(pageIndex + 1);
+    return getSearchRequestObj({ page: pageIndex + 1, searchParams });
   };
 
   const {
     data: response,
     setSize,
     isLoading,
-  } = useSWRInfinite(getKey, {
-    revalidateOnFocus: false,
-  });
+  } = useSWRInfinite(getKey, fetcher);
 
   const handleFilterSubmit = useCallback(
     (newFilters: IFilterInputs) => {
@@ -43,16 +43,16 @@ export default function Search() {
     [filters]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const filterValues: IFilterInputs = {};
     searchParams.forEach((value, key) => {
       if (key === 'query') return;
       filterValues[key as keyof IFilterInputs] = value;
     });
     setFilters(filterValues);
-  }, [searchParams]);
+  }, []);
 
-  const searchResults = response ? [].concat(...response) : [];
+  const searchResults = response ? [...response] : [];
   const reducedSearchResults = searchResults
     .map(({ data }) => data)
     .map(({ data }) => data);

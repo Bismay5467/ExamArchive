@@ -1,3 +1,3 @@
-import { getSearchRequestObj } from './search';
+import getSearchRequestObj from './search';
 
 export { getSearchRequestObj };
