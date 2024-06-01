@@ -133,7 +133,6 @@ const Reset = asyncErrorHandler(async (req: Request, res: Response) => {
         );
       }
       res.cookie(AUTH_TOKEN, token, {
-        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: COOKIES_TTL,

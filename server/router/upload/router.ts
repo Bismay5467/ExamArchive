@@ -1,7 +1,8 @@
 import { AnyZodObject } from 'zod';
 import express from 'express';
 
-import { adminPrevilege } from '../../middlewares/previlege';
+import { ROLE } from '../../constants/constants/auth';
+import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
@@ -21,21 +22,25 @@ router.post(
   '/',
   [
     verifyUser,
-    adminPrevilege,
+    privilege([ROLE.ADMIN]),
     validate(uploadFilesInputSchema as unknown as AnyZodObject, 'BODY'),
   ],
   UploadFile
 );
 router.post(
   '/webhook',
-  [verifyUser, adminPrevilege, validate(fileUploadNotifWebhookSchema, 'BODY')],
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN]),
+    validate(fileUploadNotifWebhookSchema, 'BODY'),
+  ],
   NotificationWebhook
 );
 router.put(
   '/addNames',
   [
     verifyUser,
-    adminPrevilege,
+    privilege([ROLE.ADMIN]),
     validate(addNamesInputSchema as unknown as AnyZodObject, 'BODY'),
   ],
   AddNameToCache

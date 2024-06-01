@@ -1,5 +1,7 @@
 import express from 'express';
 
+import { ROLE } from '../../constants/constants/auth';
+import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
@@ -7,11 +9,6 @@ import {
   ReportContent,
   ViewReport,
 } from '../../controllers/report';
-import {
-  adminPrevilege,
-  superAdminPrivilege,
-  userPrivilege,
-} from '../../middlewares/previlege';
 import {
   markAsResolvedInputSchema,
   reportContentInputSchema,
@@ -24,22 +21,25 @@ router.post(
   '/',
   [
     verifyUser,
-    userPrivilege,
-    adminPrevilege,
+    privilege([ROLE.ADMIN, ROLE.USER]),
     validate(reportContentInputSchema, 'BODY'),
   ],
   ReportContent
 );
 router.get(
   '/view',
-  [verifyUser, superAdminPrivilege, validate(viewReportInputSchema, 'QUERY')],
+  [
+    verifyUser,
+    privilege([ROLE.SUPERADMIN]),
+    validate(viewReportInputSchema, 'QUERY'),
+  ],
   ViewReport
 );
 router.put(
   '/markResolved',
   [
     verifyUser,
-    superAdminPrivilege,
+    privilege([ROLE.SUPERADMIN]),
     validate(markAsResolvedInputSchema, 'BODY'),
   ],
   MarkAsResolved
