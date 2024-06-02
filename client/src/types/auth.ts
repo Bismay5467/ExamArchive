@@ -27,7 +27,7 @@ export interface IAuthState {
 
 export interface IAuthContext {
   authState: IAuthState;
-  SET(jwtToken: string): void;
+  SET(): void;
   RESET(): void;
 }
 

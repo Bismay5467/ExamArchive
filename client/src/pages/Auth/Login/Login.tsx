@@ -16,7 +16,6 @@ import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
 import { CLIENT_ROUTES, SERVER_ROUTES } from '@/constants/routes';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
-import Cookies from 'js-cookie';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
@@ -48,23 +47,13 @@ export default function Login() {
     revalidateOnFocus: false,
   });
 
-  // console.log(data);
-  // console.log(document.cookie);
-
   useEffect(() => {
     if (data && data.status === 200) {
       toast('Login Success', {
-        description: data.statusText,
+        description: data?.data?.message,
       });
-      const jwtToken: string = Cookies.get('auth-token') || '';
-      if (jwtToken.length === 0) {
-        toast('Error', {
-          description: 'Something went wrong',
-        });
-      } else {
-        SET(jwtToken);
-        navigate(CLIENT_ROUTES.HOME);
-      }
+      SET();
+      navigate(CLIENT_ROUTES.HOME);
     }
   }, [data]);
 

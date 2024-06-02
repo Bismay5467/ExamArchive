@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { IAuthState, IAuthContext, IPayload } from '@/types/auth';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
+import { toast } from 'sonner';
 
 const DefaultState: IAuthState = {
   email: undefined,
@@ -37,7 +38,14 @@ const getCurrentState = () => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authState, setUserData] = useState<IAuthState>(getCurrentState());
 
-  const SET = (jwtToken: string) => {
+  const SET = () => {
+    const jwtToken: string = Cookies.get('auth-token') || '';
+    if (jwtToken.length === 0) {
+      toast('Error', {
+        description: 'Auth-Token missing',
+      });
+      return;
+    }
     const payload: IPayload = jwtDecode(jwtToken);
     const newAuthState: IAuthState = {
       email: payload.email,
