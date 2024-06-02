@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { ResetFormFields } from '@/types/auth';
+import { TResetFormFields } from '@/types/auth';
 import { Label } from '@radix-ui/react-label';
 import { useState } from 'react';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
@@ -10,8 +10,8 @@ export default function Update({
   register,
   errors,
 }: {
-  register: UseFormRegister<ResetFormFields>;
-  errors: FieldErrors<ResetFormFields>;
+  register: UseFormRegister<TResetFormFields>;
+  errors: FieldErrors<TResetFormFields>;
 }) {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
   return (

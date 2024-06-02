@@ -5,7 +5,7 @@ import Spinner from '@/components/ui/spinner';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { resetInputSchema } from '@/constants/authSchema/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ResetFormFields } from '@/types/auth';
+import { TResetFormFields } from '@/types/auth';
 import useSWR from 'swr';
 import axios, { AxiosRequestConfig } from 'axios';
 import Email from './Email/Email';
@@ -19,7 +19,7 @@ const fetcher = async (obj: AxiosRequestConfig<any>) => {
 };
 
 export default function Reset() {
-  const [data, setData] = useState<ResetFormFields>();
+  const [data, setData] = useState<TResetFormFields>();
   const navigate = useNavigate();
   const [searchParams, _] = useSearchParams();
   const hasResetToken = searchParams.has('AUTH_TOKEN');
@@ -28,7 +28,7 @@ export default function Reset() {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-  } = useForm<ResetFormFields>({
+  } = useForm<TResetFormFields>({
     resolver: zodResolver(resetInputSchema),
   });
 
@@ -54,7 +54,7 @@ export default function Reset() {
   );
   console.log(user);
 
-  const onSubmit: SubmitHandler<ResetFormFields> = async (formData) => {
+  const onSubmit: SubmitHandler<TResetFormFields> = async (formData) => {
     if (hasResetToken) {
       setData({ ...formData, action: 'RESET' });
       if (user && user.status === SUCCESS_CODES.CREATED)

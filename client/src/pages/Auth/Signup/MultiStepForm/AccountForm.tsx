@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SignUpFormFields } from '@/types/auth';
+import { TSignUpFormFields } from '@/types/auth';
 import { useState } from 'react';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -10,8 +10,8 @@ export default function AccountForm({
   register,
   errors,
 }: {
-  register: UseFormRegister<SignUpFormFields>;
-  errors: FieldErrors<SignUpFormFields>;
+  register: UseFormRegister<TSignUpFormFields>;
+  errors: FieldErrors<TSignUpFormFields>;
 }) {
   const [eyeOff, setEyeOff] = useState(true);
 

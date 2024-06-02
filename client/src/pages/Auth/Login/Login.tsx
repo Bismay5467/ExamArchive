@@ -1,30 +1,34 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineEmail } from 'react-icons/md';
 import useSWR from 'swr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/assets/Logo.png';
-import { SignInFormFields } from '@/types/auth';
+import { TSignInFormFields } from '@/types/auth';
 import Spinner from '@/components/ui/spinner';
 import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
-import { SERVER_ROUTES } from '@/constants/routes';
+import { CLIENT_ROUTES, SERVER_ROUTES } from '@/constants/routes';
+import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
-  const [userData, setUserData] = useState<SignInFormFields>();
+  const [userData, setUserData] = useState<TSignInFormFields>();
+  const navigate = useNavigate();
+  const { SET } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-  } = useForm<SignInFormFields>({
+  } = useForm<TSignInFormFields>({
     resolver: zodResolver(signInUserInputSchema),
   });
 
@@ -44,10 +48,27 @@ export default function Login() {
     revalidateOnFocus: false,
   });
 
-  console.log(data);
-  console.log(document.cookie);
+  // console.log(data);
+  // console.log(document.cookie);
 
-  const onSubmit: SubmitHandler<SignInFormFields> = async (formData) => {
+  useEffect(() => {
+    if (data && data.status === 200) {
+      toast('Login Success', {
+        description: data.statusText,
+      });
+      const jwtToken: string = Cookies.get('auth-token') || '';
+      if (jwtToken.length === 0) {
+        toast('Error', {
+          description: 'Something went wrong',
+        });
+      } else {
+        SET(jwtToken);
+        navigate(CLIENT_ROUTES.HOME);
+      }
+    }
+  }, [data]);
+
+  const onSubmit: SubmitHandler<TSignInFormFields> = async (formData) => {
     setUserData(formData);
   };
 
@@ -56,7 +77,9 @@ export default function Login() {
       <div className="h-full lg:col-span-1 py-12 ">
         <div className=" max-w-[360px] mx-auto mt-12 min-h-[100px] flex flex-col items-center gap-y-8">
           <div className="flex flex-col items-center gap-y-4">
-            <img src={Logo} alt="" className="w-[180px]" />
+            <Link to={CLIENT_ROUTES.HOME}>
+              <img src={Logo} alt="" className="w-[180px]" />
+            </Link>
             <div>
               <h1 className="text-3xl font-semibold text-center">
                 Login to your account
@@ -106,8 +129,8 @@ export default function Login() {
                     Remember me
                   </Label>
                 </div>
-                <Link to="/auth/reset">
-                  <span className="text-sm opacity-60 self-center">
+                <Link to={CLIENT_ROUTES.AUTH_RESET}>
+                  <span className="text-sm opacity-60 self-center hover:underline">
                     Recover Password
                   </span>
                 </Link>
@@ -123,6 +146,15 @@ export default function Login() {
                 <Spinner className="w-4 h-4 ml-3 " />
               )}
             </Button>
+            <p className="text-sm text-center opacity-60 self-center mt-2">
+              Don't have an account?{' '}
+              <Link
+                to={CLIENT_ROUTES.AUTH_SIGNUP}
+                className="font-semibold hover:underline"
+              >
+                Sign Up!
+              </Link>
+            </p>
           </form>
           <div className="flex flex-row gap-x-2">
             <div className="h-0.5 w-24 self-center bg-slate-200" />

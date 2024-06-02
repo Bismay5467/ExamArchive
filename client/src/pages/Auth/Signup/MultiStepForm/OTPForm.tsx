@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { SignUpFormFields } from '@/types/auth';
+import { TSignUpFormFields } from '@/types/auth';
 
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
@@ -7,8 +7,8 @@ export default function OTPForm({
   register,
   errors,
 }: {
-  register: UseFormRegister<SignUpFormFields>;
-  errors: FieldErrors<SignUpFormFields>;
+  register: UseFormRegister<TSignUpFormFields>;
+  errors: FieldErrors<TSignUpFormFields>;
 }) {
   return (
     <>

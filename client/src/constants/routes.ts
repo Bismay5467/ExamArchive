@@ -2,9 +2,9 @@ export const CLIENT_ROUTES = Object.freeze({
   HOME: '/',
   SEARCH: '/search',
   FILE_PREVIEW: '/filePreview',
-  AUTH_LOGIN: 'auth/login',
-  AUTH_SIGNUP: 'auth/signup',
-  AUTH_RESET: 'auth/reset',
+  AUTH_LOGIN: '/auth/login',
+  AUTH_SIGNUP: '/auth/signup',
+  AUTH_RESET: '/auth/reset',
 });
 
 export const SERVER_ROUTES = Object.freeze({

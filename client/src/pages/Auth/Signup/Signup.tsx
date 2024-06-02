@@ -2,7 +2,7 @@ import Logo from '@/assets/Logo.png';
 import useMultiStepForm from './MultiStepForm/useMultiStepForm';
 import AccountForm from './MultiStepForm/AccountForm';
 import OTPForm from './MultiStepForm/OTPForm';
-import { SignUpFormFields } from '@/types/auth';
+import { TSignUpFormFields } from '@/types/auth';
 import { Button } from '@/components/ui/button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,12 +21,12 @@ const fetcher = async (obj: AxiosRequestConfig<any>) => {
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [data, setData] = useState<SignUpFormFields>();
+  const [data, setData] = useState<TSignUpFormFields>();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-  } = useForm<SignUpFormFields>({
+  } = useForm<TSignUpFormFields>({
     resolver: zodResolver(newUserInputSchema),
   });
   const { next, isFirstStep, step } = useMultiStepForm([
@@ -54,7 +54,7 @@ export default function Signup() {
     }
   );
 
-  const onSubmit: SubmitHandler<SignUpFormFields> = async (formData) => {
+  const onSubmit: SubmitHandler<TSignUpFormFields> = async (formData) => {
     // TODO: Need to the body of user to get status code
     if (isFirstStep()) {
       setData({ ...formData, role: 'USER', actionType: 'GENERATE' });

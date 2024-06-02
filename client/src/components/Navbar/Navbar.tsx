@@ -10,15 +10,30 @@ import {
   NavLink,
   useLocation,
 } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
 import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes.ts';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useAuth } from '@/hooks/useAuth.tsx';
 
 export default function Navbar() {
   const { register, handleSubmit, setValue } = useForm<ISearchInput>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const currentLocation = useLocation();
+  const {
+    authState: { isAuth, username },
+    RESET,
+  } = useAuth();
 
   const search = (query: string) => {
     if (currentLocation.pathname === '/') navigate(CLIENT_ROUTES.SEARCH);
@@ -55,15 +70,37 @@ export default function Navbar() {
             <Button type="submit">Search</Button>
           </form>
         </div>
-        <div className="flex flex-row gap-x-4 items-center">
-          <NavLink to={CLIENT_ROUTES.AUTH_LOGIN}>
-            <Button className="rounded-3xl">Log in</Button>
-          </NavLink>
-          <NavLink to={CLIENT_ROUTES.AUTH_SIGNUP}>
-            <Button className="rounded-3xl">Sign up</Button>
-          </NavLink>
-          <ModeToggle />
-        </div>
+        {isAuth ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar>
+                {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
+                <AvatarFallback className="bg-pink-100">
+                  {username?.at(0)}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Team</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => RESET()}>
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex flex-row gap-x-4 items-center">
+            <NavLink to={CLIENT_ROUTES.AUTH_LOGIN}>
+              <Button className="rounded-3xl">Log in</Button>
+            </NavLink>
+            <NavLink to={CLIENT_ROUTES.AUTH_SIGNUP}>
+              <Button className="rounded-3xl">Sign up</Button>
+            </NavLink>
+            <ModeToggle />
+          </div>
+        )}
       </div>
     </nav>
   );
