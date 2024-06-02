@@ -61,4 +61,5 @@ export const resetInputSchema = z.object({
     )
     .optional(),
   action: z.enum(['RESET', 'EMAIL']).optional(),
+  authToken: z.string().optional(),
 });

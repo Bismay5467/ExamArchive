@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { IAuthState, IAuthContext, IPayload } from '@/types/auth';
+import { IAuthState, IAuthContext, ISignInJwtPayload } from '@/types/auth';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
@@ -23,7 +23,7 @@ const getCurrentState = () => {
   const jwtToken: string = Cookies.get('auth-token') || '';
   if (jwtToken.length === 0) return DefaultState;
   else {
-    const payload: IPayload = jwtDecode(jwtToken);
+    const payload: ISignInJwtPayload = jwtDecode(jwtToken);
     return {
       email: payload.email,
       isAuth: true,
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return;
     }
-    const payload: IPayload = jwtDecode(jwtToken);
+    const payload: ISignInJwtPayload = jwtDecode(jwtToken);
     const newAuthState: IAuthState = {
       email: payload.email,
       isAuth: true,

@@ -1,5 +1,9 @@
 import { SERVER_ROUTES } from '@/constants/routes';
-import { TSignInFormFields, TSignUpFormFields } from '@/types/auth';
+import {
+  TSignInFormFields,
+  TSignUpFormFields,
+  TResetFormFields,
+} from '@/types/auth';
 
 export const getSignInObj = (userData: TSignInFormFields) => {
   const url = SERVER_ROUTES.LOGIN;
@@ -20,6 +24,18 @@ export const getSignUpObj = (userData: TSignUpFormFields) => {
     url,
     data: { data: userData },
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  return axiosObj;
+};
+
+export const getResetObj = (userData: TResetFormFields) => {
+  const url = SERVER_ROUTES.RESET;
+  const axiosObj = {
+    url,
+    data: { data: userData },
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
   };
 

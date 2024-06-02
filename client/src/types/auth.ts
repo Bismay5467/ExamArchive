@@ -31,11 +31,17 @@ export interface IAuthContext {
   RESET(): void;
 }
 
-export interface IPayload {
+export interface ISignInJwtPayload {
   email: string;
   exp: number;
   iat: number;
   role: keyof typeof ROLE;
   userId: string;
   username: string;
+}
+
+export interface IResetJwtPayload {
+  email: string;
+  exp: number;
+  iat: number;
 }
