@@ -17,7 +17,13 @@ export default function Root() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
-        <SWRConfig value={{ fetcher }}>
+        <SWRConfig
+          value={{
+            fetcher,
+            shouldRetryOnError: false,
+            revalidateOnFocus: false,
+          }}
+        >
           <main className="box-border min-h-screen">
             {!isAuthPage && <Navbar />}
             <Suspense fallback={<Loading />}>

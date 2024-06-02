@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineEmail } from 'react-icons/md';
-import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -13,9 +12,12 @@ import Logo from '@/assets/Logo.png';
 import { TSignInFormFields } from '@/types/auth';
 import Spinner from '@/components/ui/spinner';
 import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
-import { CLIENT_ROUTES, SERVER_ROUTES } from '@/constants/routes';
+import { CLIENT_ROUTES } from '@/constants/routes';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import { getSignInObj } from '@/utils/axiosReqObjects';
+import { SUCCESS_CODES } from '@/constants/statusCodes';
+import useSWR from 'swr';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
@@ -30,32 +32,33 @@ export default function Login() {
   } = useForm<TSignInFormFields>({
     resolver: zodResolver(signInUserInputSchema),
   });
-
-  const getAxiosObj = () => {
-    const url = SERVER_ROUTES.LOGIN;
-    const axiosObj = {
-      url,
-      data: { data: userData },
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    };
-
-    return axiosObj;
-  };
-  const { data, isValidating } = useSWR(userData ? getAxiosObj() : null, {
-    revalidateOnFocus: false,
-  });
+  const {
+    data: user,
+    error,
+    isValidating,
+  } = useSWR(userData ? getSignInObj(userData) : null);
 
   useEffect(() => {
-    if (data && data.status === 200) {
+    if (user && user.status === SUCCESS_CODES.OK) {
+      console.log(user);
       toast('Login Success', {
-        description: data?.data?.message,
+        description: user?.data?.message,
       });
-      SET();
-      navigate(CLIENT_ROUTES.HOME);
+      setTimeout(() => {
+        SET();
+        navigate(CLIENT_ROUTES.HOME);
+      });
+    } else if (error) {
+      toast.error(`${error?.message}`, {
+        description: error?.response?.data?.message,
+        duration: 5000,
+      });
     }
-  }, [data]);
+
+    return () => {
+      setUserData(undefined);
+    };
+  }, [user, error]);
 
   const onSubmit: SubmitHandler<TSignInFormFields> = async (formData) => {
     setUserData(formData);
