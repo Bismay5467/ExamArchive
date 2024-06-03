@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -11,18 +11,20 @@ import { Label } from '@/components/ui/label';
 import Logo from '@/assets/Logo.png';
 import { TSignInFormFields } from '@/types/auth';
 import Spinner from '@/components/ui/spinner';
-import { signInUserInputSchema } from '@/constants/authSchema/authSchema';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { getSignInObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 import useSWR from 'swr';
+import { signInUserInputSchema } from '@/schemas/authSchema';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
   const [userData, setUserData] = useState<TSignInFormFields>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || CLIENT_ROUTES.HOME;
   const { SET } = useAuth();
 
   const {
@@ -40,14 +42,11 @@ export default function Login() {
 
   useEffect(() => {
     if (user && user.status === SUCCESS_CODES.OK) {
-      console.log(user);
       toast('Login Success', {
         description: user?.data?.message,
       });
-      setTimeout(() => {
-        SET();
-        navigate(CLIENT_ROUTES.HOME);
-      });
+      SET();
+      navigate(from, { replace: true });
     } else if (error) {
       toast.error(`${error?.message}`, {
         description: error?.response?.data?.message,

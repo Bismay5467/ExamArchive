@@ -92,12 +92,28 @@ export default function Navbar() {
           </DropdownMenu>
         ) : (
           <div className="flex flex-row gap-x-4 items-center">
-            <NavLink to={CLIENT_ROUTES.AUTH_LOGIN}>
-              <Button className="rounded-3xl">Log in</Button>
-            </NavLink>
-            <NavLink to={CLIENT_ROUTES.AUTH_SIGNUP}>
-              <Button className="rounded-3xl">Sign up</Button>
-            </NavLink>
+            <Button
+              className="rounded-3xl"
+              onClick={() =>
+                navigate(CLIENT_ROUTES.AUTH_LOGIN, {
+                  state: { from: currentLocation },
+                  replace: true,
+                })
+              }
+            >
+              Log in
+            </Button>
+            <Button
+              className="rounded-3xl"
+              onClick={() =>
+                navigate(CLIENT_ROUTES.AUTH_SIGNUP, {
+                  state: { from: currentLocation },
+                  replace: true,
+                })
+              }
+            >
+              Sign up
+            </Button>
             <ModeToggle />
           </div>
         )}

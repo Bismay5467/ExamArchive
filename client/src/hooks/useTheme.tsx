@@ -1,33 +1,25 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  TTheme,
+  TThemeProviderProps,
+  TThemeProviderState,
+} from '@/types/theme';
 
-type Theme = 'dark' | 'light' | 'system';
-
-type ThemeProviderProps = {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-};
-
-type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-};
-
-const initialState: ThemeProviderState = {
+const initialState: TThemeProviderState = {
   theme: 'system',
   setTheme: () => null,
 };
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+const ThemeProviderContext = createContext<TThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'vite-ui-theme',
   ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+}: TThemeProviderProps) {
+  const [theme, setTheme] = useState<TTheme>(
+    () => (localStorage.getItem(storageKey) as TTheme) || defaultTheme
   );
 
   useEffect(() => {
@@ -50,7 +42,7 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
+    setTheme: (theme: TTheme) => {
       localStorage.setItem(storageKey, theme);
       setTheme(theme);
     },

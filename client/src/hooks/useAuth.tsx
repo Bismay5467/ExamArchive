@@ -23,14 +23,15 @@ const getCurrentState = () => {
   const jwtToken: string = Cookies.get('auth-token') || '';
   if (jwtToken.length === 0) return DefaultState;
   else {
-    const payload: ISignInJwtPayload = jwtDecode(jwtToken);
+    const { email, role, userId, username }: ISignInJwtPayload =
+      jwtDecode(jwtToken);
     return {
-      email: payload.email,
+      email,
       isAuth: true,
       jwtToken: jwtToken,
-      role: payload.role,
-      userId: payload.userId,
-      username: payload.username,
+      role,
+      userId,
+      username,
     };
   }
 };
@@ -41,19 +42,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const SET = () => {
     const jwtToken: string = Cookies.get('auth-token') || '';
     if (jwtToken.length === 0) {
-      toast('Error', {
+      toast.error('Error!', {
         description: 'Auth-Token missing',
+        duration: 5000,
       });
       return;
     }
-    const payload: ISignInJwtPayload = jwtDecode(jwtToken);
+    const { email, role, userId, username }: ISignInJwtPayload =
+      jwtDecode(jwtToken);
     const newAuthState: IAuthState = {
-      email: payload.email,
+      email,
       isAuth: true,
       jwtToken: jwtToken,
-      role: payload.role,
-      userId: payload.userId,
-      username: payload.username,
+      role,
+      userId,
+      username,
     };
     setUserData(newAuthState);
   };
@@ -71,5 +74,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+
+  if (context === undefined)
+    throw new Error('useAuth must be used within a AuthProvider');
+
+  return context;
 };

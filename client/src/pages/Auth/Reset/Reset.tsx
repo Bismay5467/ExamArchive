@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/ui/spinner';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { resetInputSchema } from '@/constants/authSchema/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IResetJwtPayload, TResetFormFields } from '@/types/auth';
 import useSWR from 'swr';
@@ -15,6 +14,7 @@ import { getResetObj } from '@/utils/axiosReqObjects';
 import { toast } from 'sonner';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { jwtDecode } from 'jwt-decode';
+import { resetInputSchema } from '@/schemas/authSchema';
 
 export default function Reset() {
   const [userData, setUserData] = useState<TResetFormFields>();

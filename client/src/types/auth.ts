@@ -3,7 +3,7 @@ import {
   newUserInputSchema,
   signInUserInputSchema,
   resetInputSchema,
-} from '@/constants/authSchema/authSchema';
+} from '@/schemas/authSchema';
 
 export const ROLE = Object.freeze({
   USER: 'USER',

@@ -1,12 +1,11 @@
 import Logo from '@/assets/Logo.png';
-import useMultiStepForm from './MultiStepForm/useMultiStepForm';
-import AccountForm from './MultiStepForm/AccountForm';
-import OTPForm from './MultiStepForm/OTPForm';
+import useMultiStepForm from '@/hooks/useMultiStepForm';
+import AccountForm from './SignUpFormElements/AccountForm';
+import OTPForm from './SignUpFormElements/OTPForm';
 import { TSignUpFormFields } from '@/types/auth';
 import { Button } from '@/components/ui/button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { newUserInputSchema } from '@/constants/authSchema/authSchema';
 import { Link, useNavigate } from 'react-router-dom';
 import Spinner from '@/components/ui/spinner';
 import { useEffect, useState } from 'react';
@@ -16,6 +15,7 @@ import { CLIENT_ROUTES } from '@/constants/routes';
 // import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import useSWR from 'swr';
+import { newUserInputSchema } from '@/schemas/authSchema';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -50,6 +50,11 @@ export default function Signup() {
       } else if (user.status === SUCCESS_CODES.CREATED) {
         // TODO: Auth-token cookie not getting set, hence redirencting to /login as of now!
         // SET();
+        toast(`${user?.data?.message}`, {
+          description: 'Ready to Rock!',
+          duration: 5000,
+        });
+        console.log(user);
         navigate(CLIENT_ROUTES.AUTH_LOGIN);
       }
     } else if (error) {
@@ -61,7 +66,6 @@ export default function Signup() {
   }, [user, error]);
 
   const onSubmit: SubmitHandler<TSignUpFormFields> = async (formData) => {
-    // TODO: Need to the body of user to get status code
     if (isFirstStep()) {
       setUserData({ ...formData, role: 'USER', actionType: 'GENERATE' });
     } else {
