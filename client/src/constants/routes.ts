@@ -5,6 +5,10 @@ export const CLIENT_ROUTES = Object.freeze({
   AUTH_LOGIN: '/auth/login',
   AUTH_SIGNUP: '/auth/signup',
   AUTH_RESET: '/auth/reset',
+  DASHBOARD_PROFILE: 'profile',
+  DASHBOARD_FILEUPLOAD: 'fileupload',
+  DASHBOARD_ANALYTICS: 'analytics',
+  DASHBOARD_BOOKMARKS: 'analytics',
 });
 
 export const SERVER_ROUTES = Object.freeze({

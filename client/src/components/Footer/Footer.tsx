@@ -1,6 +1,6 @@
 import { FaHeart } from 'react-icons/fa';
 import Logo from '../../assets/Logo.png';
-import { LinkedIn } from '@/constants/socialLinks.ts';
+import { LinkedIn } from '@/constants/shared.ts';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
