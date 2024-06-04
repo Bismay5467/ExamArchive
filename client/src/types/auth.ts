@@ -1,16 +1,12 @@
 import { z } from 'zod';
+
+import { ROLES } from '@/constants/auth';
 import {
   newUserInputSchema,
-  signInUserInputSchema,
   resetInputSchema,
+  signInUserInputSchema,
 } from '@/schemas/authSchema';
 
-export const ROLE = Object.freeze({
-  USER: 'USER',
-  ADMIN: 'ADMIN',
-  SUPERADMIN: 'SUPERADMIN',
-  GUEST: 'GUEST',
-});
 
 export type TSignUpFormFields = z.infer<typeof newUserInputSchema>;
 export type TSignInFormFields = z.infer<typeof signInUserInputSchema>;
@@ -22,7 +18,7 @@ export interface IAuthState {
   username: string | undefined;
   email: string | undefined;
   userId: string | undefined;
-  role: keyof typeof ROLE;
+  role: keyof typeof ROLES;
 }
 
 export interface IAuthContext {
@@ -35,7 +31,7 @@ export interface ISignInJwtPayload {
   email: string;
   exp: number;
   iat: number;
-  role: keyof typeof ROLE;
+  role: keyof typeof ROLES;
   userId: string;
   username: string;
 }

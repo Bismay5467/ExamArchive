@@ -15,12 +15,13 @@ import { toast } from 'sonner';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { jwtDecode } from 'jwt-decode';
 import { resetInputSchema } from '@/schemas/authSchema';
+import { AUTH_TOKEN } from '@/constants/auth';
 
 export default function Reset() {
   const [userData, setUserData] = useState<TResetFormFields>();
   const navigate = useNavigate();
   const [searchParams, _] = useSearchParams();
-  const authToken = searchParams.get('auth-token');
+  const authToken = searchParams.get(AUTH_TOKEN);
 
   const {
     register,
@@ -39,7 +40,7 @@ export default function Reset() {
   useEffect(() => {
     if (user) {
       if (user.status === SUCCESS_CODES.OK) {
-        toast.success(`Reset Link Generated`, {
+        toast.success('Reset Link Generated', {
           description: 'Check your mail!',
           duration: 5000,
         });
@@ -64,7 +65,7 @@ export default function Reset() {
       setUserData({
         ...formData,
         action: 'RESET',
-        authToken: authToken,
+        authToken,
         email: payload.email,
       });
     } else {

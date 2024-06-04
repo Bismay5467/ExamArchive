@@ -1,14 +1,18 @@
-import React, { createContext, useContext, useState } from 'react';
-import { IAuthState, IAuthContext, ISignInJwtPayload } from '@/types/auth';
-import { jwtDecode } from 'jwt-decode';
+/* eslint-disable react/jsx-no-constructed-context-values */
+/* eslint-disable object-curly-newline */
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 import { toast } from 'sonner';
+import React, { createContext, useContext, useState } from 'react';
+
+import { AUTH_TOKEN, ROLES } from '@/constants/auth';
+import { IAuthContext, IAuthState, ISignInJwtPayload } from '@/types/auth';
 
 const DefaultState: IAuthState = {
   email: undefined,
   isAuth: false,
   jwtToken: undefined,
-  role: 'GUEST',
+  role: ROLES.GUEST,
   userId: undefined,
   username: undefined,
 };
@@ -20,30 +24,29 @@ const AuthContext = createContext<IAuthContext>({
 });
 
 const getCurrentState = () => {
-  const jwtToken: string = Cookies.get('auth-token') || '';
+  const jwtToken: string = Cookies.get(AUTH_TOKEN) || '';
   if (jwtToken.length === 0) return DefaultState;
-  else {
-    const { email, role, userId, username }: ISignInJwtPayload =
-      jwtDecode(jwtToken);
-    return {
-      email,
-      isAuth: true,
-      jwtToken: jwtToken,
-      role,
-      userId,
-      username,
-    };
-  }
+
+  const { email, role, userId, username }: ISignInJwtPayload =
+    jwtDecode(jwtToken);
+  return {
+    email,
+    isAuth: true,
+    jwtToken,
+    role,
+    userId,
+    username,
+  };
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authState, setUserData] = useState<IAuthState>(getCurrentState());
 
   const SET = () => {
-    const jwtToken: string = Cookies.get('auth-token') || '';
+    const jwtToken: string = Cookies.get(AUTH_TOKEN) ?? '';
     if (jwtToken.length === 0) {
       toast.error('Error!', {
-        description: 'Auth-Token missing',
+        description: 'Auth token missing',
         duration: 5000,
       });
       return;
@@ -53,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const newAuthState: IAuthState = {
       email,
       isAuth: true,
-      jwtToken: jwtToken,
+      jwtToken,
       role,
       userId,
       username,
@@ -62,8 +65,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const RESET = () => {
-    Cookies.remove('auth-token');
+    Cookies.remove(AUTH_TOKEN);
     setUserData(DefaultState);
+    window.location.reload();
   };
 
   return (
@@ -71,13 +75,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
-  if (context === undefined)
+  if (context === undefined) {
     throw new Error('useAuth must be used within a AuthProvider');
+  }
 
   return context;
 };
