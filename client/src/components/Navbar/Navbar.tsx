@@ -106,7 +106,6 @@ export default function Navbar() {
               onClick={() =>
                 navigate(CLIENT_ROUTES.AUTH_LOGIN, {
                   state: { from: currentLocation },
-                  replace: true,
                 })
               }
             >
@@ -117,7 +116,6 @@ export default function Navbar() {
               onClick={() =>
                 navigate(CLIENT_ROUTES.AUTH_SIGNUP, {
                   state: { from: currentLocation },
-                  replace: true,
                 })
               }
             >
