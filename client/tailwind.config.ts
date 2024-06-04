@@ -17,7 +17,16 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        'login-banner': "url('/src/assets/LoginImage.jpg')",
+        'signup-banner': "url('/src/assets/SignupImage.jpg')",
+        'reset-banner': "url('/src/assets/ResetImage.jpg')",
+      },
       keyframes: {
+        'caret-blink': {
+          '0%,70%,100%': { opacity: '1' },
+          '20%,50%': { opacity: '0' },
+        },
         'accordion-down': {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
@@ -30,6 +39,7 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'caret-blink': 'caret-blink 1.25s ease-out infinite',
       },
     },
   },

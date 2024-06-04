@@ -24,11 +24,7 @@ export default function Search() {
     return getSearchRequestObj({ page: pageIndex + 1, searchParams });
   };
 
-  const {
-    data: response,
-    setSize,
-    isLoading,
-  } = useSWRInfinite(getKey, { revalidateOnFocus: false });
+  const { data: response, setSize, isLoading } = useSWRInfinite(getKey);
 
   const handleFilterSubmit = useCallback(
     (newFilters: IFilterInputs) => {
@@ -81,18 +77,18 @@ export default function Search() {
       />
       <div className="p-4 flex flex-col gap-y-4 sm:col-span-7">
         {isLoading && <p>Loading...</p>}
-        {data?.map((res) => (
+        {data?.map(({ _id, institutionName, semester, subjectCode, year }) => (
           <Link
-            to={`${CLIENT_ROUTES.SEARCH}/${res._id}`}
+            to={`${CLIENT_ROUTES.FILE_PREVIEW}/${_id}`}
             target="_blank"
-            key={res._id}
+            key={_id}
           >
             <ResultCard
-              id={res._id}
-              instituteName={res.institutionName}
-              semester={res.semester}
-              subjectCode={res.semester}
-              year={res.year}
+              id={_id}
+              instituteName={institutionName}
+              semester={semester}
+              subjectCode={subjectCode}
+              year={year}
             />
           </Link>
         ))}

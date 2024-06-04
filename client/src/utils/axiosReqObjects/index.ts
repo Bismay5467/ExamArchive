@@ -1,3 +1,4 @@
+import { getSignInObj, getSignUpObj, getResetObj } from './auth';
 import getSearchRequestObj from './search';
 
-export { getSearchRequestObj };
+export { getSearchRequestObj, getSignInObj, getSignUpObj, getResetObj };
