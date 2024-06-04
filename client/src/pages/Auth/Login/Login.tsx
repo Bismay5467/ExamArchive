@@ -89,7 +89,6 @@ export default function Login() {
                 placeholder="Username/Email"
                 className="focus-visible:ring-0"
                 {...register('username')}
-                value="Bismay5467"
               />
               <MdOutlineEmail className="absolute text-xl opacity-60 right-2 top-[32px]" />
               <Label htmlFor="password-input">Password</Label>
@@ -98,7 +97,6 @@ export default function Login() {
                 type={`${eyeOff ? 'password' : 'text'}`}
                 className="focus-visible:ring-0"
                 {...register('password')}
-                value="qwe12!"
               />
               {errors && (
                 <p className="text-red-500 text-sm">
