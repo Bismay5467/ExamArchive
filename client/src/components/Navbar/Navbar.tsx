@@ -32,6 +32,7 @@ import {
   DropdownItem,
 } from '@nextui-org/react';
 import { getDropDownOptions } from '@/constants/dropDownOptions.ts';
+import ModeToggle from '../ModeToggle';
 
 export default function Navbar() {
   const { register, handleSubmit, setValue } = useForm<ISearchInput>();
@@ -71,7 +72,7 @@ export default function Navbar() {
         <section className="flex flex-row gap-6">
           <NavLink to={CLIENT_ROUTES.HOME}>
             <img src={Logo} className="w-[50px] sm:hidden" />
-            <img src={LogoBanner} className="w-[250px] hidden sm:block" />
+            <img src={LogoBanner} className="w-[230px] hidden sm:block" />
           </NavLink>
           <form onSubmit={handleSubmit(submitHandler)} className="self-center">
             <Input
@@ -82,7 +83,7 @@ export default function Navbar() {
                 inputWrapper:
                   'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
               }}
-              placeholder="Type to search...(Comma Separated)"
+              placeholder="Search (Comma Separated)"
               size="lg"
               startContent={<FaSearch />}
               type="search"
@@ -92,7 +93,8 @@ export default function Navbar() {
           </form>
         </section>
 
-        <section className="self-center">
+        <section className="self-center flex flex-row gap-x-4">
+          <ModeToggle />
           {isAuth ? (
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
