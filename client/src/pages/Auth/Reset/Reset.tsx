@@ -1,4 +1,4 @@
-import Logo from '@/assets/Logo.png';
+import LogoBanner from '@/assets/LogoBanner.png';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/ui/spinner';
@@ -78,7 +78,7 @@ export default function Reset() {
       <div className="h-full lg:col-span-1 py-12 ">
         <div className=" max-w-[360px] mx-auto mt-12 min-h-[100px] flex flex-col items-center gap-y-8">
           <div className="flex flex-col items-center gap-y-4">
-            <img src={Logo} alt="" className="w-[180px]" />
+            <img src={LogoBanner} alt="" className="w-[180px]" />
             <div>
               <h1 className="text-3xl font-semibold text-center">
                 {authToken ? `Just one more step!` : `Forgot your Password?`}

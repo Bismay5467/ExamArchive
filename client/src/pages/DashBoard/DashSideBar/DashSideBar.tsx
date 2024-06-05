@@ -1,3 +1,4 @@
+import { ROLES } from '@/constants/auth';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
@@ -19,16 +20,20 @@ export default function DashSideBar() {
           Bookmarks
         </div>
       </Link>
-      <Link to={CLIENT_ROUTES.DASHBOARD_FILEUPLOAD}>
-        <div className="border border-gray-700 p-6 text-center rounded-lg cursor-pointer hover:bg-slate-100">
-          File Upload
-        </div>
-      </Link>
-      <Link to={CLIENT_ROUTES.DASHBOARD_ANALYTICS}>
-        <div className="border border-gray-700 p-6 text-center rounded-lg cursor-pointer hover:bg-slate-100">
-          Analytics
-        </div>
-      </Link>
+      {role === ROLES.ADMIN && (
+        <Link to={CLIENT_ROUTES.DASHBOARD_FILEUPLOAD}>
+          <div className="border border-gray-700 p-6 text-center rounded-lg cursor-pointer hover:bg-slate-100">
+            File Upload
+          </div>
+        </Link>
+      )}
+      {role === ROLES.SUPERADMIN && (
+        <Link to={CLIENT_ROUTES.DASHBOARD_ANALYTICS}>
+          <div className="border border-gray-700 p-6 text-center rounded-lg cursor-pointer hover:bg-slate-100">
+            Analytics
+          </div>
+        </Link>
+      )}
     </aside>
   );
 }

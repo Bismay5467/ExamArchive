@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import Logo from '@/assets/Logo.png';
+import LogoBanner from '@/assets/LogoBanner.png';
 import { TSignInFormFields } from '@/types/auth';
 import Spinner from '@/components/ui/spinner';
 import { CLIENT_ROUTES } from '@/constants/routes';
@@ -69,7 +69,7 @@ export default function Login() {
         <div className=" max-w-[360px] mx-auto mt-12 min-h-[100px] flex flex-col items-center gap-y-8">
           <div className="flex flex-col items-center gap-y-4">
             <Link to={CLIENT_ROUTES.HOME}>
-              <img src={Logo} alt="" className="w-[180px]" />
+              <img src={LogoBanner} alt="" className="w-[180px]" />
             </Link>
             <div>
               <h1 className="text-3xl font-semibold text-center">

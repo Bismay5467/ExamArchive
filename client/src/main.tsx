@@ -12,6 +12,7 @@ import Root from './Root.tsx';
 import Error from './pages/404/Error.tsx';
 import Home from './pages/Home/Home.tsx';
 import Search from './pages/Search/Search.tsx';
+import { NextUIProvider } from '@nextui-org/system';
 
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
 const Signup = React.lazy(() => import('./pages/Auth/Signup/Signup.tsx'));
@@ -56,6 +57,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <NextUIProvider>
+      <RouterProvider router={router} />
+    </NextUIProvider>
   </React.StrictMode>
 );

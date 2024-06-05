@@ -1,81 +1,49 @@
-import { Input } from '@/components/ui/input';
+import { Input } from '@nextui-org/react';
 import { TFileUploadFormFields } from '@/types/upload';
-import { UseFormReturn } from 'react-hook-form';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { Select, SelectItem } from '@nextui-org/react';
+import { SEMESTER } from '@/constants/shared';
 
 export default function FileInfo({
-  form,
+  register,
+  errors,
 }: {
-  form: UseFormReturn<TFileUploadFormFields>;
+  register: UseFormRegister<TFileUploadFormFields>;
+  errors: FieldErrors<TFileUploadFormFields>;
 }) {
   return (
     <section className="p-4 flex flex-col gap-y-6">
-      <FormField
-        control={form.control}
-        name="institution"
-        render={({ field }) => (
-          <FormItem className="flex flex-row gap-4">
-            <FormLabel className="min-w-fit self-center font-semibold text-xl">
-              Institute:
-            </FormLabel>
-            <FormControl>
-              <Input
-                type="text"
-                className="cursor-pointer"
-                placeholder="My broke ass College..."
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+      <Input
+        isRequired
+        type="text"
+        className="w-[500px]"
+        label="Institution"
+        {...register('institution')}
       />
-      <FormField
-        control={form.control}
-        name="subjectCode"
-        render={({ field }) => (
-          <FormItem className="flex flex-row gap-4">
-            <FormLabel className="min-w-fit self-center font-semibold text-xl">
-              Subject Code:
-            </FormLabel>
-            <FormControl>
-              <Input
-                type="text"
-                className="cursor-pointer"
-                placeholder="My Shitty Subject..."
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+      {errors && (
+        <p className="text-red-500 text-sm">{errors.institution?.message}</p>
+      )}
+      <Input
+        isRequired
+        type="text"
+        className="w-[500px]"
+        label="Year"
+        {...register('year')}
       />
-      <FormField
-        control={form.control}
-        name="subjectName"
-        render={({ field }) => (
-          <FormItem className="flex flex-row gap-4">
-            <FormLabel className="min-w-fit self-center font-semibold text-xl">
-              Subject Name:
-            </FormLabel>
-            <FormControl>
-              <Input
-                type="text"
-                className="cursor-pointer"
-                placeholder="Baler subject Name..."
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {errors && <p className="text-red-500 text-sm">{errors.year?.message}</p>}
+      <Select
+        isRequired
+        label="Semester"
+        className="max-w-xs"
+        {...register('semester')}
+      >
+        {Object.entries(SEMESTER).map(([_, value]) => (
+          <SelectItem key={value}>{value}</SelectItem>
+        ))}
+      </Select>
+      {errors && (
+        <p className="text-red-500 text-sm">{errors.semester?.message}</p>
+      )}
     </section>
   );
 }

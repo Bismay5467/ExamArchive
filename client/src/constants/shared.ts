@@ -26,6 +26,4 @@ export const SEMESTER = Object.freeze({
   VIII: 'Semester VIII',
 });
 
-export const uploadFileTypes = Object.freeze({
-  PDF: 'application/pdf',
-});
+export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = ['application/pdf'];
