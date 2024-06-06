@@ -1,49 +1,52 @@
-import { Input } from '@nextui-org/react';
-import { Input as FileInput } from '@/components/ui/input';
-import { Button } from '@nextui-org/react';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { TFileUploadFormFields } from '@/types/upload';
 import { EXAM_TYPES } from '@/constants/shared';
 import { Select, SelectItem } from '@nextui-org/react';
+import { FileInput } from '@/components/ui/file-input';
 
 export default function Upload({
   register,
   errors,
+  fileName,
+  setFileName,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
+  fileName: string | undefined;
+  setFileName: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
   return (
-    <section className="p-4 flex flex-col gap-y-4">
-      <div className="flex flex-row gap-x-4">
-        <FileInput type="file" className="w-[300px]" {...register('file')} />
-      </div>
+    <section className="px-[205px] flex flex-col gap-y-4 items-center">
+      <FileInput
+        filename={fileName}
+        className="w-full"
+        {...register('file')}
+        onChange={(e) => e.target.files && setFileName(e.target.files[0].name)}
+      />
       {errors && <p className="text-red-500 text-sm">{errors.file?.message}</p>}
-      <div className="flex flex-row gap-x-4">
+      <div className="w-full flex flex-row gap-x-4">
         <Select
           label="Exam Type"
-          className="max-w-xs"
+          className="w-[50%]"
           {...register('examType')}
           isRequired
+          isInvalid={errors.examType !== undefined}
+          errorMessage={'*Required'}
         >
           {Object.entries(EXAM_TYPES.INSTITUTIONAL).map(([_, value]) => (
             <SelectItem key={value}>{value}</SelectItem>
           ))}
         </Select>
-      </div>
-      {errors && (
-        <p className="text-red-500 text-sm">{errors.examType?.message}</p>
-      )}
-      <div className="flex flex-row gap-x-4">
-        <Input
-          type="text"
-          className="w-[500px]"
-          placeholder="Enter collection name"
+        <Select
+          label="Collection"
+          className="w-[50%]"
+          {...register('examType')}
           isDisabled
-        />
-        <Button color="primary" isDisabled>
-          Create new Collection
-        </Button>
+        >
+          <SelectItem key="Saved">Saved</SelectItem>
+          <SelectItem key="Midsem">Midsem</SelectItem>
+          <SelectItem key="EndSem">EndSem</SelectItem>
+        </Select>
       </div>
     </section>
   );

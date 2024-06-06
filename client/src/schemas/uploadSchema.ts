@@ -19,25 +19,35 @@ const baseSchema = z.object({
   file: z
     .custom<FileList>()
     .refine((fileList) => fileList && fileList.length === 1, {
-      message: 'No file uploaded',
+      message: '*No file uploaded',
     })
     .transform((file) => file[0] as File)
     .refine(
       (file) => {
         return file && file.size <= MAX_FILE_SIZE;
       },
-      { message: `Max file size allowed is ${MAX_FILE_SIZE} MB` }
+      { message: `*Max file size allowed is ${MAX_FILE_SIZE} MB` }
     )
     .refine((file) => file && ALLOWED_FILE_TYPES.includes(file.type), {
-      message: 'Only .pdf format is supported',
+      message: '*Only .PDF format is supported',
     }),
 });
 
 export const uploadFilesInputSchema = z
   .object({
     examType: z.enum(getValues(EXAM_TYPES.INSTITUTIONAL)),
-    institution: z.string().trim().min(1).max(50),
-    branch: z.string().trim().min(1).max(50),
+    institution: z
+      .string()
+      .trim()
+      .min(1, { message: '*Institution must contaian atleast 1 character(s)' })
+      .max(50, {
+        message: '*Institution must contaian atmost 50 character(s)',
+      }),
+    branch: z
+      .string()
+      .trim()
+      .min(1, { message: '*Branch must contaian atleast 1 character(s)' })
+      .max(50, { message: '*Branch must contaian atmost 50 character(s)' }),
     year: z
       .string()
       .trim()
@@ -57,7 +67,7 @@ export const uploadFilesInputSchema = z
           return true;
         },
         {
-          message: `Year should be between ${
+          message: `*Year should be between ${
             new Date().getFullYear() - 15
           } and ${new Date().getFullYear()}`,
         }
@@ -66,20 +76,24 @@ export const uploadFilesInputSchema = z
     subjectCode: z
       .string()
       .trim()
-      .min(1)
-      .max(10)
+      .min(1, { message: '*Subject Code must contaian atleast 1 character(s)' })
+      .max(10, {
+        message: '*Subject Code must contaian atmost 10 character(s)',
+      })
       .transform((subjectCode) => sanitizeInput(subjectCode)),
     subjectName: z
       .string()
       .trim()
-      .min(1)
-      .max(50)
+      .min(1, { message: '*Subject Name must contaian atleast 1 character(s)' })
+      .max(50, {
+        message: '*Subject Name must contaian atmost 50 character(s)',
+      })
       .transform((subjectName) => sanitizeInput(subjectName)),
     tags: z
       .string()
       .trim()
-      .min(1)
-      .max(1000)
+      .min(1, { message: '*Tags must contaian atleast 1 character(s)' })
+      .max(1000, { message: '*Tags must contaian atmost 1000 character(s)' })
       .transform((tags) => tags.toLowerCase())
       .refine(
         (value) =>
@@ -89,7 +103,7 @@ export const uploadFilesInputSchema = z
           value.split(',').every((tag) => tag.trim() !== '' && tag !== ','),
         {
           message:
-            'The tags should be seperated by single comma with no space in between',
+            '*The tags should be seperated by single comma with no space in between',
         }
       ),
   })

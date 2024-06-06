@@ -1,7 +1,6 @@
 import { Button } from '@nextui-org/button';
 import Upload from './Steps/Upload';
 import FileInfo from './Steps/FileInfo';
-import SpecificInfo from './Steps/SpecificInfo';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
 import { TFileUploadFormFields } from '@/types/upload';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,10 +13,13 @@ import { getFileFileUploadObj } from '@/utils/axiosReqObjects/fileUpload';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 import { toast } from 'sonner';
 import { Spinner } from '@nextui-org/spinner';
+import { FaChevronLeft } from 'react-icons/fa';
+import { FaChevronRight } from 'react-icons/fa';
 
 export default function FileUpload() {
   const [fileUploadData, setFileUploadData] =
     useState<TFileUploadFormFields[]>();
+  const [fileName, setFileName] = useState<string>();
 
   const {
     data: response,
@@ -52,24 +54,29 @@ export default function FileUpload() {
   });
   const { next, prev, isFirstStep, isLastStep, step, stepIndex } =
     useMultiStepForm([
-      <Upload register={register} errors={errors} />,
+      <Upload
+        setFileName={setFileName}
+        fileName={fileName}
+        register={register}
+        errors={errors}
+      />,
       <FileInfo register={register} errors={errors} />,
-      <SpecificInfo register={register} errors={errors} />,
       <FinalSubmit />,
     ]);
 
   const triggerValiadate = () => {
-    console.log(stepIndex);
-    switch (stepIndex) {
-      case 0: {
-        return trigger(['file', 'examType']);
-      }
-      case 1: {
-        return trigger(['institution', 'year', 'semester']);
-      }
-      default: {
-        return trigger(['branch', 'subjectCode', 'subjectName', 'tags']);
-      }
+    if (stepIndex === 0) {
+      return trigger(['file', 'examType']);
+    } else {
+      return trigger([
+        'branch',
+        'subjectCode',
+        'subjectName',
+        'tags',
+        'institution',
+        'year',
+        'semester',
+      ]);
     }
   };
 
@@ -81,24 +88,29 @@ export default function FileUpload() {
   return (
     <div className="p-4 min-h-[600px]">
       <form onSubmit={handleSubmit(onSubmit)}>
-        {step}
+        <div className="min-h-[400px] p-4">{step}</div>
         <div className="flex flex-row px-4 justify-around">
           <Button
             onClick={() => prev()}
             isDisabled={isFirstStep()}
             color="primary"
+            variant="bordered"
+            startContent={<FaChevronLeft />}
           >
             Previous
           </Button>
-          <Button
-            onClick={() => {
-              triggerValiadate().then((res) => res && next());
-            }}
-            className={`${isLastStep() ? `hidden` : `block`}`}
-            color="primary"
-          >
-            Next
-          </Button>
+          {!isLastStep() && (
+            <Button
+              onClick={() => {
+                triggerValiadate().then((res) => res && next());
+              }}
+              color="primary"
+              variant="flat"
+              endContent={<FaChevronRight />}
+            >
+              Next
+            </Button>
+          )}
           <Button
             color="success"
             type="submit"
