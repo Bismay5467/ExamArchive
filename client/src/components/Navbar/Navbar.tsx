@@ -16,7 +16,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@nextui-org/react';
 import { CLIENT_ROUTES } from '@/constants/routes.ts';
 import { ISearchInput } from '@/types/search.ts';
-import Logo from '@/assets/Logo.png';
 import LogoBanner from '@/assets/LogoBanner.png';
 import { QUERY_FIELDS } from '@/constants/search.ts';
 import { useAuth } from '@/hooks/useAuth.tsx';
@@ -39,6 +38,8 @@ export default function Navbar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const currentLocation = useLocation();
+  const dashboardRegex = /\/dashboard/;
+  const isDashBoardPage = dashboardRegex.test(currentLocation.pathname);
   const {
     authState: { isAuth, username, role, userId },
     RESET,
@@ -68,12 +69,13 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex px-4 py-2 sm:py-1 flex-row justify-between max-w-[1280px] mx-auto">
+      <nav className="flex pr-8 pl-4 py-4 flex-row justify-between max-w-[1280px] mx-auto">
         <section className="flex flex-row gap-6">
-          <NavLink to={CLIENT_ROUTES.HOME}>
-            <img src={Logo} className="w-[50px] sm:hidden" />
-            <img src={LogoBanner} className="w-[230px] hidden sm:block" />
-          </NavLink>
+          {!isDashBoardPage && (
+            <NavLink to={CLIENT_ROUTES.HOME}>
+              <img src={LogoBanner} className="w-[200px] hidden sm:block" />
+            </NavLink>
+          )}
           <form onSubmit={handleSubmit(submitHandler)} className="self-center">
             <Input
               classNames={{
@@ -154,7 +156,6 @@ export default function Navbar() {
           )}
         </section>
       </nav>
-      <div className="h-1 bg-gray-200" />
     </>
   );
 }
