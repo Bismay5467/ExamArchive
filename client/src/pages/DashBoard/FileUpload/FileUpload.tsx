@@ -1,20 +1,20 @@
 import { Button } from '@nextui-org/button';
-import Upload from './Steps/Upload';
-import FileInfo from './Steps/FileInfo';
-import useMultiStepForm from '@/hooks/useMultiStepForm';
-import { TFileUploadFormFields } from '@/types/upload';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
-import FinalSubmit from './Steps/FinalSubmit';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { getFileFileUploadObj } from '@/utils/axiosReqObjects/fileUpload';
-import { SUCCESS_CODES } from '@/constants/statusCodes';
-import { toast } from 'sonner';
 import { Spinner } from '@nextui-org/spinner';
-import { FaChevronLeft } from 'react-icons/fa';
-import { FaChevronRight } from 'react-icons/fa';
+import { toast } from 'sonner';
+import useSWR from 'swr';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+
+import FileInfo from './Steps/FileInfo';
+import FinalSubmit from './Steps/FinalSubmit';
+import { SUCCESS_CODES } from '@/constants/statusCodes';
+import { TFileUploadFormFields } from '@/types/upload';
+import Upload from './Steps/Upload';
+import getFileFileUploadObj from '@/utils/axiosReqObjects/fileUpload';
+import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
+import useMultiStepForm from '@/hooks/useMultiStepForm';
 
 export default function FileUpload() {
   const [fileUploadData, setFileUploadData] =
@@ -27,15 +27,12 @@ export default function FileUpload() {
     isValidating,
   } = useSWR(fileUploadData ? getFileFileUploadObj(fileUploadData) : null);
 
-  console.log(response);
-
   useEffect(() => {
     if (response && response.status === SUCCESS_CODES.OK) {
       toast.success(`${response?.data?.message}`, {
         description: 'Amazing Job!',
         duration: 5000,
       });
-      next();
     } else if (error) {
       toast.error(`${error?.message}`, {
         description: error?.response?.data?.message,
@@ -67,21 +64,19 @@ export default function FileUpload() {
   const triggerValiadate = () => {
     if (stepIndex === 0) {
       return trigger(['file', 'examType']);
-    } else {
-      return trigger([
-        'branch',
-        'subjectCode',
-        'subjectName',
-        'tags',
-        'institution',
-        'year',
-        'semester',
-      ]);
     }
+    return trigger([
+      'branch',
+      'subjectCode',
+      'subjectName',
+      'tags',
+      'institution',
+      'year',
+      'semester',
+    ]);
   };
 
-  const onSubmit: SubmitHandler<TFileUploadFormFields> = async (formData) => {
-    console.log(formData);
+  const onSubmit: SubmitHandler<TFileUploadFormFields> = (formData) => {
     setFileUploadData([formData]);
   };
 
@@ -114,7 +109,7 @@ export default function FileUpload() {
           <Button
             color="success"
             type="submit"
-            className={`${isLastStep() ? `block` : `hidden`}`}
+            className={`${isLastStep() ? 'block' : 'hidden'}`}
           >
             Submit
             {isValidating && <Spinner />}

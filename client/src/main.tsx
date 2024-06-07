@@ -1,3 +1,4 @@
+import { NextUIProvider } from '@nextui-org/system';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
@@ -7,12 +8,11 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 
-import './index.css';
-import Root from './Root.tsx';
 import Error from './pages/404/Error.tsx';
 import Home from './pages/Home/Home.tsx';
+import Root from './Root.tsx';
 import Search from './pages/Search/Search.tsx';
-import { NextUIProvider } from '@nextui-org/system';
+import './index.css';
 
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
 const Signup = React.lazy(() => import('./pages/Auth/Signup/Signup.tsx'));

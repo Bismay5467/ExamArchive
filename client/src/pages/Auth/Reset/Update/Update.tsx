@@ -1,10 +1,13 @@
-import { Input } from '@/components/ui/input';
-import { TResetFormFields } from '@/types/auth';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import { Label } from '@radix-ui/react-label';
 import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { FaEye } from 'react-icons/fa';
-import { FaEyeSlash } from 'react-icons/fa';
+
+import { Input } from '@/components/ui/input';
+import { TResetFormFields } from '@/types/auth';
 
 export default function Update({
   register,
@@ -19,7 +22,7 @@ export default function Update({
       <Label htmlFor="password-input">Enter new password</Label>
       <Input
         id="password-input"
-        type={`${eyeOff ? `password` : `text`}`}
+        type={`${eyeOff ? 'password' : 'text'}`}
         className="focus-visible:ring-0"
         {...register('password')}
       />

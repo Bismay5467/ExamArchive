@@ -1,8 +1,9 @@
 import { FaCheckCircle, FaChevronRight } from 'react-icons/fa';
+
 import { Button } from '@/components/ui/button.tsx';
+import ChatBox from './ChatBox.tsx';
 import { TypewriterEffect } from '@/components/ui/typewriter-effect.tsx';
 import heroImg from '../../../assets/HeroImage.jpg';
-import ChatBox from './ChatBox.tsx';
 
 export default function HeroBanner() {
   const words = [
@@ -100,7 +101,7 @@ export default function HeroBanner() {
         <div className="w-[50%] flex flex-col relative justify-center">
           <img
             src={heroImg}
-            alt="Hero Image"
+            alt="Hero"
             className="rounded-tl-[80px] rounded-br-[80px]"
           />
 

@@ -18,6 +18,8 @@ export default function CommingSoon({
         return VersionUpgrade;
       case 'programming':
         return Progamming;
+      default:
+        return '';
     }
   };
 
@@ -29,6 +31,8 @@ export default function CommingSoon({
         return 'Woo Hoo! almost there!';
       case 'programming':
         return 'Implementing now!';
+      default:
+        return '';
     }
   };
 
@@ -40,6 +44,8 @@ export default function CommingSoon({
         return '*We currently in the devops phase, expect roll out any-time now!';
       case 'programming':
         return '*Feature is getting implemeneted by Brains and Caffeine. Reach out to admin for more information!';
+      default:
+        return '';
     }
   };
 

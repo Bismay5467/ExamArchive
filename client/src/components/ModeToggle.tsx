@@ -1,7 +1,7 @@
-import { useTheme } from '@/hooks/useTheme';
 import { Switch } from '@nextui-org/react';
-import { FaSun } from 'react-icons/fa';
-import { FaMoon } from 'react-icons/fa';
+import { FaMoon, FaSun } from 'react-icons/fa';
+
+import { useTheme } from '@/hooks/useTheme';
 
 export default function ModeToggle() {
   // TODO: This needs refactoring!

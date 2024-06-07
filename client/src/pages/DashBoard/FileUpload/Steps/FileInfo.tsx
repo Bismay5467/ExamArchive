@@ -1,8 +1,8 @@
-import { Input, Textarea } from '@nextui-org/react';
-import { TFileUploadFormFields } from '@/types/upload';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { Select, SelectItem } from '@nextui-org/react';
+import { Input, Select, SelectItem, Textarea } from '@nextui-org/react';
+
 import { SEMESTER } from '@/constants/shared';
+import { TFileUploadFormFields } from '@/types/upload';
 
 export default function FileInfo({
   register,
@@ -39,7 +39,7 @@ export default function FileInfo({
           className="row-span-1 col-span-5"
           {...register('semester')}
           isInvalid={errors.semester !== undefined}
-          errorMessage={'*Required'}
+          errorMessage="*Required"
         >
           {Object.entries(SEMESTER).map(([_, value]) => (
             <SelectItem key={value}>{value}</SelectItem>

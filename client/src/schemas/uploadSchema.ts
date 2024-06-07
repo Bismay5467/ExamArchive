@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-magic-numbers */
 import z from 'zod';
+
+import { MAX_FILE_SIZE } from '@/constants/upload';
 import {
   ALLOWED_FILE_TYPES,
   EXAM_TYPES,
   SEMESTER,
 } from '@/constants/shared.ts';
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 function getValues<T extends Record<string, any>>(obj: T) {
   return Object.values(obj) as [(typeof obj)[keyof T]];
@@ -22,12 +23,9 @@ const baseSchema = z.object({
       message: '*No file uploaded',
     })
     .transform((file) => file[0] as File)
-    .refine(
-      (file) => {
-        return file && file.size <= MAX_FILE_SIZE;
-      },
-      { message: `*Max file size allowed is ${MAX_FILE_SIZE} MB` }
-    )
+    .refine((file) => file && file.size <= MAX_FILE_SIZE, {
+      message: `*Max file size allowed is ${MAX_FILE_SIZE} MB`,
+    })
     .refine((file) => file && ALLOWED_FILE_TYPES.includes(file.type), {
       message: '*Only .PDF format is supported',
     }),

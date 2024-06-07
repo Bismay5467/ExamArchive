@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { FaHeart } from 'react-icons/fa';
-import LogoBanner from '../../assets/LogoBanner.png';
 import { LinkedIn } from '@/constants/shared.ts';
+import LogoBanner from '../../assets/LogoBanner.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

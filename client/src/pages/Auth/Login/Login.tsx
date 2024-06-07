@@ -1,23 +1,26 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import { MdOutlineEmail } from 'react-icons/md';
-import { useEffect, useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { toast } from 'sonner';
+import useSWR from 'swr';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
+import { CLIENT_ROUTES } from '@/constants/routes';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import LogoBanner from '@/assets/LogoBanner.png';
-import { TSignInFormFields } from '@/types/auth';
-import Spinner from '@/components/ui/spinner';
-import { CLIENT_ROUTES } from '@/constants/routes';
-import { toast } from 'sonner';
-import { useAuth } from '@/hooks/useAuth';
-import { getSignInObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
-import useSWR from 'swr';
+import Spinner from '@/components/ui/spinner';
+import { TSignInFormFields } from '@/types/auth';
+import { getSignInObj } from '@/utils/axiosReqObjects';
 import { signInUserInputSchema } from '@/schemas/authSchema';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
@@ -59,7 +62,7 @@ export default function Login() {
     };
   }, [user, error]);
 
-  const onSubmit: SubmitHandler<TSignInFormFields> = async (formData) => {
+  const onSubmit: SubmitHandler<TSignInFormFields> = (formData) => {
     setUserData(formData);
   };
 
@@ -138,7 +141,7 @@ export default function Login() {
               )}
             </Button>
             <p className="text-sm text-center opacity-60 self-center mt-2">
-              Don't have an account?{' '}
+              {"Don't have an account? "}
               <Link
                 to={CLIENT_ROUTES.AUTH_SIGNUP}
                 className="font-semibold hover:underline"

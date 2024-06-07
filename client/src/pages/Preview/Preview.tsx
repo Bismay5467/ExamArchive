@@ -8,10 +8,10 @@ export default function Preview() {
         <div className="bg-slate-100 min-h-[200px]">
           <p>Showing results for paper id: {paperid}</p>
         </div>
-        <div className="min-h-[600px] bg-pink-200"></div>
-        <div className="min-h-[500px] bg-blue-200"></div>
+        <div className="min-h-[600px] bg-pink-200" />
+        <div className="min-h-[500px] bg-blue-200" />
       </div>
-      <aside className="bg-yellow-100 col-span-2"></aside>
+      <aside className="bg-yellow-100 col-span-2" />
     </section>
   );
 }

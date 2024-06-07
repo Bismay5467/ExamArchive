@@ -1,15 +1,16 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { SWRConfig } from 'swr';
 import { Suspense } from 'react';
-import { ThemeProvider } from './hooks/useTheme.tsx';
-import Navbar from './components/Navbar/Navbar.tsx';
+import { Outlet, useLocation } from 'react-router-dom';
+
+import { AuthProvider } from './hooks/useAuth.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import Loading from './pages/Loading/Loading.tsx';
-import { SWRConfig } from 'swr';
-import fetcher from './utils/fetcher/fetcher.ts';
-import { Toaster } from '@/components/ui/sonner';
-import { AuthProvider } from './hooks/useAuth.tsx';
+import Navbar from './components/Navbar/Navbar.tsx';
 import Sidebar from './components/Sidebar/Sidebar.tsx';
+import { ThemeProvider } from './hooks/useTheme.tsx';
+import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
+import fetcher from './utils/fetcher/fetcher.ts';
 
 export default function Root() {
   const authRegex = /\/auth/;

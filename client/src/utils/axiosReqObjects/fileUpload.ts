@@ -1,10 +1,8 @@
 import { SERVER_ROUTES } from '@/constants/routes';
-import { useAuth } from '@/hooks/useAuth';
 import { TFileUploadFormFields } from '@/types/upload';
+import { useAuth } from '@/hooks/useAuth';
 
-export const getFileFileUploadObj = (
-  fileUploadData: TFileUploadFormFields[]
-) => {
+export default (fileUploadData: TFileUploadFormFields[]) => {
   const url = SERVER_ROUTES.UPLOAD;
   const {
     authState: { jwtToken },

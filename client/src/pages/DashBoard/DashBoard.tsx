@@ -1,8 +1,9 @@
-import { CLIENT_ROUTES } from '@/constants/routes';
-import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+
+import { CLIENT_ROUTES } from '@/constants/routes';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function DashBoard() {
   const {
@@ -13,7 +14,7 @@ export default function DashBoard() {
 
   useEffect(() => {
     if (!isAuth) {
-      toast.error(`Whoops! You seem to be logged out!`, {
+      toast.error('Whoops! You seem to be logged out!', {
         description: 'Authorization Required',
         duration: 5000,
       });

@@ -1,26 +1,27 @@
-import LogoBanner from '@/assets/LogoBanner.png';
-import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
-import Spinner from '@/components/ui/spinner';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IResetJwtPayload, TResetFormFields } from '@/types/auth';
-import useSWR from 'swr';
-import Email from './Email/Email';
-import Update from './Update/Update';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { SUCCESS_CODES } from '@/constants/statusCodes';
-import { getResetObj } from '@/utils/axiosReqObjects';
-import { toast } from 'sonner';
-import { CLIENT_ROUTES } from '@/constants/routes';
 import { jwtDecode } from 'jwt-decode';
-import { resetInputSchema } from '@/schemas/authSchema';
+import { toast } from 'sonner';
+import useSWR from 'swr';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { AUTH_TOKEN } from '@/constants/auth';
+import { Button } from '@/components/ui/button';
+import { CLIENT_ROUTES } from '@/constants/routes';
+import Email from './Email/Email';
+import LogoBanner from '@/assets/LogoBanner.png';
+import { SUCCESS_CODES } from '@/constants/statusCodes';
+import Spinner from '@/components/ui/spinner';
+import Update from './Update/Update';
+import { getResetObj } from '@/utils/axiosReqObjects';
+import { resetInputSchema } from '@/schemas/authSchema';
+import { IResetJwtPayload, TResetFormFields } from '@/types/auth';
 
 export default function Reset() {
   const [userData, setUserData] = useState<TResetFormFields>();
   const navigate = useNavigate();
-  const [searchParams, _] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const authToken = searchParams.get(AUTH_TOKEN);
 
   const {
@@ -59,7 +60,7 @@ export default function Reset() {
     }
   }, [user, error]);
 
-  const onSubmit: SubmitHandler<TResetFormFields> = async (formData) => {
+  const onSubmit: SubmitHandler<TResetFormFields> = (formData) => {
     if (authToken) {
       const payload: IResetJwtPayload = jwtDecode(authToken);
       setUserData({
@@ -81,12 +82,12 @@ export default function Reset() {
             <img src={LogoBanner} alt="" className="w-[180px]" />
             <div>
               <h1 className="text-3xl font-semibold text-center">
-                {authToken ? `Just one more step!` : `Forgot your Password?`}
+                {authToken ? 'Just one more step!' : 'Forgot your Password?'}
               </h1>
               <h3 className="text-sm opacity-60 mt-2 text-center">
                 {authToken
-                  ? `Enter your new password...`
-                  : `Enter your details to recover!`}
+                  ? 'Enter your new password...'
+                  : 'Enter your details to recover!'}
               </h3>
             </div>
           </div>
@@ -100,9 +101,9 @@ export default function Reset() {
               className="w-full mt-8"
               disabled={isSubmitting || isValidating}
             >
-              {authToken ? `Update` : `Send Mail`}
+              {authToken ? 'Update' : 'Send Mail'}
               {(isSubmitting || isValidating) && (
-                <Spinner className={`w-4 h-4 ml-3 `} />
+                <Spinner className="w-4 h-4 ml-3 " />
               )}
             </Button>
           </form>

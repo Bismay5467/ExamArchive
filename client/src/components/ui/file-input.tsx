@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import React from 'react';
+import { cn } from '@/lib/utils';
 import cloud from '@/assets/cloud.svg';
 
 export interface InputProps

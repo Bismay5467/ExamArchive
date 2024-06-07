@@ -1,8 +1,10 @@
+import React from 'react';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { TFileUploadFormFields } from '@/types/upload';
-import { EXAM_TYPES } from '@/constants/shared';
 import { Select, SelectItem } from '@nextui-org/react';
+
+import { EXAM_TYPES } from '@/constants/shared';
 import { FileInput } from '@/components/ui/file-input';
+import { TFileUploadFormFields } from '@/types/upload';
 
 export default function Upload({
   register,
@@ -31,7 +33,7 @@ export default function Upload({
           {...register('examType')}
           isRequired
           isInvalid={errors.examType !== undefined}
-          errorMessage={'*Required'}
+          errorMessage="*Required"
         >
           {Object.entries(EXAM_TYPES.INSTITUTIONAL).map(([_, value]) => (
             <SelectItem key={value}>{value}</SelectItem>
