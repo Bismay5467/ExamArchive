@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-magic-numbers */
+import { Types } from 'mongoose';
 import { isBase64 } from 'validator';
 import z from 'zod';
 
@@ -14,9 +15,10 @@ export const sanitizeInput = (params: string) =>
 
 const baseSchema = z.object({
   file: z.object({
-    dataURI: z.string().refine((dataURI) => isBase64(dataURI)),
+    dataURI: z.string().refine((dataURI) => isBase64(dataURI.split(',')[1])),
     name: z.string().min(1).max(100),
   }),
+  folderId: z.string().refine((folderId) => Types.ObjectId.isValid(folderId)),
 });
 
 export const uploadFilesInputSchema = z.array(
@@ -93,7 +95,3 @@ export const addNamesInputSchema = z.object({
   name: z.string().min(1).max(100),
 });
 export const getNamesInputSchema = z.string().min(1).max(100);
-export const fileUploadNotifWebhookSchema = z.object({
-  public_id: z.string(),
-  secure_url: z.string(),
-});
