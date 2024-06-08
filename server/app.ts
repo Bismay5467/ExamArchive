@@ -43,7 +43,10 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (whitelist.includes(origin)) callback(null, true);
-      else callback(new Error('Not allowed by CORS'));
+      else {
+        console.error(error);
+        callback(new Error('Not allowed by CORS'));
+      }
     },
     optionsSuccessStatus: SUCCESS_CODES.OK,
     credentials: true,
