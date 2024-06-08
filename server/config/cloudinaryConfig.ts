@@ -57,7 +57,7 @@ dotenv.config({
         unsigned: true,
         format: TRANSFORMED_FORMAT,
         async: true,
-        notification_url: `${process.env.PROD_SERVER_URL}${CLOUDINARY_WEBHOOK_ROUTE}`,
+        notification_url: `${process.env.PRODUCTION_URL}${CLOUDINARY_WEBHOOK_ROUTE}`,
       });
       // eslint-disable-next-line no-console
       console.log('New upload preset created');

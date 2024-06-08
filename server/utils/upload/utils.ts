@@ -17,11 +17,6 @@ export const getExamGroup = (examType: TExamType<keyof typeof EXAM_TYPES>) =>
     Object.values(type).includes(examType)
   )?.[0] as keyof typeof EXAM_TYPES | undefined;
 
-export const getFileName = (fileName: string) => {
-  const [filename, extension] = fileName.split('.');
-  return `${filename.split(' ').join('_')}_${Date.now()}.${extension}`;
-};
-
 export const sanitizeInput = (
   fileInfo: TExamTypeExtended<keyof typeof EXAM_TYPES>
 ) => {

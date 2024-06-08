@@ -17,11 +17,7 @@ import {
   TFile,
   TUploadFile,
 } from '../../types/upload/types';
-import {
-  getFileName,
-  sanitizeInput,
-  uploadToCloudinary,
-} from '../../utils/upload/utils';
+import { sanitizeInput, uploadToCloudinary } from '../../utils/upload/utils';
 
 const uploadFilesToCloudinary = async (fileDataURIArray: TFile[]) => {
   const { status } = await cloudinary.api.ping();
@@ -91,11 +87,7 @@ const UploadFile = asyncErrorHandler(async (req: Request, res: Response) => {
   const paramsWithId: TExamTypeExtended<keyof typeof EXAM_TYPES> = [];
   // eslint-disable-next-line no-unused-vars
   Object.entries(params).forEach(([_, value]) => {
-    paramsWithId.push({
-      ...value,
-      userId,
-      file: { dataURI: value.file.dataURI, name: getFileName(value.file.name) },
-    });
+    paramsWithId.push({ ...value, userId });
   });
   const fileDataURIArray = paramsWithId.map((fileObj) => fileObj.file);
   const sanitizedFileArray = sanitizeInput(paramsWithId);
