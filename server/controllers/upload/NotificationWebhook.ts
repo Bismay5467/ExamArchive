@@ -14,7 +14,8 @@ const NotificationWebhook = asyncErrorHandler(
       public_id: string;
       secure_url: string;
     };
-    console.log(publicId, url)
+    // eslint-disable-next-line no-console
+    console.log(publicId, url);
     if (!(publicId && url)) {
       throw new ErrorHandler(
         'Record updation failed',
