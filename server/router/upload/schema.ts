@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /* eslint-disable no-magic-numbers */
 import { Types } from 'mongoose';
 import { isBase64 } from 'validator';
