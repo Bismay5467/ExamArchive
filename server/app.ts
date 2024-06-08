@@ -44,7 +44,7 @@ app.use(
     origin: (origin, callback) => {
       if (whitelist.includes(origin)) callback(null, true);
       else {
-        console.error(error);
+        console.error(origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
