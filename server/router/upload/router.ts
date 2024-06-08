@@ -10,11 +10,7 @@ import {
   NotificationWebhook,
   UploadFile,
 } from '../../controllers/upload';
-import {
-  addNamesInputSchema,
-  fileUploadNotifWebhookSchema,
-  uploadFilesInputSchema,
-} from './schema';
+import { addNamesInputSchema, uploadFilesInputSchema } from './schema';
 
 const router = express.Router();
 
@@ -27,15 +23,7 @@ router.post(
   ],
   UploadFile
 );
-router.post(
-  '/webhook',
-  [
-    verifyUser,
-    privilege([ROLE.ADMIN]),
-    validate(fileUploadNotifWebhookSchema, 'BODY'),
-  ],
-  NotificationWebhook
-);
+router.post('/webhook', NotificationWebhook);
 router.put(
   '/addNames',
   [
