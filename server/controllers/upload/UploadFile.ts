@@ -100,8 +100,7 @@ const UploadFile = asyncErrorHandler(async (req: Request, res: Response) => {
     ]).catch(async (error: Error) => {
       console.error(`Logging Error: ${error}`);
       await session.abortTransaction();
-      throw new ErrorHandler(
-        JSON.stringify(error),
+      throw new ErrorHandler('Something went wrong. Please try again later',
         SERVER_ERROR['INTERNAL SERVER ERROR']
       );
     });
