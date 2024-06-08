@@ -27,13 +27,15 @@ export const sanitizeInput = (
       year,
       examType,
       file: { name: filename },
+      folderId,
     } = file;
     const fileObj = {
-      tags: tags.split(' '),
+      tags: tags.split(','),
       uploadedBy: userId,
       year,
       examType,
       file: { filename },
+      folderId,
     };
     const examGroup = getExamGroup(examType);
     switch (examGroup) {

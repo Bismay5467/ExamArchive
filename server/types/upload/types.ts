@@ -10,6 +10,7 @@ export type TFile = {
 
 export type TUploadFile<T extends keyof typeof EXAM_TYPES> = {
   examType: TExamType<T>;
+  folderId: string;
   file: TFile;
   tags: string;
   year: string;
