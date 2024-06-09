@@ -1,7 +1,7 @@
 import { pdfjs, Document, Page } from 'react-pdf';
 import { useState } from 'react';
-import { INITIAL_PAGE_NUMBER } from '@/constants/shared';
 import { Button } from '@nextui-org/react';
+import { INITIAL_PAGE_NUMBER } from '@/constants/shared';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -11,8 +11,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 export function PDFViewer({ pdfURL }: { pdfURL: string }) {
   const [totalPages, setTotalPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(INITIAL_PAGE_NUMBER);
-  const isLastPage = totalPages == pageNumber;
-  const isFirstPage = pageNumber == INITIAL_PAGE_NUMBER;
+  const isLastPage = totalPages === pageNumber;
+  const isFirstPage = pageNumber === INITIAL_PAGE_NUMBER;
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
     setTotalPages(numPages);
