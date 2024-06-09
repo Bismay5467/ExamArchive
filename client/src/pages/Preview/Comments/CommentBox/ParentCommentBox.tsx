@@ -1,10 +1,9 @@
 import { Avatar } from '@nextui-org/react';
-import { BiUpvote } from 'react-icons/bi';
-import { BiDownvote } from 'react-icons/bi';
+import { BiUpvote, BiDownvote } from 'react-icons/bi';
 import { BsReply } from 'react-icons/bs';
 import { FaRegComment } from 'react-icons/fa6';
 
-//TODO: BiSolidUpvote & BiSolidDownvote (for animation)
+// TODO: BiSolidUpvote & BiSolidDownvote (for animation)
 
 export default function ParentCommentBox() {
   return (

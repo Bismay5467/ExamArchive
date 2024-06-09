@@ -1,8 +1,7 @@
-import { Textarea } from '@/components/ui/textarea';
-import { FaCode } from 'react-icons/fa';
+import { FaCode, FaAt } from 'react-icons/fa';
 import { IoMdLink } from 'react-icons/io';
-import { FaAt } from 'react-icons/fa';
 import { Button } from '@nextui-org/react';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function CommentForm() {
   return (
