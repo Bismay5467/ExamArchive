@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export const ERROR_CODES = {
   'BAD REQUEST': 400,
   CONFLICT: 409,

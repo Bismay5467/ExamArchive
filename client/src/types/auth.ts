@@ -7,7 +7,6 @@ import {
   signInUserInputSchema,
 } from '@/schemas/authSchema';
 
-
 export type TSignUpFormFields = z.infer<typeof newUserInputSchema>;
 export type TSignInFormFields = z.infer<typeof signInUserInputSchema>;
 export type TResetFormFields = z.infer<typeof resetInputSchema>;

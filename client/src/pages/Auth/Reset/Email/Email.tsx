@@ -1,8 +1,9 @@
+import { Label } from '@radix-ui/react-label';
+import { MdOutlineEmail } from 'react-icons/md';
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
+
 import { Input } from '@/components/ui/input';
 import { TResetFormFields } from '@/types/auth';
-import { Label } from '@radix-ui/react-label';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { MdOutlineEmail } from 'react-icons/md';
 
 export default function Email({
   register,

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
-/* eslint-disable object-curly-newline */
+
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'sonner';

@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { FaHeart } from 'react-icons/fa';
-import Logo from '../../assets/Logo.png';
-import { LinkedIn } from '@/constants/socialLinks.ts';
+import { LinkedIn } from '@/constants/shared.ts';
+import LogoBanner from '../../assets/LogoBanner.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,7 +14,7 @@ export default function Footer() {
             href="#"
             className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
           >
-            <img src={Logo} className="w-[200px]" alt="Flowbite Logo" />
+            <img src={LogoBanner} className="w-[200px]" alt="Flowbite Logo" />
           </a>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>

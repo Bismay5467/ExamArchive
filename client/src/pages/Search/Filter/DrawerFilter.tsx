@@ -1,22 +1,22 @@
 import { Button } from '@/components/ui/button';
+import FilterForm from './FilterForm/FilterForm';
+import { IFilterInputs } from '@/types/search.ts';
 import {
+  Drawer,
   DrawerClose,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  Drawer,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import FilterForm from './FilterForm/FilterForm';
-import { IFilterInputs } from '@/types/search.ts';
 
 export default function DrawerFilter({
   filters,
   handleFilterSubmit,
 }: {
   filters: IFilterInputs;
-  handleFilterSubmit: (newFilters: IFilterInputs) => void;
+  handleFilterSubmit: (_newFilters: IFilterInputs) => void;
 }) {
   return (
     <Drawer>

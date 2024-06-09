@@ -10,5 +10,6 @@ export type TThemeProviderProps = {
 
 export type TThemeProviderState = {
   theme: TTheme;
+  // eslint-disable-next-line no-unused-vars
   setTheme: (theme: TTheme) => void;
 };

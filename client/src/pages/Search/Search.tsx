@@ -1,17 +1,15 @@
-/* eslint-disable no-underscore-dangle */
 import { Link, useSearchParams } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
 
 import AsideFilter from './Filter/AsideFilter';
 import { Button } from '@/components/ui/button';
+import { CLIENT_ROUTES } from '@/constants/routes';
 import DrawerFilter from './Filter/DrawerFilter';
-import { IFilterInputs } from '@/types/search.ts';
-import { ISearchData } from '@/types/search.ts';
 import { QUERY_FIELDS } from '@/constants/search';
 import ResultCard from './ResultCard/ResultCard';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
-import { CLIENT_ROUTES } from '@/constants/routes';
+import { IFilterInputs, ISearchData } from '@/types/search.ts';
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();

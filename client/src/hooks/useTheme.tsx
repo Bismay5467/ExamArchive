@@ -1,4 +1,7 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
+
 import { createContext, useContext, useEffect, useState } from 'react';
+
 import {
   TTheme,
   TThemeProviderProps,
@@ -42,9 +45,9 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: TTheme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: (themeval: TTheme) => {
+      localStorage.setItem(storageKey, themeval);
+      setTheme(themeval);
     },
   };
 

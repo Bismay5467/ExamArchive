@@ -1,6 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { useForm, SubmitHandler } from 'react-hook-form';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+import { Button } from '@/components/ui/button';
 import { IFilterInputs, TFilterInputs } from '@/types/search.ts';
 
 export default function FilterForm({
@@ -8,7 +11,7 @@ export default function FilterForm({
   handleFilterSubmit,
 }: {
   filters: IFilterInputs;
-  handleFilterSubmit: (newFilters: IFilterInputs) => void;
+  handleFilterSubmit: (_newFilters: IFilterInputs) => void;
 }) {
   const { register, handleSubmit, setValue, reset } = useForm<IFilterInputs>();
 

@@ -13,12 +13,15 @@ export default function Error() {
             Page not found
           </h1>
           <p className="mt-4 text-gray-500 dark:text-gray-400">
-            Sorry, the page you are looking for doesn't exist.Here are some
-            helpful links:
+            {`Sorry, the page you are looking for doesn't exist.Here are some
+            helpful links:`}
           </p>
 
           <div className="flex items-center mt-6 gap-x-3">
-            <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
+            <button
+              type="button"
+              className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -37,8 +40,11 @@ export default function Error() {
               <span>Go back</span>
             </button>
 
-            <Link to={'/'}>
-              <button className="w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
+            <Link to="/">
+              <button
+                type="button"
+                className="w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600"
+              >
                 Take me home
               </button>
             </Link>
@@ -49,7 +55,7 @@ export default function Error() {
           <img
             className=" w-full lg:h-[32rem] h-80 md:h-96 rounded-lg object-cover "
             src={errorImg}
-            alt="error Image"
+            alt="error"
           />
         </div>
       </div>

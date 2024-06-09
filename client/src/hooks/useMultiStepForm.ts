@@ -8,18 +8,21 @@ const useMultiStepForm = (steps: ReactElement[]) => {
   };
 
   const prev = () => {
-    setStepIndex((prev) => prev - 1);
+    setStepIndex((prevState) => prevState - 1);
   };
 
-  const isFirstStep = () => {
-    return stepIndex === 0;
-  };
+  const isFirstStep = () => stepIndex === 0;
 
-  const isLastStep = () => {
-    return stepIndex === steps.length - 1;
-  };
+  const isLastStep = () => stepIndex === steps.length - 1;
 
-  return { step: steps[stepIndex], next, prev, isFirstStep, isLastStep };
+  return {
+    step: steps[stepIndex],
+    next,
+    prev,
+    isFirstStep,
+    isLastStep,
+    stepIndex,
+  };
 };
 
 export default useMultiStepForm;

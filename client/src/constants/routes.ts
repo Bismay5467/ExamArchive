@@ -5,6 +5,10 @@ export const CLIENT_ROUTES = Object.freeze({
   AUTH_LOGIN: '/auth/login',
   AUTH_SIGNUP: '/auth/signup',
   AUTH_RESET: '/auth/reset',
+  DASHBOARD_PROFILE: 'profile',
+  DASHBOARD_FILEUPLOAD: 'fileupload',
+  DASHBOARD_ANALYTICS: 'analytics',
+  DASHBOARD_BOOKMARKS: 'bookmarks',
 });
 
 export const SERVER_ROUTES = Object.freeze({
@@ -12,4 +16,5 @@ export const SERVER_ROUTES = Object.freeze({
   LOGIN: '/api/v1/auth/signIn',
   RESET: '/api/v1/auth/reset',
   SIGNUP: '/api/v1/auth/newUser',
+  UPLOAD: '/api/v1/upload',
 });

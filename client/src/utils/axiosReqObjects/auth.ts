@@ -1,8 +1,8 @@
 import { SERVER_ROUTES } from '@/constants/routes';
 import {
+  TResetFormFields,
   TSignInFormFields,
   TSignUpFormFields,
-  TResetFormFields,
 } from '@/types/auth';
 
 export const getSignInObj = (userData: TSignInFormFields) => {

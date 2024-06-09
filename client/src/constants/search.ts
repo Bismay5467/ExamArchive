@@ -5,4 +5,4 @@ export const QUERY_FIELDS = Object.freeze({
   EXAM_TYPE: 'examType',
 });
 
-// TODO : attach all the fields involved
+// TODO: attach all the fields involved
