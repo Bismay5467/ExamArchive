@@ -2,12 +2,27 @@ import { Avatar } from '@nextui-org/react';
 import { BiUpvote, BiDownvote } from 'react-icons/bi';
 import { BsReply } from 'react-icons/bs';
 import { FaRegComment } from 'react-icons/fa6';
+import { BsThreeDots } from 'react-icons/bs';
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from '@nextui-org/react';
+import { useState } from 'react';
 
 // TODO: BiSolidUpvote & BiSolidDownvote (for animation)
 
 export default function ParentCommentBox() {
+  const [showDropDown, setShowDropDown] = useState<boolean>(false);
+
   return (
-    <div className=" border-gray-300 p-4 flex flex-col gap-y-4">
+    <div
+      className=" border-gray-300 p-4 flex flex-col gap-y-4"
+      onMouseEnter={() => setShowDropDown(true)}
+      onMouseLeave={() => setShowDropDown(false)}
+    >
       <span className="flex flex-row justify-between">
         <span className="flex flex-row gap-x-4">
           <Avatar
@@ -26,17 +41,31 @@ export default function ParentCommentBox() {
         totam cupiditate?
       </div>
       <div className="flex flex-row gap-x-4 text-sm opacity-55">
-        <span className="flex flex-row gap-x-2">
-          <BiUpvote className="self-center text-lg" />
+        <span className="self-center flex flex-row gap-x-2">
+          <BiUpvote className="self-center text-lg cursor-pointer" />
           <span className="self-center">2</span>
-          <BiDownvote className="self-center text-lg" />
+          <BiDownvote className="self-center text-lg cursor-pointer" />
         </span>
-        <span className="flex flex-row gap-x-2">
+        <span className="self-center flex flex-row gap-x-2 cursor-pointer">
           <FaRegComment className="self-center text-lg" /> Show 2 Replies
         </span>
-        <span className="flex flex-row gap-x-2">
+        <span className="self-center flex flex-row gap-x-2 cursor-pointer">
           <BsReply className="text-xl" /> Reply
         </span>
+        <Dropdown>
+          <DropdownTrigger>
+            <Button
+              startContent={<BsThreeDots />}
+              size="sm"
+              className={`bg-transparent text-lg -translate-x-[10px] ${showDropDown ? `visible` : `invisible`}`}
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Static Actions">
+            <DropdownItem key="new" color="danger">
+              Report
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </div>
     </div>
   );
