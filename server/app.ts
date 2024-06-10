@@ -32,23 +32,23 @@ process.on('uncaughtException', (error) => {
   console.error(error.name, error.message);
   process.exit(1);
 });
-const whitelist = [
-  process.env.PROD_CLIENT_URL,
-  process.env.DEV_CLIENT_URL,
-  process.env.STAGE_CLIENT_URL,
-];
+// const whitelist = [
+//   process.env.PROD_CLIENT_URL,
+//   process.env.DEV_CLIENT_URL,
+//   process.env.STAGE_CLIENT_URL,
+// ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (whitelist.includes(origin)) callback(null, true);
-      else callback(new Error('Not allowed by CORS'));
-    },
-    optionsSuccessStatus: SUCCESS_CODES.OK,
-    credentials: true,
-  })
-);
-// app.use(cors({ credentials: true, origin: true }));
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (whitelist.includes(origin)) callback(null, true);
+//       else callback(new Error('Not allowed by CORS'));
+//     },
+//     optionsSuccessStatus: SUCCESS_CODES.OK,
+//     credentials: true,
+//   })
+// );
+app.use(cors({ credentials: true, origin: true }));
 app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
