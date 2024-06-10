@@ -5,11 +5,7 @@ import { ROLE } from '../../constants/constants/auth';
 import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
-import {
-  AddNameToCache,
-  NotificationWebhook,
-  UploadFile,
-} from '../../controllers/upload';
+import { AddNameToCache, UploadFile } from '../../controllers/upload';
 import { addNamesInputSchema, uploadFilesInputSchema } from './schema';
 
 const router = express.Router();
@@ -23,7 +19,6 @@ router.post(
   ],
   UploadFile
 );
-router.post('/webhook', NotificationWebhook);
 router.put(
   '/addNames',
   [
