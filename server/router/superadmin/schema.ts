@@ -20,5 +20,5 @@ export const getInputSchema = z.object({
 });
 
 export const updateSchema = z.object({
-  role: z.enum([ROLE.ADMIN, ROLE.SUPERADMIN]),
+  role: z.enum([ROLE.ADMIN, ROLE.SUPERADMIN]).optional(),
 });
