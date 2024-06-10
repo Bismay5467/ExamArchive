@@ -159,7 +159,7 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <div className="hidden bg-login-banner bg-no-repeat bg-cover bg-right lg:block lg:col-span-1 lg:rounded-3xl" />
+      <div className="hidden bg-login-banner bg-no-repeat bg-cover bg-left lg:block lg:col-span-1 lg:rounded-4xl" />
     </div>
   );
 }
