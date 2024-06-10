@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import { ERROR_CODES } from '../constants/statusCode';
 import {
   ALLOWED_FILE_FORMATS,
-  CLOUDINARY_WEBHOOK_ROUTE,
+  // CLOUDINARY_WEBHOOK_ROUTE,
   TRANSFORMED_FORMAT,
 } from '../constants/constants/upload';
 
