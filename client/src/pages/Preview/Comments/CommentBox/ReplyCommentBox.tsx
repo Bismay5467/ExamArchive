@@ -1,14 +1,13 @@
-import { Avatar } from '@nextui-org/react';
-import { BiUpvote, BiDownvote } from 'react-icons/bi';
-import { BsReply } from 'react-icons/bs';
 import {
+  Avatar,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
   Button,
 } from '@nextui-org/react';
-import { BsThreeDots } from 'react-icons/bs';
+import { BiUpvote, BiDownvote } from 'react-icons/bi';
+import { BsReply, BsThreeDots } from 'react-icons/bs';
 import { useState } from 'react';
 
 export default function ReplyCommentBox() {
@@ -52,7 +51,7 @@ export default function ReplyCommentBox() {
               <Button
                 startContent={<BsThreeDots />}
                 size="sm"
-                className={`bg-transparent text-lg -translate-x-[10px] ${showDropDown ? `visible` : `invisible`}`}
+                className={`bg-transparent text-lg -translate-x-[10px] ${showDropDown ? 'visible' : 'invisible'}`}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">

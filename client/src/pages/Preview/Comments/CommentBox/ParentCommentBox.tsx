@@ -1,15 +1,14 @@
-import { Avatar } from '@nextui-org/react';
-import { BiUpvote, BiDownvote } from 'react-icons/bi';
-import { BsReply } from 'react-icons/bs';
-import { FaRegComment } from 'react-icons/fa6';
-import { BsThreeDots } from 'react-icons/bs';
 import {
+  Avatar,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
   Button,
 } from '@nextui-org/react';
+import { BiUpvote, BiDownvote } from 'react-icons/bi';
+import { BsReply, BsThreeDots } from 'react-icons/bs';
+import { FaRegComment } from 'react-icons/fa6';
 import { useState } from 'react';
 
 // TODO: BiSolidUpvote & BiSolidDownvote (for animation)
@@ -57,7 +56,7 @@ export default function ParentCommentBox() {
             <Button
               startContent={<BsThreeDots />}
               size="sm"
-              className={`bg-transparent text-lg -translate-x-[10px] ${showDropDown ? `visible` : `invisible`}`}
+              className={`bg-transparent text-lg -translate-x-[10px] ${showDropDown ? 'visible' : 'invisible'}`}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Static Actions">
