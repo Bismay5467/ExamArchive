@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import { ERROR_CODES } from '../constants/statusCode';
 import {
   ALLOWED_FILE_FORMATS,
-  CLOUDINARY_WEBHOOK_ROUTE,
+  // CLOUDINARY_WEBHOOK_ROUTE,
   TRANSFORMED_FORMAT,
 } from '../constants/constants/upload';
 
@@ -57,7 +57,9 @@ dotenv.config({
         unsigned: true,
         format: TRANSFORMED_FORMAT,
         async: true,
-        notification_url: `${process.env.PROD_SERVER_URL}${CLOUDINARY_WEBHOOK_ROUTE}`,
+        // notification_url: `${process.env.PROD_SERVER_URL}${CLOUDINARY_WEBHOOK_ROUTE}`,
+        notification_url:
+          'https://examarchive-1.onrender.com/api/v1/upload/webhook',
       });
       // eslint-disable-next-line no-console
       console.log('New upload preset created');
