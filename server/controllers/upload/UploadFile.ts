@@ -99,12 +99,14 @@ const UploadFile = asyncErrorHandler(async (req: Request, res: Response) => {
   });
   const fileDataURIArray = paramsWithId.map((fileObj) => fileObj.file);
   const sanitizedFileArray = sanitizeInput(paramsWithId);
+  // eslint-disable-next-line no-console
+  console.log(sanitizedFileArray);
   const session = await mongoose.startSession();
   await session.withTransaction(async () => {
-    const writePromises = writeToDBPromises({ sanitizedFileArray, session });
+    // const writePromises = writeToDBPromises({ sanitizedFileArray, session });
     await Promise.all([
       uploadFilesToCloudinary(fileDataURIArray),
-      ...writePromises,
+      // ...writePromises,
     ]).catch(async (error: Error) => {
       console.error(`Logging Error: ${error}`);
       await session.abortTransaction();

@@ -21,7 +21,8 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'login-banner': "url('/src/assets/LoginImage.jpg')",
+        'login-banner':
+          "url('https://res.cloudinary.com/dzorpsnmn/image/upload/v1718026209/EXAM-ARCHIVE-ASSETS/qrid8c6h4buu5vxzvdob.jpg')",
         'signup-banner': "url('/src/assets/SignupImage.jpg')",
         'reset-banner': "url('/src/assets/ResetImage.jpg')",
       },
