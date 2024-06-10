@@ -45,5 +45,5 @@ export const reactCommentInputSchema = z.object({
     .string()
     .refine((commentId) => Types.ObjectId.isValid(commentId)),
   action: z.enum(['UPVOTE', 'DOWNVOTE']),
-  reaction: z.enum(['LIKE', 'UNLIKE']),
+  reaction: z.enum(['VOTE', 'RETRACE']),
 });
