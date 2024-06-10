@@ -9,7 +9,6 @@ import fileUpload from 'express-fileupload';
 import express, { NextFunction, Request, Response } from 'express';
 
 import AppRouter from './router';
-import { NotificationWebhook } from './controllers/upload';
 import connectDB from './config/dbConfig';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
@@ -34,24 +33,26 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-app.post('/api/v1/upload/webhook', NotificationWebhook);
-
 const whitelist = [
   process.env.PROD_CLIENT_URL,
   process.env.DEV_CLIENT_URL,
   process.env.STAGE_CLIENT_URL,
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (whitelist.includes(origin)) callback(null, true);
-      else callback(new Error('Not allowed by CORS'));
-    },
-    optionsSuccessStatus: SUCCESS_CODES.OK,
-    credentials: true,
-  })
-);
+const customCors = (req: Request, res: Response, next: NextFunction) => {
+  if (req.path === '/api/v1/upload/webhook' && req.method === 'POST') next();
+  else {
+    cors({
+      origin: (origin, callback) => {
+        if (whitelist.includes(origin)) callback(null, true);
+        else callback(new Error('Not allowed by CORS'));
+      },
+      optionsSuccessStatus: SUCCESS_CODES.OK,
+      credentials: true,
+    })(req, res, next);
+  }
+};
+app.use(customCors);
 app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
