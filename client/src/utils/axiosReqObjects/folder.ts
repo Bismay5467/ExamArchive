@@ -4,18 +4,18 @@ import { ICreateFolder, IFolder } from '@/types/folder';
 
 export const getFolderNameObj = (
   action: IFolder,
-  authToke: string | undefined
+  jwtToken: string | undefined
 ) => {
   const params = { action };
   const url = `${SERVER_ROUTES.FOLDER}/getFolderNames`;
-  if (!authToke) return null;
+  if (!jwtToken) return null;
   const axiosObj: AxiosRequestConfig<any> = {
     url,
     method: 'GET',
     params,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authToke}`,
+      Authorization: `Bearer ${jwtToken}`,
     },
     withCredentials: true,
   };
@@ -25,18 +25,17 @@ export const getFolderNameObj = (
 
 export const createFolderObj = (
   folderDetails: ICreateFolder,
-  authToke: string | undefined
+  jwtToken: string | undefined
 ) => {
   const url = `${SERVER_ROUTES.FOLDER}/create`;
-
-  if (!authToke) return null;
+  if (!jwtToken) return null;
   const axiosObj: AxiosRequestConfig<any> = {
     url,
     data: { data: folderDetails },
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authToke}`,
+      Authorization: `Bearer ${jwtToken}`,
     },
     withCredentials: true,
   };

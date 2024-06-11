@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import FileInfo from './Steps/FileInfo';
 import FinalSubmit from './Steps/FinalSubmit';
@@ -27,19 +27,17 @@ export default function FileUpload() {
     isValidating,
   } = useSWR(fileUploadData ? getFileFileUploadObj(fileUploadData) : null);
 
-  useEffect(() => {
-    if (response && response.status === SUCCESS_CODES.OK) {
-      toast.success(`${response?.data?.message}`, {
-        description: 'Amazing Job!',
-        duration: 5000,
-      });
-    } else if (error) {
-      toast.error(`${error?.message}`, {
-        description: error?.response?.data?.message,
-        duration: 5000,
-      });
-    }
-  }, [response, error]);
+  if (response && response.status === SUCCESS_CODES.OK) {
+    toast.success(`${response?.data?.message}`, {
+      description: 'Amazing Job!',
+      duration: 5000,
+    });
+  } else if (error) {
+    toast.error(`${error?.message}`, {
+      description: error?.response?.data?.message,
+      duration: 5000,
+    });
+  }
 
   const {
     register,
@@ -79,6 +77,7 @@ export default function FileUpload() {
   };
 
   const onSubmit: SubmitHandler<TFileUploadFormFields> = (formData) => {
+    // TODO: Bring all data from local storage
     setFileUploadData([formData]);
   };
 
@@ -108,14 +107,12 @@ export default function FileUpload() {
               Next
             </Button>
           )}
-          <Button
-            color="success"
-            type="submit"
-            className={`${isLastStep() ? 'block' : 'hidden'}`}
-          >
-            Submit
-            {isValidating && <Spinner />}
-          </Button>
+          {isLastStep() && (
+            <Button color="success" type="submit" isDisabled={isValidating}>
+              Submit
+              {isValidating && <Spinner size="sm" className="ml-2" />}
+            </Button>
+          )}
         </div>
       </form>
     </div>

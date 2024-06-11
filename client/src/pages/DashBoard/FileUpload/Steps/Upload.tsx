@@ -26,8 +26,8 @@ import {
   getFolderNameObj,
 } from '@/utils/axiosReqObjects/folder';
 import fetcher from '@/utils/fetcher/fetcher';
-import { useAuth } from '@/hooks/useAuth';
 import { MAX_FILE_SIZE } from '@/constants/upload';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Upload({
   register,
@@ -42,11 +42,11 @@ export default function Upload({
   fileName: string | undefined;
   setFileName: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [collectionName, setCollectionName] = useState<string>();
   const {
     authState: { jwtToken },
   } = useAuth();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [collectionName, setCollectionName] = useState<string>();
   const { data, mutate } = useSWR(getFolderNameObj('UPLOAD', jwtToken));
   const folderNames: Array<{ name: string; _id: string }> =
     data?.data?.data ?? undefined;
@@ -134,7 +134,7 @@ export default function Upload({
           <Autocomplete
             label="Select a collection"
             className="w-[50%]"
-            {...register('folderId')}
+            onSelectionChange={(e) => setValue('folderId', e as string)}
             isRequired
             errorMessage="*Required"
           >
