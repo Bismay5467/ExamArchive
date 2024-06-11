@@ -1,6 +1,6 @@
+import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
 import { TCommentType } from '@/types/comments';
-import { AxiosRequestConfig } from 'axios';
 
 export const getCommentsObj = ({
   postId,
