@@ -32,7 +32,27 @@ process.on('uncaughtException', (error) => {
   console.error(error.name, error.message);
   process.exit(1);
 });
-app.use(cors());
+
+const whitelist = [
+  process.env.PROD_CLIENT_URL,
+  process.env.DEV_CLIENT_URL,
+  process.env.STAGE_CLIENT_URL,
+];
+
+const customCors = (req: Request, res: Response, next: NextFunction) => {
+  if (req.path === '/api/v1/upload/webhook' && req.method === 'POST') next();
+  else {
+    cors({
+      origin: (origin, callback) => {
+        if (whitelist.includes(origin)) callback(null, true);
+        else callback(new Error('Not allowed by CORS'));
+      },
+      optionsSuccessStatus: SUCCESS_CODES.OK,
+      credentials: true,
+    })(req, res, next);
+  }
+};
+app.use(customCors);
 app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));

@@ -10,12 +10,10 @@ import { ERROR_CODES, SUCCESS_CODES } from '../../constants/statusCode';
 
 const NotificationWebhook = asyncErrorHandler(
   async (req: Request, res: Response) => {
-    const { public_id: publicId, secure_url: url } = req.body.data as {
+    const { public_id: publicId, secure_url: url } = req.body as {
       public_id: string;
       secure_url: string;
     };
-    // eslint-disable-next-line no-console
-    console.log(publicId, url);
     if (!(publicId && url)) {
       throw new ErrorHandler(
         'Record updation failed',
