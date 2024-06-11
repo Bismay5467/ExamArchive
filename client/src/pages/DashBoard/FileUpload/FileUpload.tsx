@@ -45,6 +45,7 @@ export default function FileUpload() {
     register,
     handleSubmit,
     trigger,
+    setValue,
     formState: { errors },
   } = useForm<TFileUploadFormFields>({
     resolver: zodResolver(uploadFilesInputSchema),
@@ -56,14 +57,15 @@ export default function FileUpload() {
         fileName={fileName}
         register={register}
         errors={errors}
+        setValue={setValue}
       />,
       <FileInfo register={register} errors={errors} />,
       <FinalSubmit />,
     ]);
 
-  const triggerValiadate = () => {
+  const triggerValidate = () => {
     if (stepIndex === 0) {
-      return trigger(['file', 'examType']);
+      return trigger(['file', 'examType', 'folderId']);
     }
     return trigger([
       'branch',
@@ -97,7 +99,7 @@ export default function FileUpload() {
           {!isLastStep() && (
             <Button
               onClick={() => {
-                triggerValiadate().then((res) => res && next());
+                triggerValidate().then((res) => res && next());
               }}
               color="primary"
               variant="flat"

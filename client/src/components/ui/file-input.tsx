@@ -22,7 +22,7 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
         drag and drop
       </h3>
       <h3 className="text-sm opacity-50">
-        Supported Formats: .PDF (Less than 5MB)
+        Supported Formats: .pdf (Less than 5MB)
       </h3>
       <input
         type="file"
