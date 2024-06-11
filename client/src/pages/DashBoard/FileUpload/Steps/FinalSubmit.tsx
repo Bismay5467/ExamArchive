@@ -1,10 +1,10 @@
-import SuccessTick from '@/assets/SuccessTick.svg';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
   Button,
 } from '@nextui-org/react';
+import SuccessTick from '@/assets/SuccessTick.svg';
 
 export default function FinalSubmit() {
   return (
@@ -12,7 +12,7 @@ export default function FinalSubmit() {
       <h1 className="text-7xl font-semibold text-gray-400">Amazing Job!</h1>
       <img src={SuccessTick} alt="" />
       {/* TODO: Save current progress in local storage */}
-      <Popover placement="right" showArrow={true}>
+      <Popover placement="right" showArrow>
         <PopoverTrigger>
           <Button>Submit another one?</Button>
         </PopoverTrigger>
