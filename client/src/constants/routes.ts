@@ -18,4 +18,5 @@ export const SERVER_ROUTES = Object.freeze({
   SIGNUP: '/api/v1/auth/newUser',
   UPLOAD: '/api/v1/upload',
   GETFILE: '/api/v1/file/get',
+  GETCOMMENT: '/api/v1/comment/get',
 });
