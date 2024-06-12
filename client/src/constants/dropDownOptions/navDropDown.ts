@@ -1,7 +1,7 @@
-import { CLIENT_ROUTES } from './routes';
-import { ROLES } from './auth';
+import { CLIENT_ROUTES } from '@/constants/routes';
+import { ROLES } from '@/constants/auth';
 
-const getDropDownOptions = (role: string, userId: string) => {
+export default (role: string, userId: string) => {
   const baseRoute = `dashboard/${userId}`;
   const dashboard = {
     name: 'Dashboard',
@@ -31,5 +31,3 @@ const getDropDownOptions = (role: string, userId: string) => {
 
   return dropDownOptions;
 };
-
-export default getDropDownOptions;
