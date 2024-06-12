@@ -24,8 +24,8 @@ import { ISearchInput } from '@/types/search.ts';
 import LogoBanner from '@/assets/LogoBanner.png';
 import ModeToggle from '../ModeToggle';
 import { QUERY_FIELDS } from '@/constants/search.ts';
-import getDropDownOptions from '@/constants/dropDownOptions.ts';
 import { useAuth } from '@/hooks/useAuth.tsx';
+import { getNavDropDown } from '@/constants/dropDownOptions';
 
 export default function Navbar() {
   const { register, handleSubmit, setValue } = useForm<ISearchInput>();
@@ -112,7 +112,7 @@ export default function Navbar() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownSection title="Actions" aria-label="Profile Actions">
-                {getDropDownOptions(role, userId!).map(({ name, link }) => (
+                {getNavDropDown(role, userId!).map(({ name, link }) => (
                   <DropdownItem
                     key={name}
                     onClick={() => navigate(link)}
