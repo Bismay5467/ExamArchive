@@ -2,6 +2,7 @@ import { SWRConfig } from 'swr';
 import { Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import Cookies from 'js-cookie';
 import { AuthProvider } from './hooks/useAuth.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import Loading from './pages/Loading/Loading.tsx';
@@ -11,6 +12,8 @@ import { ThemeProvider } from './hooks/useTheme.tsx';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import fetcher from './utils/fetcher/fetcher.ts';
+import { AUTH_TOKEN } from './constants/auth.ts';
+import { TEMP_JWT_TOKEN_HARDCODED } from './constants/shared.ts';
 
 export default function Root() {
   const authRegex = /\/auth/;
@@ -20,6 +23,9 @@ export default function Root() {
   const isDashBoardPage = dashboardRegex.test(currentLocation.pathname);
   const parentClass = isDashBoardPage ? 'grid grid-cols-12' : '';
   const layoutClass = isDashBoardPage ? 'col-span-9' : '';
+
+  // TODO: Remove Manual setting of cookie afterwards
+  Cookies.set(AUTH_TOKEN, TEMP_JWT_TOKEN_HARDCODED);
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Button } from '@nextui-org/button';
 import { Spinner } from '@nextui-org/spinner';
 import { toast } from 'sonner';
@@ -15,20 +16,59 @@ import Upload from './Steps/Upload';
 import getFileFileUploadObj from '@/utils/axiosReqObjects/fileUpload';
 import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function FileUpload() {
   const [fileUploadData, setFileUploadData] =
     useState<TFileUploadFormFields[]>();
   const [fileName, setFileName] = useState<string>();
-
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    reset,
+    clearErrors,
+    formState: { errors },
+  } = useForm<TFileUploadFormFields>({
+    resolver: zodResolver(uploadFilesInputSchema),
+  });
+  const {
+    authState: { jwtToken },
+  } = useAuth();
   const {
     data: response,
     error,
     isValidating,
-  } = useSWR(fileUploadData ? getFileFileUploadObj(fileUploadData) : null);
+  } = useSWR(
+    fileUploadData
+      ? getFileFileUploadObj({ fileUploadData, jwtToken: jwtToken as string })
+      : null
+  );
+
+  const { next, prev, isFirstStep, isLastStep, resetMultiStepForm, step } =
+    useMultiStepForm([
+      <Upload
+        setFileName={setFileName}
+        fileName={fileName}
+        register={register}
+        errors={errors}
+        setValue={setValue}
+        clearErrors={clearErrors}
+      />,
+      <FileInfo
+        register={register}
+        errors={errors}
+        clearErrors={clearErrors}
+      />,
+      <FinalSubmit />,
+    ]);
 
   useEffect(() => {
     if (response && response.status === SUCCESS_CODES.OK) {
+      reset();
+      setFileName('');
+      resetMultiStepForm();
       toast.success(`${response?.data?.message}`, {
         description: 'Amazing Job!',
         duration: 5000,
@@ -41,42 +81,29 @@ export default function FileUpload() {
     }
   }, [response, error]);
 
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    formState: { errors },
-  } = useForm<TFileUploadFormFields>({
-    resolver: zodResolver(uploadFilesInputSchema),
-  });
-  const { next, prev, isFirstStep, isLastStep, step, stepIndex } =
-    useMultiStepForm([
-      <Upload
-        setFileName={setFileName}
-        fileName={fileName}
-        register={register}
-        errors={errors}
-      />,
-      <FileInfo register={register} errors={errors} />,
-      <FinalSubmit />,
-    ]);
-
-  const triggerValiadate = () => {
-    if (stepIndex === 0) {
-      return trigger(['file', 'examType']);
+  const triggerValidate = async () => {
+    const validationResult = isFirstStep()
+      ? await trigger(['file.dataURI', 'file.name', 'examType', 'folderId'])
+      : await trigger([
+          'branch',
+          'subjectCode',
+          'subjectName',
+          'tags',
+          'institution',
+          'year',
+          'semester',
+        ]);
+    if (!validationResult) {
+      toast.error('Please fillup the required fields Correctly!', {
+        duration: 5000,
+      });
     }
-    return trigger([
-      'branch',
-      'subjectCode',
-      'subjectName',
-      'tags',
-      'institution',
-      'year',
-      'semester',
-    ]);
+
+    return validationResult;
   };
 
   const onSubmit: SubmitHandler<TFileUploadFormFields> = (formData) => {
+    // TODO: Bring all data from local storage
     setFileUploadData([formData]);
   };
 
@@ -97,7 +124,7 @@ export default function FileUpload() {
           {!isLastStep() && (
             <Button
               onClick={() => {
-                triggerValiadate().then((res) => res && next());
+                triggerValidate().then((res) => res && next());
               }}
               color="primary"
               variant="flat"
@@ -106,14 +133,12 @@ export default function FileUpload() {
               Next
             </Button>
           )}
-          <Button
-            color="success"
-            type="submit"
-            className={`${isLastStep() ? 'block' : 'hidden'}`}
-          >
-            Submit
-            {isValidating && <Spinner />}
-          </Button>
+          {isLastStep() && (
+            <Button color="success" type="submit" isDisabled={isValidating}>
+              Submit
+              {isValidating && <Spinner size="sm" className="ml-2" />}
+            </Button>
+          )}
         </div>
       </form>
     </div>
