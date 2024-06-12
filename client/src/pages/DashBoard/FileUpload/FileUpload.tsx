@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Button } from '@nextui-org/button';
 import { Spinner } from '@nextui-org/spinner';
 import { toast } from 'sonner';
@@ -5,7 +6,7 @@ import useSWR from 'swr';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import FileInfo from './Steps/FileInfo';
 import FinalSubmit from './Steps/FinalSubmit';
@@ -15,7 +16,8 @@ import Upload from './Steps/Upload';
 import getFileFileUploadObj from '@/utils/axiosReqObjects/fileUpload';
 import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
-import { useAuth } from '@/hooks/useAuth';
+// import { useAuth } from '@/hooks/useAuth';
+import { TEMP_JWT_TOKEN_HARDCODED as jwtToken } from '@/constants/shared';
 
 export default function FileUpload() {
   const [fileUploadData, setFileUploadData] =
@@ -26,13 +28,15 @@ export default function FileUpload() {
     handleSubmit,
     trigger,
     setValue,
+    reset,
+    clearErrors,
     formState: { errors },
   } = useForm<TFileUploadFormFields>({
     resolver: zodResolver(uploadFilesInputSchema),
   });
-  const {
-    authState: { jwtToken },
-  } = useAuth();
+  // const {
+  //   authState: { jwtToken },
+  // } = useAuth();
   const {
     data: response,
     error,
@@ -43,18 +47,7 @@ export default function FileUpload() {
       : null
   );
 
-  if (response && response.status === SUCCESS_CODES.OK) {
-    toast.success(`${response?.data?.message}`, {
-      description: 'Amazing Job!',
-      duration: 5000,
-    });
-  } else if (error) {
-    toast.error(`${error?.message}`, {
-      description: error?.response?.data?.message,
-      duration: 5000,
-    });
-  }
-  const { next, prev, isFirstStep, isLastStep, step, stepIndex } =
+  const { next, prev, isFirstStep, isLastStep, resetMultiStepForm, step } =
     useMultiStepForm([
       <Upload
         setFileName={setFileName}
@@ -62,24 +55,52 @@ export default function FileUpload() {
         register={register}
         errors={errors}
         setValue={setValue}
+        clearErrors={clearErrors}
       />,
-      <FileInfo register={register} errors={errors} />,
+      <FileInfo
+        register={register}
+        errors={errors}
+        clearErrors={clearErrors}
+      />,
       <FinalSubmit />,
     ]);
 
-  const triggerValidate = () => {
-    if (stepIndex === 0) {
-      return trigger(['file', 'examType', 'folderId']);
+  useEffect(() => {
+    if (response && response.status === SUCCESS_CODES.OK) {
+      reset();
+      setFileName('');
+      resetMultiStepForm();
+      toast.success(`${response?.data?.message}`, {
+        description: 'Amazing Job!',
+        duration: 5000,
+      });
+    } else if (error) {
+      toast.error(`${error?.message}`, {
+        description: error?.response?.data?.message,
+        duration: 5000,
+      });
     }
-    return trigger([
-      'branch',
-      'subjectCode',
-      'subjectName',
-      'tags',
-      'institution',
-      'year',
-      'semester',
-    ]);
+  }, [response, error]);
+
+  const triggerValidate = async () => {
+    const validationResult = isFirstStep()
+      ? await trigger(['file.dataURI', 'file.name', 'examType', 'folderId'])
+      : await trigger([
+          'branch',
+          'subjectCode',
+          'subjectName',
+          'tags',
+          'institution',
+          'year',
+          'semester',
+        ]);
+    if (!validationResult) {
+      toast.error('Please fillup the required fields Correctly!', {
+        duration: 5000,
+      });
+    }
+
+    return validationResult;
   };
 
   const onSubmit: SubmitHandler<TFileUploadFormFields> = (formData) => {

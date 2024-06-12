@@ -29,3 +29,6 @@ export const SEMESTER = Object.freeze({
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
 ];
+
+export const TEMP_JWT_TOKEN_HARDCODED =
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NjVkOTM1ZWIxOWJjYWVjMmQ0MjQwZDIiLCJ1c2VybmFtZSI6IkRldmlsIiwiZW1haWwiOiJhcmtvLm9mZmljaWFsbml0a0BnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MTgxMDA5MzQsImV4cCI6MTcyMDY5MjkzNH0.kLN74mdBd9XWS4_1ax7_XYvlWJlI9vnPADePzjKb9Lg';

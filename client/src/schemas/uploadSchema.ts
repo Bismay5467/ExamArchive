@@ -24,7 +24,12 @@ const baseSchema = z.object({
       .refine((dataURI) => ALLOWED_FILE_TYPES.includes(dataURI.split(';')[0]), {
         message: 'Only .pdf is allowed',
       }),
-    name: z.string().min(1).max(100),
+    name: z
+      .string()
+      .min(1, { message: '*Filename must contain atleast 1 character(s)' })
+      .max(100, {
+        message: '*Filename must contain atmost 100 character(s)',
+      }),
   }),
   folderId: z.string(),
 });
@@ -35,15 +40,15 @@ export const uploadFilesInputSchema = z
     institution: z
       .string()
       .trim()
-      .min(1, { message: '*Institution must contaian atleast 1 character(s)' })
+      .min(1, { message: '*Institution must contain atleast 1 character(s)' })
       .max(50, {
-        message: '*Institution must contaian atmost 50 character(s)',
+        message: '*Institution must contain atmost 50 character(s)',
       }),
     branch: z
       .string()
       .trim()
-      .min(1, { message: '*Branch must contaian atleast 1 character(s)' })
-      .max(50, { message: '*Branch must contaian atmost 50 character(s)' }),
+      .min(1, { message: '*Branch must contain atleast 1 character(s)' })
+      .max(50, { message: '*Branch must contain atmost 50 character(s)' }),
     year: z
       .string()
       .trim()
@@ -72,24 +77,24 @@ export const uploadFilesInputSchema = z
     subjectCode: z
       .string()
       .trim()
-      .min(1, { message: '*Subject Code must contaian atleast 1 character(s)' })
+      .min(1, { message: '*Subject Code must contain atleast 1 character(s)' })
       .max(10, {
-        message: '*Subject Code must contaian atmost 10 character(s)',
+        message: '*Subject Code must contain atmost 10 character(s)',
       })
       .transform((subjectCode) => sanitizeInput(subjectCode)),
     subjectName: z
       .string()
       .trim()
-      .min(1, { message: '*Subject Name must contaian atleast 1 character(s)' })
+      .min(1, { message: '*Subject Name must contain atleast 1 character(s)' })
       .max(50, {
-        message: '*Subject Name must contaian atmost 50 character(s)',
+        message: '*Subject Name must contain atmost 50 character(s)',
       })
       .transform((subjectName) => sanitizeInput(subjectName)),
     tags: z
       .string()
       .trim()
-      .min(1, { message: '*Tags must contaian atleast 1 character(s)' })
-      .max(1000, { message: '*Tags must contaian atmost 1000 character(s)' })
+      .min(1, { message: '*Tags must contain atleast 1 character(s)' })
+      .max(1000, { message: '*Tags must contain atmost 1000 character(s)' })
       .transform((tags) => tags.toLowerCase())
       .refine(
         (value) =>

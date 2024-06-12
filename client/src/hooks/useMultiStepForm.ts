@@ -1,7 +1,9 @@
 import { ReactElement, useState } from 'react';
 
+const START_INDEX = 0;
+
 const useMultiStepForm = (steps: ReactElement[]) => {
-  const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(START_INDEX);
 
   const next = () => {
     setStepIndex((prev) => prev + 1);
@@ -11,9 +13,13 @@ const useMultiStepForm = (steps: ReactElement[]) => {
     setStepIndex((prevState) => prevState - 1);
   };
 
-  const isFirstStep = () => stepIndex === 0;
+  const isFirstStep = () => stepIndex === START_INDEX;
 
   const isLastStep = () => stepIndex === steps.length - 1;
+
+  const resetMultiStepForm = () => {
+    setStepIndex(START_INDEX);
+  };
 
   return {
     step: steps[stepIndex],
@@ -22,6 +28,7 @@ const useMultiStepForm = (steps: ReactElement[]) => {
     isFirstStep,
     isLastStep,
     stepIndex,
+    resetMultiStepForm,
   };
 };
 
