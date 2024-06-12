@@ -15,17 +15,33 @@ import Upload from './Steps/Upload';
 import getFileFileUploadObj from '@/utils/axiosReqObjects/fileUpload';
 import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function FileUpload() {
   const [fileUploadData, setFileUploadData] =
     useState<TFileUploadFormFields[]>();
   const [fileName, setFileName] = useState<string>();
-
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    formState: { errors },
+  } = useForm<TFileUploadFormFields>({
+    resolver: zodResolver(uploadFilesInputSchema),
+  });
+  const {
+    authState: { jwtToken },
+  } = useAuth();
   const {
     data: response,
     error,
     isValidating,
-  } = useSWR(fileUploadData ? getFileFileUploadObj(fileUploadData) : null);
+  } = useSWR(
+    fileUploadData
+      ? getFileFileUploadObj({ fileUploadData, jwtToken: jwtToken as string })
+      : null
+  );
 
   if (response && response.status === SUCCESS_CODES.OK) {
     toast.success(`${response?.data?.message}`, {
@@ -38,16 +54,6 @@ export default function FileUpload() {
       duration: 5000,
     });
   }
-
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    setValue,
-    formState: { errors },
-  } = useForm<TFileUploadFormFields>({
-    resolver: zodResolver(uploadFilesInputSchema),
-  });
   const { next, prev, isFirstStep, isLastStep, step, stepIndex } =
     useMultiStepForm([
       <Upload

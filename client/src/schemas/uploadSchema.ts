@@ -12,8 +12,7 @@ function getValues<T extends Record<string, any>>(obj: T) {
   return Object.values(obj) as [(typeof obj)[keyof T]];
 }
 
-export const sanitizeInput = (params: string) =>
-  params.toUpperCase().replace(/[^A-Z0-9]/g, '');
+export const sanitizeInput = (params: string) => params.toUpperCase();
 
 const baseSchema = z.object({
   file: z.object({
