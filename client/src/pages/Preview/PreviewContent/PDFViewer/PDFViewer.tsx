@@ -1,6 +1,6 @@
 import { pdfjs, Document, Page } from 'react-pdf';
 import { useState } from 'react';
-import { Button } from '@nextui-org/react';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { INITIAL_PAGE_NUMBER } from '@/constants/shared';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -31,27 +31,29 @@ export function PDFViewer({ pdfURL }: { pdfURL: string }) {
             renderTextLayer={false}
           />
         </Document>
-        <span className="absolute bottom-4 left-[45%]">
-          Page {pageNumber} of {totalPages}
-        </span>
-        <Button
-          color="primary"
-          variant="ghost"
-          className="absolute bottom-4 right-4"
-          onDoubleClick={() => setPageNumber((prev) => prev + 1)}
-          isDisabled={isLastPage}
-        >
-          Next
-        </Button>
-        <Button
-          color="primary"
-          variant="ghost"
-          className="absolute bottom-4 left-4"
-          onDoubleClick={() => setPageNumber((prev) => prev - 1)}
-          isDisabled={isFirstPage}
-        >
-          Prev
-        </Button>
+        <div className="absolute flex flex-row gap-x-4 rounded-xl bottom-4 left-[32%] bg-white overflow-hidden drop-shadow-2xl">
+          <button
+            className="self-stretch min-w-[50px] flex flex-row justify-center items-center disabled:hover:bg-white disabled:opacity-30 hover:bg-slate-300"
+            disabled={isFirstPage}
+            onClick={() => setPageNumber((prev) => prev - 1)}
+            aria-label="previous butuon"
+            type="button"
+          >
+            <FaChevronLeft />
+          </button>
+          <span className="self-center py-4 font-semibold">
+            Page {pageNumber} of {totalPages}
+          </span>
+          <button
+            className="self-stretch min-w-[50px] flex flex-row justify-center items-center disabled:hover:bg-white disabled:opacity-30 hover:bg-slate-300"
+            disabled={isLastPage}
+            onClick={() => setPageNumber((prev) => prev + 1)}
+            aria-label="next butuon"
+            type="button"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
       </div>
     </div>
   );
