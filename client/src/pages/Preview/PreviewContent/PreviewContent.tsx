@@ -18,6 +18,7 @@ import { getFileObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 import { IFileData } from '@/types/file';
 import { PDFViewer } from './PDFViewer/PDFViewer';
+
 const PING_TIME_OUT_TIME = 5000;
 
 export default function PreviewContent() {
