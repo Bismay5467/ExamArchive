@@ -21,6 +21,7 @@ import { TSignInFormFields } from '@/types/auth';
 import { getSignInObj } from '@/utils/axiosReqObjects';
 import { signInUserInputSchema } from '@/schemas/authSchema';
 import { useAuth } from '@/hooks/useAuth';
+import { getUpdateCacheObj } from '@/utils/axiosReqObjects/auth';
 
 export default function Login() {
   const [eyeOff, setEyeOff] = useState<boolean>(true);
@@ -42,6 +43,7 @@ export default function Login() {
     error,
     isValidating,
   } = useSWR(userData ? getSignInObj(userData) : null);
+  useSWR(userData ? getUpdateCacheObj() : null);
 
   useEffect(() => {
     if (user && user.status === SUCCESS_CODES.OK) {

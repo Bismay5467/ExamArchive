@@ -17,4 +17,6 @@ export const SERVER_ROUTES = Object.freeze({
   RESET: '/api/v1/auth/reset',
   SIGNUP: '/api/v1/auth/newUser',
   UPLOAD: '/api/v1/upload',
+  FOLDER: '/api/v1/folder',
+  UPDATE_CACHE: '/api/v1/superAdmin/update',
 });

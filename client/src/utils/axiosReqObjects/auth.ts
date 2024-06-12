@@ -41,3 +41,14 @@ export const getResetObj = (userData: TResetFormFields) => {
 
   return axiosObj;
 };
+
+export const getUpdateCacheObj = () => {
+  const url = SERVER_ROUTES.UPDATE_CACHE;
+  const axiosObj = {
+    url,
+    data: { data: { role: undefined } },
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+  };
+  return axiosObj;
+};

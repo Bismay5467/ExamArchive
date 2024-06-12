@@ -54,7 +54,7 @@ const GetFile = asyncErrorHandler(async (req: Request, res: Response) => {
       DOC_INFO_TTL_IN_SECONDS
     );
   }
-  return res.status(SUCCESS_CODES.OK).json({ data: docInfo });
+  return res.status(SUCCESS_CODES.OK).json({ data: JSON.stringify(docInfo) });
 });
 
 export default GetFile;

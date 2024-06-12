@@ -1,8 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-magic-numbers */
 import z from 'zod';
-
-import { MAX_FILE_SIZE } from '@/constants/upload';
+import { isBase64 } from 'validator';
 import {
   ALLOWED_FILE_TYPES,
   EXAM_TYPES,
@@ -17,18 +16,18 @@ export const sanitizeInput = (params: string) =>
   params.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
 const baseSchema = z.object({
-  file: z
-    .custom<FileList>()
-    .refine((fileList) => fileList && fileList.length === 1, {
-      message: '*No file uploaded',
-    })
-    .transform((file) => file[0] as File)
-    .refine((file) => file && file.size <= MAX_FILE_SIZE, {
-      message: `*Max file size allowed is ${MAX_FILE_SIZE} MB`,
-    })
-    .refine((file) => file && ALLOWED_FILE_TYPES.includes(file.type), {
-      message: '*Only .PDF format is supported',
-    }),
+  file: z.object({
+    dataURI: z
+      .string()
+      .refine((dataURI) => isBase64(dataURI.split(',')[1]), {
+        message: 'Invalid DataURI',
+      })
+      .refine((dataURI) => ALLOWED_FILE_TYPES.includes(dataURI.split(';')[0]), {
+        message: 'Only .pdf is allowed',
+      }),
+    name: z.string().min(1).max(100),
+  }),
+  folderId: z.string(),
 });
 
 export const uploadFilesInputSchema = z
