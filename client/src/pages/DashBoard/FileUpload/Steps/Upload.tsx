@@ -23,10 +23,7 @@ import { toast } from 'sonner';
 
 import useSWR from 'swr';
 import { MdCreateNewFolder } from 'react-icons/md';
-import {
-  EXAM_TYPES,
-  TEMP_JWT_TOKEN_HARDCODED as jwtToken,
-} from '@/constants/shared';
+import { EXAM_TYPES } from '@/constants/shared';
 import { FileInput } from '@/components/ui/file-input';
 import { TFileUploadFormFields } from '@/types/upload';
 import {
@@ -35,7 +32,7 @@ import {
 } from '@/utils/axiosReqObjects/folder';
 import fetcher from '@/utils/fetcher/fetcher';
 import { MAX_FILE_SIZE } from '@/constants/upload';
-// import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Upload({
   register,
@@ -52,9 +49,9 @@ export default function Upload({
   fileName: string | undefined;
   setFileName: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
-  // const {
-  //   authState: { jwtToken },
-  // } = useAuth();
+  const {
+    authState: { jwtToken },
+  } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [collectionName, setCollectionName] = useState<string>();
   const { data, mutate } = useSWR(getFolderNameObj('UPLOAD', jwtToken));

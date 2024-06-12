@@ -16,8 +16,7 @@ import Upload from './Steps/Upload';
 import getFileFileUploadObj from '@/utils/axiosReqObjects/fileUpload';
 import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
-// import { useAuth } from '@/hooks/useAuth';
-import { TEMP_JWT_TOKEN_HARDCODED as jwtToken } from '@/constants/shared';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function FileUpload() {
   const [fileUploadData, setFileUploadData] =
@@ -34,9 +33,9 @@ export default function FileUpload() {
   } = useForm<TFileUploadFormFields>({
     resolver: zodResolver(uploadFilesInputSchema),
   });
-  // const {
-  //   authState: { jwtToken },
-  // } = useAuth();
+  const {
+    authState: { jwtToken },
+  } = useAuth();
   const {
     data: response,
     error,
