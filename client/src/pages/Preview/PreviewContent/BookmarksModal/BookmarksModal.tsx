@@ -7,10 +7,8 @@ import {
   ModalFooter,
   Button,
   Input,
-  Select,
-  SelectItem,
-  SelectedItems,
-  Chip,
+  CheckboxGroup,
+  Checkbox,
 } from '@nextui-org/react';
 import { useCallback, useEffect, useState } from 'react';
 import { MdCreateNewFolder } from 'react-icons/md';
@@ -43,7 +41,7 @@ export default function BookmarksModal({
   semester: string;
   year: string;
 }) {
-  const [collectionName, setCollectionName] = useState<string>();
+  const [collectionName, setCollectionName] = useState<string>('');
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [collectionIDs, setCollectionIDs] = useState<Array<string>>([]);
   const {
@@ -59,13 +57,53 @@ export default function BookmarksModal({
     if (!isOpen) setIsCreatingFolder(false);
   }, [isOpen]);
 
+  const createBookmarks = (ids: Array<string>) => {
+    const filenameForBookmark = `${subjectName},${subjectCode},${semester},${year}`;
+    ids.map(async (id) => {
+      const bookmarkReqObj = addToBookmarkObj(
+        { fileId: paperid, folderId: id, fileName: filenameForBookmark },
+        jwtToken
+      );
+      if (!bookmarkReqObj) {
+        toast.error('Somthing went wrong!', {
+          duration: 5000,
+        });
+        return;
+      }
+      try {
+        await fetcher(bookmarkReqObj);
+      } catch (err) {
+        toast.error('Somthing went wrong!', {
+          description: `${err}`,
+          duration: 5000,
+        });
+      }
+      toast.success('File bookmarked successfully!', {
+        description: `Added to folder: ${collectionList.find(({ _id }) => _id === id)?.name ?? collectionName}`,
+        duration: 2000,
+      });
+    });
+  };
+
+  const handleBookmark = useCallback(() => {
+    if (collectionIDs.length === 0) {
+      toast.error('No collection(s) selected!', {
+        duration: 5000,
+      });
+      return;
+    }
+    onClose();
+    createBookmarks(collectionIDs);
+    setCollectionIDs([]);
+  }, [collectionIDs]);
+
   const handleCreateNew = useCallback(async () => {
     if (!isCreatingFolder) {
       setIsCreatingFolder(true);
       return;
     }
 
-    if (!collectionName || collectionName.length === 0) {
+    if (collectionName.length === 0) {
       toast.error('Collection name should have atlease one character!', {
         duration: 5000,
       });
@@ -84,8 +122,10 @@ export default function BookmarksModal({
       });
       return;
     }
+    onClose();
     try {
-      await fetcher(folderDetails);
+      const res = await fetcher(folderDetails);
+      createBookmarks([res.data.data._id as string]);
     } catch (err) {
       toast('Somthing went wrong!', {
         description: `${err}`,
@@ -102,43 +142,6 @@ export default function BookmarksModal({
     setCollectionName('');
   }, [collectionName]);
 
-  const handleBookmark = useCallback(() => {
-    if (collectionIDs.length === 0) {
-      toast.error('No collection(s) selected!', {
-        duration: 5000,
-      });
-      return;
-    }
-    onClose();
-    const filenameForBookMark = `${subjectName},${subjectCode},${semester},${year}`;
-
-    collectionIDs.map(async (id) => {
-      const bookmarkReqObj = addToBookmarkObj(
-        { fileId: paperid!, folderId: id, fileName: filenameForBookMark },
-        jwtToken
-      );
-      if (!bookmarkReqObj) {
-        toast.error('Somthing went wrong!', {
-          duration: 5000,
-        });
-        return;
-      }
-      try {
-        await fetcher(bookmarkReqObj);
-      } catch (err) {
-        toast.error('Somthing went wrong!', {
-          description: `${err}`,
-          duration: 5000,
-        });
-      }
-      toast.success('File bookmarked successfully!', {
-        description: `Added to folder: ${collectionList.find(({ _id }) => _id === id)?.name}`,
-        duration: 5000,
-      });
-    });
-    setCollectionIDs([]);
-  }, [collectionIDs]);
-
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
       <ModalContent>
@@ -148,31 +151,18 @@ export default function BookmarksModal({
               Add to Bookmark
             </ModalHeader>
             <ModalBody>
-              <Select
-                placeholder="Select Collection(s)"
-                aria-label="Select Collection(s)"
-                selectionMode="multiple"
-                isMultiline
-                variant="bordered"
-                classNames={{ base: 'w-full', trigger: 'min-h-12 py-2' }}
-                onChange={(e) => setCollectionIDs(e.target.value.split(','))}
-                items={collectionList}
-                renderValue={(
-                  items: SelectedItems<{ _id: string; name: string }>
-                ) => (
-                  <div className="flex flex-wrap gap-2">
-                    {items.map(({ data }) => (
-                      <Chip key={data?._id}>{data?.name}</Chip>
-                    ))}
-                  </div>
-                )}
+              <CheckboxGroup
+                label="Select cities"
+                color="warning"
+                onValueChange={setCollectionIDs}
+                orientation="horizontal"
               >
-                {({ _id, name }) => (
-                  <SelectItem key={_id} textValue={name}>
+                {collectionList.map(({ _id, name }) => (
+                  <Checkbox value={_id} key={_id}>
                     {name}
-                  </SelectItem>
-                )}
-              </Select>
+                  </Checkbox>
+                ))}
+              </CheckboxGroup>
               {isCreatingFolder && (
                 <Input
                   autoFocus
