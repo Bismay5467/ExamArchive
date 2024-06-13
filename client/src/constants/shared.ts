@@ -26,6 +26,9 @@ export const SEMESTER = Object.freeze({
   VIII: 'Semester VIII',
 });
 
+export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = ['application/pdf'];
+
+export const INITIAL_PAGE_NUMBER = 1;
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
 ];
