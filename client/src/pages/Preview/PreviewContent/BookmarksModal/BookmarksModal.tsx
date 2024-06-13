@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import {
   Modal,
   ModalContent,
@@ -8,9 +9,10 @@ import {
   Input,
   Select,
   SelectItem,
+  SelectedItems,
+  Chip,
 } from '@nextui-org/react';
-import { Spinner } from '@nextui-org/spinner';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdCreateNewFolder } from 'react-icons/md';
 import useSWR from 'swr';
 import { toast } from 'sonner';
@@ -20,10 +22,7 @@ import {
   getFolderNameObj,
 } from '@/utils/axiosReqObjects/folder';
 import fetcher from '@/utils/fetcher/fetcher';
-import {
-  addToBookmarkObj,
-  removeBookmarkObj,
-} from '@/utils/axiosReqObjects/bookmarks';
+import { addToBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 
 export default function BookmarksModal({
   isOpen,
@@ -46,17 +45,13 @@ export default function BookmarksModal({
 }) {
   const [collectionName, setCollectionName] = useState<string>();
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
-  const [prevCurrentCollectionIDs, setPrevCurrentCollectionIDs] = useState<
-    Array<string>
-  >([]);
+  const [collectionIDs, setCollectionIDs] = useState<Array<string>>();
   const {
     authState: { jwtToken },
   } = useAuth();
-  const {
-    data: collection,
-    mutate: mutateCollection,
-    isValidating: isValidatingCollection,
-  } = useSWR(getFolderNameObj('BOOKMARK', jwtToken));
+  const { data: collection, mutate: mutateCollection } = useSWR(
+    getFolderNameObj('BOOKMARK', jwtToken)
+  );
   const collectionList: Array<{ _id: string; name: string }> =
     collection?.data?.data ?? undefined;
 
@@ -100,23 +95,21 @@ export default function BookmarksModal({
       });
     });
     setCollectionName('');
-    onClose();
   };
 
-  const handleBookmark = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const currentCollectionIDs = e.target.value.split(',');
-    const diff = currentCollectionIDs.length - prevCurrentCollectionIDs.length;
+  const handleBookmark = () => {
+    if (!collectionIDs) {
+      toast.error('No collection(s) selected!', {
+        duration: 5000,
+      });
+      return;
+    }
+    onClose();
+    const filenameForBookMark = `${subjectName},${subjectCode},${semester},${year}`;
 
-    if (diff > 0) {
-      const [idToAdd] = currentCollectionIDs.filter(
-        (id) => !prevCurrentCollectionIDs.includes(id)
-      );
-      setPrevCurrentCollectionIDs(currentCollectionIDs);
-      //   console.log(idToAdd);
-
-      const filenameForBookMark = `${subjectName},${subjectCode},${semester},${year}`;
+    collectionIDs.map(async (id) => {
       const bookmarkReqObj = addToBookmarkObj(
-        { fileId: paperid!, folderId: idToAdd, fileName: filenameForBookMark },
+        { fileId: paperid!, folderId: id, fileName: filenameForBookMark },
         jwtToken
       );
       if (!bookmarkReqObj) {
@@ -132,39 +125,12 @@ export default function BookmarksModal({
           description: `${err}`,
           duration: 5000,
         });
-        return;
       }
       toast.success('File bookmarked successfully!', {
+        description: `Added to folder: ${collectionList.find(({ _id }) => _id === id)?.name}`,
         duration: 5000,
       });
-    } else {
-      const [idToRemove] = prevCurrentCollectionIDs.filter(
-        (id) => !currentCollectionIDs.includes(id)
-      );
-      setPrevCurrentCollectionIDs(currentCollectionIDs);
-      const bookmarkReqObj = removeBookmarkObj(
-        { fileId: paperid!, folderId: idToRemove },
-        jwtToken
-      );
-      if (!bookmarkReqObj) {
-        toast.error('Somthing went wrong!', {
-          duration: 5000,
-        });
-        return;
-      }
-      try {
-        await fetcher(bookmarkReqObj);
-      } catch (err) {
-        toast.error('Somthing went wrong!', {
-          description: `${err}`,
-          duration: 5000,
-        });
-        return;
-      }
-      toast.success('File removed from bookmarks!', {
-        duration: 5000,
-      });
-    }
+    });
   };
 
   return (
@@ -177,14 +143,29 @@ export default function BookmarksModal({
             </ModalHeader>
             <ModalBody>
               <Select
-                label="Select Collection(s)"
+                placeholder="Select Collection(s)"
+                aria-label="Select Collection(s)"
                 selectionMode="multiple"
-                className="w-full"
-                onChange={handleBookmark}
+                isMultiline
+                variant="bordered"
+                classNames={{ base: 'w-full', trigger: 'min-h-12 py-2' }}
+                onChange={(e) => setCollectionIDs(e.target.value.split(','))}
+                items={collectionList}
+                renderValue={(
+                  items: SelectedItems<{ _id: string; name: string }>
+                ) => (
+                  <div className="flex flex-wrap gap-2">
+                    {items.map(({ data }) => (
+                      <Chip key={data?._id}>{data?.name}</Chip>
+                    ))}
+                  </div>
+                )}
               >
-                {collectionList.map(({ _id, name }) => (
-                  <SelectItem key={_id}>{name}</SelectItem>
-                ))}
+                {({ _id, name }) => (
+                  <SelectItem key={_id} textValue={name}>
+                    {name}
+                  </SelectItem>
+                )}
               </Select>
               {isCreatingFolder && (
                 <Input
@@ -199,16 +180,20 @@ export default function BookmarksModal({
               <Button color="danger" variant="flat" onPress={onClose}>
                 Close
               </Button>
-              <Button
-                color="primary"
-                onClick={handleCreateNew}
-                endContent={<MdCreateNewFolder className="text-xl" />}
-              >
-                Create {!isCreatingFolder && 'new'}
-                {isValidatingCollection && (
-                  <Spinner size="sm" className="ml-2" />
-                )}
-              </Button>
+              {collectionIDs && (
+                <Button color="primary" variant="flat" onClick={handleBookmark}>
+                  Add
+                </Button>
+              )}
+              {!collectionIDs && (
+                <Button
+                  color="primary"
+                  onClick={handleCreateNew}
+                  endContent={<MdCreateNewFolder className="text-xl" />}
+                >
+                  Create {!isCreatingFolder && 'new'}
+                </Button>
+              )}
             </ModalFooter>
           </>
         )}
