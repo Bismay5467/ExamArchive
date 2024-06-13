@@ -2,32 +2,23 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import {
-  Chip,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-  Input,
-} from '@nextui-org/react';
-import { IoBookmarksOutline } from 'react-icons/io5';
+
+import { IoBookmarks } from 'react-icons/io5';
+import { Chip, useDisclosure } from '@nextui-org/react';
 import { getFileObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 import { IFileData } from '@/types/file';
 import { PDFViewer } from './PDFViewer/PDFViewer';
+import BookmarksModal from './BookmarksModal/BookmarksModal';
 
-const PING_TIME_OUT_TIME = 5000;
+const PING_TIME_OUT_TIME = 10000;
 
 export default function PreviewContent() {
   const [fileData, setFileData] = useState<IFileData>();
   const [setshowPing, setSetshowPing] = useState<boolean>(true);
   const { paperid } = useParams();
-  setTimeout(() => {
-    setSetshowPing(false);
-  }, PING_TIME_OUT_TIME);
+
+  const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
   const { data: response, error } = useSWR(
     paperid ? getFileObj(paperid) : null
@@ -39,6 +30,9 @@ export default function PreviewContent() {
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      setSetshowPing(false);
+    }, PING_TIME_OUT_TIME);
     if (response) {
       if (response.status === SUCCESS_CODES.OK) {
         parseToJSON();
@@ -56,8 +50,6 @@ export default function PreviewContent() {
     }
   }, [response, error]);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   return (
     <div className=" grid grid-cols-12">
       <div className="col-span-6 p-4">
@@ -66,9 +58,11 @@ export default function PreviewContent() {
       <div className="min-h-[500px] flex flex-col gap-y-4 p-4 col-span-6 rounded-lg">
         <div>
           <h1 className="text-4xl font-medium flex flex-row gap-x-2">
-            {fileData?.subjectName} ({fileData?.subjectCode})
+            <span className="max-w-[70%] text-wrap">
+              {fileData?.subjectName} ({fileData?.subjectCode})
+            </span>
             <span className="relative">
-              <IoBookmarksOutline
+              <IoBookmarks
                 className="self-center ml-2 text-red-500 cursor-pointer"
                 onClick={() => onOpen()}
               />
@@ -78,7 +72,7 @@ export default function PreviewContent() {
             </span>
           </h1>
           <h3 className="px-1 mt-2 font-semibold opacity-60">
-            <span>Semester:</span> {fileData?.semester} ({fileData?.year})
+            {fileData?.semester} ({fileData?.year})
           </h3>
         </div>
         <div className="flex flex-row flex-wrap gap-2">
@@ -107,37 +101,18 @@ export default function PreviewContent() {
           {fileData?.institutionName}{' '}
         </h3>
       </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                <Input
-                  autoFocus
-                  label="Email"
-                  placeholder="Enter your email"
-                  variant="bordered"
-                />
-                <Input
-                  label="Password"
-                  placeholder="Enter your password"
-                  type="password"
-                  variant="bordered"
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Sign in
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {paperid && fileData && (
+        <BookmarksModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpenChange={onOpenChange}
+          paperid={paperid}
+          semester={fileData.semester}
+          subjectCode={fileData.subjectCode}
+          subjectName={fileData.subjectName}
+          year={fileData.year}
+        />
+      )}
     </div>
   );
 }
