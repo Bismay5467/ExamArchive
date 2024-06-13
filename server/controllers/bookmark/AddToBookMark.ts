@@ -40,8 +40,13 @@ const AddToBookMarks = asyncErrorHandler(
           .exec(),
       ]);
       if (doesFileExistsInFolder) await session.abortTransaction();
-      else if (doesFileExists === null) await session.abortTransaction();
-      else {
+      else if (doesFileExists === null) {
+        await session.abortTransaction();
+        throw new ErrorHandler(
+          'This post was either deleted or removed',
+          ERROR_CODES['NOT FOUND']
+        );
+      } else {
         const [isFileAdded, isCountChanged] = await Promise.all([
           BookMarkedFile.findOneAndUpdate(
             {
