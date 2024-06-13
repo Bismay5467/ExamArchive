@@ -12,7 +12,7 @@ import {
   SelectedItems,
   Chip,
 } from '@nextui-org/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MdCreateNewFolder } from 'react-icons/md';
 import useSWR from 'swr';
 import { toast } from 'sonner';
@@ -45,7 +45,7 @@ export default function BookmarksModal({
 }) {
   const [collectionName, setCollectionName] = useState<string>();
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
-  const [collectionIDs, setCollectionIDs] = useState<Array<string>>();
+  const [collectionIDs, setCollectionIDs] = useState<Array<string>>([]);
   const {
     authState: { jwtToken },
   } = useAuth();
@@ -59,13 +59,18 @@ export default function BookmarksModal({
     if (!isOpen) setIsCreatingFolder(false);
   }, [isOpen]);
 
-  const handleCreateNew = async () => {
+  const handleCreateNew = useCallback(async () => {
     if (!isCreatingFolder) {
       setIsCreatingFolder(true);
       return;
     }
 
-    if (collectionName === undefined) return;
+    if (!collectionName || collectionName.length === 0) {
+      toast.error('Collection name should have atlease one character!', {
+        duration: 5000,
+      });
+      return;
+    }
     const folderDetails = createFolderObj(
       {
         folderName: collectionName,
@@ -95,10 +100,10 @@ export default function BookmarksModal({
       });
     });
     setCollectionName('');
-  };
+  }, [collectionName]);
 
-  const handleBookmark = () => {
-    if (!collectionIDs) {
+  const handleBookmark = useCallback(() => {
+    if (collectionIDs.length === 0) {
       toast.error('No collection(s) selected!', {
         duration: 5000,
       });
@@ -131,7 +136,8 @@ export default function BookmarksModal({
         duration: 5000,
       });
     });
-  };
+    setCollectionIDs([]);
+  }, [collectionIDs]);
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
@@ -180,18 +186,17 @@ export default function BookmarksModal({
               <Button color="danger" variant="flat" onPress={onClose}>
                 Close
               </Button>
-              {collectionIDs && (
-                <Button color="primary" variant="flat" onClick={handleBookmark}>
-                  Add
-                </Button>
-              )}
-              {!collectionIDs && (
+              {collectionIDs.length === 0 ? (
                 <Button
                   color="primary"
                   onClick={handleCreateNew}
                   endContent={<MdCreateNewFolder className="text-xl" />}
                 >
                   Create {!isCreatingFolder && 'new'}
+                </Button>
+              ) : (
+                <Button color="primary" variant="flat" onClick={handleBookmark}>
+                  Add
                 </Button>
               )}
             </ModalFooter>

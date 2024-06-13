@@ -40,7 +40,9 @@ export default function Navbar() {
   } = useAuth();
   const DELAY_IN_MS = 500;
   const search = (query: string) => {
-    if (currentLocation.pathname === '/') navigate(CLIENT_ROUTES.SEARCH);
+    if (currentLocation.pathname !== CLIENT_ROUTES.SEARCH) {
+      navigate(CLIENT_ROUTES.SEARCH);
+    }
     const currentParams = Object.fromEntries(searchParams.entries());
     setSearchParams({ ...currentParams, query });
   };
