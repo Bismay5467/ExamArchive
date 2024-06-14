@@ -47,7 +47,7 @@ export default function Root() {
               {!isAuthPage && <Footer />}
             </div>
           </main>
-          <Toaster />
+          <Toaster richColors visibleToasts={9} />
         </SWRConfig>
       </AuthProvider>
     </ThemeProvider>

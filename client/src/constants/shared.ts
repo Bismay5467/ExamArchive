@@ -26,9 +26,22 @@ export const SEMESTER = Object.freeze({
   VIII: 'Semester VIII',
 });
 
+export const reportReasons = [
+  { rank: 1, reason: 'Inappropriate or Offensive language' },
+  { rank: 2, reason: 'Harassesment or Bullying' },
+  { rank: 3, reason: 'Sexually Explicit Content' },
+  { rank: 4, reason: 'Misinformation or Fake news' },
+  { rank: 5, reason: 'Violence or Graphic Content' },
+  { rank: 6, reason: 'Impersonation' },
+  { rank: 7, reason: 'Other' },
+];
+
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
 ];
-
+export const INITIAL_PAGE_NUMBER = 1;
 export const TEMP_JWT_TOKEN_HARDCODED =
   'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NjVkOTM1ZWIxOWJjYWVjMmQ0MjQwZDIiLCJ1c2VybmFtZSI6IkRldmlsIiwiZW1haWwiOiJhcmtvLm9mZmljaWFsbml0a0BnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MTgxOTM3OTIsImV4cCI6MTcyMDc4NTc5Mn0.M5ktLtTghXyDFbbO92mHGdJ3f3MN8KmAsYIJBNsliQI';
+
+export const PDF_WORKER_URL =
+  'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js' as const;

@@ -76,11 +76,7 @@ export default function Search() {
       <div className="p-4 flex flex-col gap-y-4 sm:col-span-7">
         {isLoading && <p>Loading...</p>}
         {data?.map(({ _id, institutionName, semester, subjectCode, year }) => (
-          <Link
-            to={`${CLIENT_ROUTES.FILE_PREVIEW}/${_id}`}
-            target="_blank"
-            key={_id}
-          >
+          <Link to={`${CLIENT_ROUTES.FILE_PREVIEW}/${_id}`} key={_id}>
             <ResultCard
               id={_id}
               instituteName={institutionName}
