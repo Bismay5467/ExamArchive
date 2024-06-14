@@ -3,6 +3,7 @@
 import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
+import { FILE_UPLOAD_STATUS } from '../../constants/constants/upload';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../constants/constants/shared';
 import { Question } from '../../models';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
@@ -23,7 +24,11 @@ const NotificationWebhook = asyncErrorHandler(
     const sanitizedFileName = publicId.split('/').slice(-1)[0];
     await Question.findOneAndUpdate(
       { 'file.filename': sanitizedFileName },
-      { 'file.publicId': publicId, 'file.url': url },
+      {
+        'file.publicId': publicId,
+        'file.url': url,
+        status: FILE_UPLOAD_STATUS.UPLOADED,
+      },
       { upsert: false, new: true }
     )
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
