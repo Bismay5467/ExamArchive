@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import mongoose, { Schema } from 'mongoose';
 
+import { FILE_UPLOAD_STATUS } from '../constants/constants/upload';
 import User from './user';
 import examNames from '../utils/filePreview/examNames';
 import { EXAM_TYPES, SEMESTER } from '../constants/constants/shared';
@@ -25,6 +26,11 @@ const QuestionSchema: Schema = new mongoose.Schema(
       },
       required: true,
       index: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: Object.values(FILE_UPLOAD_STATUS),
     },
     file: {
       filename: { type: String, index: true },
@@ -72,10 +78,12 @@ const QuestionSchema: Schema = new mongoose.Schema(
     noOfDownloads: {
       count: { type: Number, default: 0 },
       userIds: [mongoose.Types.ObjectId],
+      ips: [String],
     },
     noOfViews: {
       count: { type: Number, default: 0 },
       userIds: [mongoose.Types.ObjectId],
+      ips: [String],
     },
     tags: [{ type: String, index: true }],
     institutionName: { type: String, index: true },

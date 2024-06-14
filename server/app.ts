@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { TriggerClient } from '@trigger.dev/sdk';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -9,6 +10,7 @@ import fileUpload from 'express-fileupload';
 import express, { NextFunction, Request, Response } from 'express';
 
 import AppRouter from './router';
+import { CLOUDINARY_WEBHOOK_ROUTE } from './constants/constants/upload';
 import connectDB from './config/dbConfig';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
@@ -38,9 +40,11 @@ const whitelist = [
   process.env.DEV_CLIENT_URL,
   process.env.STAGE_CLIENT_URL,
 ];
-
 const customCors = (req: Request, res: Response, next: NextFunction) => {
-  if (req.path === '/api/v1/upload/webhook' && req.method === 'POST') next();
+  console.log(
+    `Log: Hostname = ${req.hostname}, IP = ${req.ips.length === 0 ? req.ip : req.ips.join(' ')}`
+  );
+  if (req.path === CLOUDINARY_WEBHOOK_ROUTE && req.method === 'POST') next();
   else {
     cors({
       origin: (origin, callback) => {
@@ -84,7 +88,6 @@ app.use(globalErrorHandler);
 
 app.listen(PORT, async () => {
   await connectDB();
-  // eslint-disable-next-line no-console
   console.log(`Log: Server listening on PORT ${PORT}`);
 });
 
