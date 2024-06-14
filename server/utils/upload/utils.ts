@@ -50,7 +50,7 @@ export const sanitizeInput = (
         const { institution, branch, semester, subjectCode, subjectName } =
           file as TUploadFile<'INSTITUTIONAL'>;
         Object.assign(fileObj, {
-          institution,
+          institutionName: institution,
           branch,
           semester,
           subjectCode,
