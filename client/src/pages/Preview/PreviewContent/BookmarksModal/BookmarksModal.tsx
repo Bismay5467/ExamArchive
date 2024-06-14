@@ -54,7 +54,11 @@ export default function BookmarksModal({
     collection?.data?.data ?? undefined;
 
   useEffect(() => {
-    if (!isOpen) setIsCreatingFolder(false);
+    if (!isOpen) {
+      setIsCreatingFolder(false);
+      setCollectionIDs([]);
+      setCollectionName('');
+    }
   }, [isOpen]);
 
   const createBookmarks = (ids: Array<string>) => {
