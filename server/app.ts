@@ -12,6 +12,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import AppRouter from './router';
 import { CLOUDINARY_WEBHOOK_ROUTE } from './constants/constants/upload';
 import connectDB from './config/dbConfig';
+import getClientIP from './utils/filePreview/getClientIP';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
@@ -34,16 +35,14 @@ process.on('uncaughtException', (error) => {
   console.error(error.name, error.message);
   process.exit(1);
 });
-
+app.set('trust proxy', true);
 const whitelist = [
   process.env.PROD_CLIENT_URL,
   process.env.DEV_CLIENT_URL,
   process.env.STAGE_CLIENT_URL,
 ];
 const customCors = (req: Request, res: Response, next: NextFunction) => {
-  console.log(
-    `Log: Hostname = ${req.hostname}, IP = ${req.ips.length === 0 ? req.ip : req.ips.join(' ')}`
-  );
+  console.log(`Log: Hostname = ${req.hostname}, IP = ${getClientIP(req)}`);
   if (req.path === CLOUDINARY_WEBHOOK_ROUTE && req.method === 'POST') next();
   else {
     cors({
