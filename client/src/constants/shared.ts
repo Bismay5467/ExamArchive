@@ -42,3 +42,6 @@ export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
 export const INITIAL_PAGE_NUMBER = 1;
 export const TEMP_JWT_TOKEN_HARDCODED =
   'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NjVkOTM1ZWIxOWJjYWVjMmQ0MjQwZDIiLCJ1c2VybmFtZSI6IkRldmlsIiwiZW1haWwiOiJhcmtvLm9mZmljaWFsbml0a0BnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MTgxOTM3OTIsImV4cCI6MTcyMDc4NTc5Mn0.M5ktLtTghXyDFbbO92mHGdJ3f3MN8KmAsYIJBNsliQI';
+
+export const PDF_WORKER_URL =
+  'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js' as const;
