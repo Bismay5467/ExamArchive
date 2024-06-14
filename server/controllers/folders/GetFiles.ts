@@ -45,7 +45,12 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
         { $sort: { updatedAt: -1 } },
         { $skip: skipCount },
         { $limit: MAX_FILES_FETCH_LIMIT },
-        { $project: projection },
+        {
+          $project: {
+            'metadata.status': action === 'BOOKMARK' ? 0 : 1,
+            ...projection,
+          },
+        },
       ],
       { maxTimeMS: MONGO_READ_QUERY_TIMEOUT, lean: true }
     ).exec(),

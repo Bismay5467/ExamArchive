@@ -18,7 +18,7 @@ const ReactOnComments = asyncErrorHandler(
       typeof reactCommentInputSchema
     >;
     const filter = { id: commentId, isFlagged: false, isDeleted: false };
-    if (reaction === 'UNLIKE') {
+    if (reaction === 'RETRACE') {
       if (action === 'DOWNVOTE') {
         Object.assign(filter, { 'downVotes.voters': { $in: [voterId] } });
       }
@@ -30,7 +30,7 @@ const ReactOnComments = asyncErrorHandler(
 
     let updateOperator;
 
-    if (reaction === 'LIKE') {
+    if (reaction === 'VOTE') {
       updateOperator =
         action === 'DOWNVOTE'
           ? {
@@ -73,7 +73,7 @@ const ReactOnComments = asyncErrorHandler(
       );
     }
 
-    return res.status(SUCCESS_CODES.OK).json({ hasLiked: reaction === 'LIKE' });
+    return res.status(SUCCESS_CODES.OK).json({ hasVoted: reaction === 'VOTE' });
   }
 );
 

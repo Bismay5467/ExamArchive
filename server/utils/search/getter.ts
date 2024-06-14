@@ -1,3 +1,4 @@
+import { FILE_UPLOAD_STATUS } from '../../constants/constants/upload';
 import { TUserSortFilter } from '../../types/search/types';
 
 export const getQuery = ({
@@ -15,6 +16,7 @@ export const getQuery = ({
   const query = {
     tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
     isFlagged: false,
+    status: FILE_UPLOAD_STATUS.UPLOADED,
   };
   Object.assign(query, {
     ...(examType && examType.length > 0 && { examType: { $in: examType } }),

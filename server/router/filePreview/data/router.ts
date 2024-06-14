@@ -1,5 +1,6 @@
 import express from 'express';
 
+import passIPOrUserId from '../../../middlewares/passIP';
 import validate from '../../../middlewares/validate';
 import verifyUser from '../../../middlewares/verifyUser';
 import {
@@ -34,12 +35,12 @@ router.put(
 );
 router.put(
   '/downloadCount',
-  [verifyUser, validate(updateDownloadCountInputSchema, 'BODY')],
+  [passIPOrUserId, validate(updateDownloadCountInputSchema, 'BODY')],
   DownloadCount
 );
 router.put(
   '/viewCount',
-  [verifyUser, validate(updateViewCountInputSchema, 'BODY')],
+  [passIPOrUserId, validate(updateViewCountInputSchema, 'BODY')],
   ViewCount
 );
 router.put(

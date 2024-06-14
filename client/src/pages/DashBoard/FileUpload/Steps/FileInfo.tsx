@@ -1,4 +1,8 @@
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import {
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+} from 'react-hook-form';
 import { Input, Select, SelectItem, Textarea } from '@nextui-org/react';
 
 import { SEMESTER } from '@/constants/shared';
@@ -7,9 +11,11 @@ import { TFileUploadFormFields } from '@/types/upload';
 export default function FileInfo({
   register,
   errors,
+  clearErrors,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
+  clearErrors: UseFormClearErrors<TFileUploadFormFields>;
 }) {
   return (
     <section className="p-4 max-w-[600px] mx-auto">
@@ -23,6 +29,7 @@ export default function FileInfo({
           isInvalid={errors.subjectName !== undefined}
           errorMessage={errors.subjectName?.message}
           {...register('subjectName')}
+          onFocus={() => errors.subjectName && clearErrors('subjectName')}
         />
         <Input
           isRequired
@@ -32,6 +39,7 @@ export default function FileInfo({
           isInvalid={errors.subjectCode !== undefined}
           errorMessage={errors.subjectCode?.message}
           {...register('subjectCode')}
+          onFocus={() => errors.subjectCode && clearErrors('subjectCode')}
         />
         <Select
           isRequired
@@ -40,6 +48,7 @@ export default function FileInfo({
           {...register('semester')}
           isInvalid={errors.semester !== undefined}
           errorMessage="*Required"
+          onFocus={() => errors.semester && clearErrors('semester')}
         >
           {Object.entries(SEMESTER).map(([_, value]) => (
             <SelectItem key={value}>{value}</SelectItem>
@@ -52,7 +61,8 @@ export default function FileInfo({
           label="Year"
           {...register('year')}
           isInvalid={errors.year !== undefined}
-          errorMessage={errors.year?.message}
+          errorMessage={errors.year && errors.year?.message}
+          onFocus={() => clearErrors('year')}
         />
         <Input
           isRequired
@@ -62,16 +72,21 @@ export default function FileInfo({
           {...register('branch')}
           isInvalid={errors.branch !== undefined}
           errorMessage={errors.branch?.message}
+          onFocus={() => errors.branch && clearErrors('branch')}
         />
-        <Input
+        <Select
           isRequired
-          type="text"
           className="row-span-1 col-span-5"
           label="Institution"
           {...register('institution')}
           isInvalid={errors.institution !== undefined}
           errorMessage={errors.institution?.message}
-        />
+          onFocus={() => errors.institution && clearErrors('institution')}
+        >
+          <SelectItem key="National Institute of Technology karnataka">
+            National Institute of Technology karnataka
+          </SelectItem>
+        </Select>
         <Textarea
           isRequired
           type="text"
@@ -81,6 +96,7 @@ export default function FileInfo({
           {...register('tags')}
           isInvalid={errors.tags !== undefined}
           errorMessage={errors.tags?.message}
+          onFocus={() => errors.tags && clearErrors('tags')}
         />
       </div>
     </section>

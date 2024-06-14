@@ -17,6 +17,11 @@ export const SERVER_ROUTES = Object.freeze({
   RESET: '/api/v1/auth/reset',
   SIGNUP: '/api/v1/auth/newUser',
   UPLOAD: '/api/v1/upload',
+  FOLDER: '/api/v1/folder',
   GETFILE: '/api/v1/file/get',
+  RATING: '/api/v1/file/rating',
+  REPORT: '/api/v1/report',
+  BOOKMARK: '/api/v1/bookmark',
+  UPDATE_CACHE: '/api/v1/superAdmin/update',
   GETCOMMENT: '/api/v1/comment/get',
 });

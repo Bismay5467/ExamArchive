@@ -3,6 +3,7 @@
 import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
+import { FILE_UPLOAD_STATUS } from '../../constants/constants/upload';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../constants/constants/shared';
 import { Question } from '../../models';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
@@ -10,12 +11,10 @@ import { ERROR_CODES, SUCCESS_CODES } from '../../constants/statusCode';
 
 const NotificationWebhook = asyncErrorHandler(
   async (req: Request, res: Response) => {
-    const { public_id: publicId, secure_url: url } = req.body.data as {
+    const { public_id: publicId, secure_url: url } = req.body as {
       public_id: string;
       secure_url: string;
     };
-    // eslint-disable-next-line no-console
-    console.log(publicId, url);
     if (!(publicId && url)) {
       throw new ErrorHandler(
         'Record updation failed',
@@ -25,7 +24,11 @@ const NotificationWebhook = asyncErrorHandler(
     const sanitizedFileName = publicId.split('/').slice(-1)[0];
     await Question.findOneAndUpdate(
       { 'file.filename': sanitizedFileName },
-      { 'file.publicId': publicId, 'file.url': url },
+      {
+        'file.publicId': publicId,
+        'file.url': url,
+        status: FILE_UPLOAD_STATUS.UPLOADED,
+      },
       { upsert: false, new: true }
     )
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)

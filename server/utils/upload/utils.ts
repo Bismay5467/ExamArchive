@@ -5,6 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { ERROR_CODES } from '../../constants/statusCode';
 import { EXAM_TYPES } from '../../constants/constants/shared';
 import { ErrorHandler } from '../errors/errorHandler';
+import { FILE_UPLOAD_STATUS } from '../../constants/constants/upload';
 import {
   TExamType,
   TExamTypeExtended,
@@ -41,6 +42,7 @@ export const sanitizeInput = (
       examType,
       file: { filename },
       folderId,
+      status: FILE_UPLOAD_STATUS.PROCESSING,
     };
     const examGroup = getExamGroup(examType);
     switch (examGroup) {
@@ -48,7 +50,7 @@ export const sanitizeInput = (
         const { institution, branch, semester, subjectCode, subjectName } =
           file as TUploadFile<'INSTITUTIONAL'>;
         Object.assign(fileObj, {
-          institution,
+          institutionName: institution,
           branch,
           semester,
           subjectCode,

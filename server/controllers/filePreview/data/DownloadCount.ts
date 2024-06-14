@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Types } from 'mongoose';
 import { z } from 'zod';
 import { Request, Response } from 'express';
@@ -12,18 +13,28 @@ import { updateDownloadCountInputSchema } from '../../../router/filePreview/data
 import { SERVER_ERROR, SUCCESS_CODES } from '../../../constants/statusCode';
 
 const DownloadCount = asyncErrorHandler(async (req: Request, res: Response) => {
-  const { userId } = req.body as { userId: string };
+  const { userId, ip } = req.body as { userId: string; ip: string };
   const { postId } = req.body.data as z.infer<
     typeof updateDownloadCountInputSchema
   >;
-  const result = await Question.findByIdAndUpdate(
-    { _id: postId, 'noOfDownloads.userIds': { $ne: userId }, isFlagged: false },
-    {
-      $inc: { 'noOfDownloads.count': 1 },
-      $addToSet: { 'noOfDownloads.userIds': userId },
-    },
-    { upsert: false, new: true }
-  )
+  const filter = userId
+    ? {
+        _id: postId,
+        'noOfDownloads.userIds': { $ne: userId },
+        isFlagged: false,
+      }
+    : { _id: postId, 'noOfDownloads.ips': { $ne: ip }, isFlagged: false };
+  const update = userId
+    ? {
+        $inc: { 'noOfDownloads.count': 1 },
+        $addToSet: { 'noOfDownloads.userIds': userId },
+      }
+    : {
+        $inc: { 'noOfDownloads.count': 1 },
+        $addToSet: { 'noOfDownloads.ips': ip },
+      };
+  const options = { upsert: false, new: true };
+  const result = await Question.findByIdAndUpdate(filter, update, options)
     .select({ _id: 1, uploadedBy: 1, noOfDownloads: 1 })
     .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
     .lean()

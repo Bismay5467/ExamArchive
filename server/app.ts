@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { TriggerClient } from '@trigger.dev/sdk';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -9,7 +10,9 @@ import fileUpload from 'express-fileupload';
 import express, { NextFunction, Request, Response } from 'express';
 
 import AppRouter from './router';
+import { CLOUDINARY_WEBHOOK_ROUTE } from './constants/constants/upload';
 import connectDB from './config/dbConfig';
+import getClientIP from './utils/filePreview/getClientIP';
 import triggerClient from './config/triggerConfig';
 import { ERROR_CODES, SUCCESS_CODES } from './constants/statusCode';
 import { ErrorHandler, globalErrorHandler } from './utils/errors/errorHandler';
@@ -32,7 +35,27 @@ process.on('uncaughtException', (error) => {
   console.error(error.name, error.message);
   process.exit(1);
 });
-app.use(cors());
+app.set('trust proxy', true);
+const whitelist = [
+  process.env.PROD_CLIENT_URL,
+  process.env.DEV_CLIENT_URL,
+  process.env.STAGE_CLIENT_URL,
+];
+const customCors = (req: Request, res: Response, next: NextFunction) => {
+  console.log(`Log: Hostname = ${req.hostname}, IP = ${getClientIP(req)}`);
+  if (req.path === CLOUDINARY_WEBHOOK_ROUTE && req.method === 'POST') next();
+  else {
+    cors({
+      origin: (origin, callback) => {
+        if (whitelist.includes(origin)) callback(null, true);
+        else callback(new Error('Not allowed by CORS'));
+      },
+      optionsSuccessStatus: SUCCESS_CODES.OK,
+      credentials: true,
+    })(req, res, next);
+  }
+};
+app.use(customCors);
 app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -64,7 +87,6 @@ app.use(globalErrorHandler);
 
 app.listen(PORT, async () => {
   await connectDB();
-  // eslint-disable-next-line no-console
   console.log(`Log: Server listening on PORT ${PORT}`);
 });
 
