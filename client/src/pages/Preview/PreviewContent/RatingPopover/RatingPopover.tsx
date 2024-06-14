@@ -56,6 +56,7 @@ export default function RatingPopover({ postId }: { postId: string }) {
         duration: 5000,
       });
     }
+    setIsRated(false);
   }, [response, error]);
 
   return (

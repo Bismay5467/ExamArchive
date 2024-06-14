@@ -20,6 +20,7 @@ export const SERVER_ROUTES = Object.freeze({
   FOLDER: '/api/v1/folder',
   GETFILE: '/api/v1/file/get',
   RATING: '/api/v1/file/rating',
+  REPORT: '/api/v1/report',
   BOOKMARK: '/api/v1/bookmark',
   UPDATE_CACHE: '/api/v1/superAdmin/update',
 });

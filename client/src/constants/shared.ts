@@ -26,6 +26,16 @@ export const SEMESTER = Object.freeze({
   VIII: 'Semester VIII',
 });
 
+export const reportReasons = [
+  { rank: 1, reason: 'Inappropriate or Offensive language' },
+  { rank: 2, reason: 'Harassesment or Bullying' },
+  { rank: 3, reason: 'Sexually Explicit Content' },
+  { rank: 4, reason: 'Misinformation or Fake news' },
+  { rank: 5, reason: 'Violence or Graphic Content' },
+  { rank: 6, reason: 'Impersonation' },
+  { rank: 7, reason: 'Other' },
+];
+
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
 ];

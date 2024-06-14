@@ -50,7 +50,7 @@ export default function BookmarksModal({
   const { data: collection, mutate: mutateCollection } = useSWR(
     getFolderNameObj('BOOKMARK', jwtToken)
   );
-  const collectionList: Array<{ _id: string; name: string }> =
+  const collectionList: Array<{ _id: string; name: string }> | undefined =
     collection?.data?.data ?? undefined;
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function BookmarksModal({
         });
       }
       toast.success('File bookmarked successfully!', {
-        description: `Added to folder: ${collectionList.find(({ _id }) => _id === id)?.name ?? collectionName}`,
+        description: `Added to folder: ${collectionList?.find(({ _id }) => _id === id)?.name ?? collectionName}`,
         duration: 2000,
       });
     });
@@ -157,7 +157,7 @@ export default function BookmarksModal({
                 onValueChange={setCollectionIDs}
                 orientation="horizontal"
               >
-                {collectionList.map(({ _id, name }) => (
+                {collectionList?.map(({ _id, name }) => (
                   <Checkbox value={_id} key={_id}>
                     {name}
                   </Checkbox>
@@ -169,6 +169,10 @@ export default function BookmarksModal({
                   label="Enter Collection Tiile"
                   variant="bordered"
                   onValueChange={(e) => setCollectionName(e)}
+                  isInvalid={collectionList
+                    ?.map((val) => val.name)
+                    .includes(collectionName)}
+                  errorMessage="Collection already exists!"
                 />
               )}
             </ModalBody>

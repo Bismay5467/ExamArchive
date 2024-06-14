@@ -5,12 +5,14 @@ import { toast } from 'sonner';
 
 import { IoBookmarks } from 'react-icons/io5';
 import { Chip, useDisclosure, Tooltip } from '@nextui-org/react';
+import { MdReport } from 'react-icons/md';
 import { getFileObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 import { IFileData } from '@/types/file';
 import { PDFViewer } from './PDFViewer/PDFViewer';
 import BookmarksModal from './BookmarksModal/BookmarksModal';
 import RatingPopover from './RatingPopover/RatingPopover';
+import { ReportModal } from '@/components/ReportModal/ReportModal';
 
 const PING_TIME_OUT_TIME = 10000;
 const MAX_TAGS_DISPLAY = 4;
@@ -128,44 +130,18 @@ export default function PreviewContent() {
           <span className="text-2xl font-semibold">Institute:</span>{' '}
           {fileData?.institutionName}{' '}
         </h3>
-        {paperid && <RatingPopover postId={paperid} />}
-        {/* <Tooltip
-          className="self-center bg-slate-200/80"
-          showArrow
-          placement="right"
-          content={
-            <div className="w-[400px] p-4">
-              <Slider
-                label="Select a value"
-                showTooltip
-                step={0.1}
-                formatOptions={{ style: 'percent' }}
-                maxValue={1}
-                minValue={0}
-                marks={[
-                  {
-                    value: 0.2,
-                    label: '20%',
-                  },
-                  {
-                    value: 0.5,
-                    label: '50%',
-                  },
-                  {
-                    value: 0.8,
-                    label: '80%',
-                  },
-                ]}
-                defaultValue={0.2}
-                className="max-w-md"
-              />
-            </div>
-          }
-        >
-            Rate this paper?{' '}
-            <BsStars className="self-center text-xl text-purple-500" />
-          </span>
-        </Tooltip> */}
+        <span className="flex flex-row gap-x-4">
+          {paperid && <RatingPopover postId={paperid} />}
+          {paperid && (
+            <ReportModal
+              text="Report"
+              className="bg-red-500 px-4 py-2 rounded-xl text-white font-semibold tracking-wide"
+              endContent={<MdReport />}
+              contentType="POST"
+              postId={paperid}
+            />
+          )}
+        </span>
       </div>
       {paperid && fileData && (
         <BookmarksModal
