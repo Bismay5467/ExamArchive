@@ -21,7 +21,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 
 interface IReportModalProps {
-  text: string;
+  text?: string;
   contentType: TContentType;
   postId: string;
   className?: string;

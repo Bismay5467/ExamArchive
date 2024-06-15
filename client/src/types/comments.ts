@@ -3,31 +3,22 @@ export type TCommentAction = 'UPVOTE' | 'DOWNVOTE';
 export type TReaction = 'SET' | 'RESET';
 
 export interface IComment {
-  replyCount: number;
-  timestamp: string; // ISO date string
-  userId: { _id: string | null; username: string };
-  postId: string;
   commentId: string;
+  downVotes: { count: number; hasDownVoted: boolean };
   isEdited: boolean;
   message: string;
-  upVotes: {
-    count: number;
-    hasUpVoted: boolean;
-  };
-  downVotes: {
-    count: number;
-    hasDownVoted: boolean;
-  };
-  replyComments: IComment[] | null;
+  postId: string;
+  replyCount: number;
+  timestamp: string; // Date in ISO 8601 format
+  upVotes: { count: number; hasUpVoted: boolean };
+  userId: { username: string; _id: string };
 }
 
-export interface ICommentContext {
-  commentData: IComment[];
-  setPostId(): void;
-  createComment(): void;
-  editComment(): void;
-  deleteComment(): void;
-  react(): void;
+export interface IGetComments {
+  postId: string;
+  page: string;
+  parentId?: string;
+  commentType: TCommentType;
 }
 
 export interface IPostComment {

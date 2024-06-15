@@ -2,7 +2,12 @@ import getSearchRequestObj from './search';
 import { getResetObj, getSignInObj, getSignUpObj } from './auth';
 import { getFileObj } from './file';
 import { reportObj } from './report';
-import { getCommentsObj } from './comments';
+import {
+  getCommentsObj,
+  postCommentObj,
+  deleteCommentObj,
+  editCommentObj,
+} from './comments';
 
 export {
   getSearchRequestObj,
@@ -12,4 +17,7 @@ export {
   getFileObj,
   reportObj,
   getCommentsObj,
+  postCommentObj,
+  deleteCommentObj,
+  editCommentObj,
 };

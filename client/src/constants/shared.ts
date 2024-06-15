@@ -36,6 +36,21 @@ export const reportReasons = [
   { rank: 7, reason: 'Other' },
 ];
 
+export const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+] as const;
+
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
 ];
@@ -45,3 +60,5 @@ export const TEMP_JWT_TOKEN_HARDCODED =
 
 export const PDF_WORKER_URL =
   'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js' as const;
+
+export const TEMP_COMMENT_ID = '974106db98afe24eb114' as const;
