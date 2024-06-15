@@ -55,6 +55,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
           comments: [tmpComment],
         },
       };
+      // console.log([tempData, ...staleData]);
 
       return [tempData, ...staleData];
     },
@@ -76,6 +77,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
           comments: [newComment],
         },
       };
+      // console.log([updatedData, ...staleData]);
 
       return [updatedData, ...staleData];
     },

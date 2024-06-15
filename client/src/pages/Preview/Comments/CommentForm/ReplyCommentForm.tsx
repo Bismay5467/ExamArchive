@@ -11,9 +11,13 @@ interface commentFormInput {
 export default function ReplyCommentForm({
   parentId,
   setIsReplying,
+  setShowReplies,
+  setOptimisticReplyCount,
 }: {
   parentId: string;
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowReplies: React.Dispatch<React.SetStateAction<boolean>>;
+  setOptimisticReplyCount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const { register, handleSubmit, reset } = useForm<commentFormInput>();
   const { handleCreateComment } = useComments('REPLIES', parentId);
@@ -22,6 +26,8 @@ export default function ReplyCommentForm({
     handleCreateComment(formData.message);
     reset();
     setIsReplying(false);
+    setShowReplies(true);
+    setOptimisticReplyCount((prev) => prev + 1);
   };
 
   return (

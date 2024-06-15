@@ -24,6 +24,8 @@ export default function ParentCommentBox({
   const [isHidden, setIsHidden] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
+  const [showReplies, setShowReplies] = useState<boolean>(false);
+  // const [startFetching, setStartFetching] = useState<boolean>(false);
   const {
     authState: { userId },
   } = useAuth();
@@ -35,15 +37,18 @@ export default function ParentCommentBox({
     commentId,
   } = commentData;
   const [textMessage, setTextMessage] = useState<string>(message);
+  const [optimisticReplyCount, setOptimisticReplyCount] =
+    useState<number>(replyCount);
   const { handleDeleteComment, handleEditComment } = useComments('COMMENTS');
   const { response } = useComments('REPLIES', commentId);
+  // console.log(response);
 
   const replyData = response ? [...response] : [];
   const reducedReplyData = replyData
     .map(({ data }) => data)
     .map(({ comments }) => comments);
 
-  const replyList: Array<IComment> | undefined = reducedReplyData
+  const replyList: Array<IComment> = reducedReplyData
     ? [].concat(...reducedReplyData)
     : [];
 
@@ -88,10 +93,19 @@ export default function ParentCommentBox({
               <span className="self-center">2</span>
               <BiDownvote className="self-center text-lg cursor-pointer" />
             </span>
-            {replyCount !== 0 && (
-              <span className="self-center flex flex-row gap-x-2 cursor-pointer">
-                <FaRegComment className="self-center text-lg" /> Show{' '}
-                {replyCount} Replies
+            {optimisticReplyCount !== 0 && (
+              <span
+                className="self-center flex flex-row gap-x-2 cursor-pointer"
+                onClick={() => {
+                  setShowReplies((prev) => !prev);
+                  // setStartFetching(true);
+                }}
+                role="presentation"
+              >
+                <FaRegComment className="self-center text-lg" />{' '}
+                {showReplies
+                  ? 'Hide Replies'
+                  : `Show ${optimisticReplyCount} Replies`}
               </span>
             )}
             <span
@@ -168,11 +182,18 @@ export default function ParentCommentBox({
           <ReplyCommentForm
             parentId={commentId}
             setIsReplying={setIsReplying}
+            setShowReplies={setShowReplies}
+            setOptimisticReplyCount={setOptimisticReplyCount}
           />
         )}
-        {replyList?.map((val) => (
-          <ReplyCommentBox key={val.commentId} replyCommentData={val} />
-        ))}
+        {showReplies &&
+          replyList.map((val) => (
+            <ReplyCommentBox
+              key={val.commentId}
+              replyCommentData={val}
+              parentId={commentId}
+            />
+          ))}
       </div>
     </div>
   );

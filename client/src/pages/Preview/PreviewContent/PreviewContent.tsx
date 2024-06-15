@@ -71,7 +71,7 @@ export default function PreviewContent() {
                 onClick={() => onOpen()}
               />
               {setshowPing && (
-                <span className="animate-ping absolute inline-flex left-[10px] top-[0px] h-3 w-3 rounded-full bg-red-600" />
+                <span className="animate-ping absolute inline-flex left-[10px] top-[0px] h-3 w-3 rounded-full bg-blue-600" />
               )}
             </span>
           </h1>
