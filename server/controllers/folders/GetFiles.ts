@@ -12,23 +12,36 @@ import { BookMarkedFile, UploadedFiles } from '../../models/files';
 import { ERROR_CODES, SUCCESS_CODES } from '../../constants/statusCode';
 
 const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
-  const { userId, parentId, action, page } = req.query as unknown as z.infer<
+  const { userId } = req.body as { userId: string };
+  const { parentId, action, page } = req.query as unknown as z.infer<
     typeof getFilesInputSchema
   > & { userId: string };
-  const skipCount = (page - 1) * MAX_FILES_FETCH_LIMIT;
+  const skipCount = ((parseInt(page, 10) || 1) - 1) * MAX_FILES_FETCH_LIMIT;
   const Collection: any =
     action === 'BOOKMARK' ? BookMarkedFile : UploadedFiles;
   const query =
-    parentId === null
-      ? { userId: new mongoose.Types.ObjectId(userId), parentId }
+    parentId === ''
+      ? { userId: new mongoose.Types.ObjectId(userId), parentId: null }
       : {
           userId: new mongoose.Types.ObjectId(userId),
           parentId: new mongoose.Types.ObjectId(parentId),
         };
   const projection =
-    parentId === null
-      ? { name: 1, _id: 1, noOfFiles: 1 }
-      : { metadata: 1, name: 1, _id: 1 };
+    parentId === ''
+      ? { name: 1, _id: 1, noOfFiles: 1, createdAt: 1, updatedAt: 1 }
+      : {
+          'metadata._id': 1,
+          'metadata.createdAt': 1,
+          'metadata.updatedAt': 1,
+          _id: 1,
+        };
+  if (parentId && action === 'UPLOAD') Object.assign(projection, { name: 1 });
+  if (parentId && action === 'BOOKMARK') {
+    Object.assign(projection, {
+      'metadata.status': 1,
+      'metadata.file.filename': 1,
+    });
+  }
   const [files, [totalFiles]] = await Promise.all([
     Collection.aggregate(
       [
@@ -45,12 +58,7 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
         { $sort: { updatedAt: -1 } },
         { $skip: skipCount },
         { $limit: MAX_FILES_FETCH_LIMIT },
-        {
-          $project: {
-            'metadata.status': action === 'BOOKMARK' ? 0 : 1,
-            ...projection,
-          },
-        },
+        { $project: projection },
       ],
       { maxTimeMS: MONGO_READ_QUERY_TIMEOUT, lean: true }
     ).exec(),
@@ -77,7 +85,7 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
   }
   const { totalCount } = totalFiles;
   const totalPages = Math.ceil(Number(totalCount) / MAX_FILES_FETCH_LIMIT);
-  const hasMore = totalPages > page;
+  const hasMore = totalPages > (parseInt(page, 10) || 1);
   return res
     .status(SUCCESS_CODES.OK)
     .json({ files, totalPages, hasMore, totalCount });
