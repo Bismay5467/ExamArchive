@@ -5,6 +5,7 @@ import {
   IGetComments,
   IPostComment,
   IEditComment,
+  IReactToComment,
 } from '@/types/comments';
 
 export const getCommentsObj = (
@@ -76,6 +77,26 @@ export const deleteCommentObj = (
     url: `${SERVER_ROUTES.COMMENT}/delete`,
     data: { data: commentData },
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const reactToCommentObj = (
+  commentData: IReactToComment,
+  jwtToken: string | undefined
+) => {
+  if (!jwtToken) return null;
+
+  const axiosObj: AxiosRequestConfig<any> = {
+    url: `${SERVER_ROUTES.COMMENT}/react`,
+    data: { data: commentData },
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${jwtToken}`,

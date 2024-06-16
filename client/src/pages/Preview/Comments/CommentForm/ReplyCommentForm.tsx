@@ -2,25 +2,24 @@ import { Avatar, Button } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
-import { useComments } from '@/hooks/useComments';
+// import { useComments } from '@/hooks/useComments';
 
 interface commentFormInput {
   message: string;
 }
 
 export default function ReplyCommentForm({
-  parentId,
   setIsReplying,
   setShowReplies,
   setOptimisticReplyCount,
+  handleCreateComment,
 }: {
-  parentId: string;
   setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
   setShowReplies: React.Dispatch<React.SetStateAction<boolean>>;
   setOptimisticReplyCount: React.Dispatch<React.SetStateAction<number>>;
+  handleCreateComment: (_message: string) => Promise<void>;
 }) {
   const { register, handleSubmit, reset } = useForm<commentFormInput>();
-  const { handleCreateComment } = useComments('REPLIES', parentId);
 
   const onSubmit: SubmitHandler<commentFormInput> = (formData) => {
     handleCreateComment(formData.message);

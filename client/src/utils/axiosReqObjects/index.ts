@@ -7,6 +7,7 @@ import {
   postCommentObj,
   deleteCommentObj,
   editCommentObj,
+  reactToCommentObj,
 } from './comments';
 
 export {
@@ -20,4 +21,5 @@ export {
   postCommentObj,
   deleteCommentObj,
   editCommentObj,
+  reactToCommentObj,
 };

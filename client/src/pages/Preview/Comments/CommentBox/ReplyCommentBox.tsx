@@ -3,21 +3,25 @@ import { BiUpvote, BiDownvote } from 'react-icons/bi';
 import { BsReply, BsThreeDots } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
-import { IComment } from '@/types/comments';
+import { IComment, ICommentMutations } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
 import { ReportModal } from '@/components/ReportModal/ReportModal';
 import { useAuth } from '@/hooks/useAuth';
-import { useComments } from '@/hooks/useComments';
+// import { useComments } from '@/hooks/useComments';
 import { cn } from '@/lib/utils';
 
 export default function ReplyCommentBox({
   replyCommentData,
-  parentId,
+  replyMutations: { handleDeleteComment, handleEditComment },
+  setOptimisticReplyCount,
+  setIsReplying,
 }: {
   replyCommentData: IComment;
-  parentId: string;
+  replyMutations: ICommentMutations;
+  setOptimisticReplyCount: React.Dispatch<React.SetStateAction<number>>;
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isHidden, setIsHidden] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -33,11 +37,6 @@ export default function ReplyCommentBox({
   const [textMessage, setTextMessage] = useState<string>(message);
   const isMutable: boolean = userId ? userId === _id : false;
   const editClasses = isEditing ? 'bg-white' : 'bg-[#F2F3F4]';
-
-  const { handleDeleteComment, handleEditComment } = useComments(
-    'REPLIES',
-    parentId
-  );
 
   const date = new Date(timestamp);
   const day = date.getUTCDate();
@@ -80,7 +79,11 @@ export default function ReplyCommentBox({
               <span className="self-center">2</span>
               <BiDownvote className="self-center text-lg" />
             </span>
-            <span className="self-center flex flex-row gap-x-2">
+            <span
+              className="self-center flex flex-row gap-x-2 cursor-pointer"
+              onClick={() => setIsReplying(true)}
+              role="presentation"
+            >
               <BsReply className="text-xl" /> Reply
             </span>
             <span
@@ -97,7 +100,10 @@ export default function ReplyCommentBox({
               )}
               <span
                 className="self-center flex flex-row gap-x-2 cursor-pointer"
-                onClick={() => handleDeleteComment(commentId)}
+                onClick={() => {
+                  handleDeleteComment(commentId);
+                  setOptimisticReplyCount((prev) => prev - 1);
+                }}
                 role="presentation"
               >
                 <RiDeleteBin6Line className="text-lg" /> Delete

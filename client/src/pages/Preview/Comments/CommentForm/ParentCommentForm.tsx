@@ -3,15 +3,18 @@ import { IoMdLink } from 'react-icons/io';
 import { Button } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
-import { useComments } from '@/hooks/useComments';
+// import { useComments } from '@/hooks/useComments';
 
 interface commentFormInput {
   message: string;
 }
 
-export default function ParentCommentForm() {
+export default function ParentCommentForm({
+  handleCreateComment,
+}: {
+  handleCreateComment: (_message: string) => Promise<void>;
+}) {
   const { register, handleSubmit, reset } = useForm<commentFormInput>();
-  const { handleCreateComment } = useComments('COMMENTS');
 
   const onSubmit: SubmitHandler<commentFormInput> = (formData) => {
     handleCreateComment(formData.message);

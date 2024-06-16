@@ -1,6 +1,6 @@
 export type TCommentType = 'COMMENTS' | 'REPLIES';
 export type TCommentAction = 'UPVOTE' | 'DOWNVOTE';
-export type TReaction = 'SET' | 'RESET';
+export type TReaction = 'VOTE' | 'RETRACE';
 
 export interface IComment {
   commentId: string;
@@ -41,4 +41,18 @@ export interface IReactToComment {
   commentId: string;
   action: TCommentAction;
   reaction: TReaction;
+}
+
+export interface ICommentMutations {
+  handleCreateComment: (_message: string) => Promise<void>;
+  handleDeleteComment: (_commentId: string) => Promise<void>;
+  handleEditComment: (_commentId: string, _message: string) => Promise<void>;
+  handleUpvoteComment: (
+    _commentId: string,
+    _reaction: TReaction
+  ) => Promise<void>;
+  handleDownVoteComment: (
+    _commentId: string,
+    _reaction: TReaction
+  ) => Promise<void>;
 }

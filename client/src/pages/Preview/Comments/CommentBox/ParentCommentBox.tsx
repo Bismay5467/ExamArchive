@@ -1,11 +1,17 @@
+/* eslint-disable no-confusing-arrow */
 import { Avatar, Button } from '@nextui-org/react';
-import { BiUpvote, BiDownvote } from 'react-icons/bi';
+import {
+  BiUpvote,
+  BiSolidUpvote,
+  BiSolidDownvote,
+  BiDownvote,
+} from 'react-icons/bi';
 import { BsReply, BsThreeDots } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import { FaRegComment } from 'react-icons/fa6';
-import { useState } from 'react';
-import { IComment } from '@/types/comments';
+import { useEffect, useState } from 'react';
+import { IComment, ICommentMutations } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
 import { useAuth } from '@/hooks/useAuth';
 import { ReportModal } from '@/components/ReportModal/ReportModal';
@@ -14,34 +20,64 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import ReplyCommentBox from './ReplyCommentBox';
 import ReplyCommentForm from '../CommentForm/ReplyCommentForm';
-// TODO: BiSolidUpvote & BiSolidDownvote (for animation)
 
 export default function ParentCommentBox({
   commentData,
+  commentMutations: {
+    handleDeleteComment,
+    handleEditComment,
+    handleUpvoteComment,
+    handleDownVoteComment,
+  },
 }: {
   commentData: IComment;
+  commentMutations: ICommentMutations;
 }) {
   const [isHidden, setIsHidden] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
-  // const [startFetching, setStartFetching] = useState<boolean>(false);
   const {
     authState: { userId },
   } = useAuth();
+
   const {
     message,
     userId: { username, _id },
     replyCount,
     timestamp,
     commentId,
+    upVotes: { count: upvoteCount, hasUpVoted },
+    downVotes: { count: downVoteCount, hasDownVoted },
   } = commentData;
   const [textMessage, setTextMessage] = useState<string>(message);
   const [optimisticReplyCount, setOptimisticReplyCount] =
     useState<number>(replyCount);
-  const { handleDeleteComment, handleEditComment } = useComments('COMMENTS');
-  const { response } = useComments('REPLIES', commentId);
-  // console.log(response);
+  const { response, setStartFetching, mutations } = useComments(
+    'REPLIES',
+    commentId
+  );
+  const handleUpVote = () => {
+    if (hasUpVoted) {
+      handleUpvoteComment(commentId, 'RETRACE');
+      return;
+    }
+    handleUpvoteComment(commentId, 'VOTE');
+    if (hasDownVoted) handleDownVoteComment(commentId, 'RETRACE');
+  };
+
+  const handleDownVote = () => {
+    if (hasDownVoted) {
+      handleDownVoteComment(commentId, 'RETRACE');
+      return;
+    }
+    handleDownVoteComment(commentId, 'VOTE');
+    if (hasDownVoted) handleUpvoteComment(commentId, 'RETRACE');
+  };
+
+  useEffect(() => {
+    if (isReplying || showReplies) setStartFetching(true);
+  }, [isReplying, showReplies]);
 
   const replyData = response ? [...response] : [];
   const reducedReplyData = replyData
@@ -89,16 +125,28 @@ export default function ParentCommentBox({
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-x-4 text-sm opacity-55">
             <span className="self-center flex flex-row gap-x-2">
-              <BiUpvote className="self-center text-lg cursor-pointer" />
-              <span className="self-center">2</span>
-              <BiDownvote className="self-center text-lg cursor-pointer" />
+              <span onClick={handleUpVote} role="presentation">
+                {hasUpVoted ? (
+                  <BiSolidUpvote className="self-center text-lg cursor-pointer text-red-600" />
+                ) : (
+                  <BiUpvote className="self-center text-lg cursor-pointer" />
+                )}
+              </span>
+              <span className="self-center">{upvoteCount}</span>
+              <span onClick={handleDownVote} role="presentation">
+                {hasDownVoted ? (
+                  <BiSolidDownvote className="self-center text-lg cursor-pointer text-red-600" />
+                ) : (
+                  <BiDownvote className="self-center text-lg cursor-pointer" />
+                )}
+              </span>
+              <span className="self-center">{downVoteCount}</span>
             </span>
             {optimisticReplyCount !== 0 && (
               <span
                 className="self-center flex flex-row gap-x-2 cursor-pointer"
                 onClick={() => {
                   setShowReplies((prev) => !prev);
-                  // setStartFetching(true);
                 }}
                 role="presentation"
               >
@@ -180,10 +228,10 @@ export default function ParentCommentBox({
       <div className="pl-8">
         {isReplying && (
           <ReplyCommentForm
-            parentId={commentId}
             setIsReplying={setIsReplying}
             setShowReplies={setShowReplies}
             setOptimisticReplyCount={setOptimisticReplyCount}
+            handleCreateComment={mutations.handleCreateComment}
           />
         )}
         {showReplies &&
@@ -191,7 +239,9 @@ export default function ParentCommentBox({
             <ReplyCommentBox
               key={val.commentId}
               replyCommentData={val}
-              parentId={commentId}
+              replyMutations={mutations}
+              setOptimisticReplyCount={setOptimisticReplyCount}
+              setIsReplying={setIsReplying}
             />
           ))}
       </div>
