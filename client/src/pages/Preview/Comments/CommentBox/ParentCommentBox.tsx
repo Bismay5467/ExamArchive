@@ -1,4 +1,3 @@
-/* eslint-disable no-confusing-arrow */
 import { Avatar, Button } from '@nextui-org/react';
 import {
   BiUpvote,
