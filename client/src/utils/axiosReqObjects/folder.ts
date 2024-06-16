@@ -23,6 +23,29 @@ export const getFolderNameObj = (
   return axiosObj;
 };
 
+export const getFilesForFolderNameObj = (
+  action: IFolder,
+  page: number,
+  parentId: string,
+  jwtToken: string | undefined
+) => {
+  const params = { action, page, parentId };
+  const url = `${SERVER_ROUTES.FOLDER}/get`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    method: 'GET',
+    params,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
 export const createFolderObj = (
   folderDetails: ICreateFolder,
   jwtToken: string | undefined
