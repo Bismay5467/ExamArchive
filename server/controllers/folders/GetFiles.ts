@@ -28,7 +28,7 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
         };
   const projection =
     parentId === ''
-      ? { name: 1, _id: 1, noOfFiles: 1 }
+      ? { name: 1, _id: 1, noOfFiles: 1, createdAt: 1, updatedAt: 1 }
       : {
           'metadata._id': 1,
           'metadata.createdAt': 1,

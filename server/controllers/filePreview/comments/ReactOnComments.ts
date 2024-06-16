@@ -17,15 +17,15 @@ const ReactOnComments = asyncErrorHandler(
     const { commentId, action, reaction } = req.body.data as z.infer<
       typeof reactCommentInputSchema
     >;
-    const filter = { id: commentId, isFlagged: false, isDeleted: false };
+    const filter = { _id: commentId, isFlagged: false, isDeleted: false };
     if (reaction === 'RETRACE') {
       if (action === 'DOWNVOTE') {
-        Object.assign(filter, { 'downVotes.voters': { $in: [voterId] } });
-      }
+        Object.assign(filter, { 'downVotes.voters': { $in: voterId } });
+      } else Object.assign(filter, { 'upVotes.voters': { $in: voterId } });
     } else {
       action === 'DOWNVOTE'
         ? Object.assign(filter, { 'downVotes.voters': { $ne: voterId } })
-        : Object.assign(filter, { 'upVotes.voters': { $ne: voterId } });
+        : Object.assign(filter, { 'upVotes.voters': { $ne: [voterId] } });
     }
 
     let updateOperator;
