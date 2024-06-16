@@ -1,9 +1,9 @@
 import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
-import { ICreateFolder, IFolder } from '@/types/folder';
+import { ICreateFolder, IAction, IGetFilesData } from '@/types/folder';
 
 export const getFolderNameObj = (
-  action: IFolder,
+  action: IAction,
   jwtToken: string | undefined
 ) => {
   const params = { action };
@@ -23,19 +23,16 @@ export const getFolderNameObj = (
   return axiosObj;
 };
 
-export const getFilesForFolderNameObj = (
-  action: IFolder,
-  page: number,
-  parentId: string,
+export const getFilesDataObj = (
+  fileData: IGetFilesData,
   jwtToken: string | undefined
 ) => {
-  const params = { action, page, parentId };
   const url = `${SERVER_ROUTES.FOLDER}/get`;
   if (!jwtToken) return null;
   const axiosObj: AxiosRequestConfig<any> = {
     url,
     method: 'GET',
-    params,
+    params: fileData,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${jwtToken}`,

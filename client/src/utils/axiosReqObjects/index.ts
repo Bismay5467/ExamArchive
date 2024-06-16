@@ -2,11 +2,7 @@ import getSearchRequestObj from './search';
 import { getResetObj, getSignInObj, getSignUpObj } from './auth';
 import { getFileObj } from './file';
 import { reportObj } from './report';
-import {
-  getFilesForFolderNameObj,
-  createFolderObj,
-  getFolderNameObj,
-} from './folder';
+import { getFilesDataObj, createFolderObj, getFolderNameObj } from './folder';
 
 export {
   getSearchRequestObj,
@@ -15,7 +11,7 @@ export {
   getResetObj,
   getFileObj,
   reportObj,
-  getFilesForFolderNameObj,
+  getFilesDataObj,
   createFolderObj,
   getFolderNameObj,
 };

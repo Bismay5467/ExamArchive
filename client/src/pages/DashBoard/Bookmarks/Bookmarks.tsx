@@ -1,25 +1,35 @@
-import useSWR from 'swr';
-import { useAuth } from '@/hooks/useAuth';
-import { getFolderNameObj } from '@/utils/axiosReqObjects/folder';
-import BookmarkFileView from './BookmarkFileView/BookmarkFileView';
+import { useEffect } from 'react';
+// import BookmarkFileView from './BookmarkFileView/BookmarkFileView';
+import useFiles from '@/hooks/useFiles';
 
 export default function Bookmarks() {
-  const {
-    authState: { jwtToken },
-  } = useAuth();
+  const { response, setStartFetching } = useFiles('BOOKMARK');
 
-  const { data: response } = useSWR(getFolderNameObj('BOOKMARK', jwtToken));
-  const folderNames: Array<{ _id: string; name: string }> =
-    response?.data?.data;
+  const folderResults = response ? [...response] : [];
+  const reducedFolderResults = folderResults
+    .map(({ data }) => data)
+    .map(({ files }) => files);
+
+  const folderNames = reducedFolderResults
+    ? [].concat(...reducedFolderResults)
+    : [];
+
+  useEffect(() => {
+    setStartFetching(true);
+  }, []);
 
   return (
     <div className="flex flex-col gap-y-4">
       {folderNames.map(({ _id, name }) => (
-        <span key={_id} className="p-4 border-2 border-gray-400 cursor-pointer">
+        <p
+          key={_id}
+          className="p-4 border-2 border-gray-400 cursor-pointer"
+          role="presentation"
+        >
           {name}
-        </span>
+        </p>
       ))}
-      <BookmarkFileView />
+      {/* <BookmarkFileView folderId="666b9ce4eb6e1fcf6ec3cd85" /> */}
     </div>
   );
 }
