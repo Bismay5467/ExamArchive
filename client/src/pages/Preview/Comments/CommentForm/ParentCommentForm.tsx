@@ -25,7 +25,7 @@ export default function ParentCommentForm({
     <div className="py-4 rounded-xl shadow-md flex flex-col gap-y-4">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Textarea
-          placeholder="Type your comment here...(Markdown enabled)"
+          placeholder="Type your comment here..."
           className="resize-none"
           {...register('message')}
         />
@@ -35,13 +35,13 @@ export default function ParentCommentForm({
             <FaCode /> <IoMdLink /> <FaAt />
           </span>
           <span>
-            <Button
+            {/* <Button
               color="default"
               variant="flat"
               className="font-semibold mr-2 opacity-60"
             >
               Preview
-            </Button>
+            </Button> */}
             <Button
               color="success"
               className="font-semibold text-white tracking-wide"

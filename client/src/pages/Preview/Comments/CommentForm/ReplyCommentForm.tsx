@@ -44,7 +44,7 @@ export default function ReplyCommentForm({
           className="flex flex-col gap-y-4"
         >
           <Textarea
-            placeholder="Type your comment here...(Markdown enabled)"
+            placeholder="Type your comment here..."
             className="resize-none rounded-xl shadow-md "
             {...register('message')}
           />
