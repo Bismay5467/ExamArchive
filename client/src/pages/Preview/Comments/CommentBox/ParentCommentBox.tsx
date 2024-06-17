@@ -1,11 +1,21 @@
-import { Avatar, Button } from '@nextui-org/react';
+/* eslint-disable no-nested-ternary */
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  useDisclosure,
+} from '@nextui-org/react';
 import {
   BiUpvote,
   BiSolidUpvote,
   BiSolidDownvote,
   BiDownvote,
 } from 'react-icons/bi';
-import { BsReply, BsThreeDots } from 'react-icons/bs';
+import { BsReply } from 'react-icons/bs';
+import { MdReportProblem } from 'react-icons/md';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import { FaRegComment } from 'react-icons/fa6';
@@ -13,13 +23,14 @@ import { useEffect, useState } from 'react';
 import { IComment, ICommentMutations } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
 import { useAuth } from '@/hooks/useAuth';
-import { ReportModal } from '@/components/ReportModal/ReportModal';
+import ReportModal from '@/components/ReportModal/ReportModal';
 import { useComments } from '@/hooks/useComments';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import ReplyCommentBox from './ReplyCommentBox';
 import ReplyCommentForm from '../CommentForm/ReplyCommentForm';
 import Skeleton from '../Skeleton/Skeleton';
+import WarningModal from '@/components/WarningModal/WarningModal';
 
 export default function ParentCommentBox({
   commentData,
@@ -33,10 +44,23 @@ export default function ParentCommentBox({
   commentData: IComment;
   commentMutations: ICommentMutations;
 }) {
-  const [isHidden, setIsHidden] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
+  const [toDelete, setToDelete] = useState<boolean>(false);
+  const {
+    isOpen: isReportOpen,
+    onOpen: onReportOpen,
+    onClose: onReportClose,
+    onOpenChange: onReportOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isWarningOpen,
+    onOpen: onWarningOpen,
+    onClose: onWarningClose,
+    onOpenChange: onWarningOpenChange,
+  } = useDisclosure();
   const {
     authState: { userId },
   } = useAuth();
@@ -78,7 +102,8 @@ export default function ParentCommentBox({
 
   useEffect(() => {
     if (isReplying || showReplies) setStartFetching(true);
-  }, [isReplying, showReplies]);
+    else if (toDelete) handleDeleteComment(commentId);
+  }, [isReplying, showReplies, toDelete]);
 
   const replyData = response ? [...response] : [];
   const reducedReplyData = replyData
@@ -89,21 +114,23 @@ export default function ParentCommentBox({
     ? [].concat(...reducedReplyData)
     : [];
 
-  const isMutable: boolean = userId ? userId === _id : false;
+  const isMutable: string = userId
+    ? userId === _id
+      ? ''
+      : 'hidden'
+    : 'hidden';
   const editClasses = isEditing ? 'bg-slate-100' : '';
 
   const date = new Date(timestamp);
   const day = date.getUTCDate();
   const month = date.getUTCMonth();
   const year = date.getUTCFullYear();
+  const iconClasses =
+    'text-xl text-default-500 pointer-events-none flex-shrink-0';
 
   return (
     <div>
-      <div
-        className=" border-gray-300 p-4 flex flex-col gap-y-4"
-        onMouseEnter={() => setIsHidden(true)}
-        onMouseLeave={() => setIsHidden(false)}
-      >
+      <div className=" border-gray-300 p-4 flex flex-col gap-y-4">
         <span className="flex flex-row justify-between">
           <span className="flex flex-row gap-x-4">
             <Avatar
@@ -113,8 +140,65 @@ export default function ParentCommentBox({
             />
             <span className="self-center text-xl font-medium">{username}</span>
           </span>
-          <span className="text-sm opacity-55">
-            {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
+          <span className="flex flex-row gap-x-2">
+            <span className="text-sm self-center opacity-55">
+              {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
+            </span>
+            <Dropdown onOpenChange={(isOpen) => setShowMenu(isOpen)}>
+              <DropdownTrigger>
+                <button
+                  className="text-gray-500 w-10 h-10 relative focus:outline-none bg-white"
+                  type="button"
+                >
+                  <span className="sr-only">Open main menu</span>
+                  <div className="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
+                    <span
+                      aria-hidden="true"
+                      className={`block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out ${showMenu ? 'rotate-45' : '-translate-y-1.5'}`}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`block absolute  h-0.5 w-5 bg-current   transform transition duration-500 ease-in-out ${showMenu ? 'opacity-0' : ''}`}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`block absolute  h-0.5 w-5 bg-current transform  transition duration-500 ease-in-out ${showMenu ? '-rotate-45' : 'translate-y-1.5'}`}
+                    />
+                  </div>
+                </button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem
+                  key="edit"
+                  startContent={<CiEdit className={iconClasses} />}
+                  onClick={() => setIsEditing(true)}
+                  className={isMutable}
+                >
+                  Edit
+                </DropdownItem>
+                <DropdownItem
+                  key="delete"
+                  startContent={<RiDeleteBin6Line className={iconClasses} />}
+                  onClick={onWarningOpen}
+                  className={isMutable}
+                >
+                  Delete
+                </DropdownItem>
+                <DropdownItem
+                  key="report"
+                  color="danger"
+                  className="text-danger"
+                  startContent={
+                    <MdReportProblem
+                      className={cn(iconClasses, 'text-danger')}
+                    />
+                  }
+                  onClick={onReportOpen}
+                >
+                  Report
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </span>
         </span>
         <Textarea
@@ -163,34 +247,6 @@ export default function ParentCommentBox({
               role="presentation"
             >
               <BsReply className="text-xl" /> Reply
-            </span>
-            <span
-              className={`self-center flex flex-row gap-x-4 ${isHidden ? 'visible' : 'invisible'}`}
-            >
-              {!isEditing && (
-                <span
-                  className="self-center flex flex-row gap-x-2 cursor-pointer"
-                  onClick={() => setIsEditing(true)}
-                  role="presentation"
-                >
-                  <CiEdit className="text-xl" /> Edit
-                </span>
-              )}
-              <span
-                className="self-center flex flex-row gap-x-2 cursor-pointer"
-                onClick={() => handleDeleteComment(commentId)}
-                role="presentation"
-              >
-                <RiDeleteBin6Line className="text-lg" /> Delete
-              </span>
-              {!isMutable && (
-                <ReportModal
-                  contentType="COMMENT"
-                  postId={commentId}
-                  endContent={<BsThreeDots />}
-                  className="-translate-x-2"
-                />
-              )}
             </span>
           </div>
           {isEditing && (
@@ -247,6 +303,21 @@ export default function ParentCommentBox({
             />
           ))}
       </div>
+      <ReportModal
+        contentType="COMMENT"
+        isOpen={isReportOpen}
+        onClose={onReportClose}
+        onOpenChange={onReportOpenChange}
+        postId={commentId}
+      />
+      <WarningModal
+        actionText="Delete"
+        isOpen={isWarningOpen}
+        onClose={onWarningClose}
+        onOpenChange={onWarningOpenChange}
+        setEvent={setToDelete}
+        actionType="comment"
+      />
     </div>
   );
 }
