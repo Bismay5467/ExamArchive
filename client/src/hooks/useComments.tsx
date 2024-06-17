@@ -130,7 +130,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
           ...resObj.data,
           comments: resObj.data.comments.map((comment: IComment) =>
             comment.commentId === toEdit.commentId
-              ? { ...comment, message: toEdit.message }
+              ? { ...comment, message: toEdit.message, isEdited: true }
               : comment
           ),
         },
@@ -146,7 +146,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
           ...resObj.data,
           comments: resObj.data.comments.map((comment: IComment) =>
             comment.commentId === toEdit.commentId
-              ? { ...comment, message: toEdit.message }
+              ? { ...comment, message: toEdit.message, isEdited: true }
               : comment
           ),
         },

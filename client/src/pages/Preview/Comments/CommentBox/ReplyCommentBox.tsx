@@ -43,6 +43,7 @@ export default function ReplyCommentBox({
     userId: { username, _id },
     timestamp,
     commentId,
+    isEdited,
     downVotes: { hasDownVoted, count: downVoteCount },
     upVotes: { hasUpVoted, count: upvoteCount },
   } = replyCommentData;
@@ -92,7 +93,7 @@ export default function ReplyCommentBox({
           <div className="flex flex-row justify-between">
             <span className="font-medium">{username}</span>
             <span className="text-sm opacity-55">
-              {monthNames[month]} {day}, {year}
+              {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
             </span>
           </div>
           <Textarea

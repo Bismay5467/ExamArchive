@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import ReplyCommentBox from './ReplyCommentBox';
 import ReplyCommentForm from '../CommentForm/ReplyCommentForm';
+import Skeleton from '../Skeleton/Skeleton';
 
 export default function ParentCommentBox({
   commentData,
@@ -46,13 +47,14 @@ export default function ParentCommentBox({
     replyCount,
     timestamp,
     commentId,
+    isEdited,
     upVotes: { count: upvoteCount, hasUpVoted },
     downVotes: { count: downVoteCount, hasDownVoted },
   } = commentData;
   const [textMessage, setTextMessage] = useState<string>(message);
   const [optimisticReplyCount, setOptimisticReplyCount] =
     useState<number>(replyCount);
-  const { response, setStartFetching, mutations } = useComments(
+  const { response, setStartFetching, mutations, isLoading } = useComments(
     'REPLIES',
     commentId
   );
@@ -112,7 +114,7 @@ export default function ParentCommentBox({
             <span className="self-center text-xl font-medium">{username}</span>
           </span>
           <span className="text-sm opacity-55">
-            {monthNames[month]} {day}, {year}
+            {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
           </span>
         </span>
         <Textarea
@@ -233,6 +235,7 @@ export default function ParentCommentBox({
             handleCreateComment={mutations.handleCreateComment}
           />
         )}
+        {isLoading && !isReplying && <Skeleton />}
         {showReplies &&
           replyList.map((val) => (
             <ReplyCommentBox
