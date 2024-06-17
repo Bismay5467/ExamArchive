@@ -78,10 +78,15 @@ export default function ParentCommentBox({
   const [textMessage, setTextMessage] = useState<string>(message);
   const [optimisticReplyCount, setOptimisticReplyCount] =
     useState<number>(replyCount);
-  const { response, setStartFetching, mutations, isLoading } = useComments(
-    'REPLIES',
-    commentId
-  );
+  const {
+    response,
+    setStartFetching,
+    mutations,
+    isLoading,
+    isValidating,
+    isLastPage,
+    setSize,
+  } = useComments('REPLIES', commentId);
   const handleUpVote = async () => {
     if (hasUpVoted) {
       handleUpvoteComment(commentId, 'RETRACE');
@@ -291,7 +296,6 @@ export default function ParentCommentBox({
             handleCreateComment={mutations.handleCreateComment}
           />
         )}
-        {isLoading && !isReplying && <Skeleton />}
         {showReplies &&
           replyList.map((val) => (
             <ReplyCommentBox
@@ -302,6 +306,18 @@ export default function ParentCommentBox({
               setIsReplying={setIsReplying}
             />
           ))}
+        {(isLoading || isValidating) && !isLastPage && !isReplying && (
+          <Skeleton />
+        )}
+        {showReplies && !isLoading && !isValidating && !isLastPage && (
+          <button
+            className="text-blue-600 font-semibold cursor-pointer w-fit self-center text-sm"
+            type="button"
+            onClick={() => setSize((prev) => prev + 1)}
+          >
+            Load more replies...
+          </button>
+        )}
       </div>
       <ReportModal
         contentType="COMMENT"

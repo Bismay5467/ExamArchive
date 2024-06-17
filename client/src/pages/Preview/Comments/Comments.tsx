@@ -7,12 +7,35 @@ import { IComment } from '@/types/comments';
 import Skeleton from './Skeleton/Skeleton';
 
 export default function Comments() {
-  const { response, setStartFetching, mutations, isLoading } =
-    useComments('COMMENTS');
+  const {
+    response,
+    setStartFetching,
+    mutations,
+    isLoading,
+    setSize,
+    isValidating,
+    isLastPage,
+  } = useComments('COMMENTS');
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight ||
+      isLoading ||
+      isValidating
+    ) {
+      return;
+    }
+    if (!isLastPage) setSize((prev) => prev + 1);
+  };
 
   useEffect(() => {
     setStartFetching(true);
   }, []);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoading]);
 
   const commentData = response ? [...response] : [];
   const reducedCommentData = commentData
@@ -26,7 +49,6 @@ export default function Comments() {
   return (
     <div className="mt-8 flex flex-col gap-y-4 p-8 min-h-[600px]">
       <ParentCommentForm handleCreateComment={mutations.handleCreateComment} />
-      {isLoading && <Skeleton />}
       {commentList.map((comment) => (
         <ParentCommentBox
           key={comment.commentId}
@@ -34,6 +56,12 @@ export default function Comments() {
           commentMutations={mutations}
         />
       ))}
+      {(isLoading || isValidating) && !isLastPage && <Skeleton />}
+      {isLastPage && (
+        <p className="text-blue-600 font-semibold cursor-pointer w-fit self-center">
+          End of disscussion...
+        </p>
+      )}
     </div>
   );
 }

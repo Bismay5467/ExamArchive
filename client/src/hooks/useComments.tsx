@@ -4,7 +4,7 @@
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
 import { toast } from 'sonner';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getCommentsObj,
   postCommentObj,
@@ -28,23 +28,38 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
   } = useAuth();
   const { paperid: postId } = useParams();
   const [startFetching, setStartFetching] = useState<boolean>(false);
+  const [isLastPage, setIsLastPage] = useState<boolean>(false);
 
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     // TODO: Content of previousPageData needs further testing
 
-    if (previousPageData && !previousPageData.hasMore) return null;
+    if (previousPageData && !previousPageData.data.hasMore) return null;
     if (!postId || !startFetching) return null;
     return getCommentsObj(
       {
         postId,
         commentType,
-        page: String(pageIndex + 1),
+        page: (pageIndex + 1).toString(),
         parentId,
       },
       jwtToken
     );
   };
-  const { data: response, setSize, isLoading, mutate } = useSWRInfinite(getKey);
+  const {
+    data: response,
+    size,
+    setSize,
+    isLoading,
+    mutate,
+    error,
+    isValidating,
+  } = useSWRInfinite(getKey);
+
+  useEffect(() => {
+    if (response && response?.length > 0) {
+      setIsLastPage(!response.at(response.length - 1).data.hasMore);
+    }
+  }, [response]);
 
   const createCommentOptions = (newData: any) => ({
     optimisticData: (staleData: any) => {
@@ -429,7 +444,11 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
       handleUpvoteComment,
       handleDownVoteComment,
     },
+    size,
     setSize,
     isLoading,
+    isValidating,
+    error,
+    isLastPage,
   };
 };
