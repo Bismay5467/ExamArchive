@@ -1,5 +1,10 @@
 import { Avatar, Button } from '@nextui-org/react';
-import { BiUpvote, BiDownvote } from 'react-icons/bi';
+import {
+  BiUpvote,
+  BiSolidUpvote,
+  BiSolidDownvote,
+  BiDownvote,
+} from 'react-icons/bi';
 import { BsReply, BsThreeDots } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
@@ -14,7 +19,12 @@ import { cn } from '@/lib/utils';
 
 export default function ReplyCommentBox({
   replyCommentData,
-  replyMutations: { handleDeleteComment, handleEditComment },
+  replyMutations: {
+    handleDeleteComment,
+    handleEditComment,
+    handleUpvoteComment,
+    handleDownVoteComment,
+  },
   setOptimisticReplyCount,
   setIsReplying,
 }: {
@@ -33,6 +43,8 @@ export default function ReplyCommentBox({
     userId: { username, _id },
     timestamp,
     commentId,
+    downVotes: { hasDownVoted, count: downVoteCount },
+    upVotes: { hasUpVoted, count: upvoteCount },
   } = replyCommentData;
   const [textMessage, setTextMessage] = useState<string>(message);
   const isMutable: boolean = userId ? userId === _id : false;
@@ -42,6 +54,24 @@ export default function ReplyCommentBox({
   const day = date.getUTCDate();
   const month = date.getUTCMonth();
   const year = date.getUTCFullYear();
+
+  const handleUpVote = async () => {
+    if (hasUpVoted) {
+      handleUpvoteComment(commentId, 'RETRACE');
+      return;
+    }
+    if (hasDownVoted) await handleDownVoteComment(commentId, 'RETRACE');
+    handleUpvoteComment(commentId, 'VOTE');
+  };
+
+  const handleDownVote = async () => {
+    if (hasDownVoted) {
+      handleDownVoteComment(commentId, 'RETRACE');
+      return;
+    }
+    if (hasUpVoted) await handleUpvoteComment(commentId, 'RETRACE');
+    handleDownVoteComment(commentId, 'VOTE');
+  };
 
   return (
     <div
@@ -75,9 +105,22 @@ export default function ReplyCommentBox({
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-x-4 text-sm opacity-55">
             <span className="self-center flex flex-row gap-x-2">
-              <BiUpvote className="self-center text-lg" />
-              <span className="self-center">2</span>
-              <BiDownvote className="self-center text-lg" />
+              <span onClick={handleUpVote} role="presentation">
+                {hasUpVoted ? (
+                  <BiSolidUpvote className="self-center text-lg cursor-pointer text-red-600" />
+                ) : (
+                  <BiUpvote className="self-center text-lg cursor-pointer" />
+                )}
+              </span>
+              <span className="self-center">{upvoteCount}</span>
+              <span onClick={handleDownVote} role="presentation">
+                {hasDownVoted ? (
+                  <BiSolidDownvote className="self-center text-lg cursor-pointer text-red-600" />
+                ) : (
+                  <BiDownvote className="self-center text-lg cursor-pointer" />
+                )}
+              </span>
+              <span className="self-center">{downVoteCount}</span>
             </span>
             <span
               className="self-center flex flex-row gap-x-2 cursor-pointer"

@@ -56,22 +56,22 @@ export default function ParentCommentBox({
     'REPLIES',
     commentId
   );
-  const handleUpVote = () => {
+  const handleUpVote = async () => {
     if (hasUpVoted) {
       handleUpvoteComment(commentId, 'RETRACE');
       return;
     }
+    if (hasDownVoted) await handleDownVoteComment(commentId, 'RETRACE');
     handleUpvoteComment(commentId, 'VOTE');
-    if (hasDownVoted) handleDownVoteComment(commentId, 'RETRACE');
   };
 
-  const handleDownVote = () => {
+  const handleDownVote = async () => {
     if (hasDownVoted) {
       handleDownVoteComment(commentId, 'RETRACE');
       return;
     }
+    if (hasUpVoted) await handleUpvoteComment(commentId, 'RETRACE');
     handleDownVoteComment(commentId, 'VOTE');
-    if (hasDownVoted) handleUpvoteComment(commentId, 'RETRACE');
   };
 
   useEffect(() => {
