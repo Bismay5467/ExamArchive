@@ -18,7 +18,7 @@ import {
   TCommentType,
   TReaction,
 } from '@/types/comments';
-import { DOWN_VOTE, TEMP_COMMENT_ID, UPVOTE } from '@/constants/shared';
+import { RETRACE_VOTE, TEMP_COMMENT_ID, VOTE } from '@/constants/shared';
 import { useAuth } from './useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 
@@ -171,7 +171,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
                     hasUpVoted: toUpvote.reaction === 'VOTE',
                     count:
                       comment.upVotes.count +
-                      (toUpvote.reaction === 'VOTE' ? UPVOTE : DOWN_VOTE),
+                      (toUpvote.reaction === 'VOTE' ? VOTE : RETRACE_VOTE),
                   },
                 }
               : comment
@@ -195,7 +195,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
                     hasUpVoted: toUpvote.reaction === 'VOTE',
                     count:
                       comment.upVotes.count +
-                      (toUpvote.reaction === 'VOTE' ? UPVOTE : DOWN_VOTE),
+                      (toUpvote.reaction === 'VOTE' ? VOTE : RETRACE_VOTE),
                   },
                 }
               : comment
@@ -222,7 +222,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
                     hasDownVoted: toDownVote.reaction === 'VOTE',
                     count:
                       comment.downVotes.count +
-                      (toDownVote.reaction === 'VOTE' ? DOWN_VOTE : UPVOTE),
+                      (toDownVote.reaction === 'VOTE' ? VOTE : RETRACE_VOTE),
                   },
                 }
               : comment
@@ -246,7 +246,7 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
                     hasDownVoted: toDownVote.reaction === 'VOTE',
                     count:
                       comment.downVotes.count +
-                      (toDownVote.reaction === 'VOTE' ? DOWN_VOTE : UPVOTE),
+                      (toDownVote.reaction === 'VOTE' ? VOTE : RETRACE_VOTE),
                   },
                 }
               : comment

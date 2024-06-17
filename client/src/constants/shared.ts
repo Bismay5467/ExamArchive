@@ -62,5 +62,5 @@ export const PDF_WORKER_URL =
   'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js' as const;
 
 export const TEMP_COMMENT_ID = '974106db98afe24eb114' as const;
-export const UPVOTE: Readonly<number> = 1;
-export const DOWN_VOTE: Readonly<number> = -1;
+export const VOTE: Readonly<number> = 1;
+export const RETRACE_VOTE: Readonly<number> = -1;
