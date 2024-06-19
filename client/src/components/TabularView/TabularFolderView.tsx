@@ -20,20 +20,22 @@ import {
 import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MdCreateNewFolder } from 'react-icons/md';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { IBookmarkFolder } from '@/types/folder';
-import { getFilesDataObj } from '@/utils/axiosReqObjects';
+import { deleteFolderObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
+import fetcher from '@/utils/fetcher/fetcher';
 
 export default function App() {
   const {
     authState: { jwtToken },
   } = useAuth();
-  const { data: response } = useSWR(
+  const { data: response, mutate } = useSWR(
     getFilesDataObj({ action: 'BOOKMARK', page: '1', parentId: '' }, jwtToken)
   );
 
@@ -41,10 +43,7 @@ export default function App() {
   const folders: Array<IBookmarkFolder> = response?.data.files ?? [];
 
   const [filterValue, setFilterValue] = useState('');
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: 'name',
-    direction: 'ascending',
-  });
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({});
   const [page, setPage] = useState<number>(1);
 
   const hasSearchFilter = Boolean(filterValue);
@@ -64,16 +63,34 @@ export default function App() {
 
   const pages = Math.max(Math.ceil(filteredItems.length / rowsPerPage), 1);
 
-  const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  const handleDelete = useCallback(async (folderId: string) => {
+    const reqObj = deleteFolderObj({ action: 'BOOKMARK', folderId }, jwtToken);
+    if (!reqObj) {
+      toast.error('Something went wrong!', {
+        duration: 5000,
+      });
+      return;
+    }
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+    try {
+      await fetcher(reqObj);
+    } catch (err) {
+      toast.error('Something went wrong!', {
+        description: `${err}`,
+        duration: 5000,
+      });
+      return;
+    }
+    mutate().then(() =>
+      toast.success('Foder deleted successfully!', {
+        duration: 5000,
+      })
+    );
+  }, []);
 
   const sortedItems = useMemo(
     () =>
-      [...items].sort((a: IBookmarkFolder, b: IBookmarkFolder) => {
+      [...filteredItems].sort((a: IBookmarkFolder, b: IBookmarkFolder) => {
         const first = a[
           sortDescriptor.column as keyof IBookmarkFolder
         ] as number;
@@ -85,8 +102,15 @@ export default function App() {
 
         return sortDescriptor.direction === 'descending' ? -cmp : cmp;
       }),
-    [sortDescriptor, items, response]
+    [sortDescriptor, filteredItems, response]
   );
+
+  const items = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return sortedItems.slice(start, end);
+  }, [page, sortedItems, rowsPerPage]);
 
   const renderCell = useCallback((folder: IBookmarkFolder, columnKey: Key) => {
     const cellValue = folder[columnKey as keyof IBookmarkFolder];
@@ -98,7 +122,9 @@ export default function App() {
           <div className="flex flex-row gap-x-2 cursor-pointer">
             <FaFolderOpen className="self-center text-4xl text-blue-500" />
             <span className="flex flex-col">
-              <span className="font-medium text-sm">{cellValue}</span>
+              <span className="font-medium text-sm min-w-[120px]">
+                {cellValue}
+              </span>
               <span className="text-sm opacity-60">
                 File Count: {folder.noOfFiles}
               </span>
@@ -129,12 +155,17 @@ export default function App() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-                <DropdownItem key="copy">Open</DropdownItem>
-                <DropdownItem key="edit">Edit</DropdownItem>
+                <DropdownItem
+                  key="copy"
+                  onClick={() => navigate(`${folder._id}`)}
+                >
+                  Open
+                </DropdownItem>
                 <DropdownItem
                   key="delete"
                   className="text-danger"
                   color="danger"
+                  onClick={() => handleDelete(folder._id)}
                 >
                   Delete folder
                 </DropdownItem>
@@ -217,12 +248,16 @@ export default function App() {
     >
       <TableHeader columns={folderColumns}>
         {({ name, uid, sortable }) => (
-          <TableColumn key={uid} allowsSorting={sortable}>
+          <TableColumn
+            key={uid}
+            allowsSorting={sortable}
+            align={uid === 'createdAt' ? 'end' : 'start'}
+          >
             {name}
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent="No users found" items={sortedItems}>
+      <TableBody emptyContent="No users found" items={items}>
         {(item) => (
           <TableRow key={item._id}>
             {(columnKey) => (

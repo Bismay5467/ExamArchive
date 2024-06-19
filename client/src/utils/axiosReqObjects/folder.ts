@@ -1,6 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
-import { ICreateFolder, IAction, IGetFilesData } from '@/types/folder';
+import {
+  ICreateFolder,
+  IAction,
+  IGetFilesData,
+  IDeleteFolder,
+} from '@/types/folder';
 
 export const getFolderNameObj = (
   action: IAction,
@@ -53,6 +58,26 @@ export const createFolderObj = (
     url,
     data: { data: folderDetails },
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const deleteFolderObj = (
+  folderDetails: IDeleteFolder,
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.FOLDER}/delete`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: folderDetails },
+    method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${jwtToken}`,
