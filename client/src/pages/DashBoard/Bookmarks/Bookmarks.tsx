@@ -18,7 +18,7 @@ export default function Bookmarks() {
               <FaRegFilePdf className="text-3xl text-blue-500" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-              <span>Porn magazine</span>
+              <span>Test Folder 1</span>
               <span className="text-sm opacity-70">Added 69 days before</span>
             </div>
             <span className="w-fit h-fit ">
@@ -32,7 +32,7 @@ export default function Bookmarks() {
               <FaRegFilePdf className="text-3xl text-blue-500" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-              <span>Biplaw Nudes</span>
+              <span>Test Folder 2</span>
               <span className="text-sm opacity-70">Added 69 days before</span>
             </div>
             <span className="w-fit h-fit ">
@@ -46,7 +46,7 @@ export default function Bookmarks() {
               <FaRegFilePdf className="text-3xl text-blue-500" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-              <span>Self Collection 69</span>
+              <span>Test Folder 3</span>
               <span className="text-sm opacity-70">Added 69 days before</span>
             </div>
             <span className="w-fit h-fit ">

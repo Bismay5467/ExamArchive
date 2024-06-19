@@ -16,6 +16,12 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from '@nextui-org/react';
 import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
@@ -26,16 +32,27 @@ import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MdCreateNewFolder } from 'react-icons/md';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { IBookmarkFolder } from '@/types/folder';
-import { deleteFolderObj, getFilesDataObj } from '@/utils/axiosReqObjects';
+import {
+  createFolderObj,
+  deleteFolderObj,
+  getFilesDataObj,
+} from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
+import { TableViewSkeleton } from '../Skeleton';
 
 export default function App() {
   const {
     authState: { jwtToken },
   } = useAuth();
-  const { data: response, mutate } = useSWR(
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [folderName, setFolderName] = useState<string>();
+  const {
+    data: response,
+    mutate,
+    isLoading,
+  } = useSWR(
     getFilesDataObj({ action: 'BOOKMARK', page: '1', parentId: '' }, jwtToken)
   );
 
@@ -87,6 +104,39 @@ export default function App() {
       })
     );
   }, []);
+
+  const handleCreateFolder = async () => {
+    if (folderName === undefined) return;
+    const folderDetails = createFolderObj(
+      {
+        folderName,
+        action: 'BOOKMARK',
+      },
+      jwtToken
+    );
+    if (!folderDetails) {
+      toast('Somthing went wrong!', {
+        duration: 5000,
+      });
+      return;
+    }
+    try {
+      await fetcher(folderDetails);
+    } catch (err) {
+      toast('Somthing went wrong!', {
+        description: `${err}`,
+        duration: 5000,
+      });
+      setFolderName('');
+      return;
+    }
+    mutate().then(() => {
+      toast.success(`${folderName} successfully created!`, {
+        duration: 5000,
+      });
+    });
+    setFolderName('');
+  };
 
   const sortedItems = useMemo(
     () =>
@@ -206,6 +256,7 @@ export default function App() {
           color="primary"
           endContent={<MdCreateNewFolder className="text-xl" />}
           radius="sm"
+          onClick={() => onOpen()}
         >
           Create new
         </Button>
@@ -233,39 +284,93 @@ export default function App() {
   );
 
   return (
-    <Table
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      selectionMode="single"
-      onRowAction={(key) => navigate(`${key}`)}
-      radius="sm"
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={folderColumns}>
-        {({ name, uid, sortable }) => (
-          <TableColumn
-            key={uid}
-            allowsSorting={sortable}
-            align={uid === 'createdAt' ? 'end' : 'start'}
-          >
-            {name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent="No users found" items={items}>
-        {(item) => (
-          <TableRow key={item._id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div>
+      <Table
+        aria-label="Example table with custom cells, pagination and sorting"
+        isHeaderSticky
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        selectionMode="single"
+        onRowAction={(key) => navigate(`${key}`)}
+        radius="sm"
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={folderColumns}>
+          {({ name, uid, sortable }) => (
+            <TableColumn
+              key={uid}
+              allowsSorting={sortable}
+              align={uid === 'createdAt' ? 'end' : 'start'}
+            >
+              {name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          emptyContent="No folders found"
+          items={items}
+          isLoading={isLoading}
+          loadingContent={<TableViewSkeleton />}
+        >
+          {(item) => (
+            <TableRow key={item._id}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        radius="sm"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Create a new Folder
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  autoFocus
+                  radius="sm"
+                  label="Folder Name"
+                  variant="bordered"
+                  isInvalid={folders.some(({ name }) => name === folderName)}
+                  errorMessage="Folder already exists!"
+                  onValueChange={(e) => setFolderName(e)}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  variant="flat"
+                  onPress={onClose}
+                  radius="sm"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  radius="sm"
+                  onClick={() => {
+                    onClose();
+                    handleCreateFolder();
+                  }}
+                >
+                  Create
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </div>
   );
 }
