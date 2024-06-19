@@ -16,3 +16,11 @@ export interface IGetFilesData {
   page: string;
   parentId: string;
 }
+
+export interface IBookmarkFolder {
+  _id: string;
+  name: string;
+  noOfFiles: number;
+  createdAt: string;
+  updatedAt: string;
+}
