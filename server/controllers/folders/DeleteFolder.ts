@@ -1,7 +1,9 @@
+/* eslint-disable indent */
 import { z } from 'zod';
 import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
+import { FILE_TYPE } from '../../constants/constants/upload';
 import { MONGO_WRITE_QUERY_TIMEOUT } from '../../constants/constants/shared';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
 import { deleteFolderInputSchema } from '../../router/folder/schema';
@@ -14,10 +16,13 @@ const DeleteFolder = asyncErrorHandler(async (req: Request, res: Response) => {
     typeof deleteFolderInputSchema
   >;
   const Collection = action === 'BOOKMARK' ? BookMarkedFile : UploadedFiles;
-  const deleteQuery = {
-    userId,
-    $or: [{ _id: folderId }, { parentId: folderId }],
-  };
+  const deleteQuery =
+    action === 'BOOKMARK'
+      ? {
+          userId,
+          $or: [{ _id: folderId }, { parentId: folderId }],
+        }
+      : { userId, _id: folderId, noOfFiles: 0, fileType: FILE_TYPE.DIRECTORY };
   const { deletedCount } = await Collection.deleteMany(deleteQuery)
     .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
     .lean()
