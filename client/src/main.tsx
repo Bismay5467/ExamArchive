@@ -54,7 +54,10 @@ const router = createBrowserRouter(
             path=""
             element={<TabularFolderView actionVarient="BOOKMARK" />}
           />
-          <Route path=":folderId" element={<TabularFileView />} />
+          <Route
+            path=":folderId"
+            element={<TabularFileView actionVarient="BOOKMARK" />}
+          />
         </Route>
         <Route path="fileupload" element={<FileUpload />} />
         <Route path="analytics" element={<Analytics />} />

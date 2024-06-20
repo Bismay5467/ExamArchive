@@ -24,7 +24,7 @@ import { FaEllipsisVertical, FaRegFilePdf } from 'react-icons/fa6';
 import { MdDelete } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
 import { getFilesDataObj } from '@/utils/axiosReqObjects';
-import { IBookmarkFile } from '@/types/folder';
+import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import { fileColumns, monthNames } from '@/constants/shared';
@@ -33,7 +33,11 @@ import { CLIENT_ROUTES } from '@/constants/routes';
 import { removeBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 import fetcher from '@/utils/fetcher/fetcher';
 
-export default function TabularFileView() {
+export default function TabularFileView({
+  actionVarient,
+}: {
+  actionVarient: IAction;
+}) {
   const { folderId } = useParams();
   const {
     authState: { jwtToken },
@@ -45,7 +49,7 @@ export default function TabularFileView() {
     mutate,
   } = useSWR(
     folderId
-      ? getFilesDataObj({ action: 'BOOKMARK', parentId: folderId }, jwtToken)
+      ? getFilesDataObj({ action: actionVarient, parentId: folderId }, jwtToken)
       : null
   );
 
