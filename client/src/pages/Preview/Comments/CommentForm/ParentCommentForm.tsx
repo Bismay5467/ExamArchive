@@ -26,7 +26,7 @@ export default function ParentCommentForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <Textarea
           placeholder="Type your comment here..."
-          className="resize-none"
+          className="resize-none min-h-[50px]"
           {...register('message')}
         />
 

@@ -45,7 +45,7 @@ export default function ReplyCommentForm({
         >
           <Textarea
             placeholder="Type your comment here..."
-            className="resize-none rounded-xl shadow-md "
+            className="resize-none rounded-xl shadow-md min-h-[25px]"
             {...register('message')}
           />
           <span className="flex flex-row justify-end">
