@@ -27,7 +27,7 @@ export interface IBookmarkFolder {
 export interface IBookmarkFile {
   fileId: string;
   filename: string;
-  status?: string;
+  status: string;
   questionId: string;
   createdAt: string;
   updatedAt: string;

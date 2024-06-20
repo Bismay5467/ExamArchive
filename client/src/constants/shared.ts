@@ -57,8 +57,15 @@ export const folderColumns = [
   { name: 'Last Modified', uid: 'updatedAt', sortable: true },
 ];
 
-export const fileColumns = [
+export const bookmarkFileColumns = [
   { name: 'File name', uid: 'filename', sortable: false },
+  { name: 'Created at', uid: 'createdAt', sortable: true },
+  { name: 'Last Modified', uid: 'updatedAt', sortable: true },
+];
+
+export const uploadFileColumns = [
+  { name: 'File name', uid: 'filename', sortable: false },
+  { name: 'Status', uid: 'status', sortable: false },
   { name: 'Created at', uid: 'createdAt', sortable: true },
   { name: 'Last Modified', uid: 'updatedAt', sortable: true },
 ];

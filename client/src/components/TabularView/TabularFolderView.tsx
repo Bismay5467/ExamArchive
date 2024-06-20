@@ -86,7 +86,10 @@ export default function TabularFolderView({
   const pages = Math.max(Math.ceil(filteredItems.length / rowsPerPage), 1);
 
   const handleDelete = useCallback(async (folderId: string) => {
-    const reqObj = deleteFolderObj({ action: 'BOOKMARK', folderId }, jwtToken);
+    const reqObj = deleteFolderObj(
+      { action: actionVarient, folderId },
+      jwtToken
+    );
     if (!reqObj) {
       toast.error('Something went wrong!', {
         duration: 5000,
@@ -104,7 +107,7 @@ export default function TabularFolderView({
       return;
     }
     mutate().then(() =>
-      toast.success('Foder deleted successfully!', {
+      toast.success('Folder deleted successfully!', {
         duration: 5000,
       })
     );

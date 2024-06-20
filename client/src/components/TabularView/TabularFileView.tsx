@@ -19,19 +19,32 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  ChipProps,
+  Chip,
+  Spinner,
 } from '@nextui-org/react';
 import { FaEllipsisVertical, FaRegFilePdf } from 'react-icons/fa6';
+import { FiRefreshCw } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
-import { getFilesDataObj } from '@/utils/axiosReqObjects';
+import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
-import { fileColumns, monthNames } from '@/constants/shared';
-import { TableViewSkeleton } from '../Skeleton';
+import {
+  bookmarkFileColumns,
+  uploadFileColumns,
+  monthNames,
+} from '@/constants/shared';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { removeBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 import fetcher from '@/utils/fetcher/fetcher';
+
+const statusColorMap: Record<string, ChipProps['color']> = {
+  Uploaded: 'success',
+  Failed: 'danger',
+  Processing: 'warning',
+};
 
 export default function TabularFileView({
   actionVarient,
@@ -47,6 +60,7 @@ export default function TabularFileView({
     data: response,
     isLoading,
     mutate,
+    isValidating,
   } = useSWR(
     folderId
       ? getFilesDataObj({ action: actionVarient, parentId: folderId }, jwtToken)
@@ -55,10 +69,12 @@ export default function TabularFileView({
 
   const files: Array<IBookmarkFile> = response?.data.files ?? [];
 
+  const isBookmark = actionVarient === 'BOOKMARK';
   const navigate = useNavigate();
   const [filterValue, setFilterValue] = useState('');
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({});
   const [page, setPage] = useState<number>(1);
+  const columns = isBookmark ? bookmarkFileColumns : uploadFileColumns;
 
   const hasSearchFilter = Boolean(filterValue);
   const rowsPerPage = 10;
@@ -81,30 +97,35 @@ export default function TabularFileView({
 
   const pages = Math.max(Math.ceil(filteredItems.length / rowsPerPage), 1);
 
-  const handleRemove = useCallback(async (fileId: string) => {
-    const reqObj = removeBookmarkObj({ fileId, folderId: folderId! }, jwtToken);
-    if (!reqObj) {
-      toast.error('Something went wrong!', {
-        duration: 5000,
-      });
-      return;
-    }
+  const handleDelete = useCallback(
+    async (fileId: string, questionId: string) => {
+      const reqObj = isBookmark
+        ? removeBookmarkObj({ fileId, folderId: folderId! }, jwtToken)
+        : deleteFileObj(questionId, jwtToken);
+      if (!reqObj) {
+        toast.error('Something went wrong!', {
+          duration: 5000,
+        });
+        return;
+      }
 
-    try {
-      await fetcher(reqObj);
-    } catch (err) {
-      toast.error('Something went wrong!', {
-        description: `${err}`,
-        duration: 5000,
-      });
-      return;
-    }
-    mutate().then(() =>
-      toast.success('Bookmark removed successfully!', {
-        duration: 5000,
-      })
-    );
-  }, []);
+      try {
+        await fetcher(reqObj);
+      } catch (err) {
+        toast.error('Something went wrong!', {
+          description: `${err}`,
+          duration: 5000,
+        });
+        return;
+      }
+      mutate().then(() =>
+        toast.success('Bookmark removed successfully!', {
+          duration: 5000,
+        })
+      );
+    },
+    []
+  );
 
   const sortedItems = useMemo(
     () =>
@@ -141,11 +162,13 @@ export default function TabularFileView({
             <FaRegFilePdf className="self-center text-4xl text-blue-500" />
             <span className="flex flex-col">
               <span className="font-semibold text-sm min-w-[120px]">
-                {heading} ({code})
+                {heading} {isBookmark && <span>({code})</span>}
               </span>
-              <span className="text-sm opacity-60">
-                {semester}, {examYear}
-              </span>
+              {isBookmark && (
+                <span className="text-sm opacity-60">
+                  {semester}, {examYear}
+                </span>
+              )}
             </span>
           </div>
         );
@@ -154,6 +177,17 @@ export default function TabularFileView({
           <div className="font-medium opacity-65">
             {monthNames[month]} {day}, {year}
           </div>
+        );
+      case 'status':
+        return (
+          <Chip
+            className="capitalize"
+            color={statusColorMap[file.status]}
+            size="sm"
+            variant="flat"
+          >
+            {cellValue}
+          </Chip>
         );
       default:
         return (
@@ -178,9 +212,9 @@ export default function TabularFileView({
                   className="text-danger"
                   color="danger"
                   startContent={<MdDelete className="text-xl" />}
-                  onClick={() => handleRemove(file.fileId)}
+                  onClick={() => handleDelete(file.fileId, file.questionId)}
                 >
-                  Remove Bookmark
+                  {isBookmark ? 'Remove Bookmark' : 'Delete Post'}
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -205,7 +239,7 @@ export default function TabularFileView({
 
   const topContent = useMemo(
     () => (
-      <div className="flex flex-row justify-between gap-x-2">
+      <div className="flex flex-row gap-x-2">
         <Input
           isClearable
           radius="sm"
@@ -216,6 +250,9 @@ export default function TabularFileView({
           onClear={() => onClear()}
           onValueChange={onSearchChange}
         />
+        <Button variant="light" size="sm" isIconOnly className="self-center">
+          <FiRefreshCw className="text-xl" onClick={() => mutate()} />
+        </Button>
       </div>
     ),
     [filterValue, onSearchChange, hasSearchFilter]
@@ -253,7 +290,7 @@ export default function TabularFileView({
       radius="sm"
       onSortChange={setSortDescriptor}
     >
-      <TableHeader columns={fileColumns}>
+      <TableHeader columns={columns}>
         {({ name, uid, sortable }) => (
           <TableColumn
             key={uid}
@@ -267,11 +304,11 @@ export default function TabularFileView({
       <TableBody
         emptyContent="No folders found"
         items={items}
-        isLoading={isLoading}
-        loadingContent={<TableViewSkeleton />}
+        isLoading={isLoading || isValidating}
+        loadingContent={<Spinner />}
       >
         {(item) => (
-          <TableRow key={item.fileId}>
+          <TableRow key={item.questionId}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
