@@ -8,6 +8,13 @@ import {
   getFolderNameObj,
   deleteFolderObj,
 } from './folder';
+import {
+  getCommentsObj,
+  postCommentObj,
+  deleteCommentObj,
+  editCommentObj,
+  reactToCommentObj,
+} from './comments';
 
 export {
   getSearchRequestObj,
@@ -21,4 +28,9 @@ export {
   createFolderObj,
   getFolderNameObj,
   deleteFolderObj,
+  getCommentsObj,
+  postCommentObj,
+  deleteCommentObj,
+  editCommentObj,
+  reactToCommentObj,
 };

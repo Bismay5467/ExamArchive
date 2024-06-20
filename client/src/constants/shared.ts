@@ -27,13 +27,13 @@ export const SEMESTER = Object.freeze({
 });
 
 export const reportReasons = [
-  { rank: 1, reason: 'Inappropriate or Offensive language' },
-  { rank: 2, reason: 'Harassesment or Bullying' },
-  { rank: 3, reason: 'Sexually Explicit Content' },
-  { rank: 4, reason: 'Misinformation or Fake news' },
-  { rank: 5, reason: 'Violence or Graphic Content' },
-  { rank: 6, reason: 'Impersonation' },
-  { rank: 7, reason: 'Other' },
+  { rank: 1, reason: 'Inappropriate or Offensive language' }, // -> Hate Speech
+  { rank: 2, reason: 'Harassesment or Bullying' }, // -> Harassesment or Bullying
+  { rank: 3, reason: 'Sexually Explicit Content' }, // -> nudity
+  { rank: 4, reason: 'Misinformation or Fake news' }, // -> scam
+  { rank: 5, reason: 'Violence or Graphic Content' }, // Violence
+  { rank: 6, reason: 'Impersonation' }, // -> Impersonation
+  { rank: 7, reason: 'Other' }, // -> Other
 ];
 
 export const monthNames = [
@@ -79,3 +79,7 @@ export const TEMP_JWT_TOKEN_HARDCODED =
 
 export const PDF_WORKER_URL =
   'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js' as const;
+
+export const TEMP_COMMENT_ID = '974106db98afe24eb114' as const;
+export const VOTE: Readonly<number> = 1;
+export const RETRACE_VOTE: Readonly<number> = -1;

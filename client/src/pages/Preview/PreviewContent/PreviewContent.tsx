@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { IoBookmarks } from 'react-icons/io5';
-import { Chip, useDisclosure, Tooltip } from '@nextui-org/react';
+import { Chip, useDisclosure, Tooltip, Button } from '@nextui-org/react';
 import { MdReport } from 'react-icons/md';
 import { getFileObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
@@ -12,7 +12,7 @@ import { IFileData } from '@/types/file';
 import { PDFViewer } from './PDFViewer/PDFViewer';
 import BookmarksModal from './BookmarksModal/BookmarksModal';
 import RatingPopover from './RatingPopover/RatingPopover';
-import { ReportModal } from '@/components/ReportModal/ReportModal';
+import ReportModal from '@/components/ReportModal/ReportModal';
 
 const PING_TIME_OUT_TIME = 10000;
 const MAX_TAGS_DISPLAY = 4;
@@ -22,7 +22,18 @@ export default function PreviewContent() {
   const [setshowPing, setSetshowPing] = useState<boolean>(true);
   const { paperid } = useParams();
 
-  const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
+  const {
+    onOpen: onBookmarkOpen,
+    isOpen: isBookmarkOpen,
+    onOpenChange: onBookmarkOpenChange,
+    onClose: onBookmarkClose,
+  } = useDisclosure();
+  const {
+    isOpen: isReportOpen,
+    onOpen: onReportOpen,
+    onClose: onReportClose,
+    onOpenChange: onReportOpenChange,
+  } = useDisclosure();
 
   const { data: response, error } = useSWR(
     paperid ? getFileObj(paperid) : null
@@ -68,10 +79,10 @@ export default function PreviewContent() {
             <span className="relative">
               <IoBookmarks
                 className="self-center ml-2 text-red-500 cursor-pointer"
-                onClick={() => onOpen()}
+                onClick={() => onBookmarkOpen()}
               />
               {setshowPing && (
-                <span className="animate-ping absolute inline-flex left-[10px] top-[0px] h-3 w-3 rounded-full bg-red-600" />
+                <span className="animate-ping absolute inline-flex left-[10px] top-[0px] h-3 w-3 rounded-full bg-blue-600" />
               )}
             </span>
           </h1>
@@ -133,26 +144,31 @@ export default function PreviewContent() {
         <span className="flex flex-row gap-x-4">
           {paperid && <RatingPopover postId={paperid} />}
           {paperid && (
-            <ReportModal
-              text="Report"
-              className="bg-red-500 px-4 py-2 rounded-xl text-white font-semibold tracking-wide"
-              endContent={<MdReport />}
-              contentType="POST"
-              postId={paperid}
-            />
+            <Button onClick={onReportOpen} color="danger">
+              Report <MdReport />
+            </Button>
           )}
         </span>
       </div>
       {paperid && fileData && (
         <BookmarksModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onOpenChange={onOpenChange}
+          isOpen={isBookmarkOpen}
+          onClose={onBookmarkClose}
+          onOpenChange={onBookmarkOpenChange}
           paperid={paperid}
           semester={fileData.semester}
           subjectCode={fileData.subjectCode}
           subjectName={fileData.subjectName}
           year={fileData.year}
+        />
+      )}
+      {paperid && (
+        <ReportModal
+          contentType="POST"
+          isOpen={isReportOpen}
+          onClose={onReportClose}
+          onOpenChange={onReportOpenChange}
+          postId={paperid}
         />
       )}
     </div>
