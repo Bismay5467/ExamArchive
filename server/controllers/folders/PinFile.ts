@@ -10,10 +10,10 @@ import { pinFileSchema } from '../../router/folder/schema';
 
 const PinFile = asyncErrorHandler(async (req: Request, res: Response) => {
   const { userId } = req.body as { userId: string };
-  const { fileId } = req.body.data as z.infer<typeof pinFileSchema>;
+  const { fileId, action } = req.body.data as z.infer<typeof pinFileSchema>;
   await BookMarkedFile.findOneAndUpdate(
     { _id: fileId, userId, fileType: FILE_TYPE.FILE },
-    { isPinned: true },
+    { isPinned: action === 'PIN' },
     { upsert: false, new: false }
   )
     .select({ _id: 1 })

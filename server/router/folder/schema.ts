@@ -25,4 +25,5 @@ export const getFolderNamesSchema = z.object({
 
 export const pinFileSchema = z.object({
   fileId: z.string().refine((parentId) => Types.ObjectId.isValid(parentId)),
+  action: z.enum(['PIN', 'UNPIN']),
 });
