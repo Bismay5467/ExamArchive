@@ -36,6 +36,40 @@ export const reportReasons = [
   { rank: 7, reason: 'Other' },
 ];
 
+export const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+] as const;
+
+export const folderColumns = [
+  { name: 'Folder name', uid: 'name', sortable: false },
+  { name: 'Created at', uid: 'createdAt', sortable: true },
+  { name: 'Last Modified', uid: 'updatedAt', sortable: true },
+];
+
+export const bookmarkFileColumns = [
+  { name: 'File name', uid: 'filename', sortable: false },
+  { name: 'Created at', uid: 'createdAt', sortable: true },
+  { name: 'Last Modified', uid: 'updatedAt', sortable: true },
+];
+
+export const uploadFileColumns = [
+  { name: 'File name', uid: 'filename', sortable: false },
+  { name: 'Status', uid: 'status', sortable: false },
+  { name: 'Created at', uid: 'createdAt', sortable: true },
+  { name: 'Last Modified', uid: 'updatedAt', sortable: true },
+];
+
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
 ];
