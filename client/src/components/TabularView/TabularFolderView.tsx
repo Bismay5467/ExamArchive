@@ -118,7 +118,7 @@ export default function TabularFolderView({
     const folderDetails = createFolderObj(
       {
         folderName,
-        action: 'BOOKMARK',
+        action: actionVarient,
       },
       jwtToken
     );
