@@ -14,7 +14,6 @@ export const deleteFolderInputSchema = z.object({
 
 export const getFilesInputSchema = z.object({
   action: z.enum(['UPLOAD', 'BOOKMARK']),
-  page: z.string(),
   parentId: z
     .string()
     .refine((parentId) => parentId === '' || Types.ObjectId.isValid(parentId)),

@@ -19,7 +19,11 @@ import {
 
 const router = express.Router();
 
-router.get('/get', validate(getCommentsInputSchema, 'QUERY'), GetComments);
+router.get(
+  '/get',
+  [verifyUser, validate(getCommentsInputSchema, 'QUERY')],
+  GetComments
+);
 router.post(
   '/post',
   [verifyUser, validate(postCommentsInputSchema, 'BODY')],

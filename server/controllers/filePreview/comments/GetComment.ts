@@ -13,63 +13,53 @@ const getSanitizedComments = (
   comments: any,
   currentUserId: mongoose.Types.ObjectId
 ) => {
-  const sanitizedComments = comments.map((comment: any) => {
-    const {
-      isDeleted,
-      isFlagged,
-      isEdited,
-      _id: commentId,
-      message,
-      postId,
-      userId,
-      updatedAt: timestamp,
-      upVotes,
-      downVotes,
-      replyCount,
-      parentId,
-    } = comment;
+  const sanitizedComments = comments
+    .filter(
+      ({ isDeleted, isFlagged }: { isDeleted: boolean; isFlagged: boolean }) =>
+        !isDeleted && !isFlagged
+    )
+    .map((comment: any) => {
+      const {
+        isEdited,
+        _id: commentId,
+        message,
+        postId,
+        userId,
+        updatedAt: timestamp,
+        upVotes,
+        downVotes,
+        replyCount,
+        parentId,
+      } = comment;
 
-    const commentObj = {
-      replyCount,
-      timestamp,
-      userId: {
-        // eslint-disable-next-line no-underscore-dangle
-        _id: userId?._id?.toString() ?? null,
-        username: userId?.username?.toString() ?? 'ExamArchive User',
-      },
-      postId: postId.toString(),
-      commentId: commentId.toString(),
-      parentId: parentId === undefined ? undefined : parentId.toString(),
-    };
+      const commentObj = {
+        replyCount,
+        timestamp,
+        userId: {
+          // eslint-disable-next-line no-underscore-dangle
+          _id: userId?._id?.toString() ?? null,
+          username: userId?.username?.toString() ?? 'ExamArchive User',
+        },
+        postId: postId.toString(),
+        commentId: commentId.toString(),
+        parentId: parentId === undefined ? undefined : parentId.toString(),
+      };
 
-    const hasUpVoted = !!upVotes.voters.find(
-      (id: string) => id.toString() === currentUserId.toString()
-    );
-    const hasDownVoted = !!downVotes.voters.find(
-      (id: string) => id.toString() === currentUserId.toString()
-    );
-
-    if (isDeleted === true) {
-      Object.assign(commentObj, {
-        isDeleted,
-        message: 'This message was deleted by the user',
-      });
-    } else if (isFlagged === true) {
-      Object.assign(commentObj, {
-        isFlagged,
-        message: 'This comment was removed by the admin',
-      });
-    } else {
+      const hasUpVoted = !!upVotes.voters.find(
+        (id: string) => id.toString() === currentUserId.toString()
+      );
+      const hasDownVoted = !!downVotes.voters.find(
+        (id: string) => id.toString() === currentUserId.toString()
+      );
       Object.assign(commentObj, {
         isEdited,
         message,
         upVotes: { count: upVotes.count, hasUpVoted },
         downVotes: { count: downVotes.count, hasDownVoted },
       });
-    }
 
-    return commentObj;
-  });
+      return commentObj;
+    });
   return sanitizedComments;
 };
 

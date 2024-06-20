@@ -11,7 +11,9 @@
     "email": "email dev",
     "jobs": "npx @trigger.dev/cli dev",
     "build": "rm -rf dist && npx tsc",
-    "start": "set NODE_ENV=production && node dist/app.js"
+    "start": "set NODE_ENV=production && node dist/app.js",
+    "unixdev": "export NODE_ENV=development && tsx watch app.ts",
+    "unixstart": "export NODE_ENV=production && node dist/app.js"
   },
   "license": "ISC",
   "dependencies": {
