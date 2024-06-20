@@ -8,17 +8,12 @@ import {
   DropdownItem,
   useDisclosure,
 } from '@nextui-org/react';
-import {
-  BiUpvote,
-  BiSolidUpvote,
-  BiSolidDownvote,
-  BiDownvote,
-} from 'react-icons/bi';
+import { BiSolidLike, BiSolidDislike, BiLike, BiDislike } from 'react-icons/bi';
 import { BsReply } from 'react-icons/bs';
 import { MdReportProblem } from 'react-icons/md';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
-import { FaRegComment } from 'react-icons/fa6';
+import { FaEllipsisVertical, FaRegComment } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { IComment, ICommentMutations } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
@@ -44,7 +39,6 @@ export default function ParentCommentBox({
   commentData: IComment;
   commentMutations: ICommentMutations;
 }) {
-  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
@@ -149,28 +143,16 @@ export default function ParentCommentBox({
             <span className="text-sm self-center opacity-55">
               {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
             </span>
-            <Dropdown onOpenChange={(isOpen) => setShowMenu(isOpen)}>
+            <Dropdown>
               <DropdownTrigger>
-                <button
-                  className="text-gray-500 w-10 h-10 relative focus:outline-none bg-white"
-                  type="button"
+                <Button
+                  variant="light"
+                  size="sm"
+                  isIconOnly
+                  className="self-center"
                 >
-                  <span className="sr-only">Open main menu</span>
-                  <div className="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
-                    <span
-                      aria-hidden="true"
-                      className={`block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out ${showMenu ? 'rotate-45' : '-translate-y-1.5'}`}
-                    />
-                    <span
-                      aria-hidden="true"
-                      className={`block absolute  h-0.5 w-5 bg-current   transform transition duration-500 ease-in-out ${showMenu ? 'opacity-0' : ''}`}
-                    />
-                    <span
-                      aria-hidden="true"
-                      className={`block absolute  h-0.5 w-5 bg-current transform  transition duration-500 ease-in-out ${showMenu ? '-rotate-45' : 'translate-y-1.5'}`}
-                    />
-                  </div>
-                </button>
+                  <FaEllipsisVertical className="text-lg" />
+                </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem
@@ -217,17 +199,17 @@ export default function ParentCommentBox({
             <span className="self-center flex flex-row gap-x-2">
               <span onClick={handleUpVote} role="presentation">
                 {hasUpVoted ? (
-                  <BiSolidUpvote className="self-center text-lg cursor-pointer text-red-600" />
+                  <BiSolidLike className="self-center text-lg cursor-pointer text-red-500" />
                 ) : (
-                  <BiUpvote className="self-center text-lg cursor-pointer" />
+                  <BiLike className="self-center text-lg cursor-pointer" />
                 )}
               </span>
               <span className="self-center">{upvoteCount}</span>
               <span onClick={handleDownVote} role="presentation">
                 {hasDownVoted ? (
-                  <BiSolidDownvote className="self-center text-lg cursor-pointer text-red-600" />
+                  <BiSolidDislike className="self-center text-lg cursor-pointer text-red-500" />
                 ) : (
-                  <BiDownvote className="self-center text-lg cursor-pointer" />
+                  <BiDislike className="self-center text-lg cursor-pointer" />
                 )}
               </span>
               <span className="self-center">{downVoteCount}</span>

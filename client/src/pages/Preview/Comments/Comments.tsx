@@ -58,7 +58,7 @@ export default function Comments() {
       ))}
       {(isLoading || isValidating) && !isLastPage && <Skeleton />}
       {isLastPage && (
-        <p className="text-blue-600 font-semibold cursor-pointer w-fit self-center">
+        <p className="text-slate-400 font-medium cursor-pointer w-fit self-center">
           End of disscussion...
         </p>
       )}
