@@ -7,6 +7,7 @@ import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
   AddNameToCache,
+  GetStats,
   NotificationWebhook,
   UploadFile,
 } from '../../controllers/upload';
@@ -14,6 +15,7 @@ import { addNamesInputSchema, uploadFilesInputSchema } from './schema';
 
 const router = express.Router();
 
+router.get('/getStats', [verifyUser, privilege([ROLE.ADMIN])], GetStats);
 router.post(
   '/',
   [
