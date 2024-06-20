@@ -72,15 +72,15 @@ export default function TabularFolderView({
   const rowsPerPage = 10;
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...folders];
+    let filteredFolders = [...folders];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredFolders = filteredFolders.filter((folder) =>
+        folder.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
-    return filteredUsers;
+    return filteredFolders;
   }, [response, filterValue]);
 
   const pages = Math.max(Math.ceil(filteredItems.length / rowsPerPage), 1);
@@ -106,6 +106,7 @@ export default function TabularFolderView({
       });
       return;
     }
+
     mutate().then(() =>
       toast.success('Folder deleted successfully!', {
         duration: 5000,
