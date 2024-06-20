@@ -50,7 +50,10 @@ const router = createBrowserRouter(
         <Route path="" element={<DashHome />} />
         <Route path="profile" element={<Profile />} />
         <Route path="bookmarks" element={<Bookmarks />}>
-          <Route path="" element={<TabularFolderView />} />
+          <Route
+            path=""
+            element={<TabularFolderView actionVarient="BOOKMARK" />}
+          />
           <Route path=":folderId" element={<TabularFileView />} />
         </Route>
         <Route path="fileupload" element={<FileUpload />} />

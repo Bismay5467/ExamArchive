@@ -32,7 +32,7 @@ import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MdCreateNewFolder, MdDelete } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
 import { folderColumns, monthNames } from '@/constants/shared';
-import { IBookmarkFolder } from '@/types/folder';
+import { IAction, IBookmarkFolder } from '@/types/folder';
 import {
   createFolderObj,
   deleteFolderObj,
@@ -43,7 +43,11 @@ import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
 import { TableViewSkeleton } from '../Skeleton';
 
-export default function App() {
+export default function TabularFolderView({
+  actionVarient,
+}: {
+  actionVarient: IAction;
+}) {
   const {
     authState: { jwtToken },
   } = useAuth();
@@ -54,7 +58,7 @@ export default function App() {
     mutate,
     isLoading,
   } = useSWR(
-    getFilesDataObj({ action: 'BOOKMARK', page: '1', parentId: '' }, jwtToken)
+    getFilesDataObj({ action: actionVarient, parentId: '' }, jwtToken)
   );
 
   const navigate = useNavigate();

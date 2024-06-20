@@ -13,7 +13,6 @@ export interface IDeleteFolder {
 // Folder is also a file (parentId = "")
 export interface IGetFilesData {
   action: IAction;
-  page: string;
   parentId: string;
 }
 
@@ -21,6 +20,15 @@ export interface IBookmarkFolder {
   _id: string;
   name: string;
   noOfFiles: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IBookmarkFile {
+  fileId: string;
+  filename: string;
+  status?: string;
+  questionId: string;
   createdAt: string;
   updatedAt: string;
 }
