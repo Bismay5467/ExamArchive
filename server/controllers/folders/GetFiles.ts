@@ -5,11 +5,11 @@ import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
+import { SUCCESS_CODES } from '../../constants/statusCode';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
 import { getFilesInputSchema } from '../../router/folder/schema';
 import sanitizeFilesInfo from '../../utils/folders/sanitizeFilesInfo';
 import { BookMarkedFile, UploadedFiles } from '../../models/files';
-// eslint-disable-next-line sort-imports
 import { SUCCESS_CODES } from '../../constants/statusCode';
 
 const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
