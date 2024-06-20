@@ -5,11 +5,11 @@ import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
+import { SUCCESS_CODES } from '../../constants/statusCode';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
 import { getFilesInputSchema } from '../../router/folder/schema';
 import sanitizeFilesInfo from '../../utils/folders/sanitizeFilesInfo';
 import { BookMarkedFile, UploadedFiles } from '../../models/files';
-import { ERROR_CODES, SUCCESS_CODES } from '../../constants/statusCode';
 
 const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
   const { userId } = req.body as { userId: string };
@@ -61,7 +61,7 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
     ).exec(),
   ]);
   if (files.length === 0) {
-    throw new ErrorHandler('No records found', ERROR_CODES['NOT FOUND']);
+    throw new ErrorHandler('No records found', SUCCESS_CODES.OK);
   }
   const sanitizedInfo =
     parentId === '' ? files : sanitizeFilesInfo({ files, action });
