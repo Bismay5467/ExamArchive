@@ -44,3 +44,19 @@ export default ({
       return {};
     }
   );
+
+export const sanitizePinnedFilesInfo = ({ files }: { files: any[] }) =>
+  files.map(
+    ({
+      metadata,
+      name,
+      updatedAt,
+    }: {
+      metadata: any[];
+      name: string;
+      updatedAt: string;
+    }) => {
+      const { _id: questionId } = metadata[0];
+      return { questionId, name, updatedAt };
+    }
+  );

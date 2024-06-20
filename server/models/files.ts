@@ -22,6 +22,7 @@ const FileSchema: Schema = new Schema(
       index: true,
     },
     noOfFiles: { type: Number, default: 0 },
+    isPinned: { type: Boolean, default: false },
   },
   { strict: true, timestamps: true }
 );
