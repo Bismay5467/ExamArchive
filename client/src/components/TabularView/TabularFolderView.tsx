@@ -29,7 +29,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
-import { MdCreateNewFolder } from 'react-icons/md';
+import { MdCreateNewFolder, MdDelete } from 'react-icons/md';
+import { IoSearch } from 'react-icons/io5';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { IBookmarkFolder } from '@/types/folder';
 import {
@@ -206,15 +207,10 @@ export default function App() {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem
-                  key="copy"
-                  onClick={() => navigate(`${folder._id}`)}
-                >
-                  Open
-                </DropdownItem>
-                <DropdownItem
                   key="delete"
                   className="text-danger"
                   color="danger"
+                  startContent={<MdDelete className="text-xl" />}
                   onClick={() => handleDelete(folder._id)}
                 >
                   Delete folder
@@ -242,12 +238,13 @@ export default function App() {
 
   const topContent = useMemo(
     () => (
-      <div className="flex flex-row gap-x-2">
+      <div className="flex flex-row justify-between gap-x-2">
         <Input
           isClearable
           radius="sm"
           className="w-full sm:max-w-[44%]"
           placeholder="Search by folder name..."
+          startContent={<IoSearch className="text-xl" />}
           value={filterValue}
           onClear={() => onClear()}
           onValueChange={onSearchChange}
