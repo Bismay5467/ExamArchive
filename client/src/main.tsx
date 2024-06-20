@@ -34,7 +34,12 @@ const FileUpload = React.lazy(
 const DashHome = React.lazy(
   () => import('@/pages/DashBoard/DashHome/DashHome.tsx')
 );
-
+const TabularFolderView = React.lazy(
+  () => import('@/components/TabularView/TabularFolderView.tsx')
+);
+const TabularFileView = React.lazy(
+  () => import('@/components/TabularView/TabularFileView.tsx')
+);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<Error />}>
@@ -44,8 +49,26 @@ const router = createBrowserRouter(
       <Route path="dashboard/:userid/" element={<DashBoard />}>
         <Route path="" element={<DashHome />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="bookmarks" element={<Bookmarks />} />
-        <Route path="fileupload" element={<FileUpload />} />
+        <Route path="bookmarks" element={<Bookmarks />}>
+          <Route
+            path=""
+            element={<TabularFolderView actionVarient="BOOKMARK" />}
+          />
+          <Route
+            path=":folderId"
+            element={<TabularFileView actionVarient="BOOKMARK" />}
+          />
+        </Route>
+        <Route path="fileupload" element={<FileUpload />}>
+          <Route
+            path=""
+            element={<TabularFolderView actionVarient="UPLOAD" />}
+          />
+          <Route
+            path=":folderId"
+            element={<TabularFileView actionVarient="UPLOAD" />}
+          />
+        </Route>
         <Route path="analytics" element={<Analytics />} />
       </Route>
       <Route path="auth/login" element={<Login />} />

@@ -18,7 +18,7 @@ export const SERVER_ROUTES = Object.freeze({
   SIGNUP: '/api/v1/auth/newUser',
   UPLOAD: '/api/v1/upload',
   FOLDER: '/api/v1/folder',
-  GETFILE: '/api/v1/file/get',
+  FILE: '/api/v1/file',
   RATING: '/api/v1/file/rating',
   REPORT: '/api/v1/report',
   BOOKMARK: '/api/v1/bookmark',
