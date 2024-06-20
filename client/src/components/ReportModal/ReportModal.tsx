@@ -12,6 +12,7 @@ import {
 } from '@nextui-org/react';
 import useSWR from 'swr';
 import { toast } from 'sonner';
+import { MdReport } from 'react-icons/md';
 import { reportReasons } from '@/constants/shared';
 import { reportObj } from '@/utils/axiosReqObjects';
 import { TContentType } from '@/types/report';
@@ -82,21 +83,23 @@ export default function ReportModal({
         {() => (
           <>
             <ModalHeader className="flex flex-row gap-x-2 text-3xl font-[10px]">
-              Report
+              <MdReport className="self-center text-4xl text-[#595EFC]" />
+              <span>Report</span>
             </ModalHeader>
             <ModalBody>
-              <div className="font-light text-2xl flex flex-row">
+              <div className="font-medium text-2xl flex flex-row">
                 Why are you reporting this post?
               </div>
-              <div className="text-sm opacity-60">
-                Your report is anonymous exexpt if you are reporting an
+              <p className="text-sm opacity-60 text-justify">
+                Your report is anonymous except if you are reporting an
                 intellectual property infringement. If someone is in immediate
                 danger call the local emrgancy services.
-              </div>
+              </p>
               <Select
                 label="Select your complaint"
                 className="w-full"
                 variant="bordered"
+                isRequired
                 onChange={(e) => setReportRank(Number(e.target.value))}
               >
                 {reportReasons.map(({ rank, reason }) => (
@@ -105,10 +108,13 @@ export default function ReportModal({
               </Select>
             </ModalBody>
             <ModalFooter>
+              <Button className="bg-slate-200 text-medium" onPress={onClose}>
+                Cancel
+              </Button>
               <Button
                 color="success"
                 onPress={handleSubmit}
-                className="font-medium text-white tracking-wide w-full bg-[#595EFC]"
+                className="font-medium text-white tracking-wide bg-[#595EFC]"
               >
                 Report
               </Button>

@@ -10,7 +10,7 @@ import {
 } from '@nextui-org/react';
 import { BiSolidLike, BiSolidDislike, BiLike, BiDislike } from 'react-icons/bi';
 import { BsReply } from 'react-icons/bs';
-import { MdReportProblem } from 'react-icons/md';
+import { FaFlag } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import React, { useEffect, useState } from 'react';
@@ -157,9 +157,7 @@ export default function ReplyCommentBox({
                     color="danger"
                     className="text-danger"
                     startContent={
-                      <MdReportProblem
-                        className={cn(iconClasses, 'text-danger')}
-                      />
+                      <FaFlag className="text-lg pointer-events-none" />
                     }
                     onClick={onReportOpen}
                   >

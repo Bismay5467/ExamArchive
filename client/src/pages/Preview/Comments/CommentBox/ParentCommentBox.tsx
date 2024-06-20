@@ -9,8 +9,8 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { BiSolidLike, BiSolidDislike, BiLike, BiDislike } from 'react-icons/bi';
+import { FaFlag } from 'react-icons/fa';
 import { BsReply } from 'react-icons/bs';
-import { MdReportProblem } from 'react-icons/md';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import { FaEllipsisVertical, FaRegComment } from 'react-icons/fa6';
@@ -176,9 +176,7 @@ export default function ParentCommentBox({
                   color="danger"
                   className="text-danger"
                   startContent={
-                    <MdReportProblem
-                      className={cn(iconClasses, 'text-danger')}
-                    />
+                    <FaFlag className="text-lg pointer-events-none" />
                   }
                   onClick={onReportOpen}
                 >
