@@ -11,9 +11,6 @@ import {
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from '@nextui-org/react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/IconWrapper/IconWrapper';
@@ -31,7 +28,7 @@ export default function Sidebar() {
   const baseRoute = `dashboard/${userId}`;
 
   return (
-    <nav className="fixed z-50 group max-h-[800px] h-[98%] w-[70px] rounded-r-xl overflow-x-hidden top-2 transition-all duration-300 ease-in-out hover:w-[250px]">
+    <nav className="fixed z-50 group max-h-[800px] h-[98%] w-[70px] rounded-r-xl overflow-x-hidden top-2 transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg">
       <div className="bg-[#faf6f6] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
         <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
           <img src={logo} alt="LOGO" className="mix-blend-multiply w-[45px]" />
@@ -74,24 +71,18 @@ export default function Sidebar() {
               </>
             )}
           </NavLink>
-          <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg hover:bg-white">
-            <Popover placement="right" showArrow>
-              <PopoverTrigger>
-                <button type="button" className="flex flex-row gap-x-4">
-                  <IconWrapper className="self-center ">
-                    <SiGoogleanalytics className="text-xl " />
-                  </IconWrapper>
-                  <p className="self-center text-xl font-semibold opacity-60 hidden group-hover:block">
-                    Analytics
-                  </p>
-                </button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="text-small font-bold py-2 px-4">
-                  Comming Soon 🙂
-                </div>
-              </PopoverContent>
-            </Popover>
+          <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg cursor-not-allowed hover:bg-white">
+            <IconWrapper className="self-center ">
+              <SiGoogleanalytics className="text-xl " />
+            </IconWrapper>
+            <div>
+              <p className="self-center text-sm font-semibold opacity-50 hidden group-hover:block">
+                Analytics
+              </p>
+              <p className="self-center text-sm opacity-80 text-pink-500 hidden group-hover:block">
+                Comming Soon
+              </p>
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-y-2 mt-auto">
@@ -114,24 +105,18 @@ export default function Sidebar() {
           </NavLink>
         </div>
         <div className="flex flex-col gap-y-2 mt-auto">
-          <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg hover:bg-white">
-            <Popover placement="right" showArrow>
-              <PopoverTrigger>
-                <button type="button" className="flex flex-row gap-x-4">
-                  <IconWrapper className="self-center">
-                    <IoIosNotifications className="text-2xl" />
-                  </IconWrapper>
-                  <p className="self-center text-xl font-semibold opacity-60 hidden group-hover:block">
-                    Notifications
-                  </p>
-                </button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="text-small font-bold py-2 px-4">
-                  Comming Soon 🙂
-                </div>
-              </PopoverContent>
-            </Popover>
+          <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg cursor-not-allowed hover:bg-white">
+            <IconWrapper className="self-center ">
+              <IoIosNotifications className="text-2xl" />
+            </IconWrapper>
+            <div>
+              <p className="self-center text-sm font-semibold opacity-50 hidden group-hover:block">
+                Notifications
+              </p>
+              <p className="self-center text-sm opacity-80 text-pink-500 hidden group-hover:block">
+                Comming Soon
+              </p>
+            </div>
           </div>
           <div className="flex flex-row gap-x-4 py-2 px-1">
             <IconWrapper className="self-center">
