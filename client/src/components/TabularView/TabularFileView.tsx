@@ -1,6 +1,7 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-nested-ternary */
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { toast } from 'sonner';
 import { Key, useCallback, useMemo, useState } from 'react';
@@ -22,11 +23,14 @@ import {
   ChipProps,
   Chip,
   Spinner,
+  Breadcrumbs,
+  BreadcrumbItem,
 } from '@nextui-org/react';
 import { FaEllipsisVertical, FaRegFilePdf } from 'react-icons/fa6';
-import { FiRefreshCw } from 'react-icons/fi';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdOutlineRefresh } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
+import { GoBookmarkSlash } from 'react-icons/go';
+import { TbPinned } from 'react-icons/tb';
 import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
@@ -39,6 +43,7 @@ import {
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { removeBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 import fetcher from '@/utils/fetcher/fetcher';
+import RenderItems from '../Pagination/RenderItems';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   Uploaded: 'success',
@@ -51,10 +56,22 @@ export default function TabularFileView({
 }: {
   actionVarient: IAction;
 }) {
-  const { folderId } = useParams();
   const {
     authState: { jwtToken },
   } = useAuth();
+
+  const urlParts = window.location.href.split('/');
+  const folderInfo = urlParts.pop() ?? '';
+  const getFolderInfo = (info: string) => {
+    const [folderId, folderName] = info.split('_');
+    return [
+      folderId,
+      decodeURIComponent(folderName)
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase()),
+    ];
+  };
+  const [folderId, folderName] = getFolderInfo(folderInfo);
 
   const {
     data: response,
@@ -159,7 +176,7 @@ export default function TabularFileView({
       case 'filename':
         return (
           <div className="flex flex-row gap-x-2 cursor-pointer">
-            <FaRegFilePdf className="self-center text-4xl text-blue-500" />
+            <FaRegFilePdf className="self-center text-4xl text-[#e81a0c]" />
             <span className="flex flex-col">
               <span className="font-semibold text-sm min-w-[120px]">
                 {heading} {isBookmark && <span>({code})</span>}
@@ -206,16 +223,33 @@ export default function TabularFileView({
                   <FaEllipsisVertical className="text-lg" />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
+              <DropdownMenu aria-label="Static Actions" variant="light">
                 <DropdownItem
                   key="delete"
                   className="text-danger"
                   color="danger"
-                  startContent={<MdDelete className="text-xl" />}
+                  startContent={
+                    isBookmark ? (
+                      <GoBookmarkSlash className="text-xl" />
+                    ) : (
+                      <MdDelete className="text-xl" />
+                    )
+                  }
                   onClick={() => handleDelete(file.fileId, file.questionId)}
                 >
-                  {isBookmark ? 'Remove Bookmark' : 'Delete Post'}
+                  {isBookmark ? 'Remove bookmark' : 'Delete Post'}
                 </DropdownItem>
+                {isBookmark ? (
+                  <DropdownItem
+                    key="pinned"
+                    startContent={<TbPinned className="text-xl" />}
+                    onClick={() => handleDelete(file.fileId, file.questionId)}
+                  >
+                    Pin File
+                  </DropdownItem>
+                ) : (
+                  (null as any)
+                )}
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -239,37 +273,52 @@ export default function TabularFileView({
 
   const topContent = useMemo(
     () => (
-      <div className="flex flex-row gap-x-2">
-        <Input
-          isClearable
-          radius="sm"
-          className="w-full sm:max-w-[44%]"
-          placeholder="Search by file name..."
-          startContent={<IoSearch className="text-xl" />}
-          value={filterValue}
-          onClear={() => onClear()}
-          onValueChange={onSearchChange}
-        />
-        <Button variant="light" size="sm" isIconOnly className="self-center">
-          <FiRefreshCw className="text-xl" onClick={() => mutate()} />
-        </Button>
-      </div>
+      <>
+        <div className="flex flex-row justify-between gap-x-2">
+          <Input
+            isClearable
+            radius="full"
+            className="w-full sm:max-w-[32%]"
+            placeholder="Search by file name"
+            startContent={<IoSearch className="text-xl" />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          <Button
+            color="secondary"
+            variant="bordered"
+            startContent={<MdOutlineRefresh className="text-xl" />}
+            radius="sm"
+            onClick={() => mutate()}
+          >
+            Refresh
+          </Button>
+        </div>
+        <Breadcrumbs>
+          <BreadcrumbItem href="/">Home</BreadcrumbItem>
+          <BreadcrumbItem onClick={() => navigate(-1)}>
+            {folderName}
+          </BreadcrumbItem>
+          <BreadcrumbItem href="#">Files</BreadcrumbItem>
+        </Breadcrumbs>
+      </>
     ),
     [filterValue, onSearchChange, hasSearchFilter]
   );
 
   const bottomContent = useMemo(
     () => (
-      <div className="py-2 px-2 flex flex-row justify-end">
+      <div className="py-10 px-2 flex flex-row justify-end">
         <Pagination
-          radius="sm"
-          isCompact
+          disableCursorAnimation
           showControls
-          showShadow
-          color="primary"
-          page={page}
           total={pages}
-          onChange={setPage}
+          initialPage={1}
+          className="gap-2"
+          radius="full"
+          renderItem={RenderItems}
+          variant="light"
         />
       </div>
     ),
@@ -302,7 +351,7 @@ export default function TabularFileView({
         )}
       </TableHeader>
       <TableBody
-        emptyContent="No folders found"
+        emptyContent="No files found"
         items={items}
         isLoading={isLoading || isValidating}
         loadingContent={<Spinner />}

@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-nested-ternary */
 import {
+  Breadcrumbs,
   Table,
   TableHeader,
   TableColumn,
@@ -22,15 +23,18 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  BreadcrumbItem,
 } from '@nextui-org/react';
+import { CiFolderOn } from 'react-icons/ci';
 import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
-import { MdCreateNewFolder, MdDelete } from 'react-icons/md';
+import { MdDelete } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
+import { RiFolderAddLine } from 'react-icons/ri';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { IAction, IBookmarkFolder } from '@/types/folder';
 import {
@@ -42,6 +46,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
 import { TableViewSkeleton } from '../Skeleton';
+import RenderItems from '../Pagination/RenderItems';
 
 export default function TabularFolderView({
   actionVarient,
@@ -179,13 +184,13 @@ export default function TabularFolderView({
       case 'name':
         return (
           <div className="flex flex-row gap-x-2 cursor-pointer">
-            <FaFolderOpen className="self-center text-4xl text-blue-500" />
+            <FaFolderOpen className="self-center text-4xl text-[#fcba03]" />
             <span className="flex flex-col">
               <span className="font-medium text-sm min-w-[120px]">
                 {cellValue}
               </span>
               <span className="text-sm opacity-60">
-                File Count: {folder.noOfFiles}
+                File Count : {folder.noOfFiles}
               </span>
             </span>
           </div>
@@ -213,7 +218,7 @@ export default function TabularFolderView({
                   <FaEllipsisVertical className="text-lg" />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
+              <DropdownMenu aria-label="Static Actions" variant="light">
                 <DropdownItem
                   key="delete"
                   className="text-danger"
@@ -221,7 +226,7 @@ export default function TabularFolderView({
                   startContent={<MdDelete className="text-xl" />}
                   onClick={() => handleDelete(folder._id)}
                 >
-                  Delete folder
+                  Delete Folder
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -246,42 +251,49 @@ export default function TabularFolderView({
 
   const topContent = useMemo(
     () => (
-      <div className="flex flex-row justify-between gap-x-2">
-        <Input
-          isClearable
-          radius="sm"
-          className="w-full sm:max-w-[44%]"
-          placeholder="Search by folder name..."
-          startContent={<IoSearch className="text-xl" />}
-          value={filterValue}
-          onClear={() => onClear()}
-          onValueChange={onSearchChange}
-        />
-        <Button
-          color="primary"
-          endContent={<MdCreateNewFolder className="text-xl" />}
-          radius="sm"
-          onClick={() => onOpen()}
-        >
-          Create new
-        </Button>
-      </div>
+      <>
+        <div className="flex flex-row justify-between gap-x-2">
+          <Input
+            isClearable
+            radius="full"
+            className="w-full sm:max-w-[32%]"
+            placeholder="Search by folder name"
+            startContent={<IoSearch className="text-xl" />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          <Button
+            color="secondary"
+            startContent={<RiFolderAddLine className="text-xl" />}
+            radius="sm"
+            variant="bordered"
+            onClick={() => onOpen()}
+          >
+            Create new
+          </Button>
+        </div>
+        <Breadcrumbs>
+          <BreadcrumbItem href="/">Home</BreadcrumbItem>
+          <BreadcrumbItem href="#">Folders</BreadcrumbItem>
+        </Breadcrumbs>
+      </>
     ),
     [filterValue, onSearchChange, hasSearchFilter]
   );
 
   const bottomContent = useMemo(
     () => (
-      <div className="py-2 px-2 flex flex-row justify-end">
+      <div className="py-10 px-2 flex flex-row justify-end">
         <Pagination
-          radius="sm"
-          isCompact
+          disableCursorAnimation
           showControls
-          showShadow
-          color="primary"
-          page={page}
           total={pages}
-          onChange={setPage}
+          initialPage={1}
+          className="gap-2"
+          radius="full"
+          renderItem={RenderItems}
+          variant="light"
         />
       </div>
     ),
@@ -321,7 +333,7 @@ export default function TabularFolderView({
           loadingContent={<TableViewSkeleton />}
         >
           {(item) => (
-            <TableRow key={item._id}>
+            <TableRow key={`${item._id}_${item.name}`}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
@@ -338,10 +350,11 @@ export default function TabularFolderView({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Create a new Folder
+              <ModalHeader className="flex flex-row gap-3">
+                <CiFolderOn className="text-[26px] text-[#000000]" />{' '}
+                <span> Create a new folder</span>
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="mt-4">
                 <Input
                   autoFocus
                   radius="sm"
@@ -354,22 +367,25 @@ export default function TabularFolderView({
               </ModalBody>
               <ModalFooter>
                 <Button
-                  color="danger"
-                  variant="flat"
+                  color="primary"
+                  variant="ghost"
                   onPress={onClose}
                   radius="sm"
+                  className="tracking-[.1em]"
                 >
-                  Cancel
+                  CANCEL
                 </Button>
                 <Button
-                  color="primary"
+                  color="secondary"
                   radius="sm"
+                  variant="ghost"
+                  className="tracking-[.1em]"
                   onClick={() => {
                     onClose();
                     handleCreateFolder();
                   }}
                 >
-                  Create
+                  CREATE
                 </Button>
               </ModalFooter>
             </>
