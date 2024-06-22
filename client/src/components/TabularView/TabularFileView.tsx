@@ -151,7 +151,7 @@ export default function TabularFileView({
         const second = b[
           sortDescriptor.column as keyof IBookmarkFile
         ] as string;
-        // eslint-disable-next-line no-magic-numbers
+
         const cmp = first < second ? -1 : first > second ? 1 : 0;
 
         return sortDescriptor.direction === 'descending' ? -cmp : cmp;
