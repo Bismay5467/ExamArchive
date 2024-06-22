@@ -64,12 +64,7 @@ export default function TabularFileView({
   const folderInfo = urlParts.pop() ?? '';
   const getFolderInfo = (info: string) => {
     const [folderId, folderName] = info.split('_');
-    return [
-      folderId,
-      decodeURIComponent(folderName)
-        .toLowerCase()
-        .replace(/\b\w/g, (char) => char.toUpperCase()),
-    ];
+    return [folderId, decodeURIComponent(folderName)];
   };
   const [folderId, folderName] = getFolderInfo(folderInfo);
 
@@ -94,7 +89,7 @@ export default function TabularFileView({
   const columns = isBookmark ? bookmarkFileColumns : uploadFileColumns;
 
   const hasSearchFilter = Boolean(filterValue);
-  const rowsPerPage = 10;
+  const ROWS_PER_PAGE = 10;
 
   const filteredItems = useMemo(() => {
     let filteredFiles = [...files];
@@ -112,7 +107,7 @@ export default function TabularFileView({
     return filteredFiles;
   }, [response, filterValue]);
 
-  const pages = Math.max(Math.ceil(filteredItems.length / rowsPerPage), 1);
+  const pages = Math.max(Math.ceil(filteredItems.length / ROWS_PER_PAGE), 0);
 
   const handleDelete = useCallback(
     async (fileId: string, questionId: string) => {
@@ -160,11 +155,11 @@ export default function TabularFileView({
   );
 
   const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const start = (page - 1) * ROWS_PER_PAGE;
+    const end = start + ROWS_PER_PAGE;
 
     return sortedItems.slice(start, end);
-  }, [page, sortedItems, rowsPerPage]);
+  }, [page, sortedItems, ROWS_PER_PAGE]);
 
   const renderCell = useCallback((file: IBookmarkFile, columnKey: Key) => {
     const cellValue = file[columnKey as keyof IBookmarkFile];
@@ -329,7 +324,7 @@ export default function TabularFileView({
     <Table
       aria-label="Example table with custom cells, pagination and sorting"
       isHeaderSticky
-      bottomContent={bottomContent}
+      bottomContent={pages >= 1 ? bottomContent : null}
       bottomContentPlacement="outside"
       sortDescriptor={sortDescriptor}
       topContent={topContent}

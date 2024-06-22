@@ -74,7 +74,7 @@ export default function TabularFolderView({
   const [page, setPage] = useState<number>(1);
 
   const hasSearchFilter = Boolean(filterValue);
-  const rowsPerPage = 10;
+  const ROWS_PER_PAGE = 10;
 
   const filteredItems = useMemo(() => {
     let filteredFolders = [...folders];
@@ -88,7 +88,7 @@ export default function TabularFolderView({
     return filteredFolders;
   }, [response, filterValue]);
 
-  const pages = Math.max(Math.ceil(filteredItems.length / rowsPerPage), 1);
+  const pages = Math.max(Math.ceil(filteredItems.length / ROWS_PER_PAGE), 0);
 
   const handleDelete = useCallback(async (folderId: string) => {
     const reqObj = deleteFolderObj(
@@ -170,11 +170,11 @@ export default function TabularFolderView({
   );
 
   const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const start = (page - 1) * ROWS_PER_PAGE;
+    const end = start + ROWS_PER_PAGE;
 
     return sortedItems.slice(start, end);
-  }, [page, sortedItems, rowsPerPage]);
+  }, [page, sortedItems, ROWS_PER_PAGE]);
 
   const renderCell = useCallback((folder: IBookmarkFolder, columnKey: Key) => {
     const cellValue = folder[columnKey as keyof IBookmarkFolder];
@@ -305,7 +305,7 @@ export default function TabularFolderView({
       <Table
         aria-label="Example table with custom cells, pagination and sorting"
         isHeaderSticky
-        bottomContent={bottomContent}
+        bottomContent={pages >= 1 ? bottomContent : null}
         bottomContentPlacement="outside"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
