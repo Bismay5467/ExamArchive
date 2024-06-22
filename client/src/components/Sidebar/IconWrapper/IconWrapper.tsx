@@ -12,7 +12,7 @@ export default function IconWrapper({
     <div
       className={cn(
         className,
-        'flex items-center rounded-small justify-center w-7 h-7'
+        'flex items-center rounded-small justify-center w-10 h-10'
       )}
     >
       {children}

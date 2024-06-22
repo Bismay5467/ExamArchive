@@ -3,7 +3,7 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 
 import { useTheme } from '@/hooks/useTheme';
 
-export default function ModeToggle() {
+export default function ModeToggle({ className }: { className: string }) {
   // TODO: This needs refactoring!
   const { setTheme, theme } = useTheme();
 
@@ -32,6 +32,7 @@ export default function ModeToggle() {
       defaultSelected={getInitialTheme()}
       size="lg"
       color="success"
+      className={className}
       startContent={<FaSun />}
       endContent={<FaMoon />}
       onValueChange={changeTheme}
