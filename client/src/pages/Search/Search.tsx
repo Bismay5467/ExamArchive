@@ -60,7 +60,7 @@ export default function Search() {
     : [];
 
   return (
-    <div className="max-w-[1280px] mx-auto min-h-[400px] sm:grid sm:grid-cols-10 sm:gap-x-4">
+    <div className="max-w-[1250px] bg-white mx-auto min-h-[400px] sm:grid sm:grid-cols-10 sm:gap-x-4">
       <div className="flex flex-row justify-around sm:hidden">
         <DrawerFilter
           key={Math.random()}
