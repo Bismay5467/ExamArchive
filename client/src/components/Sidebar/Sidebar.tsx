@@ -28,8 +28,8 @@ export default function Sidebar() {
   const baseRoute = `dashboard/${userId}`;
 
   return (
-    <nav className="fixed z-50 group max-h-[800px] h-[100%] w-[70px] rounded-r-xl overflow-x-hidden top-2 transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg">
-      <div className="bg-[#ffffff] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
+    <nav className="fixed z-50 group max-h-[800px] h-[97.5%] w-[70px] rounded-r-xl overflow-x-hidden top-2 transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg">
+      <div className="bg-white relative h-full w-[240px] flex flex-col gap-y-16 p-3">
         <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
           <img src={logo} alt="LOGO" className="mix-blend-multiply w-[45px]" />
           <h1 className="self-center text-xl font-semibold text-[#545454] hidden group-hover:block">
