@@ -7,9 +7,10 @@ import {
   TThemeProviderProps,
   TThemeProviderState,
 } from '@/types/theme';
+import { THEME } from '@/constants/shared';
 
 const initialState: TThemeProviderState = {
-  theme: 'system',
+  theme: THEME.SYSTEM,
   setTheme: () => null,
 };
 
@@ -17,7 +18,7 @@ const ThemeProviderContext = createContext<TThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
+  defaultTheme = THEME.SYSTEM,
   storageKey = 'vite-ui-theme',
   ...props
 }: TThemeProviderProps) {
@@ -28,13 +29,13 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement;
 
-    root.classList.remove('light', 'dark');
+    root.classList.remove(THEME.LIGHT, THEME.DARK);
 
-    if (theme === 'system') {
+    if (theme === THEME.SYSTEM) {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
         .matches
-        ? 'dark'
-        : 'light';
+        ? THEME.DARK
+        : THEME.LIGHT;
 
       root.classList.add(systemTheme);
       return;

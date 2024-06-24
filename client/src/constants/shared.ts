@@ -83,3 +83,9 @@ export const PDF_WORKER_URL =
 export const TEMP_COMMENT_ID = '974106db98afe24eb114' as const;
 export const VOTE: Readonly<number> = 1;
 export const RETRACE_VOTE: Readonly<number> = -1;
+
+export const THEME = Object.freeze({
+  LIGHT: 'light',
+  DARK: 'dark',
+  SYSTEM: 'system',
+});

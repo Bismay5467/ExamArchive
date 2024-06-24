@@ -1,41 +1,44 @@
-import { Switch } from '@nextui-org/react';
-import { FaMoon, FaSun } from 'react-icons/fa';
-
+/* eslint-disable no-nested-ternary */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { FaMoon } from 'react-icons/fa';
+import { useEffect } from 'react';
+import { WiDaySunny } from 'react-icons/wi';
+import { GrSystem } from 'react-icons/gr';
 import { useTheme } from '@/hooks/useTheme';
+import IconWrapper from './Sidebar/IconWrapper/IconWrapper';
+import { THEME } from '@/constants/shared';
 
-export default function ModeToggle({ className }: { className: string }) {
-  // TODO: This needs refactoring!
+export default function ModeToggle({ className }: { className?: string }) {
   const { setTheme, theme } = useTheme();
 
-  const changeTheme = (e: boolean) => {
-    if (e) {
-      setTheme('light');
-    } else {
-      setTheme('dark');
-    }
+  const changeTheme = () => {
+    if (theme === THEME.LIGHT) setTheme(THEME.DARK);
+    else if (theme === THEME.DARK) setTheme(THEME.SYSTEM);
+    else setTheme(THEME.LIGHT);
   };
 
-  const getInitialTheme = () => {
-    if (theme === 'system') {
+  useEffect(() => {
+    if (theme === THEME.SYSTEM) {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
         .matches
         ? 'dark'
         : 'light';
-      return systemTheme === 'light';
-    }
-
-    return theme === 'light';
-  };
+      setTheme(systemTheme);
+    } else setTheme(theme);
+  }, []);
 
   return (
-    <Switch
-      defaultSelected={getInitialTheme()}
-      size="lg"
-      color="success"
-      className={className}
-      startContent={<FaSun />}
-      endContent={<FaMoon />}
-      onValueChange={changeTheme}
-    />
+    <div onClick={changeTheme} className={className}>
+      <IconWrapper className="self-center">
+        {theme === THEME.LIGHT ? (
+          <WiDaySunny className="text-2xl" />
+        ) : theme === THEME.DARK ? (
+          <FaMoon className="text-xl" />
+        ) : (
+          <GrSystem className="text-xl" />
+        )}
+      </IconWrapper>
+    </div>
   );
 }

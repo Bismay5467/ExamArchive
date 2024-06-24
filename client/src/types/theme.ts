@@ -1,6 +1,7 @@
 import React from 'react';
+import { THEME } from '@/constants/shared';
 
-export type TTheme = 'dark' | 'light' | 'system';
+export type TTheme = (typeof THEME)[keyof typeof THEME];
 
 export type TThemeProviderProps = {
   children: React.ReactNode;
