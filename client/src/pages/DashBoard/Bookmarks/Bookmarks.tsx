@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Card, CardBody } from '@nextui-org/react';
-import { FaRegFilePdf } from 'react-icons/fa6';
+import { FaFilePdf } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { TbPinnedFilled } from 'react-icons/tb';
 
@@ -15,7 +15,7 @@ export default function Bookmarks() {
         <Card className="max-w-[400px] w-1/3" radius="sm">
           <CardBody className="flex flex-row gap-x-3">
             <div className="self-center p-3 rounded-md">
-              <FaRegFilePdf className="text-3xl text-[#e81a0c]" />
+              <FaFilePdf className="text-3xl text-[#e81a0c]" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
               <span>Test Folder 1</span>
@@ -29,7 +29,7 @@ export default function Bookmarks() {
         <Card className="max-w-[400px] w-1/3" radius="sm">
           <CardBody className="flex flex-row gap-x-3">
             <div className="self-center p-3 rounded-md">
-              <FaRegFilePdf className="text-3xl text-[#e81a0c]" />
+              <FaFilePdf className="text-3xl text-[#e81a0c]" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
               <span>Test Folder 2</span>
@@ -43,7 +43,7 @@ export default function Bookmarks() {
         <Card className="max-w-[400px] w-1/3" radius="sm">
           <CardBody className="flex flex-row gap-x-3">
             <div className="self-center p-3 rounded-md">
-              <FaRegFilePdf className="text-3xl text-[#e81a0c]" />
+              <FaFilePdf className="text-3xl text-[#e81a0c]" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
               <span>Test Folder 3</span>

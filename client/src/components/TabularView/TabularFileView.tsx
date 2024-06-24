@@ -26,11 +26,12 @@ import {
   Breadcrumbs,
   BreadcrumbItem,
 } from '@nextui-org/react';
-import { FaEllipsisVertical, FaRegFilePdf } from 'react-icons/fa6';
+import { FaEllipsisVertical } from 'react-icons/fa6';
+import { FaFilePdf } from 'react-icons/fa';
 import { MdDelete, MdOutlineRefresh } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
-import { GoBookmarkSlash } from 'react-icons/go';
-import { TbPinned } from 'react-icons/tb';
+import { GoBookmarkSlashFill } from 'react-icons/go';
+import { TiPin } from 'react-icons/ti';
 import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
@@ -171,7 +172,7 @@ export default function TabularFileView({
       case 'filename':
         return (
           <div className="flex flex-row gap-x-2 cursor-pointer">
-            <FaRegFilePdf className="self-center text-4xl text-[#e81a0c]" />
+            <FaFilePdf className="self-center text-4xl text-[#e81a0c]" />
             <span className="flex flex-col">
               <span className="font-semibold text-sm min-w-[120px]">
                 {heading} {isBookmark && <span>({code})</span>}
@@ -225,7 +226,7 @@ export default function TabularFileView({
                   color="danger"
                   startContent={
                     isBookmark ? (
-                      <GoBookmarkSlash className="text-xl" />
+                      <GoBookmarkSlashFill className="text-xl" />
                     ) : (
                       <MdDelete className="text-xl" />
                     )
@@ -237,7 +238,7 @@ export default function TabularFileView({
                 {isBookmark ? (
                   <DropdownItem
                     key="pinned"
-                    startContent={<TbPinned className="text-xl" />}
+                    startContent={<TiPin className="text-xl" />}
                     onClick={() => handleDelete(file.fileId, file.questionId)}
                   >
                     Pin File

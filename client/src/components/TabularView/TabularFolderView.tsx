@@ -25,16 +25,15 @@ import {
   useDisclosure,
   BreadcrumbItem,
 } from '@nextui-org/react';
-import { CiFolderOn } from 'react-icons/ci';
 import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { FaFolderOpen } from 'react-icons/fa';
+import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MdDelete } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
-import { RiFolderAddLine } from 'react-icons/ri';
+import { AiFillFolderAdd } from 'react-icons/ai';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { IAction, IBookmarkFolder } from '@/types/folder';
 import {
@@ -265,7 +264,7 @@ export default function TabularFolderView({
           />
           <Button
             color="secondary"
-            startContent={<RiFolderAddLine className="text-xl" />}
+            startContent={<AiFillFolderAdd className="text-xl" />}
             radius="sm"
             variant="bordered"
             onClick={() => onOpen()}
@@ -351,7 +350,7 @@ export default function TabularFolderView({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-row gap-3">
-                <CiFolderOn className="text-[26px] text-[#000000]" />{' '}
+                <FaFolder className="text-[26px] text-[#000000]" />{' '}
                 <span> Create a new folder</span>
               </ModalHeader>
               <ModalBody className="mt-4">

@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { FaMoon } from 'react-icons/fa';
+import { MdSunny } from 'react-icons/md';
 import { useEffect } from 'react';
-import { WiDaySunny } from 'react-icons/wi';
 import { GrSystem } from 'react-icons/gr';
 import { useTheme } from '@/hooks/useTheme';
 import IconWrapper from './Sidebar/IconWrapper/IconWrapper';
@@ -32,7 +32,7 @@ export default function ModeToggle({ className }: { className?: string }) {
     <div onClick={changeTheme} className={className}>
       <IconWrapper className="self-center">
         {theme === THEME.LIGHT ? (
-          <WiDaySunny className="text-2xl" />
+          <MdSunny className="text-2xl" />
         ) : theme === THEME.DARK ? (
           <FaMoon className="text-xl" />
         ) : (
