@@ -18,8 +18,8 @@ export default function SearchBar({ className }: { className?: string }) {
     debouncedSearch(query);
   }, []);
   useEffect(() => {
-    setSearchField(searchInputs.searchParams);
-  }, [searchInputs]);
+    if (searchInputs.searchParams) setSearchField(searchInputs.searchParams);
+  }, [searchInputs.searchParams]);
 
   return (
     <Input

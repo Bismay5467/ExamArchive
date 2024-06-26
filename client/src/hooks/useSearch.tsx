@@ -10,13 +10,12 @@ const defaultState: ISearchInputs = {
 const SearchContext = createContext<ISearchContext>({
   searchInputs: defaultState,
   setFilters: (_filters) => {},
-  setSearchParam: (_query) => {},
+  setSearchParam: (_query: string) => {},
 });
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [urlSearchParams, setURLSearchParams] = useSearchParams();
   const [searchInputs, setSearchInputs] = useState<ISearchInputs>(defaultState);
-  console.log(searchInputs);
 
   const setSearchParam = (query: string) => {
     console.log(searchInputs);
@@ -38,6 +37,20 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       ...filters,
     });
   };
+
+  useEffect(() => {
+    if (searchInputs.searchParams) setSearchParam(searchInputs.searchParams);
+    const { subjectName, year, sortFilter, examType } = searchInputs;
+    const filter = {
+      ...(subjectName && { subjectName }),
+      ...(year && { year }),
+      ...(sortFilter && { sortFilter }),
+      ...(examType && { examType }),
+    };
+    if (typeof filter === 'object' && Object.keys(filter).length > 0) {
+      setFilters(filter);
+    }
+  }, [JSON.stringify(searchInputs)]);
 
   useEffect(() => {
     const currentSearchInputs: ISearchInputs = { searchParams: '' };
