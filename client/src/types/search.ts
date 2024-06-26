@@ -1,8 +1,19 @@
+export type TSortFilters = 'MOST VIEWS' | 'MOST RECENT';
 export interface IFilterInputs {
-  ExamType?: string;
   subjectName?: string;
   year?: string;
+  examType?: string;
   sortFilter?: string;
+}
+
+export interface ISearchInputs extends IFilterInputs {
+  searchParams: string;
+}
+
+export interface ISearchContext {
+  searchInputs: ISearchInputs;
+  setSearchParam(_query: string): void;
+  setFilters(_filters: IFilterInputs): void;
 }
 
 export type TFilterInputs = 'ExamType' | 'subjectName' | 'year' | 'sortFilter';

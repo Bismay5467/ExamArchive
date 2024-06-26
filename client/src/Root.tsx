@@ -12,6 +12,7 @@ import { Toaster } from '@/components/ui/sonner';
 import fetcher from './utils/fetcher/fetcher.ts';
 import { AUTH_TOKEN } from './constants/auth.ts';
 import { TEMP_JWT_TOKEN_HARDCODED } from './constants/shared.ts';
+import { SearchProvider } from './hooks/useSearch.tsx';
 
 export default function Root() {
   const authRegex = /\/auth/;
@@ -24,22 +25,24 @@ export default function Root() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
-        <SWRConfig
-          value={{
-            fetcher,
-            shouldRetryOnError: false,
-            revalidateOnFocus: false,
-          }}
-        >
-          <main className="box-border min-h-screen bg-primary-background">
-            <Sidebar />
-            <Suspense fallback={<Loading />}>
-              <Outlet />
-            </Suspense>
-            {!isAuthPage && <Footer />}
-          </main>
-          <Toaster richColors visibleToasts={9} />
-        </SWRConfig>
+        <SearchProvider>
+          <SWRConfig
+            value={{
+              fetcher,
+              shouldRetryOnError: false,
+              revalidateOnFocus: false,
+            }}
+          >
+            <main className="box-border min-h-screen bg-primary-background">
+              <Sidebar />
+              <Suspense fallback={<Loading />}>
+                <Outlet />
+              </Suspense>
+              {!isAuthPage && <Footer />}
+            </main>
+            <Toaster richColors visibleToasts={9} />
+          </SWRConfig>
+        </SearchProvider>
       </AuthProvider>
     </ThemeProvider>
   );
