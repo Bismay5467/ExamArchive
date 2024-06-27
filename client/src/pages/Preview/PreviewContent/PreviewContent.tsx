@@ -18,6 +18,7 @@ import { PDFViewer } from './PDFViewer/PDFViewer';
 import BookmarksModal from './BookmarksModal/BookmarksModal';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import RatingSection from './RatingSection/RatingSection';
+import TagsSection from './TagsSection/TagsSection';
 
 export default function PreviewContent() {
   const [fileData, setFileData] = useState<IFileData>();
@@ -128,7 +129,7 @@ export default function PreviewContent() {
           {paperid && <RatingSection postId={paperid} />}
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
-          <div>Tags</div>
+          {fileData && <TagsSection tags={fileData.tags} />}
         </div>
       </div>
       {paperid && fileData && (
