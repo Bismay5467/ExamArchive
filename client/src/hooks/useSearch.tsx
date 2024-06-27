@@ -23,7 +23,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       ),
       searchParams: query,
     };
-    setSearchInputs(currentParams);
     setURLSearchParams({ ...currentParams });
   };
 
@@ -34,7 +33,6 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         Object.entries(filters).filter(([_, value]) => value)
       ),
     };
-    setSearchInputs(currentParams);
     setURLSearchParams({ ...currentParams });
   };
 
@@ -44,7 +42,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       currentSearchInputs[key] = value;
     });
     setSearchInputs(currentSearchInputs);
-  }, []);
+  }, [urlSearchParams]);
 
   return (
     <SearchContext.Provider

@@ -2,7 +2,7 @@ import { Button, RadioGroup, Radio } from '@nextui-org/react';
 import { IoFilter } from 'react-icons/io5';
 import useSWR from 'swr';
 import { AxiosRequestConfig } from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Sheet,
   SheetClose,
@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/sheet';
 import { SERVER_ROUTES } from '@/constants/routes';
 import { useSearch } from '@/hooks/useSearch';
-import { IFilterInputs, TExamType, TSortFilters, TYear } from '@/types/search';
+import { IFilterInputs } from '@/types/search';
 import { SEARCH_FILTTER_OPTIONS } from '@/constants/search';
 
 export function SearchFilterSheet() {
@@ -22,16 +22,19 @@ export function SearchFilterSheet() {
     url: `${SERVER_ROUTES.SEARCH}/getSubjectFilters`,
     method: 'GET',
   };
+  const { setFilters, searchInputs } = useSearch();
   const [filter, setFilter] = useState<IFilterInputs>({
     subjectName: undefined,
     examType: undefined,
     year: undefined,
     sortFilter: undefined,
   });
-  const { setFilters } = useSearch();
   useSWR(requestObj);
 
-  // console.log(response);
+  useEffect(() => {
+    const { subjectName, examType, year, sortFilter } = searchInputs;
+    setFilter({ subjectName, examType, year, sortFilter });
+  }, [JSON.stringify(searchInputs)]);
 
   const handleApplyFilters = () => {
     setFilters(filter);
@@ -48,28 +51,23 @@ export function SearchFilterSheet() {
             <IoFilter className="text-2xl font-bold" /> Filter Options
           </SheetTitle>
         </SheetHeader>
-        {Object.entries(SEARCH_FILTTER_OPTIONS).map(([key, options], index) => (
+        {SEARCH_FILTTER_OPTIONS.map((value, index) => (
           <React.Fragment key={index}>
             <div className="w-full h-0.5 bg-slate-200" />
             <div className="flex flex-col gap-3">
               <RadioGroup
-                label={`${key} :`}
-                onValueChange={(value) =>
+                label={`${value.label} :`}
+                defaultValue={filter[value.key] ?? ''}
+                onValueChange={(val) =>
                   setFilter((prevState) => ({
                     ...prevState,
-                    ...(key === 'Sort by' && {
-                      sortFilter: value as TSortFilters,
-                    }),
-                    ...(key === 'Year' && { year: value as TYear }),
-                    ...(key === 'Exam type' && {
-                      examType: value as TExamType<'INSTITUTIONAL'>,
-                    }),
+                    [value.key]: val as any,
                   }))
                 }
               >
-                {Object.values(options).map((value) => (
-                  <Radio key={value} value={value}>
-                    {value}
+                {Object.values(value.options).map((optionVal) => (
+                  <Radio key={optionVal} value={optionVal}>
+                    {optionVal}
                   </Radio>
                 ))}
               </RadioGroup>

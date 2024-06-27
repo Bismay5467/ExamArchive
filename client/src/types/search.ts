@@ -15,6 +15,14 @@ export interface IFilterInputs {
   sortFilter?: TSortFilters;
 }
 
+export type TFilterInputs = keyof IFilterInputs;
+
+export interface TFilterOption {
+  label: string;
+  options: Record<string, string>;
+  key: TFilterInputs;
+}
+
 export interface ISearchInputs extends IFilterInputs {
   searchParams: string;
 }
@@ -25,7 +33,6 @@ export interface ISearchContext {
   setFilters(_filters: IFilterInputs): void;
 }
 
-export type TFilterInputs = keyof IFilterInputs;
 export interface ISearchInput {
   query: string;
 }
