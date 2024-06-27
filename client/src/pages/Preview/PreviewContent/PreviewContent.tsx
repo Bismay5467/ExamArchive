@@ -4,22 +4,22 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { IoBookmarks } from 'react-icons/io5';
-import { Chip, useDisclosure, Tooltip, Button } from '@nextui-org/react';
-import { MdReport } from 'react-icons/md';
+import { useDisclosure, Button } from '@nextui-org/react';
+import { MdOutlinePerson } from 'react-icons/md';
+import { FaEye, FaBookOpen, FaRegStar } from 'react-icons/fa';
+import { FiDownload } from 'react-icons/fi';
+import { BiSolidSchool } from 'react-icons/bi';
+import { IoMdTime } from 'react-icons/io';
+import { FaRegComment, FaFlag } from 'react-icons/fa6';
 import { getFileObj } from '@/utils/axiosReqObjects';
 import { SUCCESS_CODES } from '@/constants/statusCodes';
 import { IFileData } from '@/types/file';
 import { PDFViewer } from './PDFViewer/PDFViewer';
 import BookmarksModal from './BookmarksModal/BookmarksModal';
-import RatingPopover from './RatingPopover/RatingPopover';
 import ReportModal from '@/components/ReportModal/ReportModal';
-
-const PING_TIME_OUT_TIME = 10000;
-const MAX_TAGS_DISPLAY = 4;
 
 export default function PreviewContent() {
   const [fileData, setFileData] = useState<IFileData>();
-  const [setshowPing, setSetshowPing] = useState<boolean>(true);
   const { paperid } = useParams();
 
   const {
@@ -45,9 +45,6 @@ export default function PreviewContent() {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setSetshowPing(false);
-    }, PING_TIME_OUT_TIME);
     if (response) {
       if (response.status === SUCCESS_CODES.OK) {
         parseToJSON();
@@ -66,89 +63,96 @@ export default function PreviewContent() {
   }, [response, error]);
 
   return (
-    <div className=" grid grid-cols-12">
-      <div className="col-span-6 p-4">
-        {fileData && <PDFViewer pdfURL={fileData.file.url} />}
+    <>
+      <h1 className="text-xl font-medium p-4 sm:text-4xl">
+        {fileData?.subjectName} ({fileData?.subjectCode})
+      </h1>
+      <div className="flex flex-row px-4 justify-between">
+        <div className="flex flex-row gap-x-4 text-sm sm:text-medium sm:gap-x-12">
+          <div className="flex flex-row gap-x-2">
+            <FaEye className="self-center" />
+            <p className="self-center">1.8K views</p>
+          </div>
+          <div className="flex flex-row gap-x-2">
+            <FiDownload className="self-center" />
+            <p className="self-center">1K downloads</p>
+          </div>
+          <div className="hidden sm:flex sm:flex-row sm:gap-x-2">
+            <FaRegComment className="self-center" />
+            <p className="self-center">Disscussion Forum</p>
+          </div>
+        </div>
+        <div className="flex flex-row gap-x-2">
+          <Button
+            isIconOnly
+            size="sm"
+            variant="light"
+            onClick={() => onBookmarkOpen()}
+          >
+            <IoBookmarks className="self-center text-2xl text-red-600" />
+          </Button>
+          <Button isIconOnly size="sm" variant="light">
+            <FaFlag
+              className="self-center text-2xl"
+              onClick={() => onReportOpen()}
+            />
+          </Button>
+        </div>
       </div>
-      <div className="min-h-[500px] flex flex-col gap-y-4 p-4 col-span-6 rounded-lg">
-        <div>
-          <h1 className="text-4xl font-medium flex flex-row gap-x-2">
-            <span className="max-w-[70%] text-wrap">
-              {fileData?.subjectName} ({fileData?.subjectCode})
-            </span>
-            <span className="relative">
-              <IoBookmarks
-                className="self-center ml-2 text-red-500 cursor-pointer"
-                onClick={() => onBookmarkOpen()}
-              />
-              {setshowPing && (
-                <span className="animate-ping absolute inline-flex left-[10px] top-[0px] h-3 w-3 rounded-full bg-blue-600" />
-              )}
-            </span>
-          </h1>
-          <h3 className="px-1 mt-2 font-semibold opacity-60">
-            {fileData?.semester} ({fileData?.year})
-          </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-6 sm:grid-rows-3">
+        <div className="col-span-1 sm:col-span-3 sm:row-span-3 p-4">
+          {fileData && <PDFViewer pdfURL={fileData.file.url} />}
         </div>
-        <div className="flex flex-row flex-wrap gap-2">
-          {fileData?.tags.slice(0, MAX_TAGS_DISPLAY).map((val) => (
-            <Chip
-              key={val}
-              size="md"
-              radius="md"
-              color="primary"
-              variant="shadow"
-            >
-              {val}
-            </Chip>
-          ))}
-          {fileData && fileData?.tags.length > MAX_TAGS_DISPLAY && (
-            <Tooltip
-              className="self-center bg-slate-200/80"
-              showArrow
-              placement="bottom"
-              content={
-                <div className="flex flex-row flex-wrap gap-2 max-w-[500px] p-4">
-                  {fileData?.tags.map((val) => (
-                    <Chip
-                      key={val}
-                      size="md"
-                      radius="md"
-                      color="primary"
-                      variant="shadow"
-                    >
-                      {val}
-                    </Chip>
-                  ))}
-                </div>
-              }
-            >
-              <span className="my-auto text-sm opacity-55 font-semibold cursor-pointer">
-                + {fileData.tags.length - MAX_TAGS_DISPLAY} more
-              </span>
-            </Tooltip>
-          )}
+        <div className="col-span-1 row-start-1 flex flex-col gap-y-2 text-sm sm:text-lg sm:col-span-3 sm:row-span-1 p-4">
+          <div className="flex flex-row gap-x-2">
+            <FaBookOpen className="self-center sm:text-2xl" />
+            <p>Semester III, 2025</p>
+          </div>
+          <div className="flex flex-row gap-x-4">
+            <span className="flex flex-row gap-x-2">
+              <MdOutlinePerson className="self-center sm:text-2xl" />{' '}
+              <p>Arkojeet bera</p>
+            </span>
+            <span className="flex flex-row gap-x-2">
+              <IoMdTime className="self-center sm:text-2xl" />
+              <p>May 18, 2024</p>
+            </span>
+          </div>
+          <div className="flex flex-row gap-x-2">
+            <BiSolidSchool className="self-center sm:text-2xl" />
+            <p>National Institute of Technology, Karnataka</p>
+          </div>
         </div>
-        <h2 className="text-xl">
-          <span className="text-2xl font-semibold">Branch:</span>{' '}
-          {fileData?.branch}{' '}
-        </h2>
-        <h2 className="text-xl">
-          <span className="text-2xl font-semibold">Subject Code:</span>{' '}
-          {fileData?.subjectCode}{' '}
-        </h2>
-        <h3 className="text-xl">
-          <span className="text-2xl font-semibold">Institute:</span>{' '}
-          {fileData?.institutionName}{' '}
-        </h3>
-        <span className="flex flex-row gap-x-4">
-          {paperid && <RatingPopover postId={paperid} />}
-          {paperid && (
-            <Button onClick={onReportOpen} color="danger">
-              Report <MdReport />
-            </Button>
-          )}
-        </span>
+        <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
+          <div>
+            <p>Ratings ( 1.2K+ users voted )</p>
+            <Button>Rate Here</Button>
+          </div>
+          <div>
+            <p>Helpful</p>
+            <ul>
+              <li>
+                <FaRegStar />
+              </li>
+              <li>
+                <FaRegStar />
+              </li>
+              <li>
+                <FaRegStar />
+              </li>
+              <li>
+                <FaRegStar />
+              </li>
+              <li>
+                <FaRegStar />
+              </li>
+            </ul>
+            <p>4.7 / 5</p>
+          </div>
+        </div>
+        <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
+          <div>Tags</div>
+        </div>
       </div>
       {paperid && fileData && (
         <BookmarksModal
@@ -171,6 +175,6 @@ export default function PreviewContent() {
           postId={paperid}
         />
       )}
-    </div>
+    </>
   );
 }

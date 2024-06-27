@@ -31,7 +31,7 @@ export default function Root() {
             revalidateOnFocus: false,
           }}
         >
-          <main className="box-border min-h-screen">
+          <main className="box-border min-h-screen bg-primary-background">
             <Sidebar />
             <Suspense fallback={<Loading />}>
               <Outlet />
