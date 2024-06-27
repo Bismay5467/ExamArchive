@@ -18,50 +18,34 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [searchInputs, setSearchInputs] = useState<ISearchInputs>(defaultState);
 
   const setSearchParam = (query: string) => {
-    console.log(searchInputs);
     const currentParams: ISearchInputs = {
       ...Object.fromEntries(
-        Object.entries(searchInputs).filter(([_, value]) => value !== undefined)
+        Object.entries(searchInputs).filter(([_, value]) => value)
       ),
       searchParams: query,
     };
-
-    setURLSearchParams({ ...currentParams, searchParams: query });
+    setSearchInputs(currentParams);
+    setURLSearchParams({ ...currentParams });
   };
 
   const setFilters = (filters: IFilterInputs) => {
-    setURLSearchParams({
+    const currentParams: ISearchInputs = {
+      ...searchInputs,
       ...Object.fromEntries(
-        Object.entries(searchInputs).filter(([_, value]) => value !== undefined)
+        Object.entries(filters).filter(([_, value]) => value)
       ),
-      ...filters,
-    });
+    };
+    setSearchInputs(currentParams);
+    setURLSearchParams({ ...currentParams });
   };
 
   useEffect(() => {
-    if (searchInputs.searchParams) setSearchParam(searchInputs.searchParams);
-    const { subjectName, year, sortFilter, examType } = searchInputs;
-    const filter = {
-      ...(subjectName && { subjectName }),
-      ...(year && { year }),
-      ...(sortFilter && { sortFilter }),
-      ...(examType && { examType }),
-    };
-    if (typeof filter === 'object' && Object.keys(filter).length > 0) {
-      setFilters(filter);
-    }
-  }, [JSON.stringify(searchInputs)]);
-
-  useEffect(() => {
-    const currentSearchInputs: ISearchInputs = { searchParams: '' };
-    urlSearchParams.forEach((value, key) => {
-      currentSearchInputs[key as keyof ISearchInputs] = value;
+    const currentSearchInputs = { searchParams: '' } as any;
+    urlSearchParams.forEach((value: any, key: any) => {
+      currentSearchInputs[key] = value;
     });
-
-    console.log(currentSearchInputs);
-
     setSearchInputs(currentSearchInputs);
-  }, [urlSearchParams]);
+  }, []);
 
   return (
     <SearchContext.Provider

@@ -1,7 +1,7 @@
 import { Input } from '@nextui-org/react';
 import debounce from 'lodash.debounce';
 import { IoIosSearch } from 'react-icons/io';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearch } from '@/hooks/useSearch';
 
 export default function SearchBar({ className }: { className?: string }) {
@@ -13,10 +13,10 @@ export default function SearchBar({ className }: { className?: string }) {
     (query: string) => setSearchParam(query),
     DELAY_IN_MS
   );
-  const handleSearch = useCallback((query: string) => {
+  const handleSearch = (query: string) => {
     setSearchField(query);
     debouncedSearch(query);
-  }, []);
+  };
   useEffect(() => {
     if (searchInputs.searchParams) setSearchField(searchInputs.searchParams);
   }, [searchInputs.searchParams]);

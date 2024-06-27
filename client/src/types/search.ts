@@ -1,9 +1,18 @@
-export type TSortFilters = 'MOST VIEWS' | 'MOST RECENT';
+import { EXAM_TYPES } from '../constants/shared';
+import { FILTER_YEAR_OPTIONS, SORT_FILTER_OPTIONS } from '@/constants/search';
+
+export type TSortFilters = keyof typeof SORT_FILTER_OPTIONS;
+
+export type TYear =
+  (typeof FILTER_YEAR_OPTIONS)[keyof typeof FILTER_YEAR_OPTIONS];
+
+export type TExamType<T extends keyof typeof EXAM_TYPES> =
+  (typeof EXAM_TYPES)[T][keyof (typeof EXAM_TYPES)[T]];
 export interface IFilterInputs {
   subjectName?: string;
-  year?: string;
-  examType?: string;
-  sortFilter?: string;
+  year?: TYear;
+  examType?: TExamType<'INSTITUTIONAL'>;
+  sortFilter?: TSortFilters;
 }
 
 export interface ISearchInputs extends IFilterInputs {
@@ -16,7 +25,7 @@ export interface ISearchContext {
   setFilters(_filters: IFilterInputs): void;
 }
 
-export type TFilterInputs = 'ExamType' | 'subjectName' | 'year' | 'sortFilter';
+export type TFilterInputs = keyof IFilterInputs;
 export interface ISearchInput {
   query: string;
 }
