@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { IFilterInputs, ISearchContext, ISearchInputs } from '@/types/search';

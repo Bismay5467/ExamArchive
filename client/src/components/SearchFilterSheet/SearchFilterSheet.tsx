@@ -30,7 +30,7 @@ export function SearchFilterSheet() {
   });
   const { setFilters } = useSearch();
   useSWR(requestObj);
-  // eslint-disable-next-line no-console
+
   // console.log(response);
 
   const handleApplyFilters = () => {
