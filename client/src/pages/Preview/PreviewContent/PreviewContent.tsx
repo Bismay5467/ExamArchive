@@ -125,7 +125,7 @@ export default function PreviewContent() {
           </div>
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
-          <RatingSection />
+          {paperid && <RatingSection postId={paperid} />}
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
           <div>Tags</div>

@@ -15,6 +15,7 @@ import {
   editCommentObj,
   reactToCommentObj,
 } from './comments';
+import { updateRatingObj } from './rating';
 
 export {
   getSearchRequestObj,
@@ -33,4 +34,5 @@ export {
   deleteCommentObj,
   editCommentObj,
   reactToCommentObj,
+  updateRatingObj,
 };

@@ -1,4 +1,6 @@
 import Rating from '@mui/material/Rating';
+import { BsStars } from 'react-icons/bs';
+import { toast } from 'sonner';
 import {
   Modal,
   ModalContent,
@@ -8,9 +10,60 @@ import {
   Button,
   useDisclosure,
 } from '@nextui-org/react';
+import { useState } from 'react';
+import { updateRatingObj } from '@/utils/axiosReqObjects';
+import { useAuth } from '@/hooks/useAuth';
+import fetcher from '@/utils/fetcher/fetcher';
 
-export default function RatingSection() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+export default function RatingSection({ postId }: { postId: string }) {
+  const [helpfull, setHelpfull] = useState<number>(0);
+  const [standard, setStandard] = useState<number>(0);
+  const [relevance, setRelevance] = useState<number>(0);
+
+  const {
+    authState: { jwtToken },
+  } = useAuth();
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const handleSubmit = async () => {
+    if (!helpfull || !standard || !relevance) {
+      toast.error('Please rate all the fields!', {
+        duration: 5000,
+      });
+      return;
+    }
+    onClose();
+    const reqObject = updateRatingObj(
+      {
+        postId,
+        ratingArray: [
+          { type: 'HELPFUL', value: helpfull },
+          { type: 'STANDARD', value: standard },
+          { type: 'RELEVANCE', value: relevance },
+        ],
+      },
+      jwtToken
+    );
+    if (!reqObject) {
+      toast.error('Somthing went wrong!', {
+        duration: 5000,
+      });
+      return;
+    }
+    try {
+      await fetcher(reqObject);
+    } catch (err) {
+      toast.error('Somthing went wrong!', {
+        description: `${err}`,
+        duration: 5000,
+      });
+      return;
+    }
+    toast.success('Thank you for your feedback!', {
+      duration: 5000,
+    });
+  };
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
@@ -21,13 +74,23 @@ export default function RatingSection() {
       </div>
       <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit">
         <p>Helpful</p>
-        <Rating name="read-only" value={4.7} precision={0.1} readOnly />
+        <Rating name="helpful-read-only" value={4.7} precision={0.1} readOnly />
         <p className="text-center sm:text-left">4.7 / 5</p>
         <p>Standard</p>
-        <Rating name="read-only" value={4.7} precision={0.1} readOnly />
+        <Rating
+          name="standard-read-only"
+          value={4.7}
+          precision={0.1}
+          readOnly
+        />
         <p className="text-center sm:text-left">4.7 / 5</p>
         <p>Relevance</p>
-        <Rating name="read-only" value={4.7} precision={0.1} readOnly />
+        <Rating
+          name="relevance-read-only"
+          value={4.7}
+          precision={0.1}
+          readOnly
+        />
         <p className="text-center sm:text-left">4.7 / 5</p>
       </div>
       <Modal
@@ -36,38 +99,48 @@ export default function RatingSection() {
         isDismissable={false}
         isKeyboardDismissDisabled={false}
       >
-        <ModalContent>
-          {(onClose) => (
+        <ModalContent className="w-fit">
+          {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+              <ModalHeader className="flex flex-row gap-x-2">
+                <BsStars className="self-center text-2xl text-purple-500" />
+                <p className="text-xl">Rate this paper</p>
               </ModalHeader>
               <ModalBody>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat
-                  consequat elit dolor adipisicing. Mollit dolor eiusmod sunt ex
-                  incididunt cillum quis. Velit duis sit officia eiusmod Lorem
-                  aliqua enim laboris do dolor eiusmod. Et mollit incididunt
-                  nisi consectetur esse laborum eiusmod pariatur proident Lorem
-                  eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
+                <p>Let us know how you feel about this paper!</p>
+                <div className="grid grid-cols-2 grid-rows-3 gap-y-2 w-fit">
+                  <h3>Helpful:</h3>
+                  <Rating
+                    name="helpfull-controlled"
+                    value={helpfull}
+                    onChange={(_, newValue) => {
+                      setHelpfull(newValue || 0);
+                    }}
+                  />
+                  <h3>Standard:</h3>
+                  <Rating
+                    name="standard-controlled"
+                    value={standard}
+                    onChange={(_, newValue) => {
+                      setStandard(newValue || 0);
+                    }}
+                  />
+                  <h3>Relevance:</h3>
+                  <Rating
+                    name="relevance-controlled"
+                    value={relevance}
+                    onChange={(_, newValue) => {
+                      setRelevance(newValue || 0);
+                    }}
+                  />
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Cancel
                 </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
+                <Button color="primary" onPress={handleSubmit}>
+                  Submit
                 </Button>
               </ModalFooter>
             </>
