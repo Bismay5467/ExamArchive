@@ -134,13 +134,16 @@ export default function ParentCommentBox({
           <span className="flex flex-row gap-x-4">
             <Avatar
               isBordered
-              radius="md"
+              radius="sm"
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              className="h-7 w-7 sm:h-9 sm:w-9"
             />
-            <span className="self-center text-xl font-medium">{username}</span>
+            <span className="self-center font-medium sm:text-xl">
+              {username}
+            </span>
           </span>
           <span className="flex flex-row gap-x-2">
-            <span className="text-sm self-center opacity-55">
+            <span className="text-xs self-center opacity-55 sm:text-sm">
               {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
             </span>
             <Dropdown>
@@ -214,24 +217,24 @@ export default function ParentCommentBox({
             </span>
             {optimisticReplyCount !== 0 && (
               <span
-                className="self-center flex flex-row gap-x-2 cursor-pointer"
+                className="self-center flex flex-row gap-x-2 cursor-pointer text-xs sm:text-sm"
                 onClick={() => {
                   setShowReplies((prev) => !prev);
                 }}
                 role="presentation"
               >
-                <FaRegComment className="self-center text-lg" />{' '}
+                <FaRegComment className="self-center sm:text-lg" />{' '}
                 {showReplies
                   ? 'Hide Replies'
                   : `Show ${optimisticReplyCount} Replies`}
               </span>
             )}
             <span
-              className="self-center flex flex-row gap-x-2 cursor-pointer"
+              className="self-center flex flex-row gap-x-2 cursor-pointer text-xs sm:text-sm"
               onClick={() => setIsReplying(true)}
               role="presentation"
             >
-              <BsReply className="text-xl" /> Reply
+              <BsReply className="text-lg sm:text-xl" /> Reply
             </span>
           </div>
           {isEditing && (

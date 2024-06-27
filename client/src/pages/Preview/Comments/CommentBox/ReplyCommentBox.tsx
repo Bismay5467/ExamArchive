@@ -112,16 +112,18 @@ export default function ReplyCommentBox({
         isBordered
         radius="sm"
         size="md"
-        className="self-start mt-2"
+        className="self-start mt-2 h-7 w-7 sm:h-9 sm:w-9"
         src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
       />
 
       <div className="w-full flex flex-col gap-y-4">
         <div className="w-full self-start bg-[#F2F3F4] p-2 rounded-xl flex flex-col gap-y-2">
           <div className="flex flex-row justify-between">
-            <span className="font-medium self-center">{username}</span>
+            <span className="font-medium text-sm self-center sm:text-medium">
+              {username}
+            </span>
             <span className="flex flex-row gap-x-3">
-              <span className="text-sm self-center opacity-55">
+              <span className="text-xs self-center opacity-55 sm:text-sm">
                 {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
               </span>
               <Dropdown>
@@ -195,11 +197,11 @@ export default function ReplyCommentBox({
               <span className="self-center">{downVoteCount}</span>
             </span>
             <span
-              className="self-center flex flex-row gap-x-2 cursor-pointer"
+              className="self-center flex flex-row gap-x-2 cursor-pointer text-xs sm:text-sm"
               onClick={() => setIsReplying(true)}
               role="presentation"
             >
-              <BsReply className="text-xl" /> Reply
+              <BsReply className="text-lg sm:text-xl" /> Reply
             </span>
           </div>
           {isEditing && (

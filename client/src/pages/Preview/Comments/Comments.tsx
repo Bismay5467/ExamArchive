@@ -47,7 +47,7 @@ export default function Comments() {
     : [];
 
   return (
-    <div className="mt-8 flex flex-col gap-y-4 p-8 min-h-[600px]">
+    <div className="mt-8 flex flex-col gap-y-4 p-4 min-h-[600px]">
       <ParentCommentForm handleCreateComment={mutations.handleCreateComment} />
       {commentList.map((comment) => (
         <ParentCommentBox

@@ -30,8 +30,8 @@ export default function ParentCommentForm({
           {...register('message')}
         />
 
-        <div className="px-4 flex flex-row justify-between">
-          <span className="flex flex-row gap-x-4 self-center px-2 opacity-60">
+        <div className="px-4 flex flex-row justify-end sm:justify-between">
+          <span className="hidden gap-x-4 self-center px-2 opacity-60 sm:flex sm:flex-row">
             <FaCode /> <IoMdLink /> <FaAt />
           </span>
           <span>

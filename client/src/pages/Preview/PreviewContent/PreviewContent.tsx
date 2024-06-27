@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { IoBookmarks } from 'react-icons/io5';
 import { useDisclosure, Button } from '@nextui-org/react';
 import { MdOutlinePerson } from 'react-icons/md';
-import { FaEye, FaBookOpen, FaRegStar } from 'react-icons/fa';
+import { FaEye, FaBookOpen } from 'react-icons/fa';
 import { FiDownload } from 'react-icons/fi';
 import { BiSolidSchool } from 'react-icons/bi';
 import { IoMdTime } from 'react-icons/io';
@@ -17,6 +17,7 @@ import { IFileData } from '@/types/file';
 import { PDFViewer } from './PDFViewer/PDFViewer';
 import BookmarksModal from './BookmarksModal/BookmarksModal';
 import ReportModal from '@/components/ReportModal/ReportModal';
+import RatingSection from './RatingSection/RatingSection';
 
 export default function PreviewContent() {
   const [fileData, setFileData] = useState<IFileData>();
@@ -124,31 +125,7 @@ export default function PreviewContent() {
           </div>
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
-          <div>
-            <p>Ratings ( 1.2K+ users voted )</p>
-            <Button>Rate Here</Button>
-          </div>
-          <div>
-            <p>Helpful</p>
-            <ul>
-              <li>
-                <FaRegStar />
-              </li>
-              <li>
-                <FaRegStar />
-              </li>
-              <li>
-                <FaRegStar />
-              </li>
-              <li>
-                <FaRegStar />
-              </li>
-              <li>
-                <FaRegStar />
-              </li>
-            </ul>
-            <p>4.7 / 5</p>
-          </div>
+          <RatingSection />
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
           <div>Tags</div>
