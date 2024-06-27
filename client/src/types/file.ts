@@ -22,3 +22,15 @@ export interface IFileData {
   __v: number;
   _id: string;
 }
+
+export type TRatingType = 'HELPFUL' | 'STANDARD' | 'RELEVANCE';
+
+export interface IRating {
+  postId: string;
+  ratingArray: Array<{ type: TRatingType; value: number }>;
+}
+export interface IEditTags {
+  postId: string;
+  tagsToAdd: Array<string>;
+  tagsToRemove: Array<string>;
+}

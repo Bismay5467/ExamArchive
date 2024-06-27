@@ -37,9 +37,11 @@ export default function PreviewContent() {
     onOpenChange: onReportOpenChange,
   } = useDisclosure();
 
-  const { data: response, error } = useSWR(
-    paperid ? getFileObj(paperid) : null
-  );
+  const {
+    data: response,
+    error,
+    mutate,
+  } = useSWR(paperid ? getFileObj(paperid) : null);
 
   const parseToJSON = async () => {
     const parsedData = await JSON.parse(response.data.data);
@@ -129,7 +131,13 @@ export default function PreviewContent() {
           {paperid && <RatingSection postId={paperid} />}
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
-          {fileData && <TagsSection tags={fileData.tags} />}
+          {fileData && paperid && (
+            <TagsSection
+              tags={fileData.tags}
+              mutate={mutate}
+              postId={paperid}
+            />
+          )}
         </div>
       </div>
       {paperid && fileData && (
