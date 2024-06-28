@@ -29,7 +29,7 @@ dotenv.config({
 });
 
 const app = express();
-// eslint-disable-next-line no-magic-numbers
+
 const PORT = Number(process.env.PORT) || 3001;
 
 process.on('uncaughtException', (error) => {
