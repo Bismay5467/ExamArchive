@@ -38,7 +38,7 @@ export const getSortOrder = ({
 };
 
 export const getProjections = () => ({
-  uploadedBy: 0,
+  uploadedBy: 1,
   file: 0,
   rating: 0,
   isFlagged: 0,
