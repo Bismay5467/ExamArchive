@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import Question from '../../../models/question';
+import { TRole } from '../../../types/auth/types';
 import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
 import { editTagsInputSchema } from '../../../router/filePreview/data/schema';
 import redisClient from '../../../config/redisConfig';
@@ -16,24 +17,23 @@ import {
 import { ERROR_CODES, SUCCESS_CODES } from '../../../constants/statusCode';
 
 const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
+  const { userId, role } = req.body as { userId: string; role: TRole };
   const { postId, tagsToAdd, tagsToRemove } = req.body.data as z.infer<
     typeof editTagsInputSchema
   >;
-  const docInfo = await Question.findOne({ _id: postId })
+  const query =
+    role === 'ADMIN' ? { _id: postId, uploadedBy: userId } : { _id: postId };
+  const docInfo = await Question.findOne(query)
     .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
     .exec();
   if (docInfo === null) {
-    throw new ErrorHandler(
-      'No post found with given postId',
-      ERROR_CODES['NOT FOUND']
-    );
-  }
-  if (docInfo === null) {
-    throw new ErrorHandler('Post doesnot exists', ERROR_CODES['NOT FOUND']);
+    throw new ErrorHandler('Post does not exists', ERROR_CODES['NOT FOUND']);
   }
   const { tags } = docInfo as unknown as { tags: string[] };
-  const updatedTags = new Set<string>([...tagsToAdd, ...tags]);
-  tagsToRemove.forEach((tag) => updatedTags.delete(tag));
+  const updatedTags = new Set<string>([...(tagsToAdd ?? []), ...tags]);
+  if (role === 'ADMIN') {
+    (tagsToRemove ?? []).forEach((tag) => updatedTags.delete(tag));
+  }
   (docInfo as any).tags = Array.from(updatedTags);
   const redisKey = `post:${postId}`;
   await Promise.all([
@@ -45,7 +45,7 @@ const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
       DOC_INFO_TTL_IN_SECONDS
     ),
   ]);
-  if (tagsToAdd.length > 0) {
+  if ((tagsToAdd ?? []).length > 0) {
     const { uploadedBy: ownerId } = docInfo as unknown as {
       uploadedBy: Types.ObjectId;
     };

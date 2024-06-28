@@ -13,12 +13,14 @@ export const editTagsInputSchema = z.object({
     .array(z.string())
     .transform((newTags) =>
       newTags.map((tag) => tag.trim().toLowerCase()).filter(Boolean)
-    ),
+    )
+    .optional(),
   tagsToRemove: z
     .array(z.string())
     .transform((newTags) =>
       newTags.map((tag) => tag.trim().toLowerCase()).filter(Boolean)
-    ),
+    )
+    .optional(),
 });
 
 export const updateDownloadCountInputSchema = z.object({
