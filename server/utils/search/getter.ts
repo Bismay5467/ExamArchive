@@ -31,7 +31,7 @@ export const getSortOrder = ({
   sortFilter?: TUserSortFilter;
 }) => {
   const sortOrder =
-    sortFilter === 'MOST VIEWS'
+    sortFilter === 'Most Views'
       ? { 'noOfViews.count': 'desc' }
       : { updatedAt: 'desc' };
   return sortOrder;

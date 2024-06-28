@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable no-console */
 import { TriggerClient } from '@trigger.dev/sdk';
 import bodyParser from 'body-parser';
@@ -7,6 +8,7 @@ import cors from 'cors';
 import { createMiddleware } from '@trigger.dev/express';
 import dotenv from 'dotenv';
 import fileUpload from 'express-fileupload';
+import rateLimit from 'express-rate-limit';
 import express, { NextFunction, Request, Response } from 'express';
 
 import AppRouter from './router';
@@ -35,7 +37,6 @@ process.on('uncaughtException', (error) => {
   console.error(error.name, error.message);
   process.exit(1);
 });
-app.set('trust proxy', true);
 const whitelist = [
   process.env.PROD_CLIENT_URL,
   process.env.DEV_CLIENT_URL,
@@ -56,6 +57,14 @@ const customCors = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 app.use(customCors);
+app.use(
+  rateLimit({
+    windowMs: 1 * 60 * 1000,
+    limit: 20,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+  })
+);
 app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
