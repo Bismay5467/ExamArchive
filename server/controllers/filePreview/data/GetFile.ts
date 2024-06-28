@@ -24,8 +24,10 @@ const GetFile = asyncErrorHandler(async (req: Request, res: Response) => {
   const docInfo = await Question.findOne({ _id: postId })
     .populate({ path: 'uploadedBy', select: { username: 1, _id: 1 } })
     .select({
-      noOfDownloads: 0,
-      noOfViews: 0,
+      'noOfDownloads.userIds': 0,
+      'noOfDownloads.ips': 0,
+      'noOfViews.userIds': 0,
+      'noOfViews.ips': 0,
       'file.filename': 0,
       'file.publicId': 0,
       isFlagged: 0,

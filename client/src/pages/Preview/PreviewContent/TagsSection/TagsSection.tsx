@@ -7,6 +7,7 @@ import {
   Button,
   useDisclosure,
   Chip,
+  Spinner,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
@@ -33,6 +34,7 @@ export default function TagsSection({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentTags, setCurrentTags] = useState<Array<string>>(tags);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     authState: { jwtToken },
   } = useAuth();
@@ -46,7 +48,6 @@ export default function TagsSection({
       onClose();
       return;
     }
-    onClose();
     const tagsToRemove: Array<string> = tags.filter(
       (tag) => !currentTags.includes(tag)
     );
@@ -63,6 +64,7 @@ export default function TagsSection({
       });
       return;
     }
+    setIsLoading(true);
     try {
       await fetcher(reqObject);
     } catch (err: any) {
@@ -70,12 +72,15 @@ export default function TagsSection({
         description: `${err.response.data.message}`,
         duration: 5000,
       });
+      setIsLoading(false);
       return;
     }
     mutate().then(() => {
       toast.success('Tags updated successfully!', {
         duration: 5000,
       });
+      onClose();
+      setIsLoading(false);
     });
   };
 
@@ -89,7 +94,7 @@ export default function TagsSection({
   return (
     <div className="flex flex-col gap-y-2">
       <h2>Tags:</h2>
-      <div className="flex flex-row gap-x-2">
+      <div className="flex flex-row flex-wrap gap-x-2">
         {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
           <Chip
             variant="flat"
@@ -120,7 +125,7 @@ export default function TagsSection({
                       You can contribute by adding more tags by clicking on the
                       add more button!
                     </p>
-                    <div className="flex flex-row flex-wrap gap-2">
+                    <div className="flex flex-row flex-wrap gap-2 max-h-[300px] overflow-y-auto">
                       {tags.map((val, idx) => (
                         <Chip
                           variant="flat"
@@ -152,6 +157,10 @@ export default function TagsSection({
                       <IoIosAddCircleOutline className="text-xl font-semibold" />
                     ),
                   })}
+                  {...(isLoading && {
+                    endContent: <Spinner color="secondary" size="sm" />,
+                  })}
+                  {...(isLoading && { isDisabled: true })}
                 >
                   {isEditing ? 'Save and publish' : 'Add more'}
                 </Button>

@@ -15,10 +15,26 @@ import { updateRatingObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 
-export default function RatingSection({ postId }: { postId: string }) {
+export default function RatingSection({
+  postId,
+  rating,
+}: {
+  postId: string;
+  rating: Array<{
+    ratingType: string;
+    totalRating: number;
+    averageRating: number;
+    _id: string;
+  }>;
+}) {
   const [helpfull, setHelpfull] = useState<number>(0);
   const [standard, setStandard] = useState<number>(0);
   const [relevance, setRelevance] = useState<number>(0);
+  const [
+    { averageRating: helpfullRate },
+    { averageRating: standardRate },
+    { averageRating: relevanceRate },
+  ] = rating;
 
   const {
     authState: { jwtToken },
@@ -74,24 +90,35 @@ export default function RatingSection({ postId }: { postId: string }) {
       </div>
       <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit">
         <p>Helpful</p>
-        <Rating name="helpful-read-only" value={4.7} precision={0.1} readOnly />
-        <p className="text-center sm:text-left">4.7 / 5</p>
+        <Rating
+          name="helpful-read-only"
+          value={parseFloat(helpfullRate.toFixed(1))}
+          precision={0.1}
+          readOnly
+        />
+        <p className="text-center sm:text-left">
+          {parseFloat(helpfullRate.toFixed(1))} / 5
+        </p>
         <p>Standard</p>
         <Rating
           name="standard-read-only"
-          value={4.7}
+          value={parseFloat(standardRate.toFixed(1))}
           precision={0.1}
           readOnly
         />
-        <p className="text-center sm:text-left">4.7 / 5</p>
+        <p className="text-center sm:text-left">
+          {parseFloat(standardRate.toFixed(1))} / 5
+        </p>
         <p>Relevance</p>
         <Rating
           name="relevance-read-only"
-          value={4.7}
+          value={parseFloat(relevanceRate.toFixed(1))}
           precision={0.1}
           readOnly
         />
-        <p className="text-center sm:text-left">4.7 / 5</p>
+        <p className="text-center sm:text-left">
+          {parseFloat(relevanceRate.toFixed(1))} / 5
+        </p>
       </div>
       <Modal
         isOpen={isOpen}

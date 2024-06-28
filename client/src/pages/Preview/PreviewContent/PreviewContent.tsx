@@ -140,7 +140,7 @@ export default function PreviewContent() {
           <div className="flex flex-row gap-x-4">
             <span className="flex flex-row gap-x-2">
               <MdOutlinePerson className="self-center sm:text-2xl" />{' '}
-              <p>Arkojeet bera</p>
+              <p>{fileData?.uploadedBy.username ?? 'ExamArchive user'}</p>
             </span>
             <span className="flex flex-row gap-x-2">
               <IoMdTime className="self-center sm:text-2xl" />
@@ -155,7 +155,9 @@ export default function PreviewContent() {
           </div>
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
-          {paperid && <RatingSection postId={paperid} />}
+          {paperid && fileData && (
+            <RatingSection postId={paperid} rating={fileData?.rating} />
+          )}
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
           {fileData && paperid && (
