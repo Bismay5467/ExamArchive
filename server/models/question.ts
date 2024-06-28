@@ -2,6 +2,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 import { FILE_UPLOAD_STATUS } from '../constants/constants/upload';
+import { RATING_TYPE } from '../constants/constants/filePreview';
 import User from './user';
 import examNames from '../utils/filePreview/examNames';
 import { EXAM_TYPES, SEMESTER } from '../constants/constants/shared';
@@ -43,38 +44,45 @@ const QuestionSchema: Schema = new mongoose.Schema(
       enum: examNames(EXAM_TYPES),
       index: true,
     },
-    rating: [
-      {
-        ratingType: { type: String, default: 'helpful' },
-        totalRating: { type: Number, default: 0 },
-        averageRating: {
-          type: Number,
-          default: 0,
-          min: 0,
-          max: 5,
+    rating: {
+      type: [
+        {
+          ratingType: { type: String, default: RATING_TYPE.HELPFUL },
+          totalRating: { type: Number, default: 0 },
+          averageRating: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 5,
+          },
         },
-      },
-      {
-        ratingType: { type: String, default: 'standard' },
-        totalRating: { type: Number, default: 0 },
-        averageRating: {
-          type: Number,
-          default: 0,
-          min: 0,
-          max: 5,
+        {
+          ratingType: { type: String, default: RATING_TYPE.STANDARD },
+          totalRating: { type: Number, default: 0 },
+          averageRating: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 5,
+          },
         },
-      },
-      {
-        ratingType: { type: String, default: 'relevance' },
-        totalRating: { type: Number, default: 0 },
-        averageRating: {
-          type: Number,
-          default: 0,
-          min: 0,
-          max: 5,
+        {
+          ratingType: { type: String, default: RATING_TYPE.RELEVANCE },
+          totalRating: { type: Number, default: 0 },
+          averageRating: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 5,
+          },
         },
-      },
-    ],
+      ],
+      default: [
+        { ratingType: RATING_TYPE.HELPFUL, totalRating: 0, averageRating: 0 },
+        { ratingType: RATING_TYPE.STANDARD, totalRating: 0, averageRating: 0 },
+        { ratingType: RATING_TYPE.RELEVANCE, totalRating: 0, averageRating: 0 },
+      ],
+    },
     noOfDownloads: {
       count: { type: Number, default: 0 },
       userIds: [mongoose.Types.ObjectId],

@@ -15,10 +15,15 @@ const validate =
           : target === 'PARAMS'
             ? req.params
             : req.query;
-      await schema.parseAsync(data);
+      const parsedData = await schema.parseAsync(data);
+      if (target === 'BODY') req.body.data = parsedData;
+      else if (target === 'PARAMS') req.params = parsedData;
+      else req.query = parsedData;
       return next();
     } catch (error) {
-      return res.status(ERROR_CODES['BAD REQUEST']).json(error);
+      return res
+        .status(ERROR_CODES['BAD REQUEST'])
+        .json({ message: 'Data format not acceptable' });
     }
   };
 
