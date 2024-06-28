@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Accordion, AccordionItem, Button } from '@nextui-org/react';
 import { IoFilter } from 'react-icons/io5';
 import useSWR from 'swr';
 import { AxiosRequestConfig } from 'axios';
@@ -52,37 +52,19 @@ export function SearchFilterSheet() {
             <IoFilter className="text-2xl font-bold" /> Filter Options
           </SheetTitle>
         </SheetHeader>
-        {SEARCH_FILTTER_OPTIONS.map(({ key, label, options }, index) => (
-          <OptionGroup
-            key={index}
-            filter={filter}
-            setFilter={setFilter}
-            filterKey={key}
-            label={label}
-            options={options}
-          />
-          // <React.Fragment key={index}>
-          //   <div className="w-full h-0.5 bg-slate-200" />
-          //   <div className="flex flex-col gap-3">
-          //     <RadioGroup
-          //       label={`${value.label} :`}
-          //       defaultValue={filter[value.key] ?? ''}
-          //       onValueChange={(val) =>
-          //         setFilter((prevState) => ({
-          //           ...prevState,
-          //           [value.key]: val as any,
-          //         }))
-          //       }
-          //     >
-          //       {Object.entries(value.options).map(([optionKey, optionVal]) => (
-          //         <Radio key={optionKey} value={optionKey}>
-          //           {optionVal}
-          //         </Radio>
-          //       ))}
-          //     </RadioGroup>
-          //   </div>
-          // </React.Fragment>
-        ))}
+        <Accordion>
+          {SEARCH_FILTTER_OPTIONS.map(({ key, label, options }, index) => (
+            <AccordionItem key={key} aria-label={key} title={label}>
+              <OptionGroup
+                key={index}
+                filter={filter}
+                setFilter={setFilter}
+                filterKey={key}
+                options={options}
+              />
+            </AccordionItem>
+          ))}
+        </Accordion>
         <SheetFooter>
           <SheetClose asChild>
             <Button type="submit" onClick={handleApplyFilters}>

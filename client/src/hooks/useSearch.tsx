@@ -1,45 +1,49 @@
-/* eslint-disable no-console */
+/* eslint-disable require-await */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
+import useSWRInfinite, {
+  SWRInfiniteKeyLoader,
+  SWRInfiniteResponse,
+} from 'swr/infinite';
+import { debounce } from 'lodash';
 import { IFilterInputs, ISearchContext, ISearchInputs } from '@/types/search';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
 
-const defaultState: ISearchInputs = {
-  searchParams: '',
+const DEBOUNCE_DELAY_IN_MS = 500;
+
+const defaultSWRResponseState: SWRInfiniteResponse<any, any> = {
+  data: [],
+  error: null,
+  isLoading: false,
+  isValidating: false,
+  mutate: async () => [],
+  setSize: async () => [],
+  size: 0,
 };
 
 const SearchContext = createContext<ISearchContext>({
-  searchInputs: defaultState,
+  searchInputs: { searchParams: '' },
+  swrResponse: defaultSWRResponseState,
   setFilters: (_filters) => {},
   setSearchParam: (_query: string) => {},
 });
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [urlSearchParams, setURLSearchParams] = useSearchParams();
-  const [searchInputs, setSearchInputs] = useState<ISearchInputs>(defaultState);
-  console.log(searchInputs);
+  const [searchInputs, setSearchInputs] = useState<ISearchInputs>({
+    searchParams: '',
+  });
 
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     // TODO: Content of previousPageData needs further testing
 
     if (previousPageData && !previousPageData.data.hasMore) return null;
     if (searchInputs.searchParams.length === 0) return null;
-    return getSearchRequestObj({ page: pageIndex + 1, searchInputs });
+    return getSearchRequestObj(searchInputs, pageIndex + 1);
   };
-  const {
-    data: response,
-    // size,
-    // setSize,
-    // isLoading,
-    // mutate,
-    // error,
-    // isValidating,
-  } = useSWRInfinite(getKey);
+  const swrResponse = useSWRInfinite(getKey);
 
-  console.log(response);
-
-  const setSearchParam = (query: string) => {
+  const setSearchParam = debounce((query: string) => {
     const currentParams: ISearchInputs = {
       ...Object.fromEntries(
         Object.entries(searchInputs).filter(([_, value]) => value)
@@ -47,7 +51,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       searchParams: query,
     };
     setURLSearchParams({ ...currentParams });
-  };
+  }, DEBOUNCE_DELAY_IN_MS);
 
   const setFilters = (filters: IFilterInputs) => {
     const currentParams: ISearchInputs = {
@@ -70,7 +74,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   return (
     <SearchContext.Provider
       // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{ searchInputs, setFilters, setSearchParam }}
+      value={{ searchInputs, setFilters, setSearchParam, swrResponse }}
     >
       {children}
     </SearchContext.Provider>

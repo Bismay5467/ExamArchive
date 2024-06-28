@@ -1,3 +1,4 @@
+import { SWRInfiniteResponse } from 'swr/infinite';
 import { EXAM_TYPES } from '../constants/shared';
 import { FILTER_YEAR_OPTIONS, SORT_FILTER_OPTIONS } from '@/constants/search';
 
@@ -29,6 +30,7 @@ export interface ISearchInputs extends IFilterInputs {
 
 export interface ISearchContext {
   searchInputs: ISearchInputs;
+  swrResponse: SWRInfiniteResponse<any, any>;
   setSearchParam(_query: string): void;
   setFilters(_filters: IFilterInputs): void;
 }
@@ -38,18 +40,25 @@ export interface ISearchInput {
 }
 
 export interface ISearchData {
-  _id: string;
-  year: string;
-  tags: string[];
-  semester: string;
   branch: string;
   createdAt: string;
-  updatedAt: string;
+  examType: string;
   institutionName: string;
-  noOfDownloads: { count: number };
-  noOfViews: number;
+  noOfDownloads: {
+    count: number;
+    ips: Array<number>; // TODO: needs further invetigation
+  };
+  noOfViews: {
+    count: number;
+    ips: Array<number>; // TODO: needs further invetigation
+  };
+  semester: string;
+  status: string;
   subjectCode: string;
   subjectName: string;
-  examType: string;
+  tags: Array<string>;
+  updatedAt: string;
+  year: string;
   __v: number;
+  _id: string;
 }
