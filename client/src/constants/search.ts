@@ -4,7 +4,7 @@ import { EXAM_TYPES } from './shared';
 export const QUERY_FIELDS = Object.freeze({
   PAGE: 'page',
   YEAR: 'year',
-  QUERY: 'query',
+  QUERY_PARAMS: 'searchParams',
   EXAM_TYPE: 'examType',
 });
 

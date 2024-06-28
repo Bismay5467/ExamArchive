@@ -1,44 +1,42 @@
-/* eslint-disable consistent-return */
 /* eslint-disable function-paren-newline */
 
 import { AxiosRequestConfig } from 'axios';
 
 import { QUERY_FIELDS } from '@/constants/search';
 import { SERVER_ROUTES } from '@/constants/routes';
+import { ISearchInputs } from '@/types/search';
 
 export default ({
   page,
-  searchParams,
+  searchInputs,
 }: {
   page: number;
-  searchParams: URLSearchParams;
+  searchInputs: ISearchInputs;
 }) => {
   const params = {} as Record<string, string | string[]>;
 
-  searchParams.forEach((value, key) => {
+  Object.entries(searchInputs).forEach(([key, value]) => {
     if (key === QUERY_FIELDS.YEAR) {
       const currentYear = new Date().getFullYear();
-      const last = parseInt(value.split(' ')[1], 10);
+      const last = parseInt(value, 10);
       const years = Array.from({ length: last }, (_, i) =>
         (currentYear - i).toString()
       );
       params[key] = years;
-    } else if (key === QUERY_FIELDS.QUERY) {
-      if (value.length === 0) {
-        // TODO: Show a toast ('Search field can't be empty!)
-        return null;
-      }
-      params.searchParams = value.split(',').map((item) => item.trim());
+    } else if (key === QUERY_FIELDS.QUERY_PARAMS) {
+      params.searchParams = value.split(',').map((item: any) => item.trim());
     } else if (key) params[key] = value;
   });
 
-  params.page = String(page);
+  params.page = page.toString();
 
   const requestObj: AxiosRequestConfig<any> = {
     url: SERVER_ROUTES.SEARCH,
     params,
     method: 'GET',
   };
+  // eslint-disable-next-line no-console
+  console.log(requestObj);
 
   return requestObj;
 };

@@ -25,14 +25,14 @@ export default function Root() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
-        <SearchProvider>
-          <SWRConfig
-            value={{
-              fetcher,
-              shouldRetryOnError: false,
-              revalidateOnFocus: false,
-            }}
-          >
+        <SWRConfig
+          value={{
+            fetcher,
+            shouldRetryOnError: false,
+            revalidateOnFocus: false,
+          }}
+        >
+          <SearchProvider>
             <main className="box-border min-h-screen bg-primary-background">
               <Sidebar />
               <Suspense fallback={<Loading />}>
@@ -41,8 +41,8 @@ export default function Root() {
               {!isAuthPage && <Footer />}
             </main>
             <Toaster richColors visibleToasts={9} />
-          </SWRConfig>
-        </SearchProvider>
+          </SearchProvider>
+        </SWRConfig>
       </AuthProvider>
     </ThemeProvider>
   );

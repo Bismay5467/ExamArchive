@@ -1,8 +1,8 @@
-import { Button, RadioGroup, Radio } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { IoFilter } from 'react-icons/io5';
 import useSWR from 'swr';
 import { AxiosRequestConfig } from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Sheet,
   SheetClose,
@@ -16,6 +16,7 @@ import { SERVER_ROUTES } from '@/constants/routes';
 import { useSearch } from '@/hooks/useSearch';
 import { IFilterInputs } from '@/types/search';
 import { SEARCH_FILTTER_OPTIONS } from '@/constants/search';
+import OptionGroup from './OptionGroup/OptionGroup';
 
 export function SearchFilterSheet() {
   const requestObj: AxiosRequestConfig<any> = {
@@ -51,28 +52,36 @@ export function SearchFilterSheet() {
             <IoFilter className="text-2xl font-bold" /> Filter Options
           </SheetTitle>
         </SheetHeader>
-        {SEARCH_FILTTER_OPTIONS.map((value, index) => (
-          <React.Fragment key={index}>
-            <div className="w-full h-0.5 bg-slate-200" />
-            <div className="flex flex-col gap-3">
-              <RadioGroup
-                label={`${value.label} :`}
-                defaultValue={filter[value.key] ?? ''}
-                onValueChange={(val) =>
-                  setFilter((prevState) => ({
-                    ...prevState,
-                    [value.key]: val as any,
-                  }))
-                }
-              >
-                {Object.values(value.options).map((optionVal) => (
-                  <Radio key={optionVal} value={optionVal}>
-                    {optionVal}
-                  </Radio>
-                ))}
-              </RadioGroup>
-            </div>
-          </React.Fragment>
+        {SEARCH_FILTTER_OPTIONS.map(({ key, label, options }, index) => (
+          <OptionGroup
+            key={index}
+            filter={filter}
+            setFilter={setFilter}
+            filterKey={key}
+            label={label}
+            options={options}
+          />
+          // <React.Fragment key={index}>
+          //   <div className="w-full h-0.5 bg-slate-200" />
+          //   <div className="flex flex-col gap-3">
+          //     <RadioGroup
+          //       label={`${value.label} :`}
+          //       defaultValue={filter[value.key] ?? ''}
+          //       onValueChange={(val) =>
+          //         setFilter((prevState) => ({
+          //           ...prevState,
+          //           [value.key]: val as any,
+          //         }))
+          //       }
+          //     >
+          //       {Object.entries(value.options).map(([optionKey, optionVal]) => (
+          //         <Radio key={optionKey} value={optionKey}>
+          //           {optionVal}
+          //         </Radio>
+          //       ))}
+          //     </RadioGroup>
+          //   </div>
+          // </React.Fragment>
         ))}
         <SheetFooter>
           <SheetClose asChild>
