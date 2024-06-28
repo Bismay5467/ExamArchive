@@ -1,6 +1,7 @@
 import express from 'express';
 
 import passIPOrUserId from '../../../middlewares/passIP';
+import privilege from '../../../middlewares/previlege';
 import validate from '../../../middlewares/validate';
 import verifyUser from '../../../middlewares/verifyUser';
 import {
@@ -25,12 +26,20 @@ const router = express.Router();
 router.get('/get/:postId', validate(getFileInputSchema, 'PARAMS'), GetFile);
 router.delete(
   '/delete',
-  [verifyUser, validate(deleteFileInputSchema, 'BODY')],
+  [
+    verifyUser,
+    privilege(['ADMIN', 'SUPERADMIN']),
+    validate(deleteFileInputSchema, 'BODY'),
+  ],
   DeleteFile
 );
 router.put(
   '/editTags',
-  [verifyUser, validate(editTagsInputSchema, 'BODY')],
+  [
+    verifyUser,
+    privilege(['ADMIN', 'USER']),
+    validate(editTagsInputSchema, 'BODY'),
+  ],
   EditTags
 );
 router.put(

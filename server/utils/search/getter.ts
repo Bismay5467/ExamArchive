@@ -31,14 +31,14 @@ export const getSortOrder = ({
   sortFilter?: TUserSortFilter;
 }) => {
   const sortOrder =
-    sortFilter === 'MOST VIEWS'
+    sortFilter === 'Most Views'
       ? { 'noOfViews.count': 'desc' }
       : { updatedAt: 'desc' };
   return sortOrder;
 };
 
 export const getProjections = () => ({
-  uploadedBy: 0,
+  uploadedBy: 1,
   file: 0,
   rating: 0,
   isFlagged: 0,

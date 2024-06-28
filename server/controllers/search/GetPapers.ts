@@ -23,6 +23,7 @@ const GetPapers = asyncErrorHandler(async (req: Request, res: Response) => {
 
   const [searchResults, totalSearches] = await Promise.all([
     Question.find(query)
+      .populate({ path: 'uploadedBy', select: { username: 1, _id: 1 } })
       .select(project)
       .sort(sortOrder as any)
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
@@ -38,7 +39,9 @@ const GetPapers = asyncErrorHandler(async (req: Request, res: Response) => {
     Number(totalSearches) / MAX_SEARCH_RESULT_FETCH_LIMIT
   );
   const hasMore = totalPages > page;
-  return res.status(SUCCESS_CODES.OK).json({ data: searchResults, hasMore });
+  return res
+    .status(SUCCESS_CODES.OK)
+    .json({ data: searchResults, hasMore, totalSearches });
 });
 
 export default GetPapers;
