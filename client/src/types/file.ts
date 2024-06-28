@@ -3,9 +3,22 @@ export interface IFileData {
   createdAt: string;
   examType: string;
   file: {
+    filename: string;
+    publicId: string;
     url: string;
   };
   institutionName: string;
+  isFlagged: boolean;
+  noOfDownloads: {
+    count: number;
+    ips: Array<number>; // TODO: Needs further investigation
+    userIds: Array<number>;
+  };
+  noOfViews: {
+    count: number;
+    ips: Array<number>; // TODO: Needs further investigation
+    userIds: Array<number>;
+  };
   rating: Array<{
     ratingType: string;
     totalRating: number;
@@ -13,6 +26,7 @@ export interface IFileData {
     _id: string;
   }>;
   semester: string;
+  status: string;
   subjectCode: string;
   subjectName: string;
   tags: Array<string>;

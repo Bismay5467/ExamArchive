@@ -19,6 +19,9 @@ import BookmarksModal from './BookmarksModal/BookmarksModal';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import RatingSection from './RatingSection/RatingSection';
 import TagsSection from './TagsSection/TagsSection';
+import { WFullSekelton } from '@/components/Skeleton';
+import { parseUTC } from '@/utils/helpers';
+import { monthNames } from '@/constants/shared';
 
 export default function PreviewContent() {
   const [fileData, setFileData] = useState<IFileData>();
@@ -40,6 +43,7 @@ export default function PreviewContent() {
   const {
     data: response,
     error,
+    isLoading,
     mutate,
   } = useSWR(paperid ? getFileObj(paperid) : null);
 
@@ -47,6 +51,8 @@ export default function PreviewContent() {
     const parsedData = await JSON.parse(response.data.data);
     setFileData(parsedData);
   };
+
+  const { day, month, year } = parseUTC(fileData?.createdAt || '');
 
   useEffect(() => {
     if (response) {
@@ -69,22 +75,39 @@ export default function PreviewContent() {
   return (
     <>
       <h1 className="text-xl font-medium p-4 sm:text-4xl">
-        {fileData?.subjectName} ({fileData?.subjectCode})
+        {isLoading ? (
+          <WFullSekelton className="w-3/5 h-8" />
+        ) : (
+          <p>
+            {fileData?.subjectName} ({fileData?.subjectCode})
+          </p>
+        )}
       </h1>
       <div className="flex flex-row px-4 justify-between">
         <div className="flex flex-row gap-x-4 text-sm sm:text-medium sm:gap-x-12">
           <div className="flex flex-row gap-x-2">
             <FaEye className="self-center" />
-            <p className="self-center">1.8K views</p>
+            <p className="self-center">{fileData?.noOfViews.count} views</p>
           </div>
           <div className="flex flex-row gap-x-2">
             <FiDownload className="self-center" />
-            <p className="self-center">1K downloads</p>
+            <p className="self-center">
+              {fileData?.noOfDownloads.count} downloads
+            </p>
           </div>
-          <div className="hidden sm:flex sm:flex-row sm:gap-x-2">
+          <button
+            type="button"
+            className="hidden sm:flex sm:flex-row sm:gap-x-2"
+            onClick={() => {
+              const element = document.querySelector('#disscussion-forum');
+              element?.scrollIntoView({
+                behavior: 'smooth',
+              });
+            }}
+          >
             <FaRegComment className="self-center" />
             <p className="self-center">Disscussion Forum</p>
-          </div>
+          </button>
         </div>
         <div className="flex flex-row gap-x-2">
           <Button
@@ -110,7 +133,9 @@ export default function PreviewContent() {
         <div className="col-span-1 row-start-1 flex flex-col gap-y-2 text-sm sm:text-lg sm:col-span-3 sm:row-span-1 p-4">
           <div className="flex flex-row gap-x-2">
             <FaBookOpen className="self-center sm:text-2xl" />
-            <p>Semester III, 2025</p>
+            <p>
+              {fileData?.semester}, {fileData?.year}
+            </p>
           </div>
           <div className="flex flex-row gap-x-4">
             <span className="flex flex-row gap-x-2">
@@ -119,12 +144,14 @@ export default function PreviewContent() {
             </span>
             <span className="flex flex-row gap-x-2">
               <IoMdTime className="self-center sm:text-2xl" />
-              <p>May 18, 2024</p>
+              <p>
+                {monthNames[month]} {day}, {year}
+              </p>
             </span>
           </div>
           <div className="flex flex-row gap-x-2">
             <BiSolidSchool className="self-center sm:text-2xl" />
-            <p>National Institute of Technology, Karnataka</p>
+            <p>{fileData?.institutionName}</p>
           </div>
         </div>
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">

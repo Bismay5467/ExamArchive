@@ -53,9 +53,9 @@ export default function RatingSection({ postId }: { postId: string }) {
     }
     try {
       await fetcher(reqObject);
-    } catch (err) {
+    } catch (err: any) {
       toast.error('Somthing went wrong!', {
-        description: `${err}`,
+        description: `${err.response.data.message}`,
         duration: 5000,
       });
       return;
