@@ -39,7 +39,9 @@ const GetPapers = asyncErrorHandler(async (req: Request, res: Response) => {
     Number(totalSearches) / MAX_SEARCH_RESULT_FETCH_LIMIT
   );
   const hasMore = totalPages > page;
-  return res.status(SUCCESS_CODES.OK).json({ data: searchResults, hasMore });
+  return res
+    .status(SUCCESS_CODES.OK)
+    .json({ data: searchResults, hasMore, totalSearches });
 });
 
 export default GetPapers;
