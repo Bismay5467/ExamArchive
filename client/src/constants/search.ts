@@ -19,10 +19,28 @@ export const SORT_FILTER_OPTIONS = Object.freeze({
   'MOST RECENT': 'Most Recent',
 });
 
+export const getExamNames = (data: Record<string, string>) =>
+  Object.entries(data).map(([key, value]) => ({ id: key, val: value }));
+
 export const SEARCH_FILTTER_OPTIONS: TFilterOption[] = [
-  { label: 'Sort By', options: SORT_FILTER_OPTIONS, key: 'sortFilter' },
-  { label: 'Year', options: FILTER_YEAR_OPTIONS, key: 'year' },
-  { label: 'Exam Type', options: EXAM_TYPES.INSTITUTIONAL, key: 'examType' },
+  {
+    label: 'Sort By',
+    options: SORT_FILTER_OPTIONS,
+    key: 'sortFilter',
+    component: 'radio',
+  },
+  {
+    label: 'Year',
+    options: FILTER_YEAR_OPTIONS,
+    key: 'year',
+    component: 'radio',
+  },
+  {
+    label: 'Exam Type',
+    options: getExamNames(EXAM_TYPES.INSTITUTIONAL),
+    key: 'examType',
+    component: 'autocomplete',
+  },
 ];
 
 // TODO: attach all the fields involved

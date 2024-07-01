@@ -29,6 +29,9 @@ module.exports = {
       colors: {
         'primary-background': '#F5F5F5',
       },
+      fontFamily: {
+        natosans: ['Noto Sans JP', 'sans-serif'],
+      },
       keyframes: {
         'caret-blink': {
           '0%,70%,100%': { opacity: '1' },

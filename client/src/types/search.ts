@@ -20,8 +20,9 @@ export type TFilterInputs = keyof IFilterInputs;
 
 export interface TFilterOption {
   label: string;
-  options: Record<string, string>;
+  options: Record<string, string> | Record<string, string>[];
   key: TFilterInputs;
+  component: 'radio' | 'autocomplete';
 }
 
 export interface ISearchInputs extends IFilterInputs {

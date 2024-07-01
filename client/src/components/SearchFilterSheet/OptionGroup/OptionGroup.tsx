@@ -1,4 +1,4 @@
-import { Radio, RadioGroup } from '@nextui-org/react';
+import { Radio, RadioGroup, cn } from '@nextui-org/react';
 import React from 'react';
 import { IFilterInputs } from '@/types/search';
 
@@ -25,7 +25,18 @@ export default function OptionGroup({
         }
       >
         {Object.entries(options).map(([optionKey, optionVal]) => (
-          <Radio key={optionKey} value={optionVal}>
+          <Radio
+            key={optionKey}
+            value={optionVal}
+            color="secondary"
+            classNames={{
+              base: cn(
+                'inline-flex m-0 items-center justify-between',
+                'flex-row-reverse max-w-[300px] cursor-pointer rounded-lg gap-4 p-3 border-2 border-slate-300',
+                'data-[selected=true]:border-secondary font-natosans'
+              ),
+            }}
+          >
             {optionVal}
           </Radio>
         ))}

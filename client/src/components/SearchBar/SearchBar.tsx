@@ -18,7 +18,8 @@ export default function SearchBar({ className }: { className?: string }) {
     <Input
       value={searchField}
       size="md"
-      radius="sm"
+      variant="bordered"
+      radius="full"
       className={className}
       placeholder="Enter comma separated values"
       onValueChange={handleSearch}
