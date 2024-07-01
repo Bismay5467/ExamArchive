@@ -22,6 +22,7 @@ import {
   ChipProps,
   Chip,
   Spinner,
+  useDisclosure,
 } from '@nextui-org/react';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { MdDelete } from 'react-icons/md';
@@ -36,6 +37,7 @@ import {
   TModeratorRole,
 } from '@/types/superadmin';
 import { OperationsEntryColumns } from '@/constants/operations';
+import InviteModal from './InviteModal/InviteModal';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   ACCEPTED: 'success',
@@ -53,6 +55,7 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
     mutate,
     isValidating,
   } = useSWR(getModeratorsObj({ role: varient }, jwtToken));
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
   const userData: Array<IMderatorDetails> = response?.data.data ?? [];
   const isAdmin = varient === 'ADMIN';
@@ -223,6 +226,7 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
           variant="bordered"
           startContent={<IoPersonAddOutline className="text-lg" />}
           radius="sm"
+          onPress={onOpen}
         >
           Invite
         </Button>
@@ -250,39 +254,47 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
   );
 
   return (
-    <Table
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      bottomContent={pages >= 1 ? bottomContent : null}
-      bottomContentPlacement="outside"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      selectionMode="single"
-      radius="sm"
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={OperationsEntryColumns}>
-        {({ name, uid, sortable }) => (
-          <TableColumn key={uid} allowsSorting={sortable}>
-            {name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody
-        emptyContent="No files found"
-        items={items}
-        isLoading={isLoading || isValidating}
-        loadingContent={<Spinner />}
+    <>
+      <Table
+        aria-label="Example table with custom cells, pagination and sorting"
+        isHeaderSticky
+        bottomContent={pages >= 1 ? bottomContent : null}
+        bottomContentPlacement="outside"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        selectionMode="single"
+        radius="sm"
+        onSortChange={setSortDescriptor}
       >
-        {(item) => (
-          <TableRow key={item.userId}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        <TableHeader columns={OperationsEntryColumns}>
+          {({ name, uid, sortable }) => (
+            <TableColumn key={uid} allowsSorting={sortable}>
+              {name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          emptyContent="No files found"
+          items={items}
+          isLoading={isLoading || isValidating}
+          loadingContent={<Spinner />}
+        >
+          {(item) => (
+            <TableRow key={item.userId}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <InviteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpenChange={onOpenChange}
+        role={varient}
+      />
+    </>
   );
 }

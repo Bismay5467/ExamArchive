@@ -15,7 +15,11 @@ import {
   editCommentObj,
   reactToCommentObj,
 } from './comments';
-import { getModeratorsObj, removeModeratorObj } from './superadmin';
+import {
+  getModeratorsObj,
+  removeModeratorObj,
+  addModeratorObj,
+} from './superadmin';
 
 export {
   getSearchRequestObj,
@@ -36,4 +40,5 @@ export {
   reactToCommentObj,
   getModeratorsObj,
   removeModeratorObj,
+  addModeratorObj,
 };

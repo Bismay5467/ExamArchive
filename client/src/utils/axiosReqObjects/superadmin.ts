@@ -42,3 +42,23 @@ export const removeModeratorObj = (
 
   return axiosObj;
 };
+
+export const addModeratorObj = (
+  moderator: IModerator,
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.SUPER_ADMIN}/add`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: moderator },
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
