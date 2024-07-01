@@ -34,6 +34,12 @@ const FileUpload = React.lazy(
 const DashHome = React.lazy(
   () => import('@/pages/DashBoard/DashHome/DashHome.tsx')
 );
+const Operations = React.lazy(
+  () => import('@/pages/DashBoard/Operations/Operations.tsx')
+);
+const Moderation = React.lazy(
+  () => import('@/pages/DashBoard/Moderation/Moderation.tsx')
+);
 const TabularFolderView = React.lazy(
   () => import('@/components/TabularView/TabularFolderView.tsx')
 );
@@ -48,6 +54,9 @@ const router = createBrowserRouter(
       <Route path="preview/:paperid" element={<Preview />} />
       <Route path="dashboard/:userid/" element={<DashBoard />}>
         <Route path="" element={<DashHome />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="operations" element={<Operations />} />
+        <Route path="moderation" element={<Moderation />} />
         <Route path="profile" element={<Profile />} />
         <Route path="bookmarks" element={<Bookmarks />}>
           <Route

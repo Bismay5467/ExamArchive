@@ -24,4 +24,5 @@ export const SERVER_ROUTES = Object.freeze({
   BOOKMARK: '/api/v1/bookmark',
   UPDATE_CACHE: '/api/v1/superAdmin/update',
   COMMENT: '/api/v1/comment',
+  SUPER_ADMIN: '/api/v1/superAdmin',
 });
