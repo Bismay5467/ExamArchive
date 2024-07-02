@@ -4,7 +4,7 @@ import ParentCommentForm from './CommentForm/ParentCommentForm';
 import ParentCommentBox from './CommentBox/ParentCommentBox';
 import { useComments } from '@/hooks/useComments';
 import { IComment } from '@/types/comments';
-import Skeleton from './Skeleton/Skeleton';
+import CommentShimmer from '../Shimmer/Shimmer';
 
 export default function Comments() {
   const {
@@ -59,7 +59,7 @@ export default function Comments() {
           commentMutations={mutations}
         />
       ))}
-      {(isLoading || isValidating) && !isLastPage && <Skeleton />}
+      {(isLoading || isValidating) && !isLastPage && <CommentShimmer />}
       {isLastPage && (
         <p className="text-slate-400 font-medium cursor-pointer w-fit self-center">
           End of disscussion...

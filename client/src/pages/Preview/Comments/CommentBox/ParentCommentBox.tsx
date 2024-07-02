@@ -24,8 +24,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import ReplyCommentBox from './ReplyCommentBox';
 import ReplyCommentForm from '../CommentForm/ReplyCommentForm';
-import Skeleton from '../Skeleton/Skeleton';
 import WarningModal from '@/components/WarningModal/WarningModal';
+import CommentShimmer from '../../Shimmer/Shimmer';
 
 export default function ParentCommentBox({
   commentData,
@@ -290,7 +290,7 @@ export default function ParentCommentBox({
             />
           ))}
         {(isLoading || isValidating) && !isLastPage && !isReplying && (
-          <Skeleton />
+          <CommentShimmer />
         )}
         {showReplies && !isLoading && !isValidating && !isLastPage && (
           <button
