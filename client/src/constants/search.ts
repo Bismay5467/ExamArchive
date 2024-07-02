@@ -37,9 +37,9 @@ export const SEARCH_FILTTER_OPTIONS: TFilterOption[] = [
   },
   {
     label: 'Exam Type',
-    options: getExamNames(EXAM_TYPES.INSTITUTIONAL),
+    options: EXAM_TYPES.INSTITUTIONAL,
     key: 'examType',
-    component: 'autocomplete',
+    component: 'radio',
   },
 ];
 

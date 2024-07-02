@@ -39,7 +39,21 @@ export function SearchFilterSheet() {
     year: undefined,
     sortFilter: undefined,
   });
-  useSWR(requestObj);
+  const { data: response } = useSWR(requestObj);
+
+  useEffect(() => {
+    if (response) {
+      SEARCH_FILTTER_OPTIONS.push({
+        component: 'autocomplete',
+        key: 'subjectName',
+        label: 'Subject Name',
+        options: response.data.data.map((val: any, idx: number) => ({
+          key: idx.toString(),
+          val: val.subjectName,
+        })),
+      });
+    }
+  }, [response]);
 
   useEffect(() => {
     const { subjectName, examType, year, sortFilter } = searchInputs;
@@ -48,6 +62,14 @@ export function SearchFilterSheet() {
 
   const handleApplyFilters = () => {
     setFilters(filter);
+  };
+  const handleClearFilters = () => {
+    setFilters({
+      subjectName: undefined,
+      examType: undefined,
+      year: undefined,
+      sortFilter: undefined,
+    });
   };
 
   return (
@@ -69,9 +91,9 @@ export function SearchFilterSheet() {
           </SheetTitle>
         </SheetHeader>
         <div className="no-scrollbar overflow-y-auto h-[100%]">
-          {SEARCH_FILTTER_OPTIONS.map(
-            ({ key, label, options, component }, index) => (
-              <Accordion>
+          <Accordion>
+            {SEARCH_FILTTER_OPTIONS.map(
+              ({ key, label, options, component }, index) => (
                 <AccordionItem
                   key={key}
                   aria-label={key}
@@ -93,22 +115,33 @@ export function SearchFilterSheet() {
                   {component === 'autocomplete' && (
                     <Autocomplete
                       variant="bordered"
+                      aria-label="auto-complete filter"
                       defaultItems={options as Record<string, string>[]}
                       placeholder="Select exam types"
                       className="max-w-xs h-9"
                       radius="full"
+                      key={index}
+                      defaultSelectedKey={
+                        filter[key as keyof IFilterInputs] ?? ''
+                      }
+                      onSelectionChange={(val) =>
+                        setFilter((prevState) => ({
+                          ...prevState,
+                          [key]: val as any,
+                        }))
+                      }
                     >
                       {(item) => (
-                        <AutocompleteItem key={item.val}>
+                        <AutocompleteItem key={item.key}>
                           {item.val}
                         </AutocompleteItem>
                       )}
                     </Autocomplete>
                   )}
                 </AccordionItem>
-              </Accordion>
-            )
-          )}
+              )
+            )}
+          </Accordion>
         </div>
         <SheetFooter>
           <SheetClose asChild>
@@ -131,7 +164,7 @@ export function SearchFilterSheet() {
                 color="danger"
                 radius="sm"
                 startContent={<MdClear />}
-                onClick={handleApplyFilters}
+                onClick={handleClearFilters}
               >
                 CLEAR ALL
               </Button>

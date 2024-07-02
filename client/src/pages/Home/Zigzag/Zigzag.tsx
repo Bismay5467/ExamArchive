@@ -1,7 +1,7 @@
 import { Image } from '@nextui-org/react';
-import FeatImage01 from '@/assets/home-page-images/features-03-image-01.png';
-import FeatImage02 from '@/assets/home-page-images/features-03-image-02.png';
-import FeatImage03 from '@/assets/home-page-images/features-03-image-03.png';
+import FeatImage01 from '@/assets/images/features-03-image-01.png';
+import FeatImage02 from '@/assets/images/features-03-image-02.png';
+import FeatImage03 from '@/assets/images/features-03-image-03.png';
 
 export default function Zigzag() {
   return (

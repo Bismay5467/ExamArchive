@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Image } from '@nextui-org/react';
-import TestimonialImage01 from '@/assets/home-page-images/testimonial-01.jpg';
-import TestimonialImage02 from '@/assets/home-page-images/testimonial-02.jpg';
-import TestimonialImage03 from '@/assets/home-page-images/testimonial-03.jpg';
+import TestimonialImage01 from '@/assets/images/testimonial-01.jpg';
+import TestimonialImage02 from '@/assets/images/testimonial-02.jpg';
+import TestimonialImage03 from '@/assets/images/testimonial-03.jpg';
 
 export default function Testimonials() {
   return (
