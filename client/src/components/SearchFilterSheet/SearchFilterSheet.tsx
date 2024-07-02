@@ -51,9 +51,10 @@ export function SearchFilterSheet() {
           key: idx.toString(),
           val: val.subjectName,
         })),
+        multiple: false,
       });
     }
-  }, [response]);
+  }, [JSON.stringify(response)]);
 
   useEffect(() => {
     const { subjectName, examType, year, sortFilter } = searchInputs;
@@ -93,7 +94,7 @@ export function SearchFilterSheet() {
         <div className="no-scrollbar overflow-y-auto h-[100%]">
           <Accordion>
             {SEARCH_FILTTER_OPTIONS.map(
-              ({ key, label, options, component }, index) => (
+              ({ key, label, options, component, multiple }, index) => (
                 <AccordionItem
                   key={key}
                   aria-label={key}
@@ -110,31 +111,34 @@ export function SearchFilterSheet() {
                       setFilter={setFilter}
                       filterKey={key}
                       options={options as Record<string, string>}
+                      multiple={multiple}
                     />
                   )}
                   {component === 'autocomplete' && (
                     <Autocomplete
                       variant="bordered"
-                      aria-label="auto-complete filter"
-                      defaultItems={options as Record<string, string>[]}
+                      // defaultItems={options as Record<string, string>[]}
                       placeholder="Select exam types"
                       className="max-w-xs h-9"
                       radius="full"
                       key={index}
-                      defaultSelectedKey={
-                        filter[key as keyof IFilterInputs] ?? ''
-                      }
-                      onSelectionChange={(val) =>
-                        setFilter((prevState) => ({
-                          ...prevState,
-                          [key]: val as any,
-                        }))
-                      }
+                      // defaultSelectedKey={
+                      //   filter[key as keyof IFilterInputs] ?? ''
+                      // }
+                      // onSelectionChange={(val) => {
+                      //   console.log(val);
+                      //   setFilter((prevState) => ({
+                      //     ...prevState,
+                      //     [key]: val as any,
+                      //   }));
+                      // }}
                     >
-                      {(item) => (
-                        <AutocompleteItem key={item.key}>
-                          {item.val}
-                        </AutocompleteItem>
+                      {[{ key: 'abc', val: 'abc', label: 'abc' }].map(
+                        (option) => (
+                          <AutocompleteItem key={option.key} value={option.val}>
+                            {option.label}
+                          </AutocompleteItem>
+                        )
                       )}
                     </Autocomplete>
                   )}

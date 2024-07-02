@@ -31,8 +31,9 @@ export default function Search() {
       <div className="flex flex-col gap-y-8 justify-center mt-8 sm:px-24">
         {isLoading ? (
           <>
-            <ResultCardShimmer />
-            <ResultCardShimmer />
+            {Array.from({ length: 5 }).map((_, index) => (
+              <ResultCardShimmer key={index} />
+            ))}
           </>
         ) : (
           <>

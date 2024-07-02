@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Radio, RadioGroup, cn } from '@nextui-org/react';
 import React from 'react';
 import { IFilterInputs } from '@/types/search';
@@ -7,11 +8,13 @@ export default function OptionGroup({
   options,
   filter,
   setFilter,
+  multiple,
 }: {
   filterKey: string;
   options: Record<string, string>;
   filter: IFilterInputs;
   setFilter: React.Dispatch<React.SetStateAction<IFilterInputs>>;
+  multiple: boolean;
 }) {
   return (
     <div className="flex flex-col gap-3">

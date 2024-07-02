@@ -28,18 +28,21 @@ export const SEARCH_FILTTER_OPTIONS: TFilterOption[] = [
     options: SORT_FILTER_OPTIONS,
     key: 'sortFilter',
     component: 'radio',
+    multiple: false,
   },
   {
     label: 'Year',
     options: FILTER_YEAR_OPTIONS,
     key: 'year',
     component: 'radio',
+    multiple: false,
   },
   {
     label: 'Exam Type',
     options: EXAM_TYPES.INSTITUTIONAL,
     key: 'examType',
     component: 'radio',
+    multiple: true,
   },
 ];
 

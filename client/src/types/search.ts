@@ -23,6 +23,7 @@ export interface TFilterOption {
   options: Record<string, string> | Record<string, string>[];
   key: TFilterInputs;
   component: 'radio' | 'autocomplete';
+  multiple: boolean;
 }
 
 export interface ISearchInputs extends IFilterInputs {
@@ -62,4 +63,8 @@ export interface ISearchData {
   year: string;
   __v: number;
   _id: string;
+  uploadedBy: {
+    _id: string;
+    username: string;
+  };
 }
