@@ -1,7 +1,7 @@
 import getSearchRequestObj from './search';
 import { getResetObj, getSignInObj, getSignUpObj } from './auth';
 import { getFileObj, deleteFileObj } from './file';
-import { reportObj } from './report';
+import { reportObj, resolveReportObj, viewReportsObj } from './report';
 import {
   getFilesDataObj,
   createFolderObj,
@@ -28,6 +28,8 @@ export {
   getResetObj,
   getFileObj,
   reportObj,
+  resolveReportObj,
+  viewReportsObj,
   deleteFileObj,
   getFilesDataObj,
   createFolderObj,
