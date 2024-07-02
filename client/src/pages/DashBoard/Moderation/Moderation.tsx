@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-magic-numbers */
-/* eslint-disable function-paren-newline */
+
 /* eslint-disable no-nested-ternary */
 import { Key, useCallback, useMemo, useState } from 'react';
 import {
