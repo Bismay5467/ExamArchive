@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-underscore-dangle */
 import SearchBar from '@/components/SearchBar/SearchBar';
 import { SearchFilterSheet } from '@/components/SearchFilterSheet/SearchFilterSheet';
