@@ -89,29 +89,29 @@ export default function ResultCard({
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
           <div className="flex flex-row gap-x-4">
             <div className="self-center flex flex-row gap-x-2">
-              <LuFileCode2 className="self-center text-xl text-blue-500" />{' '}
+              <LuFileCode2 className="self-center text-xl text-blue-600" />{' '}
               <p className="text-blue-600">{subjectCode}</p>
             </div>
             <div className="self-center flex flex-row gap-x-2">
-              <IoPersonOutline className="self-center text-xl text-blue-500" />{' '}
+              <IoPersonOutline className="self-center text-xl text-blue-600" />{' '}
               <p className="text-blue-600">{username ?? 'ExamArchive User'}</p>
             </div>
-            <div className="self-center flex flex-row gap-x-2 text-orange-500">
+            <div className="self-center flex flex-row gap-x-2 text-orange-600">
               <LuCalendarClock className="self-center text-lg" />{' '}
               <p className="text-orange-600">{examyear}</p>
             </div>
           </div>
           <div className="hidden md:flex md:flex-row md:gap-x-4">
             <div className="self-center flex flex-row gap-x-2">
-              <SiGoogleclassroom className="self-center text-xl text-blue-500" />{' '}
+              <SiGoogleclassroom className="self-center text-xl text-blue-600" />{' '}
               <p className="text-blue-600">{branch}</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-3">
+        <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
           <div className="flex flex-row gap-x-4">
             <div className="flex flex-row gap-x-2">
-              <MdOutlineSchool className="self-center text-xl text-pink-400" />{' '}
+              <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
               <p className="self-center text-pink-600">{institutionName}</p>
             </div>
           </div>
@@ -122,8 +122,8 @@ export default function ResultCard({
               <Chip
                 key={val}
                 classNames={{
-                  base: 'bg-transparent border-small border-orange-600',
-                  content: 'text-orange-600',
+                  base: 'bg-violet-100 border-small border-violet-700',
+                  content: 'text-violet-700',
                 }}
               >
                 {val.toLowerCase()}

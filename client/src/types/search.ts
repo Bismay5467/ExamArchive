@@ -35,6 +35,7 @@ export interface ISearchContext {
   swrResponse: SWRInfiniteResponse<any, any>;
   setSearchParam(_query: string): void;
   setFilters(_filters: IFilterInputs): void;
+  clearFilters(): void;
 }
 
 export interface ISearchInput {

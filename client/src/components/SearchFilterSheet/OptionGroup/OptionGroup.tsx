@@ -16,6 +16,7 @@ export default function OptionGroup({
   setFilter: React.Dispatch<React.SetStateAction<IFilterInputs>>;
   multiple: boolean;
 }) {
+  // console.log(filter, filterKey);
   return (
     <div className="flex flex-col gap-3">
       <RadioGroup

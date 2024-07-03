@@ -32,7 +32,7 @@ export function SearchFilterSheet() {
     url: `${SERVER_ROUTES.SEARCH}/getSubjectFilters`,
     method: 'GET',
   };
-  const { setFilters, searchInputs } = useSearch();
+  const { setFilters, searchInputs, clearFilters } = useSearch();
   const [filter, setFilter] = useState<IFilterInputs>({
     subjectName: undefined,
     examType: undefined,
@@ -65,12 +65,7 @@ export function SearchFilterSheet() {
     setFilters(filter);
   };
   const handleClearFilters = () => {
-    setFilters({
-      subjectName: undefined,
-      examType: undefined,
-      year: undefined,
-      sortFilter: undefined,
-    });
+    clearFilters();
   };
 
   return (

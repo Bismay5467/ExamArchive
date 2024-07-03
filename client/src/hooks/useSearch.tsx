@@ -26,6 +26,7 @@ const SearchContext = createContext<ISearchContext>({
   swrResponse: defaultSWRResponseState,
   setFilters: (_filters) => {},
   setSearchParam: (_query: string) => {},
+  clearFilters: () => {},
 });
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
@@ -63,6 +64,13 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     setURLSearchParams({ ...currentParams });
   };
 
+  const clearFilters = () => {
+    const currentParams: ISearchInputs = {
+      searchParams: searchInputs.searchParams,
+    };
+    setURLSearchParams({ ...currentParams });
+  };
+
   useEffect(() => {
     const currentSearchInputs = { searchParams: '' } as any;
     urlSearchParams.forEach((value: any, key: any) => {
@@ -74,7 +82,13 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   return (
     <SearchContext.Provider
       // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{ searchInputs, setFilters, setSearchParam, swrResponse }}
+      value={{
+        searchInputs,
+        setFilters,
+        setSearchParam,
+        swrResponse,
+        clearFilters,
+      }}
     >
       {children}
     </SearchContext.Provider>
