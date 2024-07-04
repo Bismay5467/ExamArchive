@@ -41,7 +41,7 @@ const GetPapers = asyncErrorHandler(async (req: Request, res: Response) => {
   const hasMore = totalPages > page;
   return res
     .status(SUCCESS_CODES.OK)
-    .json({ data: searchResults, hasMore, totalSearches });
+    .json({ data: searchResults, totalResults: totalSearches, hasMore });
 });
 
 export default GetPapers;
