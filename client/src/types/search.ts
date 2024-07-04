@@ -20,7 +20,12 @@ export type TFilterInputs = keyof IFilterInputs;
 
 export interface TFilterOption {
   label: string;
-  options: Record<string, string> | Record<string, string>[];
+  options:
+    | Record<string, string>
+    | Record<string, string>[]
+    | Array<{
+        label: string;
+      }>;
   key: TFilterInputs;
   component: 'radio' | 'autocomplete';
   multiple: boolean;
