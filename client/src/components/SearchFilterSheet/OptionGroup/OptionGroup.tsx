@@ -7,14 +7,11 @@ export default function OptionGroup({
   options,
   filter,
   setFilter,
-  // eslint-disable-next-line no-unused-vars
-  multiple,
 }: {
   filterKey: string;
   options: Record<string, string>;
   filter: IFilterInputs;
   setFilter: React.Dispatch<React.SetStateAction<IFilterInputs>>;
-  multiple: boolean;
 }) {
   // console.log(filter, filterKey);
   return (
