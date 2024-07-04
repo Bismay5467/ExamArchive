@@ -8,13 +8,11 @@ export default function OptionGroup({
   options,
   filter,
   setFilter,
-  multiple,
 }: {
   filterKey: string;
   options: Record<string, string>;
   filter: IFilterInputs;
   setFilter: React.Dispatch<React.SetStateAction<IFilterInputs>>;
-  multiple: boolean;
 }) {
   // console.log(filter, filterKey);
   return (
