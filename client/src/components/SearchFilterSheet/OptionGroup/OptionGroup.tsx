@@ -16,30 +16,14 @@ export default function OptionGroup({
   setFilter: React.Dispatch<React.SetStateAction<IFilterInputs>>;
 }) {
   const handleChange = (selectedKeys: string[]) => {
-    // if (selectedKeys.length === 1) {
-    //   console.log(selectedKeys);
+    const newFilter = multiple
+      ? selectedKeys.join(',')
+      : selectedKeys[selectedKeys.length - 1];
 
-    //   const newFilter = Object.fromEntries(
-    //     Object.entries(filter).filter(([key, _]) => key !== filterKey)
-    //   );
-    //   console.log(newFilter);
-
-    //   setFilter(newFilter);
-    //   return;
-    // }
-
-    if (multiple) {
-      setFilter((prevState) => ({
-        ...prevState,
-        [filterKey]: selectedKeys.join(',') as any,
-      }));
-    } else {
-      const selectedKey = selectedKeys[selectedKeys.length - 1];
-      setFilter((prevState) => ({
-        ...prevState,
-        [filterKey]: selectedKey as any,
-      }));
-    }
+    setFilter((prevState) => ({
+      ...prevState,
+      [filterKey]: newFilter as any,
+    }));
   };
   return (
     <div className="flex flex-col gap-1 w-full">
