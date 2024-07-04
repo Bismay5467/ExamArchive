@@ -1,10 +1,10 @@
-import { Card, CardBody, Divider, Chip } from '@nextui-org/react';
+import { Card, CardBody, Divider, Chip, CardHeader } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
-import { IoPersonOutline } from 'react-icons/io5';
+import { IoDocument } from 'react-icons/io5';
+import { FaRegNoteSticky } from 'react-icons/fa6';
 import { FaEye } from 'react-icons/fa';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { MdOutlineSchool } from 'react-icons/md';
-import { BsFileEarmarkPdf } from 'react-icons/bs';
 import { LuCalendarClock, LuDownload, LuFileCode2 } from 'react-icons/lu';
 import { ISearchData } from '@/types/search';
 import { parseUTC } from '@/utils/helpers';
@@ -39,18 +39,18 @@ export default function ResultCard({
     noOfDownloads: { count: downloadCount },
     noOfViews: { count: viewCount },
     year: examyear,
-    createdAt,
+    updatedAt,
     subjectName,
+    examType,
     tags,
     subjectCode,
     branch,
     _id,
-    uploadedBy: { username },
   },
 }: {
   data: ISearchData;
 }) {
-  const { day, month, year } = parseUTC(createdAt);
+  const { day, month, year } = parseUTC(updatedAt);
   const navigate = useNavigate();
   return (
     <Card
@@ -65,27 +65,18 @@ export default function ResultCard({
         navigate(`${CLIENT_ROUTES.FILE_PREVIEW}/${_id}`);
       }}
     >
-      <CardBody className="flex gap-3 text-sm px-8 text-slate-700 bg-[#f7f7f7] sm:text-lg">
-        <div className="flex flex-row justify-between gap-y-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between">
-          <div className="flex flex-row gap-x-4">
-            <div className="self-center flex flex-row gap-x-2">
-              <BsFileEarmarkPdf className="self-center text-2xl text-red-500" />
-              <span className="self-center">
-                {subjectName
-                  .toLowerCase()
-                  .replace(/\b\w/g, (char) => char.toUpperCase())}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-row gap-x-4">
-            <div className="self-center flex flex-row gap-x-2 text-sm text-slate-500">
-              <p>{`${monthNames[month - 1]} ${day}, ${year}`}</p>
-            </div>
-          </div>
+      <CardHeader className="flex gap-3 text-sm px-8 text-slate-700 bg-[#f7f7f7] sm:text-lg">
+        <div className="flex flex-row justify-between gap-x-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between">
+          <IoDocument className="self-center text-2xl text-blue-600" />
+          <span className="self-center font-extrabold text-sm sm:text-medium">
+            {subjectName
+              .toLowerCase()
+              .replace(/\b\w/g, (char) => char.toUpperCase())}
+          </span>
         </div>
-      </CardBody>
+      </CardHeader>
       <Divider />
-      <CardBody className="flex flex-col gap-y-4 px-8 text-slate-600 font-normal">
+      <CardBody className="flex flex-col gap-y-3 px-8 text-slate-600 font-normal">
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
           <div className="flex flex-row gap-x-4">
             <div className="self-center flex flex-row gap-x-2">
@@ -93,12 +84,12 @@ export default function ResultCard({
               <p className="text-blue-600">{subjectCode}</p>
             </div>
             <div className="self-center flex flex-row gap-x-2">
-              <IoPersonOutline className="self-center text-xl text-blue-600" />{' '}
-              <p className="text-blue-600">{username ?? 'ExamArchive User'}</p>
+              <FaRegNoteSticky className="self-center text-xl text-blue-600" />{' '}
+              <p className="text-blue-600">{examType}</p>
             </div>
-            <div className="self-center flex flex-row gap-x-2 text-orange-600">
+            <div className="self-center flex flex-row gap-x-2 text-pink-600">
               <LuCalendarClock className="self-center text-lg" />{' '}
-              <p className="text-orange-600">{examyear}</p>
+              <p className="text-pink-600">{examyear}</p>
             </div>
           </div>
           <div className="hidden md:flex md:flex-row md:gap-x-4">
@@ -109,11 +100,15 @@ export default function ResultCard({
           </div>
         </div>
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
-          <div className="flex flex-row gap-x-4">
-            <div className="flex flex-row gap-x-2">
-              <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
-              <p className="self-center text-pink-600">{institutionName}</p>
-            </div>
+          <div className="flex flex-row gap-x-2 px-2 w-fit bg-pink-600/10 rounded-full">
+            <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
+            <p className="self-center text-pink-600">{institutionName}</p>
+          </div>
+          <div className="self-center hidden gap-x-2 text-sm text-slate-500 sm:flex sm:flex-row">
+            <p>
+              Last updated at:{' '}
+              <span className="bg-slate-200 px-2 py-1 rounded-lg">{`${monthNames[month - 1]} ${day}, ${year}`}</span>
+            </p>
           </div>
         </div>
         <div className="flex flex-col pb-2 gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
@@ -122,7 +117,7 @@ export default function ResultCard({
               <Chip
                 key={val}
                 classNames={{
-                  base: 'bg-violet-100 border-small border-violet-700',
+                  base: 'bg-violet-100',
                   content: 'text-violet-700',
                 }}
               >
@@ -133,7 +128,7 @@ export default function ResultCard({
               +{tags.length - MAX_TAGS_TO_DISPLAY} more
             </p>
           </div>
-          <div className="hidden lg:flex lg:flex-row lg:gap-x-4 text-md">
+          <div className="hidden gap-x-4 text-md sm:flex sm:flex-row">
             <div className="self-center flex flex-row gap-x-2">
               <FaEye className="self-center text-slate-500" />{' '}
               <p className="text-slate-500 text-sm">
