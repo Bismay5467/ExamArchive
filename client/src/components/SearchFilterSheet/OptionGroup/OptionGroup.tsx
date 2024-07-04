@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Radio, RadioGroup, cn } from '@nextui-org/react';
 import React from 'react';
 import { IFilterInputs } from '@/types/search';
@@ -8,6 +7,7 @@ export default function OptionGroup({
   options,
   filter,
   setFilter,
+  // eslint-disable-next-line no-unused-vars
   multiple,
 }: {
   filterKey: string;
@@ -48,3 +48,13 @@ export default function OptionGroup({
     </div>
   );
 }
+
+/*
+ defaultValue={filter[filterKey as keyof IFilterInputs] ?? ''}
+        onValueChange={(val) =>
+          setFilter((prevState) => ({
+            ...prevState,
+            [filterKey]: val as any,
+          }))
+        }
+*/
