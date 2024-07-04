@@ -12,6 +12,7 @@ import { Toaster } from '@/components/ui/sonner';
 import fetcher from './utils/fetcher/fetcher.ts';
 import { AUTH_TOKEN } from './constants/auth.ts';
 import { TEMP_JWT_TOKEN_HARDCODED } from './constants/shared.ts';
+import { SearchProvider } from './hooks/useSearch.tsx';
 
 export default function Root() {
   const authRegex = /\/auth/;
@@ -31,14 +32,16 @@ export default function Root() {
             revalidateOnFocus: false,
           }}
         >
-          <main className="box-border min-h-screen">
-            <Sidebar />
-            <Suspense fallback={<Loading />}>
-              <Outlet />
-            </Suspense>
-            {!isAuthPage && <Footer />}
-          </main>
-          <Toaster richColors visibleToasts={9} />
+          <SearchProvider>
+            <main className="box-border min-h-screen bg-white">
+              <Sidebar />
+              <Suspense fallback={<Loading />}>
+                <Outlet />
+              </Suspense>
+              {!isAuthPage && <Footer />}
+            </main>
+            <Toaster richColors visibleToasts={9} />
+          </SearchProvider>
         </SWRConfig>
       </AuthProvider>
     </ThemeProvider>

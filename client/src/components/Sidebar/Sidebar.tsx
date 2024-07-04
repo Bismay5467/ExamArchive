@@ -1,8 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { FaBookmark, FaSearch, FaSignOutAlt } from 'react-icons/fa';
-import { SiGoogleanalytics } from 'react-icons/si';
-import { IoIosNotifications } from 'react-icons/io';
-import { IoCloudUpload } from 'react-icons/io5';
+import { FaSignOutAlt } from 'react-icons/fa';
+import {
+  IoBookmarkOutline,
+  IoCloudUploadOutline,
+  IoNotificationsOutline,
+} from 'react-icons/io5';
+import { LuFileSearch2 } from 'react-icons/lu';
+import { TbBrandGoogleAnalytics } from 'react-icons/tb';
 import {
   Avatar,
   Dropdown,
@@ -23,13 +27,13 @@ export default function Sidebar() {
     RESET,
   } = useAuth();
 
-  const activeClass = 'text-[#181ec9]';
-  const nonActiveClass = 'text-[#5b99eb]';
+  const activeClass = 'text-orange-600';
+  const nonActiveClass = 'text-slate-600';
   const baseRoute = `dashboard/${userId}`;
 
   return (
-    <nav className="fixed z-50 group max-h-[800px] h-[97.5%] w-[70px] rounded-r-xl overflow-x-hidden top-2 transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg">
-      <div className="bg-white relative h-full w-[240px] flex flex-col gap-y-16 p-3">
+    <nav className="fixed z-50 group h-screen w-[70px] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg">
+      <div className="bg-[#f7f7f7] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
         <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
           <img src={logo} alt="LOGO" className="mix-blend-multiply w-[45px]" />
           <h1 className="self-center text-xl font-semibold text-[#545454] hidden group-hover:block">
@@ -46,7 +50,7 @@ export default function Sidebar() {
                 <IconWrapper
                   className={`self-center ${isActive ? activeClass : nonActiveClass}`}
                 >
-                  <FaSearch className="text-lg" />
+                  <LuFileSearch2 className="text-xl" />
                 </IconWrapper>
                 <p
                   className={`self-center text-base font-semibold hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
@@ -65,7 +69,7 @@ export default function Sidebar() {
                 <IconWrapper
                   className={`self-center ${isActive ? activeClass : nonActiveClass}`}
                 >
-                  <FaBookmark className="text-lg " />
+                  <IoBookmarkOutline className="text-xl" />
                 </IconWrapper>
                 <p
                   className={`self-center text-base font-semibold hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
@@ -77,13 +81,13 @@ export default function Sidebar() {
           </NavLink>
           <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg cursor-not-allowed hover:bg-white">
             <IconWrapper className="self-center ">
-              <SiGoogleanalytics className="text-lg text-violet-400" />
+              <TbBrandGoogleAnalytics className="text-xl text-slate-400" />
             </IconWrapper>
             <div>
-              <p className="self-center text-sm font-semibold text-violet-400 hidden group-hover:block">
+              <p className="self-center text-sm font-semibold text-slate-400 hidden group-hover:block">
                 Analytics
               </p>
-              <p className="self-center text-sm text-violet-400 hidden group-hover:block">
+              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
                 Comming Soon
               </p>
             </div>
@@ -99,7 +103,7 @@ export default function Sidebar() {
                 <IconWrapper
                   className={`self-center ${isActive ? activeClass : nonActiveClass}`}
                 >
-                  <IoCloudUpload className="text-xl" />
+                  <IoCloudUploadOutline className="text-xl" />
                 </IconWrapper>
                 <p
                   className={`self-center text-base font-semibold hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
@@ -113,13 +117,13 @@ export default function Sidebar() {
         <div className="flex flex-col gap-y-2 mt-auto">
           <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg cursor-not-allowed hover:bg-white">
             <IconWrapper className="self-center ">
-              <IoIosNotifications className="text-2xl text-violet-400" />
+              <IoNotificationsOutline className="text-2xl text-slate-400" />
             </IconWrapper>
             <div>
-              <p className="self-center text-sm font-semibold text-violet-400 hidden group-hover:block">
+              <p className="self-center text-sm font-semibold text-slate-400 hidden group-hover:block">
                 Notifications
               </p>
-              <p className="self-center text-sm text-violet-400 hidden group-hover:block">
+              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
                 Comming Soon
               </p>
             </div>
