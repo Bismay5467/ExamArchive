@@ -89,7 +89,7 @@ export function SearchFilterSheet() {
         <div className="no-scrollbar overflow-y-auto h-[100%]">
           <Accordion>
             {SEARCH_FILTTER_OPTIONS.map(
-              ({ key, label, options, component }, index) => (
+              ({ key, label, options, component, multiple }, index) => (
                 <AccordionItem
                   key={key}
                   aria-label={key}
@@ -102,11 +102,11 @@ export function SearchFilterSheet() {
                   {component === 'radio' && (
                     <OptionGroup
                       key={index}
+                      multiple={multiple}
                       filter={filter}
                       setFilter={setFilter}
                       filterKey={key}
                       options={options as Record<string, string>}
-                      // multiple={multiple}
                     />
                   )}
                   {component === 'autocomplete' && (
