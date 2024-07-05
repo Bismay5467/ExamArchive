@@ -1,10 +1,7 @@
-import {
-  Accordion,
-  AccordionItem,
-  Autocomplete,
-  AutocompleteItem,
-  Button,
-} from '@nextui-org/react';
+/* eslint-disable function-paren-newline */
+import { Accordion, AccordionItem, Button } from '@nextui-org/react';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { IoFilter } from 'react-icons/io5';
 import { TbFilterSearch } from 'react-icons/tb';
 import useSWR from 'swr';
@@ -47,9 +44,13 @@ export function SearchFilterSheet() {
         component: 'autocomplete',
         key: 'subjectName',
         label: 'Subject Name',
-        options: response.data.data.map((val: any, idx: number) => ({
-          key: idx.toString(),
-          val: val.subjectName,
+        options: response.data.data.map((val: any) => ({
+          label: val.subjectName
+            .split(' ')
+            .map((word: string) =>
+              word.charAt(0).toUpperCase().concat(word.slice(1).toLowerCase())
+            )
+            .join(' '),
         })),
         multiple: false,
       });
@@ -89,7 +90,7 @@ export function SearchFilterSheet() {
         <div className="no-scrollbar overflow-y-auto h-[100%]">
           <Accordion>
             {SEARCH_FILTTER_OPTIONS.map(
-              ({ key, label, options, component }, index) => (
+              ({ key, label, options, component, multiple }, index) => (
                 <AccordionItem
                   key={key}
                   aria-label={key}
@@ -102,40 +103,33 @@ export function SearchFilterSheet() {
                   {component === 'radio' && (
                     <OptionGroup
                       key={index}
+                      multiple={multiple}
                       filter={filter}
                       setFilter={setFilter}
                       filterKey={key}
                       options={options as Record<string, string>}
-                      // multiple={multiple}
                     />
                   )}
                   {component === 'autocomplete' && (
                     <Autocomplete
-                      variant="bordered"
-                      // defaultItems={options as Record<string, string>[]}
-                      placeholder="Select exam types"
-                      className="max-w-xs h-9"
-                      radius="full"
-                      key={index}
-                      // defaultSelectedKey={
-                      //   filter[key as keyof IFilterInputs] ?? ''
-                      // }
-                      // onSelectionChange={(val) => {
-                      //   console.log(val);
-                      //   setFilter((prevState) => ({
-                      //     ...prevState,
-                      //     [key]: val as any,
-                      //   }));
-                      // }}
-                    >
-                      {[{ key: 'abc', val: 'abc', label: 'abc' }].map(
-                        (option) => (
-                          <AutocompleteItem key={option.key} value={option.val}>
-                            {option.label}
-                          </AutocompleteItem>
-                        )
-                      )}
-                    </Autocomplete>
+                      disablePortal
+                      options={
+                        options as Array<{
+                          label: string;
+                        }>
+                      }
+                      className="border rounded-lg"
+                      renderInput={(params) => <TextField {...params} />}
+                      value={{
+                        label: filter[key as keyof IFilterInputs] ?? '',
+                      }}
+                      onChange={(_, newValue) => {
+                        setFilter((prevState) => ({
+                          ...prevState,
+                          [key]: newValue?.label as any,
+                        }));
+                      }}
+                    />
                   )}
                 </AccordionItem>
               )
