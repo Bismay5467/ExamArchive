@@ -16,7 +16,6 @@ import { CiBookmark } from 'react-icons/ci';
 import useSWR from 'swr';
 import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
-import { IoSearch } from 'react-icons/io5';
 import { useAuth } from '@/hooks/useAuth';
 import {
   createFolderObj,
@@ -133,9 +132,9 @@ export default function BookmarksModal({
     try {
       const res = await fetcher(folderDetails);
       createBookmarks([res.data.data._id as string]);
-    } catch (err) {
+    } catch (err: any) {
       toast('Somthing went wrong!', {
-        description: `${err}`,
+        description: `${err.response.data.message}`,
         duration: 5000,
       });
       setCollectionName('');
@@ -165,14 +164,6 @@ export default function BookmarksModal({
               <span>Add to bookmark</span>
             </ModalHeader>
             <ModalBody>
-              <Input
-                isClearable
-                radius="full"
-                variant="bordered"
-                className="w-full max-w-[98%] mb-3"
-                placeholder="Search by folder name"
-                startContent={<IoSearch className="text-xl" />}
-              />
               <CheckboxGroup
                 color="secondary"
                 onValueChange={setCollectionIDs}
