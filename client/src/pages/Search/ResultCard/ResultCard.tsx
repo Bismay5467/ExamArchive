@@ -100,7 +100,7 @@ export default function ResultCard({
           </div>
         </div>
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
-          <div className="flex flex-row gap-x-2 w-fit rounded-full">
+          <div className="flex flex-row gap-x-2 w-fit rounded-full bg-pink-100 px-3 py-1">
             <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
             <p className="self-center text-pink-600">{institutionName}</p>
           </div>
