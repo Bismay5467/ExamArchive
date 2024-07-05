@@ -56,7 +56,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
   const setFilters = (filters: IFilterInputs) => {
     const currentParams: ISearchInputs = {
-      ...searchInputs,
+      searchParams: searchInputs.searchParams,
       ...Object.fromEntries(
         Object.entries(filters).filter(([_, value]) => value)
       ),
