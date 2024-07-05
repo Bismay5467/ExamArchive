@@ -1,47 +1,66 @@
-import { Radio, RadioGroup, cn } from '@nextui-org/react';
+import { cn, CheckboxGroup, Checkbox } from '@nextui-org/react';
 import React from 'react';
 import { IFilterInputs } from '@/types/search';
 
 export default function OptionGroup({
   filterKey,
   options,
+  multiple,
   filter,
   setFilter,
 }: {
   filterKey: string;
   options: Record<string, string>;
+  multiple: boolean;
   filter: IFilterInputs;
   setFilter: React.Dispatch<React.SetStateAction<IFilterInputs>>;
 }) {
-  // console.log(filter, filterKey);
+  const handleChange = (selectedKeys: string[]) => {
+    const newFilter = multiple
+      ? selectedKeys.join(',')
+      : selectedKeys[selectedKeys.length - 1];
+
+    setFilter((prevState) => ({
+      ...prevState,
+      [filterKey]: newFilter as any,
+    }));
+  };
   return (
-    <div className="flex flex-col gap-3">
-      <RadioGroup
-        defaultValue={filter[filterKey as keyof IFilterInputs] ?? ''}
-        onValueChange={(val) =>
-          setFilter((prevState) => ({
-            ...prevState,
-            [filterKey]: val as any,
-          }))
+    <div className="flex flex-col gap-1 w-full">
+      <CheckboxGroup
+        aria-label={filterKey}
+        value={
+          multiple
+            ? filter[filterKey as keyof IFilterInputs]?.split(',') ?? []
+            : [filter[filterKey as keyof IFilterInputs] ?? '']
         }
+        onChange={handleChange}
+        classNames={{
+          base: 'w-full',
+        }}
       >
         {Object.entries(options).map(([optionKey, optionVal]) => (
-          <Radio
+          <Checkbox
+            aria-label={optionKey}
             key={optionKey}
-            value={optionVal}
             color="secondary"
             classNames={{
               base: cn(
-                'inline-flex m-0 items-center justify-between',
-                'flex-row-reverse max-w-[300px] cursor-pointer rounded-lg gap-4 p-3 border-2 border-slate-300',
-                'data-[selected=true]:border-secondary font-natosans'
+                'inline-flex max-w-md w-full bg-content1 m-0 ',
+                'flex flex-row justify-between',
+                // 'hover:bg-content2 items-center justify-start',
+                'cursor-pointer rounded-lg gap-2 py-3 px-4 border-2 border-slate-300',
+                'data-[selected=true]:border-secondary'
               ),
+              label: 'w-full',
             }}
+            value={optionVal}
+            radius="full"
           >
-            {optionVal}
-          </Radio>
+            <div className="w-full flex justify-between gap-2">{optionVal}</div>
+          </Checkbox>
         ))}
-      </RadioGroup>
+      </CheckboxGroup>
     </div>
   );
 }

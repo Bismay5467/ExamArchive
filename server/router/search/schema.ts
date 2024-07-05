@@ -36,7 +36,7 @@ export const searchInputSchema = z.object({
           const currYear = new Date().getFullYear();
           if (
             Number.isNaN(parsedYear) === false &&
-            parsedYear < currYear &&
+            parsedYear <= currYear &&
             parsedYear > currYear - 10
           ) {
             return true;
