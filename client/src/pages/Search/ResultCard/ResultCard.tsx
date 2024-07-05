@@ -1,4 +1,4 @@
-import { Card, CardBody, Divider, Chip, CardHeader } from '@nextui-org/react';
+import { Card, CardBody, Divider, CardHeader } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
 import { IoDocument } from 'react-icons/io5';
 import { FaRegNoteSticky } from 'react-icons/fa6';
