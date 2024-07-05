@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
@@ -18,7 +19,11 @@ import {
   RatingSectionShimmer,
 } from '../Shimmer/Shimmer';
 
-export default function PreviewContent() {
+export default function PreviewContent({
+  handleClick,
+}: {
+  handleClick: () => void;
+}) {
   const [fileData, setFileData] = useState<IFileData>();
   const { paperid } = useParams();
 
@@ -52,14 +57,21 @@ export default function PreviewContent() {
     }
   }, [response, error]);
 
+  const formattedSubjectName = (fileData?.subjectName ?? '')
+    .split(' ')
+    .map((word) =>
+      word.charAt(0).toUpperCase().concat(word.slice(1).toLowerCase())
+    )
+    .join(' ');
+
   return (
     <>
       {isLoading ? (
         <WFullSekelton className="w-3/5 h-8 rounded-lg" />
       ) : (
-        <h1 className="text-xl font-medium p-4 sm:text-4xl">
+        <h1 className="text-xl font-medium p-4 sm:text-4xl font-natosans text-slate-800">
           <p>
-            {fileData?.subjectName} ({fileData?.subjectCode})
+            {formattedSubjectName} ({fileData?.subjectCode})
           </p>
         </h1>
       )}
@@ -69,13 +81,14 @@ export default function PreviewContent() {
         fileData &&
         paperid && (
           <HeaderStrip
-            className="flex flex-row px-4 justify-between"
+            className="flex flex-row px-4 justify-between font-natosans"
             fileData={fileData}
             paperId={paperid}
+            handleClick={handleClick}
           />
         )
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-6 sm:grid-rows-3">
+      <div className="grid grid-cols-1 sm:grid-cols-6 sm:grid-rows-3 font-natosans">
         <div className="col-span-1 sm:col-span-3 sm:row-span-3 p-4">
           {isLoading ? (
             <PDFViewerShimmer />
@@ -93,7 +106,7 @@ export default function PreviewContent() {
             />
           )
         )}
-        <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
+        <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4 font-natosans">
           {isLoading ? (
             <RatingSectionShimmer />
           ) : (
@@ -103,7 +116,7 @@ export default function PreviewContent() {
             )
           )}
         </div>
-        <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4">
+        <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4 font-natosans">
           {fileData && paperid && (
             <TagsSection
               tags={fileData.tags}

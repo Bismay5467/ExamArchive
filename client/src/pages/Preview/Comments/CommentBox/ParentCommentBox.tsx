@@ -1,21 +1,13 @@
 /* eslint-disable no-nested-ternary */
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  useDisclosure,
-} from '@nextui-org/react';
+import { Avatar, Button, useDisclosure } from '@nextui-org/react';
 import { BiSolidLike, BiSolidDislike, BiLike, BiDislike } from 'react-icons/bi';
-import { FaFlag } from 'react-icons/fa';
 import { BsReply } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
-import { FaEllipsisVertical, FaRegComment } from 'react-icons/fa6';
+import { FaRegComment } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
-import { IComment, ICommentMutations } from '@/types/comments';
+import { IoFlagOutline } from 'react-icons/io5';
+import { IComment, ICommentMutations, IDropDownProps } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
 import { useAuth } from '@/hooks/useAuth';
 import ReportModal from '@/components/ReportModal/ReportModal';
@@ -26,6 +18,7 @@ import ReplyCommentBox from './ReplyCommentBox';
 import ReplyCommentForm from '../CommentForm/ReplyCommentForm';
 import WarningModal from '@/components/WarningModal/WarningModal';
 import CommentShimmer from '../../Shimmer/Shimmer';
+import CustomDropDown from '@/components/Dropdown';
 
 export default function ParentCommentBox({
   commentData,
@@ -124,8 +117,31 @@ export default function ParentCommentBox({
   const day = date.getUTCDate();
   const month = date.getUTCMonth();
   const year = date.getUTCFullYear();
-  const iconClasses =
-    'text-xl text-default-500 pointer-events-none flex-shrink-0';
+  const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const dropdownMenu: IDropDownProps[] = [
+    {
+      icon: <CiEdit className={iconClasses} />,
+      value: 'Edit comment',
+      action: handleEdit,
+      itemClassName: isMutable,
+    },
+    {
+      icon: <RiDeleteBin6Line className={iconClasses} />,
+      value: 'Delete comment',
+      action: onWarningOpen,
+      itemClassName: isMutable,
+    },
+    {
+      icon: <IoFlagOutline className="text-lg pointer-events-none" />,
+      value: 'Report',
+      action: onReportOpen,
+    },
+  ];
 
   return (
     <div>
@@ -138,7 +154,7 @@ export default function ParentCommentBox({
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
               className="h-7 w-7 sm:h-9 sm:w-9"
             />
-            <span className="self-center font-medium sm:text-xl">
+            <span className="self-center font-medium sm:text-medium">
               {username}
             </span>
           </span>
@@ -146,47 +162,7 @@ export default function ParentCommentBox({
             <span className="text-xs self-center opacity-55 sm:text-sm">
               {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
             </span>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button
-                  variant="light"
-                  size="sm"
-                  isIconOnly
-                  className="self-center"
-                >
-                  <FaEllipsisVertical className="text-lg" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
-                <DropdownItem
-                  key="edit"
-                  startContent={<CiEdit className={iconClasses} />}
-                  onClick={() => setIsEditing(true)}
-                  className={isMutable}
-                >
-                  Edit
-                </DropdownItem>
-                <DropdownItem
-                  key="delete"
-                  startContent={<RiDeleteBin6Line className={iconClasses} />}
-                  onClick={onWarningOpen}
-                  className={isMutable}
-                >
-                  Delete
-                </DropdownItem>
-                <DropdownItem
-                  key="report"
-                  color="danger"
-                  className="text-danger"
-                  startContent={
-                    <FaFlag className="text-lg pointer-events-none" />
-                  }
-                  onClick={onReportOpen}
-                >
-                  Report
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <CustomDropDown menu={dropdownMenu} />
           </span>
         </span>
         <Textarea
@@ -196,8 +172,8 @@ export default function ParentCommentBox({
           onChange={(e) => setTextMessage(e.target.value)}
         />
         <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-x-4 text-sm opacity-55">
-            <span className="self-center flex flex-row gap-x-2">
+          <div className="flex flex-row gap-x-6 text-sm opacity-55">
+            <span className="self-center flex flex-row gap-x-4">
               <span onClick={handleUpVote} role="presentation">
                 {hasUpVoted ? (
                   <BiSolidLike className="self-center text-lg cursor-pointer text-red-500" />
@@ -239,13 +215,10 @@ export default function ParentCommentBox({
           </div>
           {isEditing && (
             <div className="flex flex-row gap-x-2">
-              <span className="self-center mr-6 text-sm opacity-60 font-medium">
-                Preview
-              </span>
               <Button
                 color="default"
-                variant="flat"
-                className="font-semibold mr-2 opacity-60"
+                variant="bordered"
+                radius="sm"
                 size="sm"
                 onClick={() => {
                   setTextMessage(message);
@@ -255,9 +228,10 @@ export default function ParentCommentBox({
                 Cancel
               </Button>
               <Button
-                color="success"
-                className="font-semibold text-white text-medium tracking-wide"
+                color="primary"
                 type="submit"
+                variant="bordered"
+                radius="sm"
                 size="sm"
                 onClick={() => {
                   handleEditComment(commentId, textMessage);

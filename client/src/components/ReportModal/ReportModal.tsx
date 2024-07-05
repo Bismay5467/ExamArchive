@@ -12,7 +12,7 @@ import {
 } from '@nextui-org/react';
 import useSWR from 'swr';
 import { toast } from 'sonner';
-import { MdReport } from 'react-icons/md';
+import { CiFlag1 } from 'react-icons/ci';
 import { reportReasons } from '@/constants/shared';
 import { reportObj } from '@/utils/axiosReqObjects';
 import { TContentType } from '@/types/report';
@@ -78,43 +78,56 @@ export default function ReportModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      placement="top-center"
+      className="font-natosans"
+      radius="sm"
+    >
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-row gap-x-2 text-3xl font-[10px]">
-              <MdReport className="self-center text-4xl text-[#595EFC]" />
-              <span>Report</span>
+            <ModalHeader className="flex flex-row gap-x-3">
+              <CiFlag1 className="self-center text-2xl" />
+              <span>Report this {contentType.toLowerCase()}</span>
             </ModalHeader>
             <ModalBody>
-              <div className="font-medium text-2xl flex flex-row">
-                Why are you reporting this post?
+              <div className="font-medium text-medium flex flex-row text-slate-700">
+                Help us understand why you are reporting this{' '}
+                {contentType.toLowerCase()}
               </div>
-              <p className="text-sm opacity-60 text-justify">
-                Your report is anonymous except if you are reporting an
-                intellectual property infringement. If someone is in immediate
-                danger call the local emrgancy services.
-              </p>
               <Select
                 label="Select your complaint"
                 className="w-full"
                 variant="bordered"
                 isRequired
+                radius="sm"
                 onChange={(e) => setReportRank(Number(e.target.value))}
               >
                 {reportReasons.map(({ rank, reason }) => (
                   <SelectItem key={rank}>{reason}</SelectItem>
                 ))}
               </Select>
+              <p className="text-sm text-red-400 text-justify">
+                We take reports seriously and after a thorough review of the{' '}
+                {contentType.toLowerCase()} our team will get back to you.
+              </p>
             </ModalBody>
             <ModalFooter>
-              <Button className="bg-slate-200 text-medium" onPress={onClose}>
+              <Button
+                radius="sm"
+                color="default"
+                variant="bordered"
+                onPress={onClose}
+              >
                 Cancel
               </Button>
               <Button
-                color="success"
+                radius="sm"
+                color="primary"
+                variant="bordered"
                 onPress={handleSubmit}
-                className="font-medium text-white tracking-wide bg-[#595EFC]"
               >
                 Report
               </Button>

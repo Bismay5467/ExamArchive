@@ -1,6 +1,6 @@
 import Rating from '@mui/material/Rating';
-import { BsStars } from 'react-icons/bs';
 import { toast } from 'sonner';
+import { IoIosStarOutline } from 'react-icons/io';
 import {
   Modal,
   ModalContent,
@@ -83,12 +83,19 @@ export default function RatingSection({
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
-        <p className="self-center">Ratings ( 1.2K+ users voted )</p>
-        <Button size="sm" radius="sm" className="text-small" onPress={onOpen}>
+        <p className="self-center text-black">
+          Ratings <span className="text-slate-500">( 1.2K+ users voted )</span>
+        </p>
+        <Button
+          size="sm"
+          radius="sm"
+          className="text-small bg-transparent text-blue-500"
+          onPress={onOpen}
+        >
           Rate Here
         </Button>
       </div>
-      <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit">
+      <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit text-slate-700">
         <p>Helpful</p>
         <Rating
           name="helpful-read-only"
@@ -125,18 +132,22 @@ export default function RatingSection({
         onOpenChange={onOpenChange}
         isDismissable={false}
         isKeyboardDismissDisabled={false}
+        radius="sm"
+        className="font-natosans"
       >
         <ModalContent className="w-fit">
           {() => (
             <>
               <ModalHeader className="flex flex-row gap-x-2">
-                <BsStars className="self-center text-2xl text-purple-500" />
-                <p className="text-xl">Rate this paper</p>
+                <IoIosStarOutline className="self-center text-2xl" />
+                <p className="text-lg">Rate this paper</p>
               </ModalHeader>
               <ModalBody>
-                <p>Let us know how you feel about this paper!</p>
+                <p className="mt-1 mb-2 text-slate-700">
+                  Let us know how you feel about this paper!
+                </p>
                 <div className="grid grid-cols-2 grid-rows-3 gap-y-2 w-fit">
-                  <h3>Helpful:</h3>
+                  <h3>Helpful :</h3>
                   <Rating
                     name="helpfull-controlled"
                     value={helpfull}
@@ -144,7 +155,7 @@ export default function RatingSection({
                       setHelpfull(newValue || 0);
                     }}
                   />
-                  <h3>Standard:</h3>
+                  <h3>Standard :</h3>
                   <Rating
                     name="standard-controlled"
                     value={standard}
@@ -152,7 +163,7 @@ export default function RatingSection({
                       setStandard(newValue || 0);
                     }}
                   />
-                  <h3>Relevance:</h3>
+                  <h3>Relevance :</h3>
                   <Rating
                     name="relevance-controlled"
                     value={relevance}
@@ -163,10 +174,20 @@ export default function RatingSection({
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="default"
+                  radius="sm"
+                  variant="bordered"
+                  onPress={onClose}
+                >
                   Cancel
                 </Button>
-                <Button color="primary" onPress={handleSubmit}>
+                <Button
+                  color="primary"
+                  radius="sm"
+                  variant="bordered"
+                  onPress={handleSubmit}
+                >
                   Submit
                 </Button>
               </ModalFooter>

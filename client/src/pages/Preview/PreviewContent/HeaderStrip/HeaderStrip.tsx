@@ -1,15 +1,19 @@
 import { FaEye } from 'react-icons/fa';
-import { IoBookmarks } from 'react-icons/io5';
 import { FiDownload } from 'react-icons/fi';
-import { FaRegComment, FaFlag } from 'react-icons/fa6';
+import { FaRegComment } from 'react-icons/fa6';
+import { CiBookmarkPlus } from 'react-icons/ci';
 import { Button, useDisclosure } from '@nextui-org/react';
+import { IoCloudDownloadOutline, IoFlagOutline } from 'react-icons/io5';
 import { IFileData } from '@/types/file';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import BookmarksModal from '../BookmarksModal/BookmarksModal';
+import { IDropDownProps } from '@/types/comments';
+import CustomDropDown from '@/components/Dropdown';
 
 export default function HeaderStrip({
   className,
   paperId,
+  handleClick,
   fileData: {
     noOfDownloads,
     noOfViews,
@@ -19,6 +23,7 @@ export default function HeaderStrip({
     year,
   },
 }: {
+  handleClick: () => void;
   className: string;
   paperId: string;
   fileData: IFileData;
@@ -35,21 +40,42 @@ export default function HeaderStrip({
     onClose: onReportClose,
     onOpenChange: onReportOpenChange,
   } = useDisclosure();
+  const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
+  const dropdownMenu: IDropDownProps[] = [
+    {
+      icon: <IoCloudDownloadOutline className={iconClasses} />,
+      value: 'Download file',
+    },
+    {
+      icon: <IoFlagOutline className="text-lg pointer-events-none" />,
+      value: 'Report',
+      action: onReportOpen,
+    },
+  ];
   return (
     <div className={className}>
-      <div className="flex flex-row gap-x-4 text-sm sm:text-medium sm:gap-x-12">
+      <div className="flex flex-row gap-x-4 text-sm sm:text-medium sm:gap-x-12 text-slate-700">
         <div className="flex flex-row gap-x-2">
           <FaEye className="self-center" />
-          <p className="self-center">{noOfViews.count} views</p>
+          <p className="self-center">
+            {noOfViews.count > 1
+              ? `${noOfViews.count} views`
+              : `${noOfViews.count} view`}
+          </p>
         </div>
         <div className="flex flex-row gap-x-2">
           <FiDownload className="self-center" />
-          <p className="self-center">{noOfDownloads.count} downloads</p>
+          <p className="self-center">
+            {noOfDownloads.count > 1
+              ? `${noOfDownloads.count} downloads`
+              : `${noOfDownloads.count} download`}
+          </p>
         </div>
         <button
           type="button"
           className="hidden sm:flex sm:flex-row sm:gap-x-2"
           onClick={() => {
+            handleClick();
             const element = document.querySelector('#disscussion-forum');
             element?.scrollIntoView({
               behavior: 'smooth',
@@ -64,17 +90,12 @@ export default function HeaderStrip({
         <Button
           isIconOnly
           size="sm"
-          variant="light"
+          className="bg-transparent"
           onClick={() => onBookmarkOpen()}
         >
-          <IoBookmarks className="self-center text-2xl text-red-600" />
+          <CiBookmarkPlus className="self-center text-2xl text-red-600" />
         </Button>
-        <Button isIconOnly size="sm" variant="light">
-          <FaFlag
-            className="self-center text-2xl"
-            onClick={() => onReportOpen()}
-          />
-        </Button>
+        <CustomDropDown menu={dropdownMenu} />
       </div>
       <BookmarksModal
         isOpen={isBookmarkOpen}

@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   Modal,
   ModalContent,
@@ -6,19 +9,18 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Chip,
   Spinner,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import { IoPricetags } from 'react-icons/io5';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { KeyedMutator } from 'swr';
-import { tagsBgColorMap, tagsTextColorMap } from '@/constants/shared';
+import { FaHashtag } from 'react-icons/fa';
 import TagsEditor from '@/components/TagsEditor/TagsEditor';
 import { editTagsObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import Tag from '@/components/Tags';
 
 const MAX_TAGS_TO_DISPLAY = 3;
 
@@ -92,28 +94,37 @@ export default function TagsSection({
   }, [isOpen, tags]);
 
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex flex-col gap-y-2 font-natosans">
       <h2>Tags:</h2>
       <div className="flex flex-row flex-wrap gap-x-2">
         {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
-          <Chip
-            variant="flat"
-            key={val}
-            className={`self-center ${tagsBgColorMap[idx % tagsBgColorMap.length]} ${tagsTextColorMap[idx % tagsTextColorMap.length]}`}
-          >
-            {val}
-          </Chip>
+          <Tag
+            val={val}
+            key={idx}
+            classNames={{
+              base: 'bg-violet-100 border-small border-violet-700',
+              content: 'text-violet-700',
+            }}
+          />
         ))}
-        <Button variant="light" size="sm" onPress={onOpen}>
+        <div
+          onClick={onOpen}
+          className="hover:cursor-pointer text-sm text-indigo-800"
+        >
           +{tags.length - MAX_TAGS_TO_DISPLAY} more
-        </Button>
+        </div>
       </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        radius="sm"
+        className="font-natosans"
+      >
         <ModalContent>
           {() => (
             <>
               <ModalHeader className="flex flex-row gap-x-2">
-                <IoPricetags className="self-center text-2xl text-red-600" />
+                <FaHashtag className="self-center text-xl" />
                 <p>All tags</p>
               </ModalHeader>
               <ModalBody>
@@ -121,19 +132,20 @@ export default function TagsSection({
                   <TagsEditor tags={currentTags} setTags={setCurrentTags} />
                 ) : (
                   <>
-                    <p className="text-sm opacity-60">
+                    <p className="text-sm">
                       You can contribute by adding more tags by clicking on the
                       add more button!
                     </p>
-                    <div className="flex flex-row flex-wrap gap-2 max-h-[300px] overflow-y-auto">
+                    <div className="flex flex-row flex-wrap gap-2 max-h-[200px] overflow-y-auto no-scrollbar">
                       {tags.map((val, idx) => (
-                        <Chip
-                          variant="flat"
-                          key={val}
-                          className={`self-center ${tagsBgColorMap[idx % tagsBgColorMap.length]} ${tagsTextColorMap[idx % tagsTextColorMap.length]}`}
-                        >
-                          {val}
-                        </Chip>
+                        <Tag
+                          val={val}
+                          key={idx}
+                          classNames={{
+                            base: 'bg-violet-100 border-small border-violet-700',
+                            content: 'text-violet-700',
+                          }}
+                        />
                       ))}
                     </div>
                   </>
@@ -141,24 +153,25 @@ export default function TagsSection({
               </ModalBody>
               <ModalFooter>
                 <Button
-                  color="danger"
-                  variant="light"
                   radius="sm"
+                  color="default"
+                  variant="bordered"
                   onPress={onClose}
                 >
                   Close
                 </Button>
                 <Button
                   color="primary"
+                  variant="bordered"
                   onPress={handleSubmit}
                   radius="sm"
                   {...(!isEditing && {
-                    endContent: (
+                    startContent: (
                       <IoIosAddCircleOutline className="text-xl font-semibold" />
                     ),
                   })}
                   {...(isLoading && {
-                    endContent: <Spinner color="secondary" size="sm" />,
+                    startContent: <Spinner color="secondary" size="sm" />,
                   })}
                   {...(isLoading && { isDisabled: true })}
                 >

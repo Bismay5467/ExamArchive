@@ -44,23 +44,29 @@ export default function ReplyCommentForm({
           className="flex flex-col gap-y-4"
         >
           <Textarea
-            placeholder="Type your comment here..."
-            className="resize-none rounded-xl shadow-md min-h-[25px]"
+            placeholder="Type your comment here ..."
+            className="resize-none rounded-lg min-h-[60px] pt-4"
+            style={{
+              boxShadow:
+                'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
+            }}
             {...register('message')}
           />
           <span className="flex flex-row justify-end">
             <Button
               color="default"
-              variant="flat"
-              className="font-semibold mr-2 opacity-60"
+              variant="bordered"
+              className="mr-2"
+              radius="sm"
               size="sm"
               onClick={() => setIsReplying(false)}
             >
               Cancel
             </Button>
             <Button
-              color="success"
-              className="font-semibold text-white tracking-wide"
+              color="primary"
+              variant="bordered"
+              radius="sm"
               type="submit"
               size="sm"
             >

@@ -23,11 +23,15 @@ export function HeaderStripShimmer({ className }: { className: string }) {
 export function BasicInfoShimmer({ className }: { className: string }) {
   return (
     <div className={className}>
-      <Skeleton className="w-[100px] h-4 rounded-lg" />
       <div className="flex flex-row gap-x-4">
         <Skeleton className="w-[100px] h-4 rounded-lg" />
         <Skeleton className="w-[100px] h-4 rounded-lg" />
       </div>
+      <div className="flex flex-row gap-x-4">
+        <Skeleton className="w-[100px] h-4 rounded-lg" />
+        <Skeleton className="w-[100px] h-4 rounded-lg" />
+      </div>
+      <Skeleton className="w-[300px] h-4 rounded-lg" />
       <Skeleton className="w-[300px] h-4 rounded-lg" />
     </div>
   );

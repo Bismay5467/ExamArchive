@@ -1,3 +1,5 @@
+import { JSX } from 'react';
+
 export type TCommentType = 'COMMENTS' | 'REPLIES';
 export type TCommentAction = 'UPVOTE' | 'DOWNVOTE';
 export type TReaction = 'VOTE' | 'RETRACE';
@@ -55,4 +57,11 @@ export interface ICommentMutations {
     _commentId: string,
     _reaction: TReaction
   ) => Promise<void>;
+}
+
+export interface IDropDownProps {
+  value: String;
+  action?: () => void;
+  icon: JSX.Element;
+  itemClassName?: string;
 }

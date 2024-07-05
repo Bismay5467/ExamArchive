@@ -1,9 +1,6 @@
-import { FaCode, FaAt } from 'react-icons/fa';
-import { IoMdLink } from 'react-icons/io';
 import { Button } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
-// import { useComments } from '@/hooks/useComments';
 
 interface commentFormInput {
   message: string;
@@ -22,7 +19,13 @@ export default function ParentCommentForm({
   };
 
   return (
-    <div className="py-4 rounded-xl shadow-md flex flex-col gap-y-4">
+    <div
+      className="pb-4 pt-2 rounded-lg flex flex-col gap-y-4"
+      style={{
+        boxShadow:
+          'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
+      }}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Textarea
           placeholder="Type your comment here..."
@@ -30,21 +33,12 @@ export default function ParentCommentForm({
           {...register('message')}
         />
 
-        <div className="px-4 flex flex-row justify-end sm:justify-between">
-          <span className="hidden gap-x-4 self-center px-2 opacity-60 sm:flex sm:flex-row">
-            <FaCode /> <IoMdLink /> <FaAt />
-          </span>
+        <div className="px-4 flex flex-row justify-end">
           <span>
-            {/* <Button
-              color="default"
-              variant="flat"
-              className="font-semibold mr-2 opacity-60"
-            >
-              Preview
-            </Button> */}
             <Button
-              color="success"
-              className="font-semibold text-white tracking-wide"
+              radius="sm"
+              variant="bordered"
+              color="primary"
               type="submit"
             >
               Comment

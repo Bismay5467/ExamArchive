@@ -1,9 +1,9 @@
-import { Chip, Input } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
-import { tagsBgColorMap, tagsTextColorMap } from '@/constants/shared';
 import { useAuth } from '@/hooks/useAuth';
 import { ROLES } from '@/constants/auth';
+import Tag from '../Tags';
 
 export default function TagsEditor({
   tags,
@@ -43,27 +43,29 @@ export default function TagsEditor({
   };
 
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4 font-natosans">
       <div
         id="tags-section"
-        className="flex flex-row flex-wrap gap-2 max-h-[200px] overflow-y-auto"
+        className="flex flex-row flex-wrap gap-2 max-h-[200px] overflow-y-auto no-scrollbar"
       >
         {tags.map((val, idx) => (
-          <Chip
-            variant="flat"
-            key={val}
-            className={`self-center ${tagsBgColorMap[idx % tagsBgColorMap.length]} ${tagsTextColorMap[idx % tagsTextColorMap.length]}`}
-            {...(isDeletable && { onClose: () => handleDeleteTag(val) })}
-          >
-            {val}
-          </Chip>
+          <Tag
+            val={val}
+            key={idx}
+            classNames={{
+              base: 'bg-violet-100 border-small border-violet-700',
+              content: 'text-violet-700',
+            }}
+            {...(isDeletable && { handleDeleteTag })}
+          />
         ))}
       </div>
       <Input
         isClearable
-        placeholder="Likh aur enter mar maderchod!"
+        placeholder="Type a tag and press enter to add it to the list"
         radius="sm"
         size="md"
+        variant="bordered"
         onValueChange={setNewTagValue}
         onKeyDown={(e) => {
           if (e.key === 'Enter') handleAddNewTag();

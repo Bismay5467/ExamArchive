@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Radio, RadioGroup, cn } from '@nextui-org/react';
 import React from 'react';
 import { IFilterInputs } from '@/types/search';

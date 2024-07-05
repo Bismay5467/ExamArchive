@@ -1,4 +1,4 @@
-import { Card, CardBody, Divider, Chip } from '@nextui-org/react';
+import { Card, CardBody, Divider } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
 import { IoPersonOutline } from 'react-icons/io5';
 import { FaEye } from 'react-icons/fa';
@@ -10,6 +10,7 @@ import { ISearchData } from '@/types/search';
 import { parseUTC } from '@/utils/helpers';
 import { monthNames } from '@/constants/shared';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import Tag from '@/components/Tags';
 
 const MAX_TAGS_TO_DISPLAY = 3;
 
@@ -118,16 +119,15 @@ export default function ResultCard({
         </div>
         <div className="flex flex-col pb-2 gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
           <div className="flex flex- row gap-x-2">
-            {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val) => (
-              <Chip
-                key={val}
+            {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
+              <Tag
+                key={idx}
+                val={val}
                 classNames={{
                   base: 'bg-violet-100 border-small border-violet-700',
                   content: 'text-violet-700',
                 }}
-              >
-                {val.toLowerCase()}
-              </Chip>
+              />
             ))}
             <p className="text-sm self-center text-slate-500">
               +{tags.length - MAX_TAGS_TO_DISPLAY} more
