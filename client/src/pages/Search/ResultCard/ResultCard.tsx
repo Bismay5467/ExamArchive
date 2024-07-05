@@ -92,7 +92,7 @@ export default function ResultCard({
               <p className="text-pink-600">{examyear}</p>
             </div>
           </div>
-          <div className="hidden md:flex md:flex-row md:gap-x-4">
+          <div className="hidden lg:flex lg:flex-row lg:gap-x-4">
             <div className="self-center flex flex-row gap-x-2">
               <SiGoogleclassroom className="self-center text-xl text-blue-600" />{' '}
               <p className="text-blue-600">{branch}</p>
@@ -104,7 +104,7 @@ export default function ResultCard({
             <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
             <p className="self-center text-pink-600">{institutionName}</p>
           </div>
-          <div className="self-center hidden gap-x-2 text-sm text-slate-500 sm:flex sm:flex-row">
+          <div className="self-center hidden gap-x-2 text-sm text-slate-500 lg:flex lg:flex-row">
             <p>
               Last updated at :{' '}
               <span className="py-1">{`${monthNames[month - 1]} ${day}, ${year}`}</span>
@@ -128,7 +128,7 @@ export default function ResultCard({
               +{tags.length - MAX_TAGS_TO_DISPLAY} more
             </p>
           </div>
-          <div className="hidden gap-x-4 text-md sm:flex sm:flex-row">
+          <div className="hidden gap-x-4 text-md lg:flex lg:flex-row">
             <div className="self-center flex flex-row gap-x-2">
               <FaEye className="self-center text-slate-500" />{' '}
               <p className="text-slate-500 text-sm">
