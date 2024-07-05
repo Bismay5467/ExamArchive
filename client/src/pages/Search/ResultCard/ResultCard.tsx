@@ -67,8 +67,8 @@ export default function ResultCard({
     >
       <CardHeader className="flex gap-3 text-sm px-8 text-slate-700 bg-[#f7f7f7] sm:text-lg">
         <div className="flex flex-row justify-between gap-x-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between">
-          <IoDocument className="self-center text-2xl text-blue-600" />
-          <span className="self-center font-extrabold text-sm sm:text-medium">
+          <IoDocument className="self-center text-2xl text-slate-600" />
+          <span className="self-center text-sm sm:text-medium">
             {subjectName
               .toLowerCase()
               .replace(/\b\w/g, (char) => char.toUpperCase())}
@@ -100,14 +100,14 @@ export default function ResultCard({
           </div>
         </div>
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
-          <div className="flex flex-row gap-x-2 px-2 w-fit bg-pink-600/10 rounded-full">
+          <div className="flex flex-row gap-x-2 w-fit rounded-full">
             <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
             <p className="self-center text-pink-600">{institutionName}</p>
           </div>
           <div className="self-center hidden gap-x-2 text-sm text-slate-500 sm:flex sm:flex-row">
             <p>
-              Last updated at:{' '}
-              <span className="bg-slate-200 px-2 py-1 rounded-lg">{`${monthNames[month - 1]} ${day}, ${year}`}</span>
+              Last updated at :{' '}
+              <span className="py-1">{`${monthNames[month - 1]} ${day}, ${year}`}</span>
             </p>
           </div>
         </div>
