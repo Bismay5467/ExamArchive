@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import { Accordion, AccordionItem, Button } from '@nextui-org/react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -44,7 +45,12 @@ export function SearchFilterSheet() {
         key: 'subjectName',
         label: 'Subject Name',
         options: response.data.data.map((val: any) => ({
-          label: val.subjectName,
+          label: val.subjectName
+            .split(' ')
+            .map((word: string) =>
+              word.charAt(0).toUpperCase().concat(word.slice(1).toLowerCase())
+            )
+            .join(' '),
         })),
         multiple: false,
       });
@@ -112,9 +118,8 @@ export function SearchFilterSheet() {
                           label: string;
                         }>
                       }
-                      renderInput={(params) => (
-                        <TextField {...params} label="Subject Name" />
-                      )}
+                      className="border rounded-lg"
+                      renderInput={(params) => <TextField {...params} />}
                       value={{
                         label: filter[key as keyof IFilterInputs] ?? '',
                       }}

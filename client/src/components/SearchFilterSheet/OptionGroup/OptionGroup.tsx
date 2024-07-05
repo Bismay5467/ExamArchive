@@ -46,14 +46,16 @@ export default function OptionGroup({
             color="secondary"
             classNames={{
               base: cn(
-                'inline-flex max-w-md w-full bg-content1 m-0',
-                'hover:bg-content2 items-center justify-start',
-                'cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent',
+                'inline-flex max-w-md w-full bg-content1 m-0 ',
+                'flex flex-row justify-between',
+                // 'hover:bg-content2 items-center justify-start',
+                'cursor-pointer rounded-lg gap-2 py-3 px-4 border-2 border-slate-300',
                 'data-[selected=true]:border-secondary'
               ),
               label: 'w-full',
             }}
             value={optionVal}
+            radius="full"
           >
             <div className="w-full flex justify-between gap-2">{optionVal}</div>
           </Checkbox>
