@@ -179,7 +179,7 @@ export default function TagsSection({
                   {...(isLoading && {
                     startContent: <Spinner color="secondary" size="sm" />,
                   })}
-                  {...(isLoading && { isDisabled: true })}
+                  isDisabled={isLoading}
                 >
                   {isEditing ? 'Save and publish' : 'Add more'}
                 </Button>

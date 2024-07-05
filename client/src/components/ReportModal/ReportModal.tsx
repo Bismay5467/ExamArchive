@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -9,15 +9,15 @@ import {
   Button,
   Select,
   SelectItem,
+  Spinner,
 } from '@nextui-org/react';
-import useSWR from 'swr';
 import { toast } from 'sonner';
 import { CiFlag1 } from 'react-icons/ci';
 import { reportReasons } from '@/constants/shared';
 import { reportObj } from '@/utils/axiosReqObjects';
 import { TContentType } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
-import { SUCCESS_CODES } from '@/constants/statusCodes';
+import fetcher from '@/utils/fetcher/fetcher';
 
 interface IReportModalProps {
   isOpen: boolean;
@@ -34,46 +34,55 @@ export default function ReportModal({
   contentType,
   postId,
 }: IReportModalProps) {
-  // const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [reportRank, setReportRank] = useState<number>();
-  const [submit, setSubmit] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const {
     authState: { jwtToken },
   } = useAuth();
 
-  const { data: response, error } = useSWR(
-    submit && reportRank
-      ? reportObj(
-          {
-            contentType,
-            postId,
-            reason: {
-              rank: reportRank,
-              reason: reportReasons.find(({ rank }) => rank === reportRank)
-                ?.reason!,
-            },
-          },
-          jwtToken
-        )
-      : null
-  );
-
-  useEffect(() => {
-    if (response && response.status === SUCCESS_CODES.OK) {
-      toast.success('Thanks for flagging the post.', {
-        description: "We'll take a look at it and take the neccsary steps",
+  const handleSubmit = async () => {
+    if (!reportRank) {
+      toast.error('Please select one of the provided options!', {
         duration: 5000,
       });
-      if (error) {
-        toast.error(`${error.response.data.message}`, {
-          duration: 5000,
-        });
-      }
+      return;
     }
-  }, [response, error]);
-
-  const handleSubmit = () => {
-    setSubmit(true);
+    const reqObject = reportObj(
+      {
+        contentType,
+        postId,
+        reason: {
+          rank: reportRank,
+          reason: reportReasons.find(({ rank }) => rank === reportRank)
+            ?.reason!,
+        },
+      },
+      jwtToken
+    );
+    if (!reqObject) {
+      toast.error('Somthing went wrong!', {
+        duration: 5000,
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await fetcher(reqObject);
+    } catch (err: any) {
+      toast.error('Somthing went wrong!', {
+        description: `${err.response.data.message}`,
+        duration: 5000,
+      });
+      setIsLoading(false);
+      return;
+    }
+    toast.success('Thanks for flagging the post.', {
+      description: "We'll take a look at it and take the neccsary steps",
+      duration: 5000,
+    });
+    setIsLoading(false);
+    setReportRank(undefined);
     onClose();
   };
 
@@ -128,6 +137,10 @@ export default function ReportModal({
                 color="primary"
                 variant="bordered"
                 onPress={handleSubmit}
+                {...(isLoading && {
+                  startContent: <Spinner color="secondary" size="sm" />,
+                })}
+                isDisabled={isLoading}
               >
                 Report
               </Button>
