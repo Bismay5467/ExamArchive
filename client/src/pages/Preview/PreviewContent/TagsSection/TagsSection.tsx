@@ -28,19 +28,21 @@ export default function TagsSection({
   tags,
   postId,
   mutate,
+  uploaderId,
 }: {
   tags: Array<string>;
   postId: string;
   mutate: KeyedMutator<any>;
+  uploaderId: string;
 }) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentTags, setCurrentTags] = useState<Array<string>>(tags);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
-    authState: { jwtToken },
+    authState: { jwtToken, userId },
   } = useAuth();
-
+  const isDeletable = userId === uploaderId;
   const handleSubmit = async () => {
     if (!isEditing) {
       setIsEditing(true);
@@ -109,7 +111,7 @@ export default function TagsSection({
         ))}
         <div
           onClick={onOpen}
-          className="hover:cursor-pointer text-sm text-indigo-800"
+          className="hover:cursor-pointer text-sm text-indigo-800 self-center"
         >
           +{tags.length - MAX_TAGS_TO_DISPLAY} more
         </div>
@@ -129,7 +131,11 @@ export default function TagsSection({
               </ModalHeader>
               <ModalBody>
                 {isEditing ? (
-                  <TagsEditor tags={currentTags} setTags={setCurrentTags} />
+                  <TagsEditor
+                    tags={currentTags}
+                    setTags={setCurrentTags}
+                    isDeletable={isDeletable}
+                  />
                 ) : (
                   <>
                     <p className="text-sm">

@@ -1,22 +1,18 @@
 import { Input } from '@nextui-org/react';
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { ROLES } from '@/constants/auth';
 import Tag from '../Tags';
 
 export default function TagsEditor({
   tags,
   setTags,
+  isDeletable,
 }: {
   tags: Array<string>;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  isDeletable: boolean;
 }) {
   const [newTagValue, setNewTagValue] = useState<string>('');
-  const {
-    authState: { role },
-  } = useAuth();
-  const isDeletable = role === ROLES.ADMIN;
 
   useEffect(() => {
     const tagsSection = document.querySelector('#tags-section');
@@ -29,13 +25,14 @@ export default function TagsEditor({
       });
       return;
     }
-    if (tags.includes(newTagValue)) {
+    if (tags.includes(newTagValue.toLowerCase())) {
       toast.error('Entered tag value already exists!', {
         duration: 1000,
       });
       return;
     }
-    setTags((prev) => [...prev, newTagValue]);
+    setTags((prev) => [...prev, newTagValue.toLowerCase()]);
+    setNewTagValue('');
   };
 
   const handleDeleteTag = (tagValue: string) => {
@@ -62,6 +59,7 @@ export default function TagsEditor({
       </div>
       <Input
         isClearable
+        value={newTagValue}
         placeholder="Type a tag and press enter to add it to the list"
         radius="sm"
         size="md"

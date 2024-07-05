@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable function-paren-newline */
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -119,6 +120,7 @@ export default function PreviewContent({
         <div className="col-span-1 sm:col-span-3 sm:row-span-1 p-4 font-natosans">
           {fileData && paperid && (
             <TagsSection
+              uploaderId={fileData.uploadedBy._id}
               tags={fileData.tags}
               mutate={mutate}
               postId={paperid}
