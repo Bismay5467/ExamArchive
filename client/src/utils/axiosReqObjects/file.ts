@@ -69,3 +69,41 @@ export const editTagsObj = (
 
   return axiosObj;
 };
+
+export const getUpdateViewCountObj = (
+  postId: string,
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.FILE}/viewCount`;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: { postId } },
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(jwtToken && { Authorization: `Bearer ${jwtToken}` }),
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const getUpdateDownloadCountObj = (
+  postId: string,
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.FILE}/downloadCount`;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: { postId } },
+    method: 'PUT',
+    headers: {
+      ...(jwtToken && { Authorization: `Bearer ${jwtToken}` }),
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};

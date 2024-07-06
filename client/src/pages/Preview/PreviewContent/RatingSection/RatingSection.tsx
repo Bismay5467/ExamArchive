@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import Rating from '@mui/material/Rating';
 import { toast } from 'sonner';
 import { IoIosStarOutline } from 'react-icons/io';
@@ -11,6 +12,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { useState } from 'react';
+import { KeyedMutator } from 'swr';
 import { updateRatingObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
@@ -18,7 +20,10 @@ import fetcher from '@/utils/fetcher/fetcher';
 export default function RatingSection({
   postId,
   rating,
+  ratingCount,
+  mutate,
 }: {
+  ratingCount: number;
   postId: string;
   rating: Array<{
     ratingType: string;
@@ -26,6 +31,7 @@ export default function RatingSection({
     averageRating: number;
     _id: string;
   }>;
+  mutate: KeyedMutator<any>;
 }) {
   const [helpfull, setHelpfull] = useState<number>(0);
   const [standard, setStandard] = useState<number>(0);
@@ -41,6 +47,13 @@ export default function RatingSection({
   } = useAuth();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const getRatingCount = () => {
+    // eslint-disable-next-line no-magic-numbers
+    if (ratingCount > 1000) return `${Math.floor(ratingCount / 1000)}K+ users`;
+    if (ratingCount > 1) return `${ratingCount} users`;
+    return `${ratingCount} user`;
+  };
 
   const handleSubmit = async () => {
     if (!helpfull || !standard || !relevance) {
@@ -76,15 +89,20 @@ export default function RatingSection({
       });
       return;
     }
-    toast.success('Thank you for your feedback!', {
-      duration: 5000,
-    });
+    mutate().then(() =>
+      toast.success('Thank you for your feedback!', {
+        duration: 5000,
+      })
+    );
   };
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
         <p className="self-center text-black">
-          Ratings <span className="text-slate-500">( 1.2K+ users voted )</span>
+          Ratings{' '}
+          <span className="text-slate-500">
+            {`( ${getRatingCount()} voted )`}
+          </span>
         </p>
         <Button
           size="sm"

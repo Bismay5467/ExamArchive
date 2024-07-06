@@ -72,7 +72,7 @@ const UpdateRating = asyncErrorHandler(async (req: Request, res: Response) => {
         .exec(),
       Question.findByIdAndUpdate(
         { _id: postId },
-        { rating },
+        { rating, $inc: { ratingCount: 1 } },
         { upsert: false, new: true }
       )
         .session(session)
