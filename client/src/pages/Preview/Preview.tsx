@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import { FaRegComments } from 'react-icons/fa';
-import { Button } from '@nextui-org/react';
+import { Button, Skeleton } from '@nextui-org/react';
 import Comments from './Comments/Comments';
 import PreviewContent from './PreviewContent/PreviewContent';
 
 export default function Preview() {
   const [showComments, setShowComments] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const setLoading = (val: boolean) => {
+    setIsLoading(val);
+  };
   return (
     <section className="min-h-[600px] max-w-[1250px] bg-white p-4 mx-auto">
-      <PreviewContent />
-      {showComments === false && (
+      <PreviewContent setLoading={setLoading} />
+      {showComments === false && isLoading === true && (
+        <Skeleton className="h-10 w-[100%] rounded-lg mt-8" />
+      )}
+      {showComments === false && isLoading === false && (
         <Button
           variant="bordered"
           color="default"
@@ -21,7 +28,7 @@ export default function Preview() {
           Load Discussions
         </Button>
       )}
-      {showComments === true && <Comments />}
+      {showComments === true && isLoading === false && <Comments />}
     </section>
   );
 }

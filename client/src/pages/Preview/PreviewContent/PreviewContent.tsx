@@ -20,7 +20,11 @@ import {
   RatingSectionShimmer,
 } from '../Shimmer/Shimmer';
 
-export default function PreviewContent() {
+export default function PreviewContent({
+  setLoading,
+}: {
+  setLoading: (_val: boolean) => void;
+}) {
   const [fileData, setFileData] = useState<IFileData>();
   const { paperid } = useParams();
 
@@ -35,6 +39,10 @@ export default function PreviewContent() {
     const parsedData = await JSON.parse(response.data.data);
     setFileData(parsedData);
   };
+
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
 
   useEffect(() => {
     if (response) {
