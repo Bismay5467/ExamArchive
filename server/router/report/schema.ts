@@ -16,6 +16,11 @@ export const reportContentInputSchema = z.object({
 export const viewReportInputSchema = z.object({
   page: z.string(),
 });
+export const getCommentInputSchema = z.object({
+  commentId: z
+    .string()
+    .refine((commentId) => Types.ObjectId.isValid(commentId)),
+});
 
 export const markAsResolvedInputSchema = z.object({
   reportId: z.string().refine((reportId) => Types.ObjectId.isValid(reportId)),
