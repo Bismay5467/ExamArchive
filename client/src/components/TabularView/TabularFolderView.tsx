@@ -29,11 +29,12 @@ import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
-import { MdDelete } from 'react-icons/md';
+import { IoMdAddCircleOutline } from 'react-icons/io';
+import { CiFolderOn } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
-import { AiFillFolderAdd } from 'react-icons/ai';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { IAction, IBookmarkFolder } from '@/types/folder';
 import {
@@ -168,6 +169,8 @@ export default function TabularFolderView({
     [sortDescriptor, filteredItems, response]
   );
 
+  const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
+
   const items = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     const end = start + ROWS_PER_PAGE;
@@ -206,7 +209,7 @@ export default function TabularFolderView({
             <span className="self-center">
               {monthNames[month]} {day}, {year}
             </span>
-            <Dropdown>
+            <Dropdown radius="sm" className="font-natosans">
               <DropdownTrigger>
                 <Button
                   variant="light"
@@ -220,9 +223,7 @@ export default function TabularFolderView({
               <DropdownMenu aria-label="Static Actions" variant="light">
                 <DropdownItem
                   key="delete"
-                  className="text-danger"
-                  color="danger"
-                  startContent={<MdDelete className="text-xl" />}
+                  startContent={<RiDeleteBin6Line className={iconClasses} />}
                   onClick={() => handleDelete(folder._id)}
                 >
                   Delete Folder
@@ -251,7 +252,7 @@ export default function TabularFolderView({
   const topContent = useMemo(
     () => (
       <>
-        <div className="flex flex-row justify-between gap-x-2">
+        <div className="flex flex-row justify-between gap-x-2 mt-3">
           <Input
             isClearable
             radius="full"
@@ -261,10 +262,11 @@ export default function TabularFolderView({
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
+            variant="bordered"
           />
           <Button
-            color="secondary"
-            startContent={<AiFillFolderAdd className="text-xl" />}
+            color="primary"
+            startContent={<IoMdAddCircleOutline className="text-xl" />}
             radius="sm"
             variant="bordered"
             onClick={() => onOpen()}
@@ -272,7 +274,7 @@ export default function TabularFolderView({
             Create new
           </Button>
         </div>
-        <Breadcrumbs>
+        <Breadcrumbs className="font-natosans my-3">
           <BreadcrumbItem href="/">Home</BreadcrumbItem>
           <BreadcrumbItem href="#">Folders</BreadcrumbItem>
         </Breadcrumbs>
@@ -300,7 +302,7 @@ export default function TabularFolderView({
   );
 
   return (
-    <div>
+    <div className="font-natosans">
       <Table
         aria-label="Example table with custom cells, pagination and sorting"
         isHeaderSticky
@@ -316,11 +318,7 @@ export default function TabularFolderView({
       >
         <TableHeader columns={folderColumns}>
           {({ name, uid, sortable }) => (
-            <TableColumn
-              key={uid}
-              allowsSorting={sortable}
-              align={uid === 'createdAt' ? 'end' : 'start'}
-            >
+            <TableColumn key={uid} allowsSorting={sortable} align="start">
               {name}
             </TableColumn>
           )}
@@ -345,12 +343,13 @@ export default function TabularFolderView({
         onOpenChange={onOpenChange}
         placement="top-center"
         radius="sm"
+        className="font-natosans"
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-row gap-3">
-                <FaFolder className="text-[26px] text-[#000000]" />{' '}
+              <ModalHeader className="flex flex-row gap-4">
+                <CiFolderOn className="text-2xl" />{' '}
                 <span> Create a new folder</span>
               </ModalHeader>
               <ModalBody className="mt-4">
@@ -366,25 +365,23 @@ export default function TabularFolderView({
               </ModalBody>
               <ModalFooter>
                 <Button
-                  color="primary"
-                  variant="ghost"
+                  color="default"
+                  variant="bordered"
                   onPress={onClose}
                   radius="sm"
-                  className="tracking-[.1em]"
                 >
-                  CANCEL
+                  Cancel
                 </Button>
                 <Button
-                  color="secondary"
+                  color="primary"
                   radius="sm"
-                  variant="ghost"
-                  className="tracking-[.1em]"
+                  variant="bordered"
                   onClick={() => {
                     onClose();
                     handleCreateFolder();
                   }}
                 >
-                  CREATE
+                  Create
                 </Button>
               </ModalFooter>
             </>

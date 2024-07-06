@@ -81,12 +81,12 @@ export default function PreviewContent({
         </h1>
       )}
       {isLoading ? (
-        <HeaderStripShimmer className="flex flex-row p-4 justify-between" />
+        <HeaderStripShimmer className="flex flex-row p-4 justify-end" />
       ) : (
         fileData &&
         paperid && (
           <HeaderStrip
-            className="flex flex-row px-4 justify-between font-natosans"
+            className="flex flex-row px-4 justify-end font-natosans"
             fileData={fileData}
             paperId={paperid}
           />

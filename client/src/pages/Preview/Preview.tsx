@@ -14,14 +14,14 @@ export default function Preview() {
     <section className="min-h-[600px] max-w-[1250px] bg-white p-4 mx-auto">
       <PreviewContent setLoading={setLoading} />
       {showComments === false && isLoading === true && (
-        <Skeleton className="h-10 w-[100%] rounded-lg mt-8" />
+        <Skeleton className="h-10 w-[100%] rounded-lg mt-20" />
       )}
       {showComments === false && isLoading === false && (
         <Button
           variant="bordered"
           color="default"
           radius="sm"
-          className="w-[100%] font-natosans py-3 mt-8 text-medium"
+          className="w-[100%] font-natosans py-3 mt-20 text-medium"
           onClick={() => setShowComments(true)}
           startContent={<FaRegComments className="text-xl" />}
         >

@@ -28,10 +28,16 @@ import {
 } from '@nextui-org/react';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { FaFilePdf } from 'react-icons/fa';
-import { MdDelete, MdOutlineRefresh } from 'react-icons/md';
+import { MdOutlineRefresh } from 'react-icons/md';
+import {
+  RiDeleteBin6Line,
+  RiErrorWarningLine,
+  RiPushpinLine,
+} from 'react-icons/ri';
 import { IoSearch } from 'react-icons/io5';
-import { GoBookmarkSlashFill } from 'react-icons/go';
-import { TiPin } from 'react-icons/ti';
+import { GoBookmarkSlash } from 'react-icons/go';
+import { ImSpinner2 } from 'react-icons/im';
+import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
@@ -46,10 +52,13 @@ import { removeBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 import fetcher from '@/utils/fetcher/fetcher';
 import RenderItems from '../Pagination/RenderItems';
 
-const statusColorMap: Record<string, ChipProps['color']> = {
-  Uploaded: 'success',
-  Failed: 'danger',
-  Processing: 'warning',
+const statusMap: Record<string, Record<string, any>> = {
+  Uploaded: {
+    color: 'success',
+    icon: <IoIosCheckmarkCircleOutline className="text-xl" />,
+  },
+  Failed: { color: 'danger', icon: <RiErrorWarningLine className="text-xl" /> },
+  Processing: { color: 'default', icon: <ImSpinner2 className="text-xl" /> },
 };
 
 export default function TabularFileView({
@@ -140,6 +149,8 @@ export default function TabularFileView({
     []
   );
 
+  const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
+
   const sortedItems = useMemo(
     () =>
       [...filteredItems].sort((a: IBookmarkFile, b: IBookmarkFile) => {
@@ -174,7 +185,7 @@ export default function TabularFileView({
           <div className="flex flex-row gap-x-2 cursor-pointer">
             <FaFilePdf className="self-center text-4xl text-[#e81a0c]" />
             <span className="flex flex-col">
-              <span className="font-semibold text-sm min-w-[120px]">
+              <span className="text-sm min-w-[120px]">
                 {heading} {isBookmark && <span>({code})</span>}
               </span>
               {isBookmark && (
@@ -195,9 +206,10 @@ export default function TabularFileView({
         return (
           <Chip
             className="capitalize"
-            color={statusColorMap[file.status]}
+            color={statusMap[file.status].color as ChipProps['color']}
             size="sm"
-            variant="flat"
+            variant="bordered"
+            startContent={statusMap[file.status].icon}
           >
             {cellValue}
           </Chip>
@@ -208,7 +220,7 @@ export default function TabularFileView({
             <span className="self-center">
               {monthNames[month]} {day}, {year}
             </span>
-            <Dropdown>
+            <Dropdown radius="sm" className="font-natosans">
               <DropdownTrigger>
                 <Button
                   variant="light"
@@ -222,23 +234,21 @@ export default function TabularFileView({
               <DropdownMenu aria-label="Static Actions" variant="light">
                 <DropdownItem
                   key="delete"
-                  className="text-danger"
-                  color="danger"
                   startContent={
                     isBookmark ? (
-                      <GoBookmarkSlashFill className="text-xl" />
+                      <GoBookmarkSlash className={iconClasses} />
                     ) : (
-                      <MdDelete className="text-xl" />
+                      <RiDeleteBin6Line className={iconClasses} />
                     )
                   }
                   onClick={() => handleDelete(file.fileId, file.questionId)}
                 >
-                  {isBookmark ? 'Remove bookmark' : 'Delete Post'}
+                  {isBookmark ? 'Remove Bookmark' : 'Delete Post'}
                 </DropdownItem>
                 {isBookmark ? (
                   <DropdownItem
                     key="pinned"
-                    startContent={<TiPin className="text-xl" />}
+                    startContent={<RiPushpinLine className={iconClasses} />}
                     onClick={() => handleDelete(file.fileId, file.questionId)}
                   >
                     Pin File
@@ -270,7 +280,7 @@ export default function TabularFileView({
   const topContent = useMemo(
     () => (
       <>
-        <div className="flex flex-row justify-between gap-x-2">
+        <div className="flex flex-row justify-between gap-x-2 mt-3 font-natosans">
           <Input
             isClearable
             radius="full"
@@ -280,9 +290,10 @@ export default function TabularFileView({
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
+            variant="bordered"
           />
           <Button
-            color="secondary"
+            color="primary"
             variant="bordered"
             startContent={<MdOutlineRefresh className="text-xl" />}
             radius="sm"
@@ -291,7 +302,7 @@ export default function TabularFileView({
             Refresh
           </Button>
         </div>
-        <Breadcrumbs>
+        <Breadcrumbs className="my-3">
           <BreadcrumbItem href="/">Home</BreadcrumbItem>
           <BreadcrumbItem onClick={() => navigate(-1)}>
             {folderName}
@@ -334,14 +345,11 @@ export default function TabularFileView({
       onRowAction={(key) => navigate(`${CLIENT_ROUTES.FILE_PREVIEW}/${key}`)}
       radius="sm"
       onSortChange={setSortDescriptor}
+      className="font-natosans"
     >
       <TableHeader columns={columns}>
         {({ name, uid, sortable }) => (
-          <TableColumn
-            key={uid}
-            allowsSorting={sortable}
-            align={uid === 'createdAt' ? 'end' : 'start'}
-          >
+          <TableColumn key={uid} allowsSorting={sortable} align="start">
             {name}
           </TableColumn>
         )}

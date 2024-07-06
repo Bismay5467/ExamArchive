@@ -7,10 +7,6 @@ export function WFullShimmer({ className }: { className: string }) {
 export function HeaderStripShimmer({ className }: { className: string }) {
   return (
     <div className={className}>
-      <div className="flex flex-row gap-x-4 text-sm sm:text-medium sm:gap-x-12">
-        <Skeleton className="w-[100px] h-2 rounded-lg" />
-        <Skeleton className="w-[100px] h-2 rounded-lg" />
-      </div>
       <div className="flex flex-row gap-x-2">
         <Skeleton className="w-[30px] h-8 rounded-lg" />
         <Skeleton className="w-[30px] h-8 rounded-lg" />
