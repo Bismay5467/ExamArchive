@@ -1,5 +1,3 @@
-import { FaEye } from 'react-icons/fa';
-import { FiDownload } from 'react-icons/fi';
 import { CiBookmarkPlus } from 'react-icons/ci';
 import { Button, useDisclosure } from '@nextui-org/react';
 import { IoCloudDownloadOutline, IoFlagOutline } from 'react-icons/io5';
@@ -12,14 +10,7 @@ import CustomDropDown from '@/components/Dropdown';
 export default function HeaderStrip({
   className,
   paperId,
-  fileData: {
-    noOfDownloads,
-    noOfViews,
-    semester,
-    subjectCode,
-    subjectName,
-    year,
-  },
+  fileData: { semester, subjectCode, subjectName, year },
 }: {
   className: string;
   paperId: string;
@@ -51,24 +42,6 @@ export default function HeaderStrip({
   ];
   return (
     <div className={className}>
-      <div className="flex flex-row gap-x-4 text-sm sm:text-medium sm:gap-x-12 text-slate-700">
-        <div className="flex flex-row gap-x-2">
-          <FaEye className="self-center" />
-          <p className="self-center">
-            {noOfViews.count > 1
-              ? `${noOfViews.count} views`
-              : `${noOfViews.count} view`}
-          </p>
-        </div>
-        <div className="flex flex-row gap-x-2">
-          <FiDownload className="self-center" />
-          <p className="self-center">
-            {noOfDownloads.count > 1
-              ? `${noOfDownloads.count} downloads`
-              : `${noOfDownloads.count} download`}
-          </p>
-        </div>
-      </div>
       <div className="flex flex-row gap-x-2">
         <Button
           isIconOnly
