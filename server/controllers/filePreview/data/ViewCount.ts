@@ -61,7 +61,9 @@ const ViewCount = asyncErrorHandler(async (req: Request, res: Response) => {
       SERVER_ERROR['INTERNAL SERVER ERROR']
     );
   }
-  return res.status(SUCCESS_CODES['NO CONTENT']);
+  return res.status(SUCCESS_CODES['NO CONTENT']).json({
+    message: 'No message',
+  });
 });
 
 export default ViewCount;

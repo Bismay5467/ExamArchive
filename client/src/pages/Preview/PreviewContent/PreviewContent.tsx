@@ -11,11 +11,9 @@ import { PDFViewer } from './PDFViewer/PDFViewer';
 import RatingSection from './RatingSection/RatingSection';
 import TagsSection from './TagsSection/TagsSection';
 import { WFullSekelton } from '@/components/Skeleton';
-import HeaderStrip from './HeaderStrip/HeaderStrip';
 import BasicInfo from './BasicInfo/BasicInfo';
 import {
   BasicInfoShimmer,
-  HeaderStripShimmer,
   PDFViewerShimmer,
   RatingSectionShimmer,
 } from '../Shimmer/Shimmer';
@@ -39,11 +37,7 @@ export default function PreviewContent({
     isLoading,
     mutate,
   } = useSWR(paperid ? getFileObj(paperid) : null);
-  useSWR(
-    paperid && isLoading
-      ? getUpdateViewCountObj({ postId: paperid, jwtToken })
-      : null
-  );
+  useSWR(paperid ? getUpdateViewCountObj(paperid, jwtToken) : null);
 
   const parseToJSON = async () => {
     const parsedData = await JSON.parse(response.data.data);
@@ -90,19 +84,7 @@ export default function PreviewContent({
           </p>
         </h1>
       )}
-      {isLoading ? (
-        <HeaderStripShimmer className="flex flex-row p-4 justify-end" />
-      ) : (
-        fileData &&
-        paperid && (
-          <HeaderStrip
-            className="flex flex-row px-4 justify-end font-natosans"
-            fileData={fileData}
-            paperId={paperid}
-          />
-        )
-      )}
-      <div className="grid grid-cols-1 sm:grid-cols-6 sm:grid-rows-3 font-natosans">
+      <div className="grid sm:mt-4 grid-cols-1 sm:grid-cols-6 sm:grid-rows-3 font-natosans">
         <div className="col-span-1 sm:col-span-3 sm:row-span-3 p-4">
           {isLoading ? (
             <PDFViewerShimmer />
@@ -113,10 +95,12 @@ export default function PreviewContent({
         {isLoading ? (
           <BasicInfoShimmer className="col-span-1 row-start-1 flex flex-col gap-y-2 text-sm sm:text-lg sm:col-span-3 sm:row-span-1 p-4" />
         ) : (
-          fileData && (
+          fileData &&
+          paperid && (
             <BasicInfo
               className="col-span-1 row-start-1 flex flex-col gap-y-2 text-sm sm:text-lg sm:col-span-3 sm:row-span-1 p-4"
               fileData={fileData}
+              paperId={paperid}
             />
           )
         )}
