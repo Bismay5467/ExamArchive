@@ -1,6 +1,11 @@
 import getSearchRequestObj from './search';
 import { getResetObj, getSignInObj, getSignUpObj } from './auth';
-import { getFileObj, deleteFileObj } from './file';
+import {
+  getFileObj,
+  deleteFileObj,
+  updateRatingObj,
+  editTagsObj,
+} from './file';
 import { reportObj } from './report';
 import {
   getFilesDataObj,
@@ -24,6 +29,7 @@ export {
   getFileObj,
   reportObj,
   deleteFileObj,
+  editTagsObj,
   getFilesDataObj,
   createFolderObj,
   getFolderNameObj,
@@ -33,4 +39,5 @@ export {
   deleteCommentObj,
   editCommentObj,
   reactToCommentObj,
+  updateRatingObj,
 };

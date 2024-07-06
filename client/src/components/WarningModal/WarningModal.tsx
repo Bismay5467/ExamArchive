@@ -6,8 +6,8 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
-import { BsQuestionCircleFill } from 'react-icons/bs';
 import React from 'react';
+import { MdDeleteOutline } from 'react-icons/md';
 
 interface IWarningModalProps {
   isOpen: boolean;
@@ -32,23 +32,38 @@ export default function WarningModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      radius="sm"
+      className="font-natosans"
+    >
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-row gap-x-2 text-xl">
-              <BsQuestionCircleFill className="self-center text-2xl text-[#DB1256]" />
-              Are you sure?
+            <ModalHeader className="flex flex-row gap-x-2 text-lg text-red-500">
+              <MdDeleteOutline className="self-center text-2xl" />
+              Delete comment
             </ModalHeader>
-            <ModalBody className="font-medium tracking-wide opacity-70">
+            <ModalBody className="font-sm">
               Are you sure you want to {actionText.toLowerCase()} this{' '}
-              {actionType.toLowerCase()}?
+              {actionType.toLowerCase()}? This action is irreversible.
             </ModalBody>
             <ModalFooter>
-              <Button className="bg-slate-200" onPress={onClose}>
+              <Button
+                variant="bordered"
+                color="default"
+                onPress={onClose}
+                radius="sm"
+              >
                 Close
               </Button>
-              <Button color="danger" onPress={handleSubmit}>
+              <Button
+                variant="bordered"
+                color="danger"
+                onPress={handleSubmit}
+                radius="sm"
+              >
                 {actionText}
               </Button>
             </ModalFooter>

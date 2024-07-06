@@ -7,7 +7,6 @@ import {
   MONGO_WRITE_QUERY_TIMEOUT,
 } from '../../../constants/constants/shared';
 
-import { DOC_INFO_TTL_IN_SECONDS } from '../../../constants/constants/filePreview';
 import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { IRatingInfo } from '../../../types/filePreview/types';
 import Question from '../../../models/question';
@@ -81,9 +80,7 @@ const UpdateRating = asyncErrorHandler(async (req: Request, res: Response) => {
         .lean()
         .exec(),
     ];
-    const [updatedRatings, updatedDocInfo] = await Promise.all(
-      updateDataInDBPromises
-    );
+    const [updatedRatings] = await Promise.all(updateDataInDBPromises);
     if (updatedRatings !== null) {
       await session.abortTransaction();
       throw new ErrorHandler(
@@ -92,14 +89,7 @@ const UpdateRating = asyncErrorHandler(async (req: Request, res: Response) => {
       );
     }
     const redisKey = `post:${postId}`;
-    if (redisClient) {
-      await redisClient.set(
-        redisKey,
-        JSON.stringify(updatedDocInfo),
-        'EX',
-        DOC_INFO_TTL_IN_SECONDS
-      );
-    }
+    if (redisClient) await redisClient.del(redisKey);
   });
   await session.endSession();
   return res

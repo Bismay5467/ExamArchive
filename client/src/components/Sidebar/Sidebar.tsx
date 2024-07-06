@@ -32,7 +32,7 @@ export default function Sidebar() {
   const baseRoute = `dashboard/${userId}`;
 
   return (
-    <nav className="fixed z-50 group h-screen w-[70px] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg">
+    <nav className="fixed z-50 group h-screen w-[70px] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg font-natosans">
       <div className="bg-[#f7f7f7] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
         <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
           <img src={logo} alt="LOGO" className="mix-blend-multiply w-[45px]" />
@@ -53,7 +53,7 @@ export default function Sidebar() {
                   <LuFileSearch2 className="text-xl" />
                 </IconWrapper>
                 <p
-                  className={`self-center text-base font-semibold hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
+                  className={`self-center text-base hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
                 >
                   Search
                 </p>
@@ -72,7 +72,7 @@ export default function Sidebar() {
                   <IoBookmarkOutline className="text-xl" />
                 </IconWrapper>
                 <p
-                  className={`self-center text-base font-semibold hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
+                  className={`self-center text-base hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
                 >
                   Bookmarks
                 </p>
@@ -84,7 +84,7 @@ export default function Sidebar() {
               <TbBrandGoogleAnalytics className="text-xl text-slate-400" />
             </IconWrapper>
             <div>
-              <p className="self-center text-sm font-semibold text-slate-400 hidden group-hover:block">
+              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
                 Analytics
               </p>
               <p className="self-center text-sm text-slate-400 hidden group-hover:block">
@@ -106,7 +106,7 @@ export default function Sidebar() {
                   <IoCloudUploadOutline className="text-xl" />
                 </IconWrapper>
                 <p
-                  className={`self-center text-base font-semibold hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
+                  className={`self-center text-base hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
                 >
                   Upload
                 </p>
@@ -120,7 +120,7 @@ export default function Sidebar() {
               <IoNotificationsOutline className="text-2xl text-slate-400" />
             </IconWrapper>
             <div>
-              <p className="self-center text-sm font-semibold text-slate-400 hidden group-hover:block">
+              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
                 Notifications
               </p>
               <p className="self-center text-sm text-slate-400 hidden group-hover:block">
@@ -139,10 +139,10 @@ export default function Sidebar() {
                       src="https://i.pravatar.cc/150?u=a04258114e29026302d"
                     />
                     <div>
-                      <p className="self-center text-sm font-semibold hidden group-hover:block">
+                      <p className="self-center text-sm hidden group-hover:block">
                         {username}
                       </p>
-                      <p className="self-center text-sm font-semibold opacity-60 hidden group-hover:block">
+                      <p className="self-center text-sm opacity-60 hidden group-hover:block">
                         @{role.toLowerCase()}
                       </p>
                     </div>

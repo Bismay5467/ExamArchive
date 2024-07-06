@@ -21,3 +21,7 @@ export function TableViewSkeleton() {
     </div>
   );
 }
+
+export function WFullSekelton({ className }: { className: string }) {
+  return <Skeleton className={className} />;
+}
