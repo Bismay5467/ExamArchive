@@ -1,21 +1,35 @@
+/* eslint-disable no-magic-numbers */
 import { CiBookmarkPlus } from 'react-icons/ci';
+import { useState } from 'react';
 import { Button, useDisclosure } from '@nextui-org/react';
 import { IoCloudDownloadOutline, IoFlagOutline } from 'react-icons/io5';
+import useSWR from 'swr';
 import { IFileData } from '@/types/file';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import BookmarksModal from '../BookmarksModal/BookmarksModal';
 import { IDropDownProps } from '@/types/comments';
 import CustomDropDown from '@/components/Dropdown';
+import { getUpdateDownloadCountObj } from '@/utils/axiosReqObjects/file';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function HeaderStrip({
   className,
   paperId,
-  fileData: { semester, subjectCode, subjectName, year },
+  fileData: {
+    semester,
+    subjectCode,
+    subjectName,
+    year,
+    file: { url },
+  },
 }: {
   className: string;
   paperId: string;
   fileData: IFileData;
 }) {
+  const {
+    authState: { jwtToken, userId },
+  } = useAuth();
   const {
     onOpen: onBookmarkOpen,
     isOpen: isBookmarkOpen,
@@ -28,11 +42,34 @@ export default function HeaderStrip({
     onClose: onReportClose,
     onOpenChange: onReportOpenChange,
   } = useDisclosure();
+  const [isFileDownloaded, setIsFileDownloaded] = useState<boolean>(false);
   const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
+  const onDownload = () => {
+    fetch(url).then((response) => {
+      response.blob().then((blob) => {
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.setAttribute('href', fileURL);
+        anchor.setAttribute('download', `${paperId}_${userId}_${Date.now()}`);
+        anchor.click();
+        setIsFileDownloaded(true);
+        setTimeout(() => {
+          window.URL.revokeObjectURL(fileURL);
+          setIsFileDownloaded(false);
+        }, 10000);
+      });
+    });
+  };
+  useSWR(
+    isFileDownloaded
+      ? getUpdateDownloadCountObj({ postId: paperId, jwtToken })
+      : null
+  );
   const dropdownMenu: IDropDownProps[] = [
     {
       icon: <IoCloudDownloadOutline className={iconClasses} />,
       value: 'Download file',
+      action: onDownload,
     },
     {
       icon: <IoFlagOutline className="text-lg pointer-events-none" />,

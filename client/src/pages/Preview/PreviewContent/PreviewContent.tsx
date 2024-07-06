@@ -19,6 +19,8 @@ import {
   PDFViewerShimmer,
   RatingSectionShimmer,
 } from '../Shimmer/Shimmer';
+import { useAuth } from '@/hooks/useAuth';
+import { getUpdateViewCountObj } from '@/utils/axiosReqObjects/file';
 
 export default function PreviewContent({
   setLoading,
@@ -26,6 +28,9 @@ export default function PreviewContent({
   setLoading: (_val: boolean) => void;
 }) {
   const [fileData, setFileData] = useState<IFileData>();
+  const {
+    authState: { jwtToken },
+  } = useAuth();
   const { paperid } = useParams();
 
   const {
@@ -34,6 +39,11 @@ export default function PreviewContent({
     isLoading,
     mutate,
   } = useSWR(paperid ? getFileObj(paperid) : null);
+  useSWR(
+    paperid && isLoading
+      ? getUpdateViewCountObj({ postId: paperid, jwtToken })
+      : null
+  );
 
   const parseToJSON = async () => {
     const parsedData = await JSON.parse(response.data.data);

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
 import { IEditTags, IRating } from '@/types/file';
@@ -66,6 +67,68 @@ export const editTagsObj = (
     },
     withCredentials: true,
   };
+
+  return axiosObj;
+};
+
+export const getUpdateViewCountObj = ({
+  postId,
+  jwtToken,
+}: {
+  postId: string;
+  jwtToken?: string;
+}) => {
+  const url = `${SERVER_ROUTES.FILE}/viewCount`;
+  const axiosObj: AxiosRequestConfig<any> = jwtToken
+    ? {
+        url,
+        data: { data: postId },
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        withCredentials: true,
+      }
+    : {
+        url,
+        data: { data: postId },
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+  return axiosObj;
+};
+
+export const getUpdateDownloadCountObj = ({
+  postId,
+  jwtToken,
+}: {
+  postId: string;
+  jwtToken?: string;
+}) => {
+  const url = `${SERVER_ROUTES.FILE}/downloadCount`;
+  const axiosObj: AxiosRequestConfig<any> = jwtToken
+    ? {
+        url,
+        data: { data: postId },
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        withCredentials: true,
+      }
+    : {
+        url,
+        data: { data: postId },
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
   return axiosObj;
 };
