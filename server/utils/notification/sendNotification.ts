@@ -2,9 +2,12 @@
 import { Types } from 'mongoose';
 
 import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
-import { NOTIF_FREQ } from '../../constants/constants/filePreview';
 import { User } from '../../models';
 import inAppNotification from './inApp';
+import {
+  NOTIF_FREQ,
+  getFilePreviewLink,
+} from '../../constants/constants/filePreview';
 import { TNotif, TNotifType } from '../../types/filePreview/types';
 
 const getSubscriberPayload = async ({
@@ -43,8 +46,10 @@ const sendNotification = async (params: TNotif<TNotifType>) => {
       payload = { numbers: count, type, postId };
       break;
     case 'tags':
+      const redirectURL = getFilePreviewLink(postId);
       subscriberPayload = await getSubscriberPayload({ ownerId });
       if (Object.keys(subscriberPayload).length === 0) return undefined;
+      payload = { redirectURL };
       break;
     default:
       return null;
