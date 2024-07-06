@@ -114,6 +114,7 @@ export default function PreviewContent({
                 postId={paperid}
                 rating={fileData.rating}
                 ratingCount={fileData.ratingCount}
+                mutate={mutate}
               />
             )
           )}

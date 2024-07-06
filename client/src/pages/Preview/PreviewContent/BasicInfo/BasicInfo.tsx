@@ -1,5 +1,4 @@
 /* eslint-disable no-magic-numbers */
-import { LuCalendarClock } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { HiOutlineAcademicCap } from 'react-icons/hi2';
 import {
@@ -13,11 +12,9 @@ import { Button, useDisclosure } from '@nextui-org/react';
 import { CiBookmarkPlus } from 'react-icons/ci';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { monthNames } from '@/constants/shared';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import BookmarksModal from '../BookmarksModal/BookmarksModal';
 import { IFileData } from '@/types/file';
-import { parseUTC } from '@/utils/helpers';
 import CustomDropDown from '@/components/Dropdown';
 import { IDropDownProps } from '@/types/comments';
 import { useAuth } from '@/hooks/useAuth';
@@ -32,7 +29,6 @@ export default function BasicInfo({
     uploadedBy,
     year,
     institutionName,
-    createdAt,
     branch,
     examType,
     file: { url },
@@ -46,7 +42,6 @@ export default function BasicInfo({
   const {
     authState: { jwtToken, userId },
   } = useAuth();
-  const { day, month, year: createYear } = parseUTC(createdAt || '');
   const [isFileDownloaded, setIsFileDownloaded] = useState<boolean>(false);
   const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
   const {
@@ -102,10 +97,6 @@ export default function BasicInfo({
               {semester}, {year}
             </p>
           </span>
-          <span className="flex flex-row gap-x-3">
-            <PiExam className="self-center text-xl" />
-            <p className="self-center">{examType}</p>
-          </span>
         </div>
         <div className="flex flex-row gap-x-2">
           <Button
@@ -125,10 +116,8 @@ export default function BasicInfo({
           <p>{uploadedBy.username ?? 'ExamArchive user'}</p>
         </span>
         <span className="flex flex-row gap-x-3">
-          <LuCalendarClock className="self-center text-xl" />
-          <p>
-            {monthNames[month]} {day}, {createYear}
-          </p>
+          <PiExam className="self-center text-xl" />
+          <p className="self-center">{examType}</p>
         </span>
       </div>
       <div className="flex flex-row gap-x-3 text-slate-700">
