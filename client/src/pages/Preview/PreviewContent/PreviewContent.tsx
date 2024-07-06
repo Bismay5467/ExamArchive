@@ -20,11 +20,7 @@ import {
   RatingSectionShimmer,
 } from '../Shimmer/Shimmer';
 
-export default function PreviewContent({
-  handleClick,
-}: {
-  handleClick: () => void;
-}) {
+export default function PreviewContent() {
   const [fileData, setFileData] = useState<IFileData>();
   const { paperid } = useParams();
 
@@ -85,7 +81,6 @@ export default function PreviewContent({
             className="flex flex-row px-4 justify-between font-natosans"
             fileData={fileData}
             paperId={paperid}
-            handleClick={handleClick}
           />
         )
       )}

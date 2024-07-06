@@ -2,7 +2,7 @@ import { cn, CheckboxGroup, Checkbox } from '@nextui-org/react';
 import React from 'react';
 import { IFilterInputs } from '@/types/search';
 
-export default function OptionGroup({
+function OptionGroup({
   filterKey,
   options,
   multiple,
@@ -64,3 +64,5 @@ export default function OptionGroup({
     </div>
   );
 }
+
+export default OptionGroup;

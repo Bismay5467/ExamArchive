@@ -1,6 +1,5 @@
 import { FaEye } from 'react-icons/fa';
 import { FiDownload } from 'react-icons/fi';
-import { FaRegComment } from 'react-icons/fa6';
 import { CiBookmarkPlus } from 'react-icons/ci';
 import { Button, useDisclosure } from '@nextui-org/react';
 import { IoCloudDownloadOutline, IoFlagOutline } from 'react-icons/io5';
@@ -13,7 +12,6 @@ import CustomDropDown from '@/components/Dropdown';
 export default function HeaderStrip({
   className,
   paperId,
-  handleClick,
   fileData: {
     noOfDownloads,
     noOfViews,
@@ -23,7 +21,6 @@ export default function HeaderStrip({
     year,
   },
 }: {
-  handleClick: () => void;
   className: string;
   paperId: string;
   fileData: IFileData;
@@ -71,20 +68,6 @@ export default function HeaderStrip({
               : `${noOfDownloads.count} download`}
           </p>
         </div>
-        <button
-          type="button"
-          className="hidden sm:flex sm:flex-row sm:gap-x-2"
-          onClick={() => {
-            handleClick();
-            const element = document.querySelector('#disscussion-forum');
-            element?.scrollIntoView({
-              behavior: 'smooth',
-            });
-          }}
-        >
-          <FaRegComment className="self-center" />
-          <p className="self-center">Disscussion Forum</p>
-        </button>
       </div>
       <div className="flex flex-row gap-x-2">
         <Button
