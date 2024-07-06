@@ -61,11 +61,7 @@ function RenderItems({
       type="button"
       key={key}
       ref={ref}
-      className={cn(
-        className,
-        isActive &&
-          'text-white bg-gradient-to-br from-indigo-500 to-pink-500 font-bold'
-      )}
+      className={cn(className, isActive && 'text-white bg-pink-500 font-bold')}
       onClick={() => setPage(value)}
     >
       {value}

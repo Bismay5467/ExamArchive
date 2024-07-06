@@ -27,7 +27,7 @@ export default function Sidebar() {
     RESET,
   } = useAuth();
 
-  const activeClass = 'text-orange-600';
+  const activeClass = 'text-pink-600';
   const nonActiveClass = 'text-slate-600';
   const baseRoute = `dashboard/${userId}`;
 
