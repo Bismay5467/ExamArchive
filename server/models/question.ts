@@ -44,6 +44,11 @@ const QuestionSchema: Schema = new mongoose.Schema(
       enum: examNames(EXAM_TYPES),
       index: true,
     },
+    ratingCount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     rating: {
       type: [
         {

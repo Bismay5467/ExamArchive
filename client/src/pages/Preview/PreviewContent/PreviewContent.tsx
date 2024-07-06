@@ -126,7 +126,11 @@ export default function PreviewContent({
           ) : (
             paperid &&
             fileData && (
-              <RatingSection postId={paperid} rating={fileData.rating} />
+              <RatingSection
+                postId={paperid}
+                rating={fileData.rating}
+                ratingCount={fileData.ratingCount}
+              />
             )
           )}
         </div>

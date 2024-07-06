@@ -18,7 +18,9 @@ import fetcher from '@/utils/fetcher/fetcher';
 export default function RatingSection({
   postId,
   rating,
+  ratingCount,
 }: {
+  ratingCount: number;
   postId: string;
   rating: Array<{
     ratingType: string;
@@ -41,6 +43,13 @@ export default function RatingSection({
   } = useAuth();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const getRatingCount = () => {
+    // eslint-disable-next-line no-magic-numbers
+    if (ratingCount > 1000) return `${Math.floor(ratingCount / 1000)}K+ users`;
+    if (ratingCount > 1) return `${ratingCount} users`;
+    return `${ratingCount} user`;
+  };
 
   const handleSubmit = async () => {
     if (!helpfull || !standard || !relevance) {
@@ -84,7 +93,10 @@ export default function RatingSection({
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
         <p className="self-center text-black">
-          Ratings <span className="text-slate-500">( 1.2K+ users voted )</span>
+          Ratings{' '}
+          <span className="text-slate-500">
+            {`( ${getRatingCount()} voted )`}
+          </span>
         </p>
         <Button
           size="sm"

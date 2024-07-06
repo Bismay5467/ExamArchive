@@ -2,6 +2,7 @@ export interface IFileData {
   branch: string;
   createdAt: string;
   examType: string;
+  ratingCount: number;
   file: {
     url: string;
   };
