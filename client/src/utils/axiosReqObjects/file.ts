@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
 import { IEditTags, IRating } from '@/types/file';
