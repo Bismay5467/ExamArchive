@@ -12,3 +12,5 @@ export const NOTIF_FREQ = 100;
 export const NOVU_MILESTONE_ACHIEVED = 'exam-archive-milestone-achieved';
 export const NOVU_EDIT_TAGS = 'exam-archive-tags-added';
 export const MAX_FILE_PIN_LIMIT = 3;
+
+export const getFilePreviewLink = (postId: string) => `/preview/${postId}`;
