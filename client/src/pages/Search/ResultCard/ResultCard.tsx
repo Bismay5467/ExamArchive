@@ -40,7 +40,7 @@ export default function ResultCard({
     noOfDownloads: { count: downloadCount },
     noOfViews: { count: viewCount },
     year: examyear,
-    updatedAt,
+    createdAt,
     subjectName,
     examType,
     tags,
@@ -51,7 +51,7 @@ export default function ResultCard({
 }: {
   data: ISearchData;
 }) {
-  const { day, month, year } = parseUTC(updatedAt);
+  const { day, month, year } = parseUTC(createdAt);
   const navigate = useNavigate();
   return (
     <Card
@@ -107,7 +107,7 @@ export default function ResultCard({
           </div>
           <div className="self-center hidden gap-x-2 text-sm text-slate-500 lg:flex lg:flex-row">
             <p>
-              Last updated at :{' '}
+              Posted on :{' '}
               <span className="py-1">{`${monthNames[month - 1]} ${day}, ${year}`}</span>
             </p>
           </div>

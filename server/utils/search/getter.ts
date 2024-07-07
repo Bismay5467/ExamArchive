@@ -33,7 +33,7 @@ export const getSortOrder = ({
   const sortOrder =
     sortFilter === 'Most Views'
       ? { 'noOfViews.count': 'desc' }
-      : { updatedAt: 'desc' };
+      : { createdAt: 'desc' };
   return sortOrder;
 };
 
