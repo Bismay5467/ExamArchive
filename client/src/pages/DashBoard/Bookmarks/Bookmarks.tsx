@@ -6,13 +6,13 @@ import { AiOutlineFilePdf } from 'react-icons/ai';
 
 export default function Bookmarks() {
   return (
-    <div className="flex flex-col p-4 gap-y-4 font-natosans">
+    <div className="max-w-[1200px] mx-auto flex flex-col p-4 gap-y-4 font-natosans">
       <div className="text-xl flex flex-row gap-x-2 font-semibold text-slate-700">
         <span>Pinned</span> <RiPushpinLine className="self-center text-2xl" />
       </div>
-      <div className="flex flex-row gap-x-4">
+      <div className="flex gap-4 flex-col sm:flex-row">
         <Card
-          className="max-w-[400px] w-1/3 font-natosans"
+          className="w-full sm:w-1/3 font-natosans"
           radius="sm"
           style={{
             boxShadow:
@@ -35,7 +35,7 @@ export default function Bookmarks() {
           </CardBody>
         </Card>
         <Card
-          className="max-w-[400px] w-1/3 font-natosans"
+          className="w-full sm:w-1/3 font-natosans"
           radius="sm"
           style={{
             boxShadow:
@@ -47,7 +47,7 @@ export default function Bookmarks() {
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-              <span className="text-slate-700">Test Folder 2</span>
+              <span className="text-slate-700">Test Folder 1</span>
               <span className="text-sm text-slate-500">
                 Added 69 days before
               </span>
@@ -58,7 +58,7 @@ export default function Bookmarks() {
           </CardBody>
         </Card>
         <Card
-          className="max-w-[400px] w-1/3 font-natosans"
+          className="w-full sm:w-1/3 font-natosans"
           radius="sm"
           style={{
             boxShadow:
@@ -70,7 +70,7 @@ export default function Bookmarks() {
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
             </div>
             <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-              <span className="text-slate-700">Test Folder 3</span>
+              <span className="text-slate-700">Test Folder 1</span>
               <span className="text-sm text-slate-500">
                 Added 69 days before
               </span>

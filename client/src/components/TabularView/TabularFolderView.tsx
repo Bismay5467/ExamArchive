@@ -185,7 +185,7 @@ export default function TabularFolderView({
     switch (columnKey) {
       case 'name':
         return (
-          <div className="flex flex-row gap-x-2 cursor-pointer">
+          <div className="min-w-[250px] flex flex-row gap-x-2 cursor-pointer">
             <FaFolderOpen className="self-center text-4xl text-[#fcba03]" />
             <span className="flex flex-col">
               <span className="font-medium text-sm min-w-[120px]">
@@ -199,13 +199,13 @@ export default function TabularFolderView({
         );
       case 'createdAt':
         return (
-          <div className="font-medium opacity-65">
+          <div className="min-w-[100px] font-medium opacity-65">
             {monthNames[month]} {day}, {year}
           </div>
         );
       default:
         return (
-          <div className="font-medium flex flex-row justify-between opacity-65">
+          <div className="font-medium min-w-[120px] flex flex-row justify-between opacity-65">
             <span className="self-center">
               {monthNames[month]} {day}, {year}
             </span>

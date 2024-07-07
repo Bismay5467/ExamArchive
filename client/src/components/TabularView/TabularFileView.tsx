@@ -182,7 +182,7 @@ export default function TabularFileView({
     switch (columnKey) {
       case 'filename':
         return (
-          <div className="flex flex-row gap-x-2 cursor-pointer">
+          <div className="flex min-w-[300px] flex-row gap-x-2 cursor-pointer">
             <FaFilePdf className="self-center text-4xl text-[#e81a0c]" />
             <span className="flex flex-col">
               <span className="text-sm min-w-[120px]">
@@ -198,14 +198,14 @@ export default function TabularFileView({
         );
       case 'createdAt':
         return (
-          <div className="font-medium opacity-65">
+          <div className="min-w-[100px] font-medium opacity-65">
             {monthNames[month]} {day}, {year}
           </div>
         );
       case 'status':
         return (
           <Chip
-            className="capitalize"
+            className="capitalize min-w-[100px]"
             color={statusMap[file.status].color as ChipProps['color']}
             size="sm"
             variant="bordered"
@@ -216,7 +216,7 @@ export default function TabularFileView({
         );
       default:
         return (
-          <div className="font-medium flex flex-row justify-between opacity-65">
+          <div className="min-w-[120px] font-medium flex flex-row justify-between opacity-65">
             <span className="self-center">
               {monthNames[month]} {day}, {year}
             </span>
