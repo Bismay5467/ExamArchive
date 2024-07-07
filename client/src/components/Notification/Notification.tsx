@@ -38,8 +38,8 @@ export default function Notification({
     >
       <PopoverNotificationCenter
         colorScheme={theme}
-        allowedNotificationActions={false}
         onNotificationClick={handleNotificationClick}
+        showUserPreferences={false}
       >
         {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
       </PopoverNotificationCenter>

@@ -43,13 +43,17 @@ const sendNotification = async (params: TNotif<TNotifType>) => {
       }
       subscriberPayload = await getSubscriberPayload({ ownerId });
       if (Object.keys(subscriberPayload).length === 0) return undefined;
-      payload = { numbers: count, type, postId };
+      payload = {
+        numbers: count,
+        type,
+        postId,
+        redirectURL: getFilePreviewLink(postId),
+      };
       break;
     case 'tags':
-      const redirectURL = getFilePreviewLink(postId);
       subscriberPayload = await getSubscriberPayload({ ownerId });
       if (Object.keys(subscriberPayload).length === 0) return undefined;
-      payload = { redirectURL };
+      payload = { redirectURL: getFilePreviewLink(postId) };
       break;
     default:
       return null;
