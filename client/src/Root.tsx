@@ -33,7 +33,7 @@ export default function Root() {
           }}
         >
           <SearchProvider>
-            <main className="box-border min-h-screen bg-white">
+            <main className="box-border min-h-screen">
               <Sidebar />
               <Suspense fallback={<Loading />}>
                 <Outlet />

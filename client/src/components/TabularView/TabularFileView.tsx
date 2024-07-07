@@ -27,7 +27,6 @@ import {
   BreadcrumbItem,
 } from '@nextui-org/react';
 import { FaEllipsisVertical } from 'react-icons/fa6';
-import { FaFilePdf } from 'react-icons/fa';
 import { MdOutlineRefresh } from 'react-icons/md';
 import {
   RiDeleteBin6Line,
@@ -38,6 +37,7 @@ import { IoSearch } from 'react-icons/io5';
 import { GoBookmarkSlash } from 'react-icons/go';
 import { ImSpinner2 } from 'react-icons/im';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
+import { AiOutlineFilePdf } from 'react-icons/ai';
 import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
@@ -183,7 +183,7 @@ export default function TabularFileView({
       case 'filename':
         return (
           <div className="flex min-w-[300px] flex-row gap-x-2 cursor-pointer">
-            <FaFilePdf className="self-center text-4xl text-[#e81a0c]" />
+            <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
             <span className="flex flex-col">
               <span className="text-sm min-w-[120px]">
                 {heading} {isBookmark && <span>({code})</span>}

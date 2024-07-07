@@ -23,7 +23,7 @@ export default function DashBoard() {
   }, [isAuth]);
 
   return (
-    <main>
+    <main className="pt-6">
       <Outlet />
     </main>
   );
