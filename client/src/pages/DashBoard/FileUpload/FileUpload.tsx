@@ -17,6 +17,7 @@ export default function FileUpload() {
           cursor: 'w-full bg-pink-500',
           tab: 'max-w-fit px-0 h-12',
           tabContent: 'group-data-[selected=true]:text-pink-500',
+          base: 'w-fit',
         }}
       >
         <Tab

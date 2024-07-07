@@ -15,22 +15,28 @@ function getValues<T extends Record<string, any>>(obj: T) {
 export const sanitizeInput = (params: string) => params.toUpperCase();
 
 const baseSchema = z.object({
-  file: z.object({
-    dataURI: z
-      .string()
-      .refine((dataURI) => isBase64(dataURI.split(',')[1]), {
-        message: 'Invalid DataURI',
-      })
-      .refine((dataURI) => ALLOWED_FILE_TYPES.includes(dataURI.split(';')[0]), {
-        message: 'Only .pdf is allowed',
-      }),
-    name: z
-      .string()
-      .min(1, { message: '*Filename must contain atleast 1 character(s)' })
-      .max(100, {
-        message: '*Filename must contain atmost 100 character(s)',
-      }),
-  }),
+  file: z.object(
+    {
+      dataURI: z
+        .string()
+        .refine((dataURI) => isBase64(dataURI.split(',')[1]), {
+          message: 'Invalid DataURI',
+        })
+        .refine(
+          (dataURI) => ALLOWED_FILE_TYPES.includes(dataURI.split(';')[0]),
+          {
+            message: 'Only .pdf is allowed',
+          }
+        ),
+      name: z
+        .string()
+        .min(1, { message: '*Filename must contain atleast 1 character(s)' })
+        .max(100, {
+          message: '*Filename must contain atmost 100 character(s)',
+        }),
+    },
+    { message: 'Please upload a file!' }
+  ),
   folderId: z.string(),
 });
 

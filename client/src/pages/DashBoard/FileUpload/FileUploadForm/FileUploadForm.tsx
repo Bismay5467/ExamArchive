@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable indent */
 import { Button } from '@nextui-org/button';
 import { Spinner } from '@nextui-org/spinner';
@@ -83,7 +84,9 @@ export default function FileUploadForm() {
 
   const triggerValidate = async () => {
     const validationResult = isFirstStep()
-      ? await trigger(['file.dataURI', 'file.name', 'examType', 'folderId'])
+      ? await trigger(['file']).then(() =>
+          trigger(['file.dataURI', 'file.name', 'examType', 'folderId'])
+        )
       : await trigger([
           'branch',
           'subjectCode',
@@ -93,6 +96,7 @@ export default function FileUploadForm() {
           'year',
           'semester',
         ]);
+
     if (!validationResult) {
       toast.error('Please fillup the required fields Correctly!', {
         duration: 5000,

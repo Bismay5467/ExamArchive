@@ -127,7 +127,11 @@ export default function Upload({
         onFocus={() => errors.file?.dataURI && clearErrors('file.dataURI')}
       />
       {errors && (
-        <p className="text-red-500 text-sm">{errors.file?.dataURI?.message}</p>
+        <p className="text-red-500 text-sm">
+          {errors.file?.message ??
+            errors.file?.dataURI?.message ??
+            errors.file?.name?.message}
+        </p>
       )}
       <div className="w-full flex flex-col gap-y-1">
         <div className="w-full flex flex-row gap-x-4">
