@@ -6,7 +6,7 @@ import FileUploadForm from './FileUploadForm/FileUploadForm';
 
 export default function FileUpload() {
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex max-w-[1200px] mx-auto flex-col">
       <Tabs
         aria-label="Options"
         color="primary"
