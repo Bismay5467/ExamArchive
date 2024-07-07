@@ -4,17 +4,6 @@ export function WFullShimmer({ className }: { className: string }) {
   return <Skeleton className={className} />;
 }
 
-export function HeaderStripShimmer({ className }: { className: string }) {
-  return (
-    <div className={className}>
-      <div className="flex flex-row gap-x-2">
-        <Skeleton className="w-[30px] h-8 rounded-lg" />
-        <Skeleton className="w-[30px] h-8 rounded-lg" />
-      </div>
-    </div>
-  );
-}
-
 export function BasicInfoShimmer({ className }: { className: string }) {
   return (
     <div className={className}>

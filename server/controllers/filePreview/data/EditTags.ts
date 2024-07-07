@@ -34,7 +34,7 @@ const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
   (docInfo as any).tags = Array.from(updatedTags);
   const redisKey = `post:${postId}`;
   await Promise.all([docInfo.save(), redisClient?.del(redisKey)]);
-  if ((tagsToAdd ?? []).length > 0) {
+  if ((tagsToAdd ?? []).length > 0 || (tagsToRemove ?? []).length > 0) {
     const { uploadedBy: ownerId } = docInfo as unknown as {
       uploadedBy: Types.ObjectId;
     };

@@ -21,7 +21,7 @@ const DownloadCount = asyncErrorHandler(async (req: Request, res: Response) => {
   const filter = userId
     ? {
         _id: postId,
-        'noOfDownloads.userIds': { $ne: userId },
+        'noOfDownloads.userIds': { $ne: new Types.ObjectId(userId) },
         isFlagged: false,
       }
     : { _id: postId, 'noOfDownloads.ips': { $ne: ip }, isFlagged: false };
@@ -37,7 +37,7 @@ const DownloadCount = asyncErrorHandler(async (req: Request, res: Response) => {
   const options = { upsert: false, new: true };
   const redisKey = `post:${postId}`;
   const [result] = await Promise.all([
-    Question.findByIdAndUpdate(filter, update, options)
+    Question.findOneAndUpdate(filter, update, options)
       .select({ _id: 1, uploadedBy: 1, noOfDownloads: 1 })
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
       .lean()
@@ -65,7 +65,9 @@ const DownloadCount = asyncErrorHandler(async (req: Request, res: Response) => {
       SERVER_ERROR['INTERNAL SERVER ERROR']
     );
   }
-  return res.status(SUCCESS_CODES['NO CONTENT']);
+  return res.status(SUCCESS_CODES['NO CONTENT']).json({
+    message: 'No message',
+  });
 });
 
 export default DownloadCount;

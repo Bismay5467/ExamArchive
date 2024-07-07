@@ -61,7 +61,7 @@ export interface ICommentMutations {
 
 export interface IDropDownProps {
   value: String;
-  action?: () => void;
+  action?: (_val?: any) => void | Promise<void>;
   icon: JSX.Element;
   itemClassName?: string;
 }

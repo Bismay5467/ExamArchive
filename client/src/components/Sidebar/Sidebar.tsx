@@ -1,10 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { FaSignOutAlt } from 'react-icons/fa';
-import {
-  IoBookmarkOutline,
-  IoCloudUploadOutline,
-  IoNotificationsOutline,
-} from 'react-icons/io5';
+import { IoBookmarkOutline, IoCloudUploadOutline } from 'react-icons/io5';
 import { LuFileSearch2 } from 'react-icons/lu';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
 import {
@@ -20,6 +16,7 @@ import IconWrapper from '@/components/Sidebar/IconWrapper/IconWrapper';
 import logo from '@/assets/Logo.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
+import Notification from '../Notification/Notification';
 
 export default function Sidebar() {
   const {
@@ -27,7 +24,7 @@ export default function Sidebar() {
     RESET,
   } = useAuth();
 
-  const activeClass = 'text-orange-600';
+  const activeClass = 'text-pink-600';
   const nonActiveClass = 'text-slate-600';
   const baseRoute = `dashboard/${userId}`;
 
@@ -115,18 +112,18 @@ export default function Sidebar() {
           </NavLink>
         </div>
         <div className="flex flex-col gap-y-2 mt-auto">
-          <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg cursor-not-allowed hover:bg-white">
-            <IconWrapper className="self-center ">
-              <IoNotificationsOutline className="text-2xl text-slate-400" />
-            </IconWrapper>
-            <div>
-              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
-                Notifications
-              </p>
-              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
-                Comming Soon
-              </p>
-            </div>
+          <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg hover:bg-white hover:cursor-pointer">
+            <Notification
+              applicationIdentifier={
+                import.meta.env.VITE_NOVU_APPLLICATION_IDENTIFIER
+              }
+              subscriberId={userId ?? ''}
+            />
+            <p
+              className={`self-center text-base hidden group-hover:block ${nonActiveClass}`}
+            >
+              Notification
+            </p>
           </div>
           <div className="flex flex-row justify-between">
             <div className="py-2 px-1">
