@@ -19,7 +19,11 @@ const ViewCount = asyncErrorHandler(async (req: Request, res: Response) => {
     typeof updateViewCountInputSchema
   >;
   const filter = userId
-    ? { _id: postId, 'noOfViews.userIds': { $ne: userId }, isFlagged: false }
+    ? {
+        _id: postId,
+        'noOfViews.userIds': { $ne: new Types.ObjectId(userId) },
+        isFlagged: false,
+      }
     : { _id: postId, 'noOfViews.ips': { $ne: ip }, isFlagged: false };
   const update = userId
     ? {
@@ -33,7 +37,7 @@ const ViewCount = asyncErrorHandler(async (req: Request, res: Response) => {
   const options = { upsert: false, new: true };
   const redisKey = `post:${postId}`;
   const [result] = await Promise.all([
-    Question.findByIdAndUpdate(filter, update, options)
+    Question.findOneAndUpdate(filter, update, options)
       .select({ _id: 1, uploadedBy: 1, noOfViews: 1 })
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
       .lean()
