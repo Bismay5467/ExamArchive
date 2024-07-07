@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {
   NovuProvider,
   PopoverNotificationCenter,
@@ -29,7 +30,11 @@ export default function Notification({
       styles={{
         notifications: {
           listItem: {
-            layout: { fontFamily: 'Noto Sans JP', fontSize: '15px' },
+            layout: {
+              fontFamily: 'Noto Sans JP',
+              fontSize: '15px',
+              textAlign: 'left',
+            },
             unread: { fontWeight: 'lighter' },
           },
         },
@@ -40,6 +45,7 @@ export default function Notification({
         colorScheme={theme}
         onNotificationClick={handleNotificationClick}
         showUserPreferences={false}
+        footer={() => <div className="h-5" />}
       >
         {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
       </PopoverNotificationCenter>
