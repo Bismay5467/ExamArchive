@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { ErrorHandler } from '../../utils/errors/errorHandler';
 import ReportNotificationEmail from '../../emails/ReportNotification';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
+import { getFilePreviewLink } from '../../constants/constants/filePreview';
 import getSuperAdminInfo from '../../utils/superadmin/getSuperAdminInfo';
 import notifyMutipleUsers from '../../utils/notification/notifyMultipleUser';
 import { reportContentInputSchema } from '../../router/report/schema';
@@ -27,6 +28,54 @@ import {
   reasonsForReport,
 } from '../../constants/constants/report';
 
+const getReasons = (reasons: any) =>
+  reasons.map((r: any) => r.reason) as typeof reasonsForReport;
+
+const sendNotificationHelper = async ({
+  contentType,
+  postId,
+  totalNoOfReports,
+  reasons,
+}: {
+  postId: string;
+  totalNoOfReports: number;
+  reasons: typeof reasonsForReport;
+  contentType: 'POST' | 'COMMENT';
+}) => {
+  const postLink =
+    contentType === 'POST'
+      ? `${process.env.DOMAIN_URL}${getFilePreviewLink(postId)}`
+      : '';
+  const info = await getSuperAdminInfo();
+  if (info !== null) {
+    const { ids, emailIds } = info;
+    const emailHTML = render(
+      ReportNotificationEmail({
+        postLink,
+        totalNoOfReports,
+        reasons,
+      }),
+      { pretty: true }
+    );
+    await Promise.all([
+      sendMail({
+        eventName: MAIL_EVENT_NAME,
+        payload: {
+          to: emailIds,
+          subject: 'Violation of Code of Conduct',
+          html: emailHTML,
+        },
+      }),
+      notifyMutipleUsers({
+        topic: { key: NOVU_TOPIC.KEY, name: NOVU_TOPIC.NAME },
+        subscribers: ids,
+        workflowIndentifier: NOVU_WORKFLOW_IDENTIFIER,
+        payload: { contentType, redirectURL: postLink },
+      }),
+    ]);
+  }
+};
+
 const ReportContent = asyncErrorHandler(async (req: Request, res: Response) => {
   const { postId, reason, contentType } = req.body.data as z.infer<
     typeof reportContentInputSchema
@@ -43,18 +92,10 @@ const ReportContent = asyncErrorHandler(async (req: Request, res: Response) => {
         .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
         .lean()
         .exec(),
-      Report.findOneAndUpdate(
-        { docModel, postId },
-        {
-          $addToSet: { reasons: reason.reason },
-          $inc: { totalReport: reason.rank },
-        },
-        { upsert: true, new: true }
-      )
-        .select({ resolved: 0 })
+      Report.findOne({ docModel, postId })
+        .select({ resolved: 0, docModel: 0, postId: 0 })
         .session(session)
         .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
-        .lean()
         .exec(),
     ]);
     if (post === null) {
@@ -71,46 +112,31 @@ const ReportContent = asyncErrorHandler(async (req: Request, res: Response) => {
         SERVER_ERROR['INTERNAL SERVER ERROR']
       );
     }
-    const { totalReport, reasons } = reportInfo as unknown as {
-      totalReport: number;
-      reasons: typeof reasonsForReport;
-    };
-    if (
-      totalReport > SENDING_MAIL_FREQUENCY &&
-      totalReport % SENDING_MAIL_FREQUENCY === 0
-    ) {
-      const postLink =
-        contentType === 'POST'
-          ? `${process.env.DOMAIN_URL}/filePreview/${postId}`
-          : `${process.env.DOMAIN_URL}/filePreview/${post.postId}#${postId}`;
-      const info = await getSuperAdminInfo();
-      if (info !== null) {
-        const { ids, emailIds } = info;
-        const emailHTML = render(
-          ReportNotificationEmail({
-            postLink,
-            totalNoOfReports: totalReport,
-            reasons,
-          }),
-          { pretty: true }
-        );
-        await Promise.all([
-          sendMail({
-            eventName: MAIL_EVENT_NAME,
-            payload: {
-              to: emailIds,
-              subject: 'Violation of Code of Conduct',
-              html: emailHTML,
-            },
-          }),
-          notifyMutipleUsers({
-            topic: { key: NOVU_TOPIC.KEY, name: NOVU_TOPIC.NAME },
-            subscribers: ids,
-            workflowIndentifier: NOVU_WORKFLOW_IDENTIFIER,
-            payload: { contentType, redirectURL: postLink },
-          }),
-        ]);
+    reportInfo.totalReport += reason.rank;
+    let isPresent = false;
+    for (let i = 0; i < reportInfo.reasons; i++) {
+      if (
+        reportInfo.reasons[i].reason.trim().toLowerCase() ===
+        reason.reason.trim().toLowerCase()
+      ) {
+        isPresent = true;
+        reportInfo.reasons[i].count += 1;
       }
+    }
+    if (isPresent === false) {
+      reportInfo.reasons.push({ reason: reason.reason, count: 1 });
+    }
+    await reportInfo.save();
+    if (
+      reportInfo.totalReport > SENDING_MAIL_FREQUENCY &&
+      reportInfo.totalReport % SENDING_MAIL_FREQUENCY === 0
+    ) {
+      await sendNotificationHelper({
+        contentType,
+        postId,
+        totalNoOfReports: reportInfo.totalReport,
+        reasons: getReasons(reportInfo.reasons),
+      });
     }
   });
   await session.endSession();

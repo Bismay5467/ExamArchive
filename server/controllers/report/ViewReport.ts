@@ -7,17 +7,20 @@ import { Report } from '../../models';
 import { SUCCESS_CODES } from '../../constants/statusCode';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
 import { viewReportInputSchema } from '../../router/report/schema';
+import { getQuery, getSortOptions } from '../../utils/report/getter';
 
 const ViewReport = asyncErrorHandler(async (req: Request, res: Response) => {
-  const { page } = req.query as unknown as z.infer<
-    typeof viewReportInputSchema
-  >;
+  const { page, action, sortFilters, contentType, countOfReports } =
+    req.query as unknown as z.infer<typeof viewReportInputSchema>;
   const skipCount = (Number(page) - 1) * MAX_REPORT_FETCH_LIMIT;
-  const query = { 'resolved.isResolved': false };
+  const query = getQuery({ action, contentType });
+  const sortOptions = getSortOptions({
+    sortFilters,
+    countOfReports,
+  });
   const [result, totalDocuments] = await Promise.all([
     Report.find(query)
-      .select({ resolved: 0 })
-      .sort({ totalReport: 'desc', updatedAt: 'desc' })
+      .sort(sortOptions)
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .skip(skipCount)

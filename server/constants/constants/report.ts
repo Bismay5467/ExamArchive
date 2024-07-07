@@ -19,3 +19,9 @@ export const NOVU_TOPIC = {
   NAME: 'notify-admin-on-report-content',
 };
 export const NOVU_WORKFLOW_IDENTIFIER = 'exam-archive-report-content';
+
+export const SORT_FILTERS = ['MOST RECENT', 'LEAST RECENT'] as const;
+
+export const CONTENT_TYPE = ['POST', 'COMMENT'] as const;
+
+export const REPORT_COUNT = ['MOST COUNT', 'LEAST COUNT'] as const;
