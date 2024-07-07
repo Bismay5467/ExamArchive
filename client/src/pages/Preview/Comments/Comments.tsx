@@ -4,7 +4,7 @@ import ParentCommentForm from './CommentForm/ParentCommentForm';
 import ParentCommentBox from './CommentBox/ParentCommentBox';
 import { useComments } from '@/hooks/useComments';
 import { IComment } from '@/types/comments';
-import Skeleton from './Skeleton/Skeleton';
+import CommentShimmer from '../Shimmer/Shimmer';
 
 export default function Comments() {
   const {
@@ -47,7 +47,7 @@ export default function Comments() {
     : [];
 
   return (
-    <div className="mt-8 flex flex-col gap-y-4 p-8 min-h-[600px]">
+    <div className="mt-20 flex flex-col gap-y-4 p-4 min-h-[600px] font-natosans">
       <ParentCommentForm handleCreateComment={mutations.handleCreateComment} />
       {commentList.map((comment) => (
         <ParentCommentBox
@@ -56,7 +56,7 @@ export default function Comments() {
           commentMutations={mutations}
         />
       ))}
-      {(isLoading || isValidating) && !isLastPage && <Skeleton />}
+      {(isLoading || isValidating) && !isLastPage && <CommentShimmer />}
       {isLastPage && (
         <p className="text-slate-400 font-medium cursor-pointer w-fit self-center">
           End of disscussion...

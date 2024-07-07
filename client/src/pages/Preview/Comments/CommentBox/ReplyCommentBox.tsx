@@ -1,27 +1,19 @@
 /* eslint-disable no-nested-ternary */
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  useDisclosure,
-} from '@nextui-org/react';
+import { Avatar, Button, useDisclosure } from '@nextui-org/react';
 import { BiSolidLike, BiSolidDislike, BiLike, BiDislike } from 'react-icons/bi';
 import { BsReply } from 'react-icons/bs';
-import { FaFlag } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import React, { useEffect, useState } from 'react';
-import { FaEllipsisVertical } from 'react-icons/fa6';
+import { IoFlagOutline } from 'react-icons/io5';
 import { Textarea } from '@/components/ui/textarea';
-import { IComment, ICommentMutations } from '@/types/comments';
+import { IComment, ICommentMutations, IDropDownProps } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import WarningModal from '@/components/WarningModal/WarningModal';
+import CustomDropDown from '@/components/Dropdown';
 
 export default function ReplyCommentBox({
   replyCommentData,
@@ -59,7 +51,7 @@ export default function ReplyCommentBox({
       ? ''
       : 'hidden'
     : 'hidden';
-  const editClasses = isEditing ? 'bg-white' : 'bg-[#F2F3F4]';
+  const editClasses = isEditing ? 'bg-white' : 'bg-[#f7f7f7]';
   const iconClasses =
     'text-xl text-default-500 pointer-events-none flex-shrink-0';
 
@@ -106,65 +98,51 @@ export default function ReplyCommentBox({
     handleDownVoteComment(commentId, 'VOTE');
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const dropdownMenu: IDropDownProps[] = [
+    {
+      icon: <CiEdit className={iconClasses} />,
+      value: 'Edit comment',
+      action: handleEdit,
+      itemClassName: isMutable,
+    },
+    {
+      icon: <RiDeleteBin6Line className={iconClasses} />,
+      value: 'Delete comment',
+      action: onWarningOpen,
+      itemClassName: isMutable,
+    },
+    {
+      icon: <IoFlagOutline className="text-lg pointer-events-none" />,
+      value: 'Report',
+      action: onReportOpen,
+    },
+  ];
+
   return (
     <div className="p-4 flex flex-row gap-x-4">
       <Avatar
         isBordered
         radius="sm"
         size="md"
-        className="self-start mt-2"
+        className="self-start mt-2 h-7 w-7 sm:h-9 sm:w-9"
         src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
       />
 
       <div className="w-full flex flex-col gap-y-4">
-        <div className="w-full self-start bg-[#F2F3F4] p-2 rounded-xl flex flex-col gap-y-2">
+        <div className="w-full self-start bg-[#f7f7f7] p-2 rounded-lg flex flex-col gap-y-2">
           <div className="flex flex-row justify-between">
-            <span className="font-medium self-center">{username}</span>
+            <span className="font-medium text-sm self-center sm:text-medium">
+              {username}
+            </span>
             <span className="flex flex-row gap-x-3">
-              <span className="text-sm self-center opacity-55">
+              <span className="text-xs self-center opacity-55 sm:text-sm">
                 {isEdited && '[edited]'} {monthNames[month]} {day}, {year}
               </span>
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    variant="light"
-                    size="sm"
-                    isIconOnly
-                    className="self-center"
-                  >
-                    <FaEllipsisVertical className="text-sm" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Static Actions">
-                  <DropdownItem
-                    key="edit"
-                    startContent={<CiEdit className={iconClasses} />}
-                    onClick={() => setIsEditing(true)}
-                    className={isMutable}
-                  >
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    startContent={<RiDeleteBin6Line className={iconClasses} />}
-                    onClick={onWarningOpen}
-                    className={isMutable}
-                  >
-                    Delete
-                  </DropdownItem>
-                  <DropdownItem
-                    key="report"
-                    color="danger"
-                    className="text-danger"
-                    startContent={
-                      <FaFlag className="text-lg pointer-events-none" />
-                    }
-                    onClick={onReportOpen}
-                  >
-                    Report
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <CustomDropDown menu={dropdownMenu} />
             </span>
           </div>
           <Textarea
@@ -195,22 +173,19 @@ export default function ReplyCommentBox({
               <span className="self-center">{downVoteCount}</span>
             </span>
             <span
-              className="self-center flex flex-row gap-x-2 cursor-pointer"
+              className="self-center flex flex-row gap-x-2 cursor-pointer text-xs sm:text-sm"
               onClick={() => setIsReplying(true)}
               role="presentation"
             >
-              <BsReply className="text-xl" /> Reply
+              <BsReply className="text-lg sm:text-xl" /> Reply
             </span>
           </div>
           {isEditing && (
             <div className="flex flex-row gap-x-2">
-              <span className="self-center mr-6 text-sm opacity-60 font-medium">
-                Preview
-              </span>
               <Button
                 color="default"
-                variant="flat"
-                className="font-semibold mr-2 opacity-60"
+                variant="bordered"
+                radius="sm"
                 size="sm"
                 onClick={() => {
                   setTextMessage(message);
@@ -220,9 +195,10 @@ export default function ReplyCommentBox({
                 Cancel
               </Button>
               <Button
-                color="success"
-                className="font-semibold text-white text-medium tracking-wide"
+                color="primary"
                 type="submit"
+                variant="bordered"
+                radius="sm"
                 size="sm"
                 onClick={() => {
                   handleEditComment(commentId, textMessage);

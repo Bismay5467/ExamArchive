@@ -4,16 +4,13 @@ import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../../utils/errors/errorHandler';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
+import { NOVU_EDIT_TAGS } from '../../../constants/constants/filePreview';
 import Question from '../../../models/question';
 import { TRole } from '../../../types/auth/types';
 import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
 import { editTagsInputSchema } from '../../../router/filePreview/data/schema';
 import redisClient from '../../../config/redisConfig';
 import sendNotification from '../../../utils/notification/sendNotification';
-import {
-  DOC_INFO_TTL_IN_SECONDS,
-  NOVU_EDIT_TAGS,
-} from '../../../constants/constants/filePreview';
 import { ERROR_CODES, SUCCESS_CODES } from '../../../constants/statusCode';
 
 const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
@@ -36,16 +33,8 @@ const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
   }
   (docInfo as any).tags = Array.from(updatedTags);
   const redisKey = `post:${postId}`;
-  await Promise.all([
-    docInfo.save(),
-    redisClient?.set(
-      redisKey,
-      JSON.stringify(docInfo),
-      'EX',
-      DOC_INFO_TTL_IN_SECONDS
-    ),
-  ]);
-  if ((tagsToAdd ?? []).length > 0) {
+  await Promise.all([docInfo.save(), redisClient?.del(redisKey)]);
+  if ((tagsToAdd ?? []).length > 0 || (tagsToRemove ?? []).length > 0) {
     const { uploadedBy: ownerId } = docInfo as unknown as {
       uploadedBy: Types.ObjectId;
     };

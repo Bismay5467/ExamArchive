@@ -11,9 +11,11 @@ import {
   Checkbox,
 } from '@nextui-org/react';
 import { useCallback, useEffect, useState } from 'react';
-import { MdCreateNewFolder } from 'react-icons/md';
+import { MdAddCircleOutline } from 'react-icons/md';
+import { CiBookmark } from 'react-icons/ci';
 import useSWR from 'swr';
 import { toast } from 'sonner';
+import { FaFolderOpen } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import {
   createFolderObj,
@@ -130,9 +132,9 @@ export default function BookmarksModal({
     try {
       const res = await fetcher(folderDetails);
       createBookmarks([res.data.data._id as string]);
-    } catch (err) {
+    } catch (err: any) {
       toast('Somthing went wrong!', {
-        description: `${err}`,
+        description: `${err.response.data.message}`,
         duration: 5000,
       });
       setCollectionName('');
@@ -147,28 +149,41 @@ export default function BookmarksModal({
   }, [collectionName]);
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      placement="top-center"
+      radius="sm"
+      className="font-natosans"
+    >
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Add to Bookmark
+            <ModalHeader className="flex flex-row gap-x-3">
+              <CiBookmark className="self-center text-2xl" />
+              <span>Add to bookmark</span>
             </ModalHeader>
             <ModalBody>
               <CheckboxGroup
-                label="Select cities"
-                color="warning"
+                color="secondary"
                 onValueChange={setCollectionIDs}
-                orientation="horizontal"
+                className="text-medium"
               >
-                {collectionList?.map(({ _id, name }) => (
-                  <Checkbox value={_id} key={_id}>
-                    {name}
-                  </Checkbox>
-                ))}
+                <div className="max-h-[200px] overflow-y-auto no-scrollbar flex flex-col gap-y-4">
+                  {collectionList?.map(({ _id, name }) => (
+                    <div className="flex flex-row justify-between">
+                      <div className="flex flex-row gap-x-3">
+                        <FaFolderOpen className="self-center text-2xl text-[#fcba03]" />
+                        {name}
+                      </div>
+                      <Checkbox radius="full" value={_id} key={_id} />
+                    </div>
+                  ))}
+                </div>
               </CheckboxGroup>
               {isCreatingFolder && (
                 <Input
+                  radius="sm"
                   autoFocus
                   label="Enter Collection Tiile"
                   variant="bordered"
@@ -181,19 +196,32 @@ export default function BookmarksModal({
               )}
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="flat" onPress={onClose}>
-                Close
+              {/*  */}
+              <Button
+                radius="sm"
+                color="default"
+                variant="bordered"
+                onPress={onClose}
+              >
+                Cancel
               </Button>
               {collectionIDs.length === 0 ? (
                 <Button
+                  radius="sm"
                   color="primary"
+                  variant="bordered"
                   onClick={handleCreateNew}
-                  endContent={<MdCreateNewFolder className="text-xl" />}
+                  startContent={<MdAddCircleOutline className="text-xl" />}
                 >
                   Create {!isCreatingFolder && 'new'}
                 </Button>
               ) : (
-                <Button color="primary" variant="flat" onClick={handleBookmark}>
+                <Button
+                  radius="sm"
+                  color="primary"
+                  variant="bordered"
+                  onClick={handleBookmark}
+                >
                   Add
                 </Button>
               )}

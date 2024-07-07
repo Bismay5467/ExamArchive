@@ -8,7 +8,7 @@ import cors from 'cors';
 import { createMiddleware } from '@trigger.dev/express';
 import dotenv from 'dotenv';
 import fileUpload from 'express-fileupload';
-import rateLimit from 'express-rate-limit';
+// import rateLimit from 'express-rate-limit';
 import express, { NextFunction, Request, Response } from 'express';
 
 import AppRouter from './router';
@@ -42,6 +42,15 @@ const whitelist = [
   process.env.DEV_CLIENT_URL,
   process.env.STAGE_CLIENT_URL,
 ];
+// app.use(
+//   rateLimit({
+//     windowMs: 1 * 60 * 1000,
+//     limit: 20,
+//     standardHeaders: 'draft-7',
+//     legacyHeaders: false,
+//   })
+// );
+app.set('trust-proxy', true);
 const customCors = (req: Request, res: Response, next: NextFunction) => {
   console.log(`Log: Hostname = ${req.hostname}, IP = ${getClientIP(req)}`);
   if (req.path === CLOUDINARY_WEBHOOK_ROUTE && req.method === 'POST') next();
@@ -57,14 +66,6 @@ const customCors = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 app.use(customCors);
-app.use(
-  rateLimit({
-    windowMs: 1 * 60 * 1000,
-    limit: 20,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-  })
-);
 app.use(createMiddleware(triggerClient as TriggerClient));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));

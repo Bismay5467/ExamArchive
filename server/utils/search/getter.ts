@@ -20,7 +20,7 @@ export const getQuery = ({
   };
   Object.assign(query, {
     ...(examType && examType.length > 0 && { examType: { $in: examType } }),
-    ...(subjectName && { subjectName }),
+    ...(subjectName && { subjectName: new RegExp(`^${subjectName}$`, 'i') }),
     ...(year && year.length > 0 && { year: { $in: year } }),
   });
   return query;
@@ -38,7 +38,6 @@ export const getSortOrder = ({
 };
 
 export const getProjections = () => ({
-  uploadedBy: 1,
   file: 0,
   rating: 0,
   isFlagged: 0,

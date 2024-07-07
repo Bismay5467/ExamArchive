@@ -37,18 +37,18 @@ export const reportReasons = [
 ];
 
 export const monthNames = [
-  'January',
-  'February',
+  'Jan',
+  'Feb',
   'March',
   'April',
   'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ] as const;
 
 export const folderColumns = [
@@ -69,6 +69,24 @@ export const uploadFileColumns = [
   { name: 'Created at', uid: 'createdAt', sortable: true },
   { name: 'Last Modified', uid: 'updatedAt', sortable: true },
 ];
+
+export const tagsBgColorMap: Array<string> = [
+  'bg-danger/10',
+  'bg-default/10',
+  'bg-primary/10',
+  'bg-secondary/10',
+  'bg-success/10',
+  'bg-warning/10',
+] as const;
+
+export const tagsTextColorMap: Array<string> = [
+  'text-danger-500',
+  'text-default-500',
+  'text-primary-500',
+  'text-secondary-500',
+  'text-success-500',
+  'text-warning-500',
+] as const;
 
 export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
   'data:application/pdf',
