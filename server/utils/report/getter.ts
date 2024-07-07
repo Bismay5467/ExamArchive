@@ -19,8 +19,8 @@ export const getQuery = ({
       ? { docModel: 'Question' }
       : { docModel: { $in: ['Comment', 'Question'] } }),
   ...(action === 'PENDING'
-    ? { 'resolved.isResolved': true }
-    : { 'resolved.isResolved': false }),
+    ? { 'resolved.isResolved': false }
+    : { 'resolved.isResolved': true }),
 });
 
 export const getSortOptions = ({
