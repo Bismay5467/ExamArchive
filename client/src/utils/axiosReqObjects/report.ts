@@ -32,7 +32,7 @@ export const resolveReportObj = (
   const axiosObj: AxiosRequestConfig<any> = {
     url,
     data: { data: reportData },
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${jwtToken}`,
@@ -67,6 +67,27 @@ export const viewReportsObj = (
   const axiosObj: AxiosRequestConfig<any> = {
     url,
     params: sanitizedParams,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const getCommentBody = (
+  commentId: string,
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.REPORT}/getComment`;
+
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    params: { commentId },
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

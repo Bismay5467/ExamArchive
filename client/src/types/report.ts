@@ -14,9 +14,10 @@ export interface IResolveReport {
 
 export interface IReportPreview {
   createdAt: string;
-  docModel: string;
+  docModel: 'Question' | 'Comment';
   postId: string;
-  reasons: Array<string>;
+  reasons: Array<{ count: number; reason: string; _id: string }>;
+  resolved: { isResolved: boolean };
   totalReport: number;
   updatedAt: string;
   __v: number;

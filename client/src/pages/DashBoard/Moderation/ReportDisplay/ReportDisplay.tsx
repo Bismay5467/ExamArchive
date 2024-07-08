@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -5,6 +6,7 @@ import { viewReportsObj } from '@/utils/axiosReqObjects';
 import { IReportFilterFields, TReportAction } from '@/types/superadmin';
 import { FilterSheet } from './FilterSheet/FilterSheet';
 import ReportCard from './ReportCard/ReportCard';
+import { IReportPreview } from '@/types/report';
 
 export default function ReportDisplay({ action }: { action: TReportAction }) {
   const {
@@ -27,17 +29,16 @@ export default function ReportDisplay({ action }: { action: TReportAction }) {
     .map(({ data }) => data)
     .map(({ data }) => data.result);
 
-  const reportDataList = reducedReportData
+  const reportDataList: Array<IReportPreview> = reducedReportData
     ? [].concat(...reducedReportData)
     : [];
-  // TODO: Remove log
-  // eslint-disable-next-line no-console
-  console.log(reportDataList);
   return (
     <div className="max-w-[1200px] mx-auto">
       <FilterSheet action={action} setReportFilters={setReportFilters} />
       <div className="flex flex-col gap-y-8 justify-center mt-8 sm:px-24">
-        <ReportCard />
+        {reportDataList.map((val) => (
+          <ReportCard reportData={val} key={val._id} />
+        ))}
       </div>
     </div>
   );

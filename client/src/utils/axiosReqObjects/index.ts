@@ -6,7 +6,12 @@ import {
   updateRatingObj,
   editTagsObj,
 } from './file';
-import { reportObj, resolveReportObj, viewReportsObj } from './report';
+import {
+  reportObj,
+  resolveReportObj,
+  viewReportsObj,
+  getCommentBody,
+} from './report';
 import {
   getFilesDataObj,
   createFolderObj,
@@ -35,6 +40,7 @@ export {
   getResetObj,
   getFileObj,
   reportObj,
+  getCommentBody,
   resolveReportObj,
   viewReportsObj,
   deleteFileObj,
