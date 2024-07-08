@@ -27,7 +27,6 @@ import {
 
 
 function Sidebar() {
-export default function Sidebar() {
   const [token, setToken] = useState<string>('');
   // TODO: Remove Manual setting of cookie afterwards
   Cookies.set(AUTH_TOKEN, token);
