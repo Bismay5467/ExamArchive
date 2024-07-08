@@ -1,4 +1,3 @@
-/* eslint-disable function-paren-newline */
 import { Accordion, AccordionItem, Button } from '@nextui-org/react';
 import { IoFilter } from 'react-icons/io5';
 import { TbFilterSearch } from 'react-icons/tb';
