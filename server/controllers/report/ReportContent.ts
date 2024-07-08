@@ -52,7 +52,7 @@ const ReportContent = asyncErrorHandler(async (req: Request, res: Response) => {
         totalReport: reason.rank,
         reasons: [{ reason: reason.reason, count: 1 }],
       };
-      info = await Report.create([newReportObj], { session });
+      [info] = await Report.create([newReportObj], { session });
     } else {
       const hasUserReportedBefore =
         reportInfo.userIds.find(
