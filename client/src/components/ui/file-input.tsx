@@ -17,11 +17,11 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
     >
       <img src={cloud} alt="" className="w-[100px]" />
       {filename && <h2 className="font-semibold">{filename}</h2>}
-      <h3>
+      <h3 className="px-4 text-center text-xs sm:text-medium">
         <span className="text-blue-600">Click here</span> to upload your file or
         drag and drop
       </h3>
-      <h3 className="text-sm opacity-50">
+      <h3 className="px-4 text-xs opacity-50 sm:text-sm">
         Supported Formats: .pdf (Less than 5MB)
       </h3>
       <input

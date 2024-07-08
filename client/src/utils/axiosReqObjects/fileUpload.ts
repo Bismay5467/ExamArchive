@@ -1,13 +1,10 @@
 import { SERVER_ROUTES } from '@/constants/routes';
 import { TFileUploadFormFields } from '@/types/upload';
 
-export default ({
-  fileUploadData,
-  jwtToken,
-}: {
-  fileUploadData: TFileUploadFormFields[];
-  jwtToken: string;
-}) => {
+export default (
+  fileUploadData: TFileUploadFormFields[],
+  jwtToken: string | undefined
+) => {
   const url = SERVER_ROUTES.UPLOAD;
   if (!jwtToken) return null;
   const axiosObj = {

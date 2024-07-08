@@ -1,14 +1,16 @@
-import { Input } from '@nextui-org/react';
+import { cn, Input } from '@nextui-org/react';
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
 import Tag from '../Tags';
 
 export default function TagsEditor({
   tags,
+  className,
   setTags,
   isDeletable,
 }: {
   tags: Array<string>;
+  className: string;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   isDeletable: boolean;
 }) {
@@ -40,7 +42,7 @@ export default function TagsEditor({
   };
 
   return (
-    <div className="flex flex-col gap-y-4 font-natosans">
+    <div className={cn('flex flex-col gap-y-4 font-natosans', className)}>
       <div
         id="tags-section"
         className="flex flex-row flex-wrap gap-2 max-h-[200px] overflow-y-auto no-scrollbar"

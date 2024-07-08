@@ -119,12 +119,12 @@ export default function Upload({
   };
 
   return (
-    <section className="px-[205px] flex flex-col gap-y-4 items-center">
+    <section className="py-4 flex flex-col gap-y-4 items-center">
       <FileInput
         filename={fileName}
         className="w-full"
         onChange={(e) => pdfToBase64(e)}
-        onFocus={() => errors.file?.dataURI && clearErrors('file.dataURI')}
+        onFocus={() => errors.file && clearErrors('file')}
       />
       {errors && (
         <p className="text-red-500 text-sm">
@@ -133,24 +133,28 @@ export default function Upload({
             errors.file?.name?.message}
         </p>
       )}
-      <div className="w-full flex flex-col gap-y-1">
-        <div className="w-full flex flex-row gap-x-4">
-          <Select
-            label="Exam Type"
-            className="w-[50%]"
-            {...register('examType')}
-            isRequired
-            isInvalid={errors.examType !== undefined}
-            errorMessage="*Required"
-            onFocus={() => errors.examType && clearErrors('examType')}
-          >
-            {Object.entries(EXAM_TYPES.INSTITUTIONAL).map(([_, value]) => (
-              <SelectItem key={value}>{value}</SelectItem>
-            ))}
-          </Select>
+      <div className="w-full flex flex-col sm:flex-row gap-x-4">
+        <Select
+          label="Exam Type"
+          size="sm"
+          radius="sm"
+          className="self-center sm:w-1/2"
+          {...register('examType')}
+          isRequired
+          isInvalid={errors.examType !== undefined}
+          errorMessage="*Required"
+          onFocus={() => errors.examType && clearErrors('examType')}
+        >
+          {Object.entries(EXAM_TYPES.INSTITUTIONAL).map(([_, value]) => (
+            <SelectItem key={value}>{value}</SelectItem>
+          ))}
+        </Select>
+        <div className="flex flex-row gap-x-4 sm:w-1/2">
           <Autocomplete
             label="Select a collection"
-            className="w-[50%]"
+            size="sm"
+            radius="sm"
+            className="self-center"
             onSelectionChange={(e) => setValue('folderId', e as string)}
             isRequired
             isInvalid={errors.folderId !== undefined}
@@ -163,15 +167,16 @@ export default function Upload({
               </AutocompleteItem>
             ))}
           </Autocomplete>
+          <Button
+            onPress={onOpen}
+            radius="sm"
+            size="lg"
+            color="primary"
+            isIconOnly
+          >
+            <MdCreateNewFolder className="text-xl" />
+          </Button>
         </div>
-        <Button
-          onPress={onOpen}
-          color="primary"
-          className="self-end"
-          endContent={<MdCreateNewFolder className="text-xl" />}
-        >
-          Create new collection
-        </Button>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>

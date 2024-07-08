@@ -2,29 +2,38 @@ import {
   FieldErrors,
   UseFormClearErrors,
   UseFormRegister,
+  UseFormSetValue,
 } from 'react-hook-form';
-import { Input, Select, SelectItem, Textarea } from '@nextui-org/react';
+import { Input, Select, SelectItem } from '@nextui-org/react';
 
+import { useEffect, useState } from 'react';
 import { SEMESTER } from '@/constants/shared';
 import { TFileUploadFormFields } from '@/types/upload';
+import TagsEditor from '@/components/TagsEditor/TagsEditor';
 
 export default function FileInfo({
   register,
   errors,
   clearErrors,
+  setValue,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
   clearErrors: UseFormClearErrors<TFileUploadFormFields>;
+  setValue: UseFormSetValue<TFileUploadFormFields>;
 }) {
+  const [tags, setTags] = useState<Array<string>>([]);
+  useEffect(() => {
+    setValue('tags', tags.join(','));
+  }, [tags]);
   return (
-    <section className="p-4 max-w-[600px] mx-auto">
-      <h1 className="text-3xl mb-6 font-bold text-gray-600">Tell us More!</h1>
-      <div className="grid grid-cols-8 grid-rows-4 gap-x-4">
+    <section className="py-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-8">
         <Input
           isRequired
+          radius="sm"
           type="text"
-          className="row-span-1 col-span-4"
+          className="col-span-2 sm:col-span-4"
           label="Subject Name"
           isInvalid={errors.subjectName !== undefined}
           errorMessage={errors.subjectName?.message}
@@ -33,8 +42,9 @@ export default function FileInfo({
         />
         <Input
           isRequired
+          radius="sm"
           type="text"
-          className="row-span-1 col-span-4"
+          className="col-span-2 sm:col-span-4"
           label="Subject Code"
           isInvalid={errors.subjectCode !== undefined}
           errorMessage={errors.subjectCode?.message}
@@ -44,7 +54,8 @@ export default function FileInfo({
         <Select
           isRequired
           label="Semester"
-          className="row-span-1 col-span-5"
+          radius="sm"
+          className="col-span-1 sm:col-span-5"
           {...register('semester')}
           isInvalid={errors.semester !== undefined}
           errorMessage="*Required"
@@ -57,7 +68,8 @@ export default function FileInfo({
         <Input
           isRequired
           type="text"
-          className="row-span-1 col-span-3"
+          className="col-span-1 sm:col-span-3"
+          radius="sm"
           label="Year"
           {...register('year')}
           isInvalid={errors.year !== undefined}
@@ -66,8 +78,9 @@ export default function FileInfo({
         />
         <Input
           isRequired
+          radius="sm"
           type="text"
-          className="row-span-1 col-span-3"
+          className="col-span-2 sm:col-span-3"
           label="Branch"
           {...register('branch')}
           isInvalid={errors.branch !== undefined}
@@ -76,7 +89,8 @@ export default function FileInfo({
         />
         <Select
           isRequired
-          className="row-span-1 col-span-5"
+          className="col-span-2 sm:col-span-5"
+          radius="sm"
           label="Institution"
           {...register('institution')}
           isInvalid={errors.institution !== undefined}
@@ -87,17 +101,28 @@ export default function FileInfo({
             National Institute of Technology karnataka
           </SelectItem>
         </Select>
-        <Textarea
+        <TagsEditor
+          isDeletable
+          tags={tags}
+          setTags={setTags}
+          className="col-span-2 sm:col-span-8"
+        />
+        {errors && (
+          <p className="text-red-500 text-sm col-span-2 sm:col-span-8 text-center">
+            {errors.tags?.message}
+          </p>
+        )}
+        {/* <Textarea
           isRequired
           type="text"
-          className="row-span-1 col-span-8"
+          className="col-span-2 sm:col-span-8"
           label="Tags"
           placeholder="Comma Separated with no spaces"
           {...register('tags')}
           isInvalid={errors.tags !== undefined}
           errorMessage={errors.tags?.message}
           onFocus={() => errors.tags && clearErrors('tags')}
-        />
+        /> */}
       </div>
     </section>
   );
