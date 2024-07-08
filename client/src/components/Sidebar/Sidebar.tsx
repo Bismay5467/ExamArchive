@@ -1,32 +1,40 @@
 import { NavLink } from 'react-router-dom';
-import { FaSignOutAlt } from 'react-icons/fa';
+import Cookies from 'js-cookie';
 import { IoBookmarkOutline, IoCloudUploadOutline } from 'react-icons/io5';
 import { LuFileSearch2 } from 'react-icons/lu';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
+import { FaRegCircleUser } from 'react-icons/fa6';
 import {
   Avatar,
   Dropdown,
   DropdownItem,
   DropdownMenu,
-  DropdownSection,
   DropdownTrigger,
 } from '@nextui-org/react';
+import { useState } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/IconWrapper/IconWrapper';
 import logo from '@/assets/Logo.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
+import { AUTH_TOKEN } from '@/constants/auth';
+import { TEMP_JWT_TOKEN_HARDCODED } from '@/constants/shared';
 
 export default function Sidebar() {
+  const [token, setToken] = useState<string>('');
+  // TODO: Remove Manual setting of cookie afterwards
+  Cookies.set(AUTH_TOKEN, token);
   const {
     authState: { userId, role, username },
-    RESET,
   } = useAuth();
 
   const activeClass = 'text-pink-600';
   const nonActiveClass = 'text-slate-600';
   const baseRoute = `dashboard/${userId}`;
+
+  const iconClasses =
+    'text-xl text-slate-700 pointer-events-none flex-shrink-0';
 
   return (
     <nav className="fixed z-50 group h-screen w-[70px] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg font-natosans">
@@ -127,7 +135,11 @@ export default function Sidebar() {
           </div>
           <div className="flex flex-row justify-between">
             <div className="py-2 px-1">
-              <Dropdown placement="bottom-end">
+              <Dropdown
+                placement="bottom-end"
+                radius="sm"
+                className="font-natosans"
+              >
                 <DropdownTrigger>
                   <div className="flex flex-row gap-x-4 cursor-pointer">
                     <Avatar
@@ -145,7 +157,7 @@ export default function Sidebar() {
                     </div>
                   </div>
                 </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                {/* <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownSection aria-label="user control">
                     <DropdownItem
                       color="danger"
@@ -158,6 +170,29 @@ export default function Sidebar() {
                       Sign Out
                     </DropdownItem>
                   </DropdownSection>
+                </DropdownMenu> */}
+                <DropdownMenu aria-label="Static Actions" variant="light">
+                  <DropdownItem
+                    key="delete"
+                    startContent={<FaRegCircleUser className={iconClasses} />}
+                    onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
+                  >
+                    User
+                  </DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    startContent={<FaRegCircleUser className={iconClasses} />}
+                    onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
+                  >
+                    Admin
+                  </DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    startContent={<FaRegCircleUser className={iconClasses} />}
+                    onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
+                  >
+                    Super admin
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
