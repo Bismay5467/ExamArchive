@@ -20,7 +20,7 @@ import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
 import { AUTH_TOKEN } from '@/constants/auth';
-import { TEMP_JWT_TOKEN_HARDCODED } from '@/constants/shared';
+import { TEMP_JWT_TOKEN_HARDCODED, TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN } from '@/constants/shared';
 
 export default function Sidebar() {
   const [token, setToken] = useState<string>('');
@@ -184,7 +184,7 @@ export default function Sidebar() {
                     key="superadmin"
                     startContent={<FaRegCircleUser className={iconClasses} />}
                     onClick={() => {
-                      setToken(TEMP_JWT_TOKEN_HARDCODED);
+                      setToken(TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN);
                       window.location.reload();
                     }}
                   >
