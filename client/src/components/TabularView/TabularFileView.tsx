@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable no-confusing-arrow */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-nested-ternary */
@@ -35,7 +37,6 @@ import {
 } from 'react-icons/ri';
 import { IoSearch } from 'react-icons/io5';
 import { GoBookmarkSlash } from 'react-icons/go';
-import { ImSpinner2 } from 'react-icons/im';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { AiOutlineFilePdf } from 'react-icons/ai';
 import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
@@ -55,10 +56,16 @@ import RenderItems from '../Pagination/RenderItems';
 const statusMap: Record<string, Record<string, any>> = {
   Uploaded: {
     color: 'success',
-    icon: <IoIosCheckmarkCircleOutline className="text-xl" />,
+    icon: <IoIosCheckmarkCircleOutline className="text-xl mr-1" />,
   },
-  Failed: { color: 'danger', icon: <RiErrorWarningLine className="text-xl" /> },
-  Processing: { color: 'default', icon: <ImSpinner2 className="text-xl" /> },
+  Failed: {
+    color: 'danger',
+    icon: <RiErrorWarningLine className="text-xl mr-1" />,
+  },
+  Processing: {
+    color: 'default',
+    icon: <Spinner size="sm" color="default" className="mr-1" />,
+  },
 };
 
 export default function TabularFileView({
@@ -141,9 +148,13 @@ export default function TabularFileView({
         return;
       }
       mutate().then(() =>
-        toast.success('Bookmark removed successfully!', {
-          duration: 5000,
-        })
+        isBookmark
+          ? toast.success('Bookmark removed successfully!', {
+              duration: 5000,
+            })
+          : toast.success('File removed successfully!', {
+              duration: 5000,
+            })
       );
     },
     []
@@ -205,7 +216,7 @@ export default function TabularFileView({
       case 'status':
         return (
           <Chip
-            className="capitalize min-w-[100px]"
+            className="uppercase min-w-[100px] border border-transparent"
             color={statusMap[file.status].color as ChipProps['color']}
             size="sm"
             variant="bordered"

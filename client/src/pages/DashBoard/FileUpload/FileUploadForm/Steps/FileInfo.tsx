@@ -28,10 +28,11 @@ export default function FileInfo({
   }, [tags]);
   return (
     <section className="py-4">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-8">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-8 font-natosans">
         <Input
           isRequired
           radius="sm"
+          variant="bordered"
           type="text"
           className="col-span-2 sm:col-span-4"
           label="Subject Name"
@@ -44,6 +45,7 @@ export default function FileInfo({
           isRequired
           radius="sm"
           type="text"
+          variant="bordered"
           className="col-span-2 sm:col-span-4"
           label="Subject Code"
           isInvalid={errors.subjectCode !== undefined}
@@ -55,6 +57,7 @@ export default function FileInfo({
           isRequired
           label="Semester"
           radius="sm"
+          variant="bordered"
           className="col-span-1 sm:col-span-5"
           {...register('semester')}
           isInvalid={errors.semester !== undefined}
@@ -68,6 +71,7 @@ export default function FileInfo({
         <Input
           isRequired
           type="text"
+          variant="bordered"
           className="col-span-1 sm:col-span-3"
           radius="sm"
           label="Year"
@@ -79,6 +83,7 @@ export default function FileInfo({
         <Input
           isRequired
           radius="sm"
+          variant="bordered"
           type="text"
           className="col-span-2 sm:col-span-3"
           label="Branch"
@@ -91,6 +96,7 @@ export default function FileInfo({
           isRequired
           className="col-span-2 sm:col-span-5"
           radius="sm"
+          variant="bordered"
           label="Institution"
           {...register('institution')}
           isInvalid={errors.institution !== undefined}

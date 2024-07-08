@@ -3,6 +3,7 @@ import {
   FieldErrors,
   UseFormClearErrors,
   UseFormRegister,
+  UseFormResetField,
   UseFormSetValue,
 } from 'react-hook-form';
 import {
@@ -22,7 +23,8 @@ import {
 import { toast } from 'sonner';
 
 import useSWR from 'swr';
-import { MdCreateNewFolder } from 'react-icons/md';
+import { RiDeleteBin6Line, RiFolderAddLine } from 'react-icons/ri';
+import { CiFolderOn } from 'react-icons/ci';
 import { EXAM_TYPES } from '@/constants/shared';
 import { FileInput } from '@/components/ui/file-input';
 import { TFileUploadFormFields } from '@/types/upload';
@@ -33,21 +35,24 @@ import {
 import fetcher from '@/utils/fetcher/fetcher';
 import { MAX_FILE_SIZE } from '@/constants/upload';
 import { useAuth } from '@/hooks/useAuth';
+import { TFile } from '../FileUploadForm';
 
 export default function Upload({
   register,
   errors,
-  fileName,
-  setFileName,
+  resetField,
+  setFile,
   setValue,
   clearErrors,
+  file,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
+  resetField: UseFormResetField<TFileUploadFormFields>;
   setValue: UseFormSetValue<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
   clearErrors: UseFormClearErrors<TFileUploadFormFields>;
-  fileName: string | undefined;
-  setFileName: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setFile: React.Dispatch<React.SetStateAction<TFile>>;
+  file: TFile;
 }) {
   const {
     authState: { jwtToken },
@@ -69,11 +74,11 @@ export default function Upload({
         });
         return;
       }
-      setFileName(fileToLoad.name);
       const fileReader = new FileReader();
 
       fileReader.onload = (fileLoadedEvent) => {
         const dataURI = fileLoadedEvent.target?.result as string;
+        setFile({ dataURI, filename: fileToLoad.name });
         setValue('file', { dataURI, name: fileToLoad.name });
       };
 
@@ -83,6 +88,13 @@ export default function Upload({
         duration: 5000,
       });
     }
+  };
+
+  const handleDeleteFile = () => {
+    setFile(null);
+    // resetField('file');
+    resetField('file.dataURI');
+    resetField('file.name');
   };
 
   const handleCreateFolder = async () => {
@@ -119,9 +131,9 @@ export default function Upload({
   };
 
   return (
-    <section className="py-4 flex flex-col gap-y-4 items-center">
+    <section className="py-4 flex flex-col gap-y-4 items-center font-natosans">
       <FileInput
-        filename={fileName}
+        file={file}
         className="w-full"
         onChange={(e) => pdfToBase64(e)}
         onFocus={() => errors.file && clearErrors('file')}
@@ -133,14 +145,25 @@ export default function Upload({
             errors.file?.name?.message}
         </p>
       )}
+      <Button
+        variant="bordered"
+        color="danger"
+        startContent={<RiDeleteBin6Line className="text-xl" />}
+        radius="sm"
+        className="w-[100%] py-5 mb-5 text-medium"
+        onClick={handleDeleteFile}
+      >
+        Delete
+      </Button>
       <div className="w-full flex flex-col sm:flex-row gap-x-4">
         <Select
           label="Exam Type"
           size="sm"
           radius="sm"
-          className="self-center sm:w-1/2"
+          className="self-center sm:w-1/2 font-natosans"
           {...register('examType')}
           isRequired
+          variant="bordered"
           isInvalid={errors.examType !== undefined}
           errorMessage="*Required"
           onFocus={() => errors.examType && clearErrors('examType')}
@@ -149,11 +172,12 @@ export default function Upload({
             <SelectItem key={value}>{value}</SelectItem>
           ))}
         </Select>
-        <div className="flex flex-row gap-x-4 sm:w-1/2">
+        <div className="flex flex-row gap-x-4 sm:w-1/2 self-center">
           <Autocomplete
-            label="Select a collection"
+            label="Select a folder"
             size="sm"
             radius="sm"
+            variant="bordered"
             className="self-center"
             onSelectionChange={(e) => setValue('folderId', e as string)}
             isRequired
@@ -170,39 +194,55 @@ export default function Upload({
           <Button
             onPress={onOpen}
             radius="sm"
-            size="lg"
+            size="md"
+            variant="bordered"
             color="primary"
             isIconOnly
           >
-            <MdCreateNewFolder className="text-xl" />
+            <RiFolderAddLine className="text-xl" />
           </Button>
         </div>
       </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        radius="sm"
+        className="font-natosans"
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Create a new Collection
+              <ModalHeader className="flex flex-row gap-4">
+                <CiFolderOn className="text-2xl" />{' '}
+                <span> Create a new folder</span>
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="mt-4">
                 <Input
                   autoFocus
-                  label="Collection Name"
+                  radius="sm"
+                  label="Folder Name"
                   variant="bordered"
                   isInvalid={folderNames.some(
                     ({ name }) => name === collectionName
                   )}
-                  errorMessage="Collection already exists!"
+                  errorMessage="Folder already exists!"
                   onValueChange={(e) => setCollectionName(e)}
                 />
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
+                <Button
+                  color="default"
+                  variant="bordered"
+                  onPress={onClose}
+                  radius="sm"
+                >
                   Cancel
                 </Button>
                 <Button
                   color="primary"
+                  radius="sm"
+                  variant="bordered"
                   onClick={() => {
                     onClose();
                     handleCreateFolder();

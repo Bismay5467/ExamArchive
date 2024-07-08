@@ -9,6 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
 
+import { FaRegCircleCheck } from 'react-icons/fa6';
+import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
+import { IoAddCircleOutline } from 'react-icons/io5';
 import { Typography } from '@mui/material';
 import { Button, Spinner } from '@nextui-org/react';
 import FileInfo from './Steps/FileInfo';
@@ -19,8 +22,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { fileUploadObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 
+export type TFile = { dataURI: string; filename: string } | null;
 export default function FileUploadForm() {
-  const [fileName, setFileName] = useState<string>();
+  const [file, setFile] = useState<TFile>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
   const {
@@ -28,6 +32,7 @@ export default function FileUploadForm() {
     handleSubmit,
     trigger,
     setValue,
+    resetField,
     reset,
     clearErrors,
     formState: { errors },
@@ -43,10 +48,11 @@ export default function FileUploadForm() {
       label: 'Upload',
       content: (
         <Upload
-          setFileName={setFileName}
-          fileName={fileName}
+          setFile={setFile}
+          file={file}
           register={register}
           errors={errors}
+          resetField={resetField}
           setValue={setValue}
           clearErrors={clearErrors}
         />
@@ -122,7 +128,7 @@ export default function FileUploadForm() {
     setIsLoading(false);
     localStorage.removeItem('formData');
     reset();
-    setFileName('');
+    setFile(null);
     setActiveStep(0);
   };
 
@@ -157,47 +163,71 @@ export default function FileUploadForm() {
       if (res) {
         handleSubmit(onAddAnother)();
         reset();
-        setFileName('');
+        setFile(null);
         setActiveStep(0);
       }
     });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-[800px] mx-auto">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="max-w-[800px] mx-auto font-natosans"
+    >
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map(({ content, label }, index) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
               <Typography>{content}</Typography>
-              <div className="flex flex-row justify-between">
-                {activeStep === 0 ? (
-                  <span />
-                ) : (
-                  <Button onPress={handleAddAnother} color="success">
-                    Add Another
-                  </Button>
-                )}
-                <div className="flex flex-row gap-x-4">
+              {activeStep === 0 ? (
+                <span />
+              ) : (
+                <Button
+                  onPress={handleAddAnother}
+                  color="secondary"
+                  variant="bordered"
+                  radius="sm"
+                  className="w-[100%] mb-5"
+                  startContent={<IoAddCircleOutline className="text-2xl" />}
+                >
+                  Add Another
+                </Button>
+              )}
+              <div
+                className={`flex flex-row ${index > 0 ? 'justify-between' : 'justify-end'}`}
+              >
+                {index > 0 && (
                   <Button
-                    isDisabled={index === 0}
                     onPress={handleBack}
-                    color="success"
+                    color="primary"
+                    variant="bordered"
+                    radius="sm"
+                    startContent={<GrFormPreviousLink className="text-2xl" />}
                   >
                     Back
                   </Button>
-                  <Button
-                    variant="bordered"
-                    onPress={handleNext}
-                    isDisabled={isLoading}
-                    {...(isLoading && {
-                      startContent: <Spinner color="secondary" size="sm" />,
+                )}
+                <Button
+                  variant="bordered"
+                  radius="sm"
+                  color="primary"
+                  onPress={handleNext}
+                  isDisabled={isLoading}
+                  {...(isLoading && {
+                    startContent: <Spinner color="secondary" size="sm" />,
+                  })}
+                  {...(isLoading === false &&
+                    index !== steps.length - 1 && {
+                      endContent: <GrFormNextLink className="text-2xl" />,
                     })}
-                  >
-                    {index === steps.length - 1 ? 'Submit' : 'Continue'}
-                  </Button>
-                </div>
+                  {...(isLoading === false &&
+                    index === steps.length - 1 && {
+                      endContent: <FaRegCircleCheck className="text-xl" />,
+                    })}
+                >
+                  {index === steps.length - 1 ? 'Submit' : 'Continue'}
+                </Button>
               </div>
             </StepContent>
           </Step>

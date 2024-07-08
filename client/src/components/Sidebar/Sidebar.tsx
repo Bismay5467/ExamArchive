@@ -25,9 +25,8 @@ import {
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
 
-
 function Sidebar() {
-  const [token, setToken] = useState<string>('');
+  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
   // TODO: Remove Manual setting of cookie afterwards
   Cookies.set(AUTH_TOKEN, token);
   const {
@@ -43,7 +42,7 @@ function Sidebar() {
     'text-xl text-slate-700 pointer-events-none flex-shrink-0';
 
   return (
-    <nav className="fixed z-50 group h-[700px] w-[70px] top-[50%] -translate-y-[50%] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg font-natosans">
+    <nav className="fixed z-50 group h-[740px] w-[70px] top-[50%] -translate-y-[50%] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg font-natosans">
       <div className="bg-[#f7f7f7] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
         <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
           <img src={logo} alt="LOGO" className="mix-blend-multiply w-[45px]" />

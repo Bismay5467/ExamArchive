@@ -45,7 +45,7 @@ export default function TagsEditor({
     <div className={cn('flex flex-col gap-y-4 font-natosans', className)}>
       <div
         id="tags-section"
-        className="flex flex-row flex-wrap gap-2 max-h-[200px] overflow-y-auto no-scrollbar"
+        className="flex flex-row flex-wrap gap-2 max-h-[80px] overflow-y-auto no-scrollbar"
       >
         {tags.map((val, idx) => (
           <Tag
