@@ -27,13 +27,13 @@ export const SEMESTER = Object.freeze({
 });
 
 export const reportReasons = [
-  { rank: 1, reason: 'Inappropriate or Offensive language' }, // -> Hate Speech
-  { rank: 2, reason: 'Harassesment or Bullying' }, // -> Harassesment or Bullying
-  { rank: 3, reason: 'Sexually Explicit Content' }, // -> nudity
-  { rank: 4, reason: 'Misinformation or Fake news' }, // -> scam
-  { rank: 5, reason: 'Violence or Graphic Content' }, // Violence
-  { rank: 6, reason: 'Impersonation' }, // -> Impersonation
-  { rank: 7, reason: 'Other' }, // -> Other
+  { rank: 2, reason: 'Inappropriate or Offensive language' }, // -> Hate Speech
+  { rank: 3, reason: 'Harassesment or Bullying' }, // -> Harassesment or Bullying
+  { rank: 4, reason: 'Sexually Explicit Content' }, // -> nudity
+  { rank: 5, reason: 'Misinformation or Fake news' }, // -> scam
+  { rank: 6, reason: 'Violence or Graphic Content' }, // Violence
+  { rank: 7, reason: 'Impersonation' }, // -> Impersonation
+  { rank: 1, reason: 'Other' }, // -> Other
 ];
 
 export const monthNames = [
@@ -93,6 +93,9 @@ export const ALLOWED_FILE_TYPES: ReadonlyArray<string> = [
 ];
 export const INITIAL_PAGE_NUMBER = 1;
 export const TEMP_JWT_TOKEN_HARDCODED =
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NjUxOTVjY2U5NWY4ZGZmNzM1YTQ1YzYiLCJ1c2VybmFtZSI6IkFya29qZWV0IiwiZW1haWwiOiJhcmtvamVldC5kZXZAZ21haWwuY29tIiwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3MTk3NjkyMTksImV4cCI6MTcyMjM2MTIxOX0.wIjAlzNH4VFUCgJqvcxmT23pjct8-v3C2VOe3H_CD5M';
+
+export const TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN =
   'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NjUxOTVjY2U5NWY4ZGZmNzM1YTQ1YzYiLCJ1c2VybmFtZSI6IkFya29qZWV0IiwiZW1haWwiOiJhcmtvamVldC5kZXZAZ21haWwuY29tIiwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3MTk3NjkyMTksImV4cCI6MTcyMjM2MTIxOX0.wIjAlzNH4VFUCgJqvcxmT23pjct8-v3C2VOe3H_CD5M';
 
 export const PDF_WORKER_URL =
