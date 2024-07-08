@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Tabs, Tab } from '@nextui-org/react';
 import { PiFiles } from 'react-icons/pi';
 import { IoCloudUploadOutline } from 'react-icons/io5';
