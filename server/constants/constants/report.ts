@@ -1,12 +1,12 @@
 export const reportReasons = [
-  { rank: 1, reason: 'Inappropriate or Offensive language' },
-  { rank: 2, reason: 'Harassesment or Bullying' },
-  { rank: 3, reason: 'Sexually Explicit Content' },
-  { rank: 4, reason: 'Misinformation or Fake news' },
-  { rank: 5, reason: 'Violence or Graphic Content' },
-  { rank: 6, reason: 'Impersonation' },
-  { rank: 7, reason: 'Other' },
-] as const;
+  { rank: 1, reason: 'Other' }, // -> Other
+  { rank: 2, reason: 'Inappropriate or Offensive language' }, // -> Hate Speech
+  { rank: 3, reason: 'Harassesment or Bullying' }, // -> Harassesment or Bullying
+  { rank: 4, reason: 'Sexually Explicit Content' }, // -> nudity
+  { rank: 5, reason: 'Misinformation or Fake news' }, // -> scam
+  { rank: 6, reason: 'Violence or Graphic Content' }, // Violence
+  { rank: 7, reason: 'Impersonation' }, // -> Impersonation
+];
 
 export const reasonsForReport = reportReasons.map((reason) => reason.reason);
 
@@ -19,3 +19,9 @@ export const NOVU_TOPIC = {
   NAME: 'notify-admin-on-report-content',
 };
 export const NOVU_WORKFLOW_IDENTIFIER = 'exam-archive-report-content';
+
+export const SORT_FILTERS = ['MOST RECENT', 'LEAST RECENT'] as const;
+
+export const CONTENT_TYPE = ['POST', 'COMMENT'] as const;
+
+export const REPORT_COUNT = ['MOST COUNT', 'LEAST COUNT'] as const;

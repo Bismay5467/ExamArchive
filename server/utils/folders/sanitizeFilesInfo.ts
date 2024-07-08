@@ -13,15 +13,24 @@ export default ({
       _id: fileId,
       metadata,
       name,
+      isPinned,
     }: {
       _id: string;
       metadata: any[];
       name?: string;
+      isPinned?: boolean;
     }) => {
       if (action === 'BOOKMARK') {
         if (Array.isArray(metadata) && metadata.length === 0) return {};
         const { createdAt, updatedAt, _id: questionId } = metadata[0];
-        return { fileId, questionId, filename: name, createdAt, updatedAt };
+        return {
+          fileId,
+          questionId,
+          filename: name,
+          createdAt,
+          updatedAt,
+          isPinned: isPinned ?? false,
+        };
       }
       if (action === 'UPLOAD') {
         if (Array.isArray(metadata) && metadata.length === 0) return {};

@@ -34,7 +34,9 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
           'metadata.updatedAt': 1,
           _id: 1,
         };
-  if (parentId && action === 'BOOKMARK') Object.assign(projection, { name: 1 });
+  if (parentId && action === 'BOOKMARK') {
+    Object.assign(projection, { name: 1, isPinned: 1 });
+  }
   if (parentId && action === 'UPLOAD') {
     Object.assign(projection, {
       'metadata.status': 1,
