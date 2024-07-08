@@ -5,11 +5,13 @@ import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
+  GetFlaggedComment,
   MarkAsResolved,
   ReportContent,
   ViewReport,
 } from '../../controllers/report';
 import {
+  getCommentInputSchema,
   markAsResolvedInputSchema,
   reportContentInputSchema,
   viewReportInputSchema,
@@ -34,6 +36,15 @@ router.get(
     validate(viewReportInputSchema, 'QUERY'),
   ],
   ViewReport
+);
+router.get(
+  '/getComment',
+  [
+    verifyUser,
+    privilege([ROLE.SUPERADMIN]),
+    validate(getCommentInputSchema, 'QUERY'),
+  ],
+  GetFlaggedComment
 );
 router.put(
   '/markResolved',

@@ -25,7 +25,8 @@ import {
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
 
-export default function Sidebar() {
+
+function Sidebar() {
   const [token, setToken] = useState<string>('');
   // TODO: Remove Manual setting of cookie afterwards
   Cookies.set(AUTH_TOKEN, token);
@@ -212,3 +213,5 @@ export default function Sidebar() {
     </nav>
   );
 }
+
+export default Sidebar;

@@ -2,7 +2,12 @@
 import { Types } from 'mongoose';
 import z from 'zod';
 
-import { reasonsForReport } from '../../constants/constants/report';
+import {
+  CONTENT_TYPE,
+  REPORT_COUNT,
+  SORT_FILTERS,
+  reasonsForReport,
+} from '../../constants/constants/report';
 
 export const reportContentInputSchema = z.object({
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
@@ -15,6 +20,15 @@ export const reportContentInputSchema = z.object({
 
 export const viewReportInputSchema = z.object({
   page: z.string(),
+  action: z.enum(['RESOLVED', 'PENDING']),
+  sortFilters: z.enum(SORT_FILTERS).optional(),
+  countOfReports: z.enum(REPORT_COUNT).optional(),
+  contentType: z.enum(CONTENT_TYPE).optional(),
+});
+export const getCommentInputSchema = z.object({
+  commentId: z
+    .string()
+    .refine((commentId) => Types.ObjectId.isValid(commentId)),
 });
 
 export const markAsResolvedInputSchema = z.object({

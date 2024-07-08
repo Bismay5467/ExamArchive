@@ -3,6 +3,11 @@ import mongoose, { Schema } from 'mongoose';
 import User from './user';
 import { reasonsForReport } from '../constants/constants/report';
 
+const reasonSubSchema: Schema = new mongoose.Schema({
+  reason: { type: String, enum: reasonsForReport, required: true },
+  count: { type: Number, default: 0, required: true },
+});
+
 const ReportSchema: Schema = new mongoose.Schema(
   {
     docModel: {
@@ -16,8 +21,9 @@ const ReportSchema: Schema = new mongoose.Schema(
       index: true,
       refPath: 'docModel',
     },
+    userIds: [mongoose.Types.ObjectId],
     totalReport: { type: Number, default: 0, index: true },
-    reasons: [{ type: String, enum: reasonsForReport, required: true }],
+    reasons: [reasonSubSchema],
     resolved: {
       isResolved: { type: Boolean, default: false },
       adminId: { type: mongoose.Types.ObjectId, ref: User },

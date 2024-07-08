@@ -16,9 +16,13 @@ import { reasonsForReport } from '../constants/constants/report';
 import { LOGO_URL } from '../constants/constants/shared';
 
 interface ReportNotificationEmailProps {
-  postLink: string;
   totalNoOfReports: number;
   reasons: typeof reasonsForReport;
+  content: {
+    type: string;
+    link?: string;
+    comment?: string;
+  };
 }
 
 const main = {
@@ -42,9 +46,9 @@ const text = {
 };
 
 export function ReportNotificationEmail({
-  postLink,
-  totalNoOfReports,
-  reasons,
+  totalNoOfReports = 100,
+  reasons = [],
+  content = { type: 'COMMENT', comment: 'This is a comment' },
 }: ReportNotificationEmailProps) {
   return (
     <Html>
@@ -53,7 +57,9 @@ export function ReportNotificationEmail({
         <Container style={container}>
           <Img src={LOGO_URL} width="100%" height="100" alt="Exam Archive" />
           <Section>
-            <Text style={{ ...text, textAlign: 'justify' }}>Hi Admin,</Text>
+            <Text style={{ ...text, textAlign: 'justify' }}>
+              Hi Superadmin,
+            </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
               This is an automated notification to bring to your attention a
               post on our platform that has been mass reported by users. The
@@ -63,26 +69,41 @@ export function ReportNotificationEmail({
             <Text style={{ ...text, textAlign: 'justify' }}>
               {`Given the nature of the reports and the potential impact on our
               platform's reputation and user experience, I kindly request your
-              immediate attention to review the content of this post.`}
+              immediate attention to review the content of this ${content.type.toLowerCase()}.`}
             </Text>
-            <Link
-              href={postLink}
-              style={{ ...text, color: 'blue', textAlign: 'justify' }}
-            >
-              View the post here
-            </Link>
+            {content.type === 'POST' && (
+              <Link
+                href={content.link}
+                style={{ ...text, color: 'blue', textAlign: 'justify' }}
+              >
+                View the post here
+              </Link>
+            )}
+            {content.type === 'COMMENT' && (
+              <Text
+                style={{
+                  ...text,
+                  textAlign: 'justify',
+                  backgroundColor: '#f7fa98',
+                  padding: '10px',
+                }}
+              >
+                {content.comment}
+              </Text>
+            )}
+
             <Text
               style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
             >
-              No of users reported : {totalNoOfReports}
+              Report count : {totalNoOfReports}
             </Text>
             <Text
               style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}
             >
-              Reported Reasons : {reasons.join(', ')}
+              Reported Reasons : {(reasons ?? []).join(', ')}
             </Text>
             <Text style={{ ...text, textAlign: 'justify' }}>
-              {`As an admin, your prompt intervention and assessment of this
+              {`As an super admin, your prompt intervention and assessment of this
               matter are crucial to maintaining the integrity and safety of our
               platform. We take reports from our users seriously, and it's
               imperative that we address any content that violates our community
