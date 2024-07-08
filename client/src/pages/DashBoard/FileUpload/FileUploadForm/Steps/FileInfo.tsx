@@ -78,7 +78,6 @@ export default function FileInfo({
         </Select>
         <Select
           isRequired
-          type="text"
           variant="bordered"
           className="col-span-1 sm:col-span-3"
           radius="sm"
