@@ -360,7 +360,13 @@ export default function TabularFileView({
     >
       <TableHeader columns={columns}>
         {({ name, uid, sortable }) => (
-          <TableColumn key={uid} allowsSorting={sortable} align="start">
+          <TableColumn
+            key={uid}
+            allowsSorting={sortable}
+            {...(uid === 'status' && {
+              className: 'pl-10',
+            })}
+          >
             {name}
           </TableColumn>
         )}
