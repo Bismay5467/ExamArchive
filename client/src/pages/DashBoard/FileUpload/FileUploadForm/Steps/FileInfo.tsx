@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import {
   FieldErrors,
   UseFormClearErrors,
@@ -6,7 +7,7 @@ import {
 } from 'react-hook-form';
 import { Input, Select, SelectItem } from '@nextui-org/react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SEMESTER } from '@/constants/shared';
 import { TFileUploadFormFields } from '@/types/upload';
 import TagsEditor from '@/components/TagsEditor/TagsEditor';
@@ -26,6 +27,13 @@ export default function FileInfo({
   useEffect(() => {
     setValue('tags', tags.join(','));
   }, [tags]);
+  const yearOptions = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 15 }, (_, i) =>
+      (currentYear - i).toString()
+    );
+    return years;
+  }, []);
   return (
     <section className="py-4">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-8 font-natosans">
@@ -68,7 +76,7 @@ export default function FileInfo({
             <SelectItem key={value}>{value}</SelectItem>
           ))}
         </Select>
-        <Input
+        <Select
           isRequired
           type="text"
           variant="bordered"
@@ -77,9 +85,13 @@ export default function FileInfo({
           label="Year"
           {...register('year')}
           isInvalid={errors.year !== undefined}
-          errorMessage={errors.year && errors.year?.message}
-          onFocus={() => clearErrors('year')}
-        />
+          errorMessage="*Required"
+          onFocus={() => errors.year && clearErrors('year')}
+        >
+          {yearOptions.map((val) => (
+            <SelectItem key={val}>{val}</SelectItem>
+          ))}
+        </Select>
         <Input
           isRequired
           radius="sm"
@@ -118,17 +130,6 @@ export default function FileInfo({
             {errors.tags?.message}
           </p>
         )}
-        {/* <Textarea
-          isRequired
-          type="text"
-          className="col-span-2 sm:col-span-8"
-          label="Tags"
-          placeholder="Comma Separated with no spaces"
-          {...register('tags')}
-          isInvalid={errors.tags !== undefined}
-          errorMessage={errors.tags?.message}
-          onFocus={() => errors.tags && clearErrors('tags')}
-        /> */}
       </div>
     </section>
   );

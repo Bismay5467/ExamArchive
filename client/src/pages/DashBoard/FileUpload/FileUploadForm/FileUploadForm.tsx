@@ -21,6 +21,7 @@ import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
 import { useAuth } from '@/hooks/useAuth';
 import { fileUploadObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
+import { UPLOAD_FILE_KEY } from '@/constants/upload';
 
 export type TFile = { dataURI: string; filename: string } | null;
 export default function FileUploadForm() {
@@ -99,7 +100,7 @@ export default function FileUploadForm() {
   const onSubmit: SubmitHandler<TFileUploadFormFields> = async (formData) => {
     // TODO: Bring all data from local storage
     let fileUploadData: Array<TFileUploadFormFields> = [formData];
-    const storedData = localStorage.getItem('formData');
+    const storedData = localStorage.getItem(UPLOAD_FILE_KEY);
     if (storedData) {
       fileUploadData = [...fileUploadData, ...JSON.parse(storedData)];
     }
@@ -134,7 +135,7 @@ export default function FileUploadForm() {
 
   const onAddAnother: SubmitHandler<TFileUploadFormFields> = (formData) => {
     // TODO: Bring all data from local storage
-    const storedData = localStorage.getItem('formData');
+    const storedData = localStorage.getItem(UPLOAD_FILE_KEY);
     if (!storedData) {
       localStorage.setItem('formData', JSON.stringify([formData]));
     } else {

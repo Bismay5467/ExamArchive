@@ -21,12 +21,15 @@ import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
 import { AUTH_TOKEN } from '@/constants/auth';
 import {
-  TEMP_JWT_TOKEN_HARDCODED,
+  TEMP_JWT_TOKEN_HARDCODED_USER,
+  TEMP_JWT_TOKEN_HARDCODED_ADMIN,
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
 
-function Sidebar() {
-  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
+export default function Sidebar() {
+  const [token, setToken] = useState<string>(
+    TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN
+  );
   // TODO: Remove Manual setting of cookie afterwards
   Cookies.set(AUTH_TOKEN, token);
   const {
@@ -167,7 +170,7 @@ function Sidebar() {
                     key="user"
                     startContent={<FaRegCircleUser className={iconClasses} />}
                     onClick={() => {
-                      setToken(TEMP_JWT_TOKEN_HARDCODED);
+                      setToken(TEMP_JWT_TOKEN_HARDCODED_USER);
                       window.location.reload();
                     }}
                   >
@@ -177,7 +180,7 @@ function Sidebar() {
                     key="admin"
                     startContent={<FaRegCircleUser className={iconClasses} />}
                     onClick={() => {
-                      setToken(TEMP_JWT_TOKEN_HARDCODED);
+                      setToken(TEMP_JWT_TOKEN_HARDCODED_ADMIN);
                       window.location.reload();
                     }}
                   >
@@ -212,5 +215,3 @@ function Sidebar() {
     </nav>
   );
 }
-
-export default Sidebar;
