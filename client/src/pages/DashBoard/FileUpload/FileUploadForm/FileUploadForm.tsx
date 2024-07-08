@@ -8,8 +8,6 @@ import StepContent from '@mui/material/StepContent';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
-
-import { Typography } from '@mui/material';
 import { Button, Spinner } from '@nextui-org/react';
 import FileInfo from './Steps/FileInfo';
 import { TFileUploadFormFields } from '@/types/upload';
@@ -18,6 +16,7 @@ import { uploadFilesInputSchema } from '@/schemas/uploadSchema';
 import { useAuth } from '@/hooks/useAuth';
 import { fileUploadObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
+import { UPLOAD_FILE_KEY } from '@/constants/upload';
 
 export default function FileUploadForm() {
   const [fileName, setFileName] = useState<string>();
@@ -93,7 +92,7 @@ export default function FileUploadForm() {
   const onSubmit: SubmitHandler<TFileUploadFormFields> = async (formData) => {
     // TODO: Bring all data from local storage
     let fileUploadData: Array<TFileUploadFormFields> = [formData];
-    const storedData = localStorage.getItem('formData');
+    const storedData = localStorage.getItem(UPLOAD_FILE_KEY);
     if (storedData) {
       fileUploadData = [...fileUploadData, ...JSON.parse(storedData)];
     }
@@ -128,7 +127,7 @@ export default function FileUploadForm() {
 
   const onAddAnother: SubmitHandler<TFileUploadFormFields> = (formData) => {
     // TODO: Bring all data from local storage
-    const storedData = localStorage.getItem('formData');
+    const storedData = localStorage.getItem(UPLOAD_FILE_KEY);
     if (!storedData) {
       localStorage.setItem('formData', JSON.stringify([formData]));
     } else {
@@ -170,8 +169,8 @@ export default function FileUploadForm() {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              <Typography>{content}</Typography>
-              <div className="flex flex-row justify-between">
+              {content}
+              <div className="flex gap-y-2 flex-col sm:flex-row sm:justify-between">
                 {activeStep === 0 ? (
                   <span />
                 ) : (
@@ -179,7 +178,7 @@ export default function FileUploadForm() {
                     Add Another
                   </Button>
                 )}
-                <div className="flex flex-row gap-x-4">
+                <div className="flex flex-row justify-between sm:gap-x-4">
                   <Button
                     isDisabled={index === 0}
                     onPress={handleBack}
