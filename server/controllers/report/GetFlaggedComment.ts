@@ -10,7 +10,7 @@ import { ERROR_CODES, SUCCESS_CODES } from '../../constants/statusCode';
 
 const GetFlaggedComment = asyncErrorHandler(
   async (req: Request, res: Response) => {
-    const { commentId } = req.body.data as z.infer<
+    const { commentId } = req.query as unknown as z.infer<
       typeof getCommentInputSchema
     >;
     const result = await Comment.findOne({ _id: commentId })
@@ -20,7 +20,7 @@ const GetFlaggedComment = asyncErrorHandler(
       .exec();
     if (result === null) {
       throw new ErrorHandler(
-        'No comment found with this ID',
+        'No comment found with this Id',
         ERROR_CODES['NOT FOUND']
       );
     }

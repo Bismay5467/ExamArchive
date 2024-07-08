@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { ROLE } from '../../constants/constants/auth';
-import { getCommentsInputSchema } from '../filePreview/comments/schema';
 import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
@@ -12,6 +11,7 @@ import {
   ViewReport,
 } from '../../controllers/report';
 import {
+  getCommentInputSchema,
   markAsResolvedInputSchema,
   reportContentInputSchema,
   viewReportInputSchema,
@@ -42,7 +42,7 @@ router.get(
   [
     verifyUser,
     privilege([ROLE.SUPERADMIN]),
-    validate(getCommentsInputSchema, 'QUERY'),
+    validate(getCommentInputSchema, 'QUERY'),
   ],
   GetFlaggedComment
 );

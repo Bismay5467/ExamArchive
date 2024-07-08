@@ -21,6 +21,7 @@ const ViewReport = asyncErrorHandler(async (req: Request, res: Response) => {
   const [result, totalDocuments] = await Promise.all([
     Report.find(query)
       .sort(sortOptions)
+      .select({ userIds: 0 })
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .skip(skipCount)

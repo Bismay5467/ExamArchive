@@ -18,7 +18,7 @@ import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
 
-export default function Sidebar() {
+function Sidebar() {
   const {
     authState: { userId, role, username },
     RESET,
@@ -168,3 +168,5 @@ export default function Sidebar() {
     </nav>
   );
 }
+
+export default Sidebar;

@@ -21,6 +21,7 @@ const ReportSchema: Schema = new mongoose.Schema(
       index: true,
       refPath: 'docModel',
     },
+    userIds: [mongoose.Types.ObjectId],
     totalReport: { type: Number, default: 0, index: true },
     reasons: [reasonSubSchema],
     resolved: {
