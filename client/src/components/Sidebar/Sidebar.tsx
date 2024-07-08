@@ -163,21 +163,30 @@ export default function Sidebar() {
                   <DropdownItem
                     key="user"
                     startContent={<FaRegCircleUser className={iconClasses} />}
-                    onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
+                    onClick={() => {
+                      setToken(TEMP_JWT_TOKEN_HARDCODED);
+                      window.location.reload();
+                    }}
                   >
                     User
                   </DropdownItem>
                   <DropdownItem
                     key="admin"
                     startContent={<FaRegCircleUser className={iconClasses} />}
-                    onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
+                    onClick={() => {
+                      setToken(TEMP_JWT_TOKEN_HARDCODED);
+                      window.location.reload();
+                    }}
                   >
                     Admin
                   </DropdownItem>
                   <DropdownItem
                     key="superadmin"
                     startContent={<FaRegCircleUser className={iconClasses} />}
-                    onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
+                    onClick={() => {
+                      setToken(TEMP_JWT_TOKEN_HARDCODED);
+                      window.location.reload();
+                    }}
                   >
                     Super Admin
                   </DropdownItem>
