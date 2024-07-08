@@ -27,13 +27,13 @@ export const SEMESTER = Object.freeze({
 });
 
 export const reportReasons = [
-  { rank: 1, reason: 'Other' }, // -> Other
   { rank: 2, reason: 'Inappropriate or Offensive language' }, // -> Hate Speech
   { rank: 3, reason: 'Harassesment or Bullying' }, // -> Harassesment or Bullying
   { rank: 4, reason: 'Sexually Explicit Content' }, // -> nudity
   { rank: 5, reason: 'Misinformation or Fake news' }, // -> scam
   { rank: 6, reason: 'Violence or Graphic Content' }, // Violence
   { rank: 7, reason: 'Impersonation' }, // -> Impersonation
+  { rank: 1, reason: 'Other' }, // -> Other
 ];
 
 export const monthNames = [
