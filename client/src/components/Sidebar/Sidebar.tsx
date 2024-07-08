@@ -4,6 +4,7 @@ import { IoBookmarkOutline, IoCloudUploadOutline } from 'react-icons/io5';
 import { LuFileSearch2 } from 'react-icons/lu';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
 import { FaRegCircleUser } from 'react-icons/fa6';
+import { LiaSignOutAltSolid } from 'react-icons/lia';
 import {
   Avatar,
   Dropdown,
@@ -27,6 +28,7 @@ export default function Sidebar() {
   Cookies.set(AUTH_TOKEN, token);
   const {
     authState: { userId, role, username },
+    RESET,
   } = useAuth();
 
   const activeClass = 'text-pink-600';
@@ -157,41 +159,36 @@ export default function Sidebar() {
                     </div>
                   </div>
                 </DropdownTrigger>
-                {/* <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownSection aria-label="user control">
-                    <DropdownItem
-                      color="danger"
-                      startContent={<FaSignOutAlt />}
-                      key="signout"
-                      textValue="Sign Out"
-                      onClick={() => RESET()}
-                    >
-                      {' '}
-                      Sign Out
-                    </DropdownItem>
-                  </DropdownSection>
-                </DropdownMenu> */}
                 <DropdownMenu aria-label="Static Actions" variant="light">
                   <DropdownItem
-                    key="delete"
+                    key="user"
                     startContent={<FaRegCircleUser className={iconClasses} />}
                     onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
                   >
                     User
                   </DropdownItem>
                   <DropdownItem
-                    key="delete"
+                    key="admin"
                     startContent={<FaRegCircleUser className={iconClasses} />}
                     onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
                   >
                     Admin
                   </DropdownItem>
                   <DropdownItem
-                    key="delete"
+                    key="superadmin"
                     startContent={<FaRegCircleUser className={iconClasses} />}
                     onClick={() => setToken(TEMP_JWT_TOKEN_HARDCODED)}
                   >
-                    Super admin
+                    Super Admin
+                  </DropdownItem>
+                  <DropdownItem
+                    key="signout"
+                    startContent={
+                      <LiaSignOutAltSolid className={iconClasses} />
+                    }
+                    onClick={() => RESET()}
+                  >
+                    Sign Out
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
