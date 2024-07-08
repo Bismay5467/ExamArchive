@@ -1,4 +1,3 @@
-/* eslint-disable function-paren-newline */
 /* eslint-disable indent */
 import { toast } from 'sonner';
 import Stepper from '@mui/material/Stepper';
