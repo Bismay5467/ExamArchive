@@ -3,7 +3,6 @@ import {
   FieldErrors,
   UseFormClearErrors,
   UseFormRegister,
-  UseFormResetField,
   UseFormSetValue,
 } from 'react-hook-form';
 import {
@@ -35,24 +34,21 @@ import {
 import fetcher from '@/utils/fetcher/fetcher';
 import { MAX_FILE_SIZE } from '@/constants/upload';
 import { useAuth } from '@/hooks/useAuth';
-import { TFile } from '../FileUploadForm';
 
 export default function Upload({
   register,
   errors,
-  resetField,
   setFile,
   setValue,
   clearErrors,
   file,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
-  resetField: UseFormResetField<TFileUploadFormFields>;
   setValue: UseFormSetValue<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
   clearErrors: UseFormClearErrors<TFileUploadFormFields>;
-  setFile: React.Dispatch<React.SetStateAction<TFile>>;
-  file: TFile;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  file: File | null;
 }) {
   const {
     authState: { jwtToken },
@@ -63,38 +59,20 @@ export default function Upload({
   const folderNames: Array<{ name: string; _id: string }> =
     data?.data?.data ?? undefined;
 
-  const pdfToBase64 = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-
     if (files && files?.length > 0) {
       const [fileToLoad] = files;
       if (fileToLoad.size > MAX_FILE_SIZE) {
-        toast('File size exeeded 5MB!', {
+        toast.error('File size exeeded 5MB!', {
           duration: 5000,
         });
-        return;
-      }
-      const fileReader = new FileReader();
-
-      fileReader.onload = (fileLoadedEvent) => {
-        const dataURI = fileLoadedEvent.target?.result as string;
-        setFile({ dataURI, filename: fileToLoad.name });
-        setValue('file', { dataURI, name: fileToLoad.name });
-      };
-
-      fileReader.readAsDataURL(fileToLoad);
+      } else setFile(fileToLoad);
     } else {
-      toast('Please upload a file!', {
+      toast.error('Please upload a file!', {
         duration: 5000,
       });
     }
-  };
-
-  const handleDeleteFile = () => {
-    setFile(null);
-    // resetField('file');
-    resetField('file.dataURI');
-    resetField('file.name');
   };
 
   const handleCreateFolder = async () => {
@@ -131,14 +109,14 @@ export default function Upload({
   };
 
   return (
-    <section className="py-4 flex flex-col gap-y-4 items-center font-natosans">
+    <section className="py-4 flex flex-col gap-y-6 items-center font-natosans">
       <FileInput
         file={file}
-        className="w-full"
-        onChange={(e) => pdfToBase64(e)}
+        className={`w-full ${errors.file ? 'border-red-500' : ''}`}
+        onChange={handleUploadFile}
         onFocus={() => errors.file && clearErrors('file')}
       />
-      {errors && (
+      {errors.file && (
         <p className="text-red-500 text-sm">
           {errors.file?.message ??
             errors.file?.dataURI?.message ??
@@ -150,8 +128,9 @@ export default function Upload({
         color="danger"
         startContent={<RiDeleteBin6Line className="text-xl" />}
         radius="sm"
-        className="w-[100%] py-5 mb-5 text-medium"
-        onClick={handleDeleteFile}
+        isDisabled={file === null}
+        className="w-full text-medium"
+        onPress={() => setFile(null)}
       >
         Delete
       </Button>
@@ -172,7 +151,7 @@ export default function Upload({
             <SelectItem key={value}>{value}</SelectItem>
           ))}
         </Select>
-        <div className="flex flex-row gap-x-4 sm:w-1/2 self-center">
+        <div className="flex flex-row gap-x-4 w-full sm:w-1/2 self-center">
           <Autocomplete
             label="Select a folder"
             size="sm"
@@ -194,7 +173,7 @@ export default function Upload({
           <Button
             onPress={onOpen}
             radius="sm"
-            size="md"
+            size="lg"
             variant="bordered"
             color="primary"
             isIconOnly

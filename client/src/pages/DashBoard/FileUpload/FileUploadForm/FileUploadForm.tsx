@@ -7,12 +7,11 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { IoAddCircleOutline } from 'react-icons/io5';
-import { Typography } from '@mui/material';
 import { Button, Spinner } from '@nextui-org/react';
 import FileInfo from './Steps/FileInfo';
 import { TFileUploadFormFields } from '@/types/upload';
@@ -23,9 +22,8 @@ import { fileUploadObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { UPLOAD_FILE_KEY } from '@/constants/upload';
 
-export type TFile = { dataURI: string; filename: string } | null;
 export default function FileUploadForm() {
-  const [file, setFile] = useState<TFile>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
   const {
@@ -34,6 +32,7 @@ export default function FileUploadForm() {
     trigger,
     setValue,
     resetField,
+    getValues,
     reset,
     clearErrors,
     formState: { errors },
@@ -44,6 +43,21 @@ export default function FileUploadForm() {
     authState: { jwtToken },
   } = useAuth();
 
+  useEffect(() => {
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onload = (fileLoadedEvent) => {
+        const dataURI = fileLoadedEvent.target?.result as string;
+        setValue('file', { dataURI, name: file.name });
+      };
+      fileReader.readAsDataURL(file);
+    } else {
+      resetField('file');
+      reset({ ...getValues, file: undefined });
+      clearErrors('file');
+    }
+  }, [file]);
+
   const steps = [
     {
       label: 'Upload',
@@ -53,7 +67,6 @@ export default function FileUploadForm() {
           file={file}
           register={register}
           errors={errors}
-          resetField={resetField}
           setValue={setValue}
           clearErrors={clearErrors}
         />
@@ -75,8 +88,10 @@ export default function FileUploadForm() {
   const triggerValidate = async () => {
     const validationResult =
       activeStep === 0
-        ? await trigger(['file']).then(() =>
-            trigger(['file.dataURI', 'file.name', 'examType', 'folderId'])
+        ? await trigger(['file']).then(
+            (res) =>
+              res &&
+              trigger(['file.dataURI', 'file.name', 'examType', 'folderId'])
           )
         : await trigger([
             'branch',
@@ -178,9 +193,11 @@ export default function FileUploadForm() {
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map(({ content, label }, index) => (
           <Step key={label}>
-            <StepLabel>{label}</StepLabel>
+            <StepLabel>
+              <span className="text-lg">{label}</span>
+            </StepLabel>
             <StepContent>
-              <Typography>{content}</Typography>
+              {content}
               {activeStep === 0 ? (
                 <span />
               ) : (
