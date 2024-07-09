@@ -130,7 +130,7 @@ export default function TabularFileView({
     }
 
     return filteredFiles;
-  }, [response, filterValue]);
+  }, [response, filterValue, pinnedFiles]);
 
   const pages = Math.max(Math.ceil(filteredItems.length / ROWS_PER_PAGE), 0);
 
@@ -169,7 +169,16 @@ export default function TabularFileView({
   );
 
   const handleFilePin = useCallback(
-    async (fileId: string, action: 'PIN' | 'UNPIN') => {
+    async (fileId: string, questionId: string, action: 'PIN' | 'UNPIN') => {
+      const isFilePinned =
+        action === 'PIN' &&
+        pinnedFiles.some((file) => file.questionId === questionId);
+      if (isFilePinned) {
+        toast.error('This file is already pinned!', {
+          duration: 5000,
+        });
+        return;
+      }
       const reqObj = togglePinObj({ fileId, action }, jwtToken);
       if (!reqObj) {
         toast.error('Something went wrong!', {
@@ -187,7 +196,8 @@ export default function TabularFileView({
         });
         return;
       }
-      mutatePin().then(() =>
+      await mutatePin();
+      mutate().then(() =>
         toast.success(
           `File ${action === 'PIN' ? 'Pinned' : 'Un-Pinned'} successfully!`,
           {
@@ -196,7 +206,7 @@ export default function TabularFileView({
         )
       );
     },
-    []
+    [pinnedFiles]
   );
 
   const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
@@ -265,7 +275,7 @@ export default function TabularFileView({
           return (
             <Chip
               className="uppercase min-w-[100px] border border-transparent"
-              color={statusMap[file.status!].color as ChipProps['color']}
+              color={statusMap[file.status].color as ChipProps['color']}
               size="sm"
               variant="bordered"
               startContent={statusMap[file.status].icon}
@@ -311,11 +321,8 @@ export default function TabularFileView({
                       onClick={() =>
                         handleFilePin(
                           file.fileId,
-                          pinnedFiles.some(
-                            (val) => val.questionId === file.questionId
-                          )
-                            ? 'UNPIN'
-                            : 'PIN'
+                          file.questionId,
+                          file.isPinned ? 'UNPIN' : 'PIN'
                         )
                       }
                     >
@@ -330,7 +337,7 @@ export default function TabularFileView({
           );
       }
     },
-    []
+    [pinnedFiles, items]
   );
 
   const onSearchChange = useCallback((value?: string) => {
