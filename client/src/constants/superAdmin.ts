@@ -1,4 +1,4 @@
-import { IReportFilterOption } from '@/types/superadmin';
+import { IReportFilterOption } from '@/types/report';
 
 export const REPORT_CONTENT_TYPE_OPTIONS = Object.freeze({
   POST: 'POST',

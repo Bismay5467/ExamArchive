@@ -2,13 +2,13 @@ import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
 import {
   ICreateFolder,
-  IAction,
+  TAction,
   IGetFilesData,
   IDeleteFolder,
 } from '@/types/folder';
 
 export const getFolderNameObj = (
-  action: IAction,
+  action: TAction,
   jwtToken: string | undefined
 ) => {
   const params = { action };

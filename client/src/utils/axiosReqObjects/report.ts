@@ -1,7 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
-import { IReportContent, IResolveReport } from '@/types/report';
+import {
+  IReportContent,
+  IResolveReport,
+  IReportFilterFields,
+} from '@/types/report';
 import { SERVER_ROUTES } from '@/constants/routes';
-import { IReportFilterFields } from '@/types/superadmin';
 
 export const reportObj = (
   reportData: IReportContent,

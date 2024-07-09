@@ -10,7 +10,7 @@ export default function TagsEditor({
   isDeletable,
 }: {
   tags: Array<string>;
-  className: string;
+  className?: string;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   isDeletable: boolean;
 }) {
