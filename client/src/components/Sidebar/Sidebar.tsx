@@ -1,4 +1,3 @@
-/* eslint-disable function-paren-newline */
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useState } from 'react';

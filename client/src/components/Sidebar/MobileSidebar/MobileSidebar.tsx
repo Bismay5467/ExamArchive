@@ -1,4 +1,3 @@
-/* eslint-disable function-paren-newline */
 import { NavLink } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
 import React, { useEffect, useRef, useState } from 'react';
