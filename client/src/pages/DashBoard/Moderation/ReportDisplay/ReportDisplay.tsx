@@ -3,10 +3,13 @@ import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { viewReportsObj } from '@/utils/axiosReqObjects';
-import { IReportFilterFields, TReportAction } from '@/types/superadmin';
 import { FilterSheet } from './FilterSheet/FilterSheet';
 import ReportCard from './ReportCard/ReportCard';
-import { IReportPreview } from '@/types/report';
+import {
+  IReportFilterFields,
+  IReportPreview,
+  TReportAction,
+} from '@/types/report';
 
 export default function ReportDisplay({ action }: { action: TReportAction }) {
   const {
