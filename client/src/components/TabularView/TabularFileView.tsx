@@ -44,7 +44,7 @@ import {
   getFilesDataObj,
   togglePinObj,
 } from '@/utils/axiosReqObjects';
-import { IAction, IBookmarkFile } from '@/types/folder';
+import { TAction, TFileType } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import {
@@ -56,6 +56,7 @@ import { CLIENT_ROUTES } from '@/constants/routes';
 import { removeBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 import fetcher from '@/utils/fetcher/fetcher';
 import RenderItems from '../Pagination/RenderItems';
+import { usePin } from '@/pages/DashBoard/Bookmarks/Bookmarks';
 
 const statusMap: Record<string, Record<string, any>> = {
   Uploaded: {
@@ -75,7 +76,7 @@ const statusMap: Record<string, Record<string, any>> = {
 export default function TabularFileView({
   actionVarient,
 }: {
-  actionVarient: IAction;
+  actionVarient: TAction;
 }) {
   const {
     authState: { jwtToken },
@@ -100,7 +101,10 @@ export default function TabularFileView({
       : null
   );
 
-  const files: Array<IBookmarkFile> = response?.data.files ?? [];
+  const { pinnedFiles, mutate: mutatePin } = usePin();
+
+  const files: Array<TFileType<typeof actionVarient>> =
+    response?.data?.files ?? [];
 
   const isBookmark = actionVarient === 'BOOKMARK';
   const navigate = useNavigate();
@@ -183,7 +187,7 @@ export default function TabularFileView({
         });
         return;
       }
-      mutate().then(() =>
+      mutatePin().then(() =>
         toast.success(
           `File ${action === 'PIN' ? 'Pinned' : 'Un-Pinned'} successfully!`,
           {
@@ -199,16 +203,23 @@ export default function TabularFileView({
 
   const sortedItems = useMemo(
     () =>
-      [...filteredItems].sort((a: IBookmarkFile, b: IBookmarkFile) => {
-        const first = a[sortDescriptor.column as keyof IBookmarkFile] as string;
-        const second = b[
-          sortDescriptor.column as keyof IBookmarkFile
-        ] as string;
+      [...filteredItems].sort(
+        (
+          a: TFileType<typeof actionVarient>,
+          b: TFileType<typeof actionVarient>
+        ) => {
+          const first = a[
+            sortDescriptor.column as keyof TFileType<typeof actionVarient>
+          ] as string;
+          const second = b[
+            sortDescriptor.column as keyof TFileType<typeof actionVarient>
+          ] as string;
 
-        const cmp = first < second ? -1 : first > second ? 1 : 0;
+          const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-        return sortDescriptor.direction === 'descending' ? -cmp : cmp;
-      }),
+          return sortDescriptor.direction === 'descending' ? -cmp : cmp;
+        }
+      ),
     [sortDescriptor, filteredItems, response]
   );
 
@@ -219,100 +230,108 @@ export default function TabularFileView({
     return sortedItems.slice(start, end);
   }, [page, sortedItems, ROWS_PER_PAGE]);
 
-  const renderCell = useCallback((file: IBookmarkFile, columnKey: Key) => {
-    const cellValue = file[columnKey as keyof IBookmarkFile];
-    const { day, month, year } = parseUTC(cellValue as string);
-    const [heading, code, semester, examYear] =
-      columnKey === 'filename' ? (cellValue as string)!.split(',') : [];
+  const renderCell = useCallback(
+    (file: TFileType<typeof actionVarient>, columnKey: Key) => {
+      const cellValue =
+        file[columnKey as keyof TFileType<typeof actionVarient>];
+      const { day, month, year } = parseUTC(cellValue as string);
+      const [heading, code, semester, examYear] =
+        columnKey === 'filename' ? (cellValue as string)!.split(',') : [];
 
-    switch (columnKey) {
-      case 'filename':
-        return (
-          <div className="flex min-w-[300px] flex-row gap-x-2 cursor-pointer">
-            <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
-            <span className="flex flex-col">
-              <span className="text-sm min-w-[120px]">
-                {heading} {isBookmark && <span>({code})</span>}
-              </span>
-              {isBookmark && (
-                <span className="text-sm opacity-60">
-                  {semester}, {examYear}
+      switch (columnKey) {
+        case 'filename':
+          return (
+            <div className="flex min-w-[300px] flex-row gap-x-2 cursor-pointer">
+              <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
+              <span className="flex flex-col">
+                <span className="text-sm min-w-[120px]">
+                  {heading} {isBookmark && <span>({code})</span>}
                 </span>
-              )}
-            </span>
-          </div>
-        );
-      case 'createdAt':
-        return (
-          <div className="min-w-[100px] font-medium opacity-65">
-            {monthNames[month]} {day}, {year}
-          </div>
-        );
-      case 'status':
-        return (
-          <Chip
-            className="uppercase min-w-[100px] border border-transparent"
-            color={statusMap[file.status].color as ChipProps['color']}
-            size="sm"
-            variant="bordered"
-            startContent={statusMap[file.status].icon}
-          >
-            {cellValue}
-          </Chip>
-        );
-      default:
-        return (
-          <div className="min-w-[120px] font-medium flex flex-row justify-between opacity-65">
-            <span className="self-center">
+                {isBookmark && (
+                  <span className="text-sm opacity-60">
+                    {semester}, {examYear}
+                  </span>
+                )}
+              </span>
+            </div>
+          );
+        case 'createdAt':
+          return (
+            <div className="min-w-[100px] font-medium opacity-65">
               {monthNames[month]} {day}, {year}
-            </span>
-            <Dropdown radius="sm" className="font-natosans">
-              <DropdownTrigger>
-                <Button
-                  variant="light"
-                  size="sm"
-                  isIconOnly
-                  className="self-center"
-                >
-                  <FaEllipsisVertical className="text-lg" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions" variant="light">
-                <DropdownItem
-                  key="delete"
-                  startContent={
-                    isBookmark ? (
-                      <GoBookmarkSlash className={iconClasses} />
-                    ) : (
-                      <RiDeleteBin6Line className={iconClasses} />
-                    )
-                  }
-                  onClick={() => handleDelete(file.fileId, file.questionId)}
-                >
-                  {isBookmark ? 'Remove Bookmark' : 'Delete Post'}
-                </DropdownItem>
-                {isBookmark ? (
+            </div>
+          );
+        case 'status':
+          return (
+            <Chip
+              className="uppercase min-w-[100px] border border-transparent"
+              color={statusMap[file.status!].color as ChipProps['color']}
+              size="sm"
+              variant="bordered"
+              startContent={statusMap[file.status].icon}
+            >
+              {cellValue}
+            </Chip>
+          );
+        default:
+          return (
+            <div className="min-w-[120px] font-medium flex flex-row justify-between opacity-65">
+              <span className="self-center">
+                {monthNames[month]} {day}, {year}
+              </span>
+              <Dropdown radius="sm" className="font-natosans">
+                <DropdownTrigger>
+                  <Button
+                    variant="light"
+                    size="sm"
+                    isIconOnly
+                    className="self-center"
+                  >
+                    <FaEllipsisVertical className="text-lg" />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Static Actions" variant="light">
                   <DropdownItem
-                    key="pinned"
-                    startContent={<RiPushpinLine className={iconClasses} />}
-                    onClick={() =>
-                      handleFilePin(
-                        file.fileId,
-                        file.isPinned! ? 'UNPIN' : 'PIN'
+                    key="delete"
+                    startContent={
+                      isBookmark ? (
+                        <GoBookmarkSlash className={iconClasses} />
+                      ) : (
+                        <RiDeleteBin6Line className={iconClasses} />
                       )
                     }
+                    onClick={() => handleDelete(file.fileId, file.questionId)}
                   >
-                    {file.isPinned! ? 'Un-Pin File' : 'Pin File'}
+                    {isBookmark ? 'Remove Bookmark' : 'Delete Post'}
                   </DropdownItem>
-                ) : (
-                  (null as any)
-                )}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-    }
-  }, []);
+                  {isBookmark ? (
+                    <DropdownItem
+                      key="pinned"
+                      startContent={<RiPushpinLine className={iconClasses} />}
+                      onClick={() =>
+                        handleFilePin(
+                          file.fileId,
+                          pinnedFiles.some(
+                            (val) => val.questionId === file.questionId
+                          )
+                            ? 'UNPIN'
+                            : 'PIN'
+                        )
+                      }
+                    >
+                      {file.isPinned ? 'Un-Pin File' : 'Pin File'}
+                    </DropdownItem>
+                  ) : (
+                    (null as any)
+                  )}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+      }
+    },
+    []
+  );
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {

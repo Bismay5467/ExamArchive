@@ -1,22 +1,22 @@
-export type IAction = 'UPLOAD' | 'BOOKMARK';
+export type TAction = 'UPLOAD' | 'BOOKMARK';
 
 export interface ICreateFolder {
-  action: IAction;
+  action: TAction;
   folderName: string;
 }
 
 export interface IDeleteFolder {
-  action: IAction;
+  action: TAction;
   folderId: string;
 }
 
 // Folder is also a file (parentId = "")
 export interface IGetFilesData {
-  action: IAction;
+  action: TAction;
   parentId: string;
 }
 
-export interface IBookmarkFolder {
+export interface IFolder {
   _id: string;
   name: string;
   noOfFiles: number;
@@ -24,15 +24,18 @@ export interface IBookmarkFolder {
   updatedAt: string;
 }
 
-export interface IBookmarkFile {
+export type TFileType<T extends TAction> = {
+  type: T;
   fileId: string;
   questionId: string;
   filename: string;
-  status: string;
   createdAt: string;
   updatedAt: string;
-  isPinned?: boolean;
-}
+} & (T extends Exclude<TAction, 'UPLOAD'>
+  ? { status: string }
+  : T extends Exclude<TAction, 'BOOKMARK'>
+    ? { isPinned: boolean }
+    : {});
 
 export interface IPinnedFile {
   name: string;

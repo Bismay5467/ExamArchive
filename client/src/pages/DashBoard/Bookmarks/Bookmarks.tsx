@@ -1,3 +1,4 @@
+/* eslint-disable require-await */
 /* eslint-disable function-paren-newline */
 import { Outlet, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -13,8 +14,8 @@ import {
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiPushpinLine } from 'react-icons/ri';
 import { AiOutlineFilePdf } from 'react-icons/ai';
-import useSWR from 'swr';
-import { useCallback } from 'react';
+import useSWR, { KeyedMutator, MutatorOptions } from 'swr';
+import { createContext, useCallback, useContext } from 'react';
 import { getPinnedFilesObj, togglePinObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import { IPinnedFile } from '@/types/folder';
@@ -22,6 +23,16 @@ import { CLIENT_ROUTES } from '@/constants/routes';
 import fetcher from '@/utils/fetcher/fetcher';
 import { parseUTC } from '@/utils/helpers';
 import { monthNames } from '@/constants/shared';
+import { IPinContext } from '@/types/bookmarks';
+
+const defaultMutate: KeyedMutator<any> = async (
+  _data?: any,
+  _opts?: boolean | MutatorOptions<any>
+) => Promise.resolve({});
+const PinContext = createContext<IPinContext>({
+  pinnedFiles: [],
+  mutate: defaultMutate,
+});
 
 export default function Bookmarks() {
   const {
@@ -124,7 +135,22 @@ export default function Bookmarks() {
           );
         })}
       </div>
-      <Outlet />
+      <PinContext.Provider
+        // eslint-disable-next-line react/jsx-no-constructed-context-values
+        value={{ pinnedFiles, mutate }}
+      >
+        <Outlet />
+      </PinContext.Provider>
     </div>
   );
 }
+
+export const usePin = () => {
+  const context = useContext(PinContext);
+
+  if (context === undefined) {
+    throw new Error('usePin must be used within a PinProvider');
+  }
+
+  return context;
+};
