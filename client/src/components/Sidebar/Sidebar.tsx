@@ -15,7 +15,9 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import MobileSidebar from './MobileSidebar/MobileSidebar';
 
 export default function Sidebar() {
-  const [token, setToken] = useState<string>(TEMP_JWT_TOKEN_HARDCODED_ADMIN);
+  const [token, setToken] = useState<string>(
+    Cookies.get(AUTH_TOKEN) ?? TEMP_JWT_TOKEN_HARDCODED_ADMIN
+  );
   // TODO: Remove Manual setting of cookie afterwards
   Cookies.set(AUTH_TOKEN, token);
   const {
