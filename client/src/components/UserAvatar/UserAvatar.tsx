@@ -36,10 +36,10 @@ export default function UserAvatar({
             src="https://i.pravatar.cc/150?u=a04258114e29026302d"
           />
           <div>
-            <p className="self-center text-sm hidden group-hover:block">
+            <p className="self-center text-sm sm:hidden sm:group-hover:block">
               {username}
             </p>
-            <p className="self-center text-sm opacity-60 hidden group-hover:block">
+            <p className="self-center text-sm opacity-60 sm:hidden sm:group-hover:block">
               @{role.toLowerCase()}
             </p>
           </div>

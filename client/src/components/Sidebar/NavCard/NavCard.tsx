@@ -32,7 +32,7 @@ export default function NavCard({
           </IconWrapper>
           {isReady ? (
             <p
-              className={`self-center my-auto text-base hidden group-hover:block ${isActive ? activeClass : nonActiveClass}`}
+              className={`self-center my-auto text-base sm:hidden sm:group-hover:block ${isActive ? activeClass : nonActiveClass}`}
             >
               {name}
             </p>
@@ -44,7 +44,7 @@ export default function NavCard({
               >
                 {name}
               </p> */}
-              <p className="self-center text-sm text-slate-400 hidden group-hover:block">
+              <p className="self-center text-sm text-slate-400 sm:hidden sm:group-hover:block">
                 Comming Soon
               </p>
             </div>

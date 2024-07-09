@@ -262,7 +262,9 @@ export default function TabularFolderView({
           />
           <Button
             color="primary"
-            startContent={<IoMdAddCircleOutline className="text-xl" />}
+            startContent={
+              <IoMdAddCircleOutline className="text-xl hidden sm:block" />
+            }
             radius="sm"
             variant="bordered"
             onClick={() => onOpen()}

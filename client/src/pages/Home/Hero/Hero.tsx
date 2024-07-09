@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom';
+import { CLIENT_ROUTES } from '@/constants/routes';
+
 export default function Hero() {
   return (
     <section>
@@ -56,12 +59,12 @@ export default function Hero() {
             </p>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
               <div data-aos="fade-up" data-aos-delay="400">
-                <a
+                <Link
                   className="btn text-white bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0"
-                  href="#0"
+                  to={CLIENT_ROUTES.SEARCH}
                 >
-                  Start free trial
-                </a>
+                  Start Searching
+                </Link>
               </div>
               <div data-aos="fade-up" data-aos-delay="600">
                 <a
