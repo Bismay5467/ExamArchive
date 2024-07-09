@@ -20,7 +20,9 @@ const PinFile = asyncErrorHandler(async (req: Request, res: Response) => {
     .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
     .lean()
     .exec();
-  return res.status(SUCCESS_CODES.OK).json({ message: 'File pinned' });
+  return res
+    .status(SUCCESS_CODES.OK)
+    .json({ message: `File ${action === 'PIN' ? 'pinned' : 'un-pinned'}` });
 });
 
 export default PinFile;
