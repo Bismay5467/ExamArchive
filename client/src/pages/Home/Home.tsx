@@ -9,6 +9,7 @@ import Features from './Features/Features';
 import Zigzag from './Zigzag/Zigzag';
 import Testimonials from './Testimonials/Testimonials';
 import Newsletter from './Newsletter/Newsletter';
+import Footer from '@/components/Footer/Footer';
 
 export default function Home() {
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Home() {
         <Zigzag />
         <Testimonials />
         <Newsletter />
+        <Footer />
       </div>
     </div>
   );

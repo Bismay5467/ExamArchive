@@ -9,6 +9,8 @@ export const CLIENT_ROUTES = Object.freeze({
   DASHBOARD_FILEUPLOAD: 'fileupload',
   DASHBOARD_ANALYTICS: 'analytics',
   DASHBOARD_BOOKMARKS: 'bookmarks',
+  DASHBOARD_OPERATIONS: 'operations',
+  DASHBOARD_MODERATION: 'moderation',
 });
 
 export const SERVER_ROUTES = Object.freeze({
