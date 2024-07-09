@@ -1,6 +1,6 @@
 import { cn, CheckboxGroup, Checkbox } from '@nextui-org/react';
 import React from 'react';
-import { IReportFilterFields } from '@/types/superadmin';
+import { IReportFilterFields } from '@/types/report';
 
 export default function ReportFilterOptionGroup({
   filterKey,

@@ -12,7 +12,7 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { useAuth } from '@/hooks/useAuth';
-import { TModeratorRole } from '@/types/superadmin';
+import { TModeratorRole } from '@/types/moderator';
 import { addModeratorObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 

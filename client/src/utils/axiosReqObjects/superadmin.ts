@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
-import { IModerator, TModeratorRole } from '@/types/superadmin';
+import { IModerator, TModeratorRole } from '@/types/moderator';
 
 export const getModeratorsObj = (
   { role }: { role: TModeratorRole },

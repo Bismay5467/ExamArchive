@@ -35,7 +35,7 @@ import {
   IMderatorDetails,
   IModerator,
   TModeratorRole,
-} from '@/types/superadmin';
+} from '@/types/moderator';
 import { OperationsEntryColumns } from '@/constants/operations';
 import InviteModal from './InviteModal/InviteModal';
 

@@ -2,13 +2,13 @@ import { AxiosRequestConfig } from 'axios';
 import { SERVER_ROUTES } from '@/constants/routes';
 import {
   ICreateFolder,
-  IAction,
+  TAction,
   IGetFilesData,
   IDeleteFolder,
 } from '@/types/folder';
 
 export const getFolderNameObj = (
-  action: IAction,
+  action: TAction,
   jwtToken: string | undefined
 ) => {
   const params = { action };
@@ -78,6 +78,42 @@ export const deleteFolderObj = (
     url,
     data: { data: folderDetails },
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const getPinnedFilesObj = (jwtToken: string | undefined) => {
+  const url = `${SERVER_ROUTES.FOLDER}/getPinFiles`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const togglePinObj = (
+  fileDetails: { fileId: string; action: 'PIN' | 'UNPIN' },
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.FOLDER}/pinFile`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: fileDetails },
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${jwtToken}`,

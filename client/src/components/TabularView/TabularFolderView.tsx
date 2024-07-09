@@ -24,6 +24,7 @@ import {
   ModalFooter,
   useDisclosure,
   BreadcrumbItem,
+  Spinner,
 } from '@nextui-org/react';
 import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
@@ -36,7 +37,7 @@ import { CiFolderOn } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { folderColumns, monthNames } from '@/constants/shared';
-import { IAction, IBookmarkFolder } from '@/types/folder';
+import { TAction, IFolder } from '@/types/folder';
 import {
   createFolderObj,
   deleteFolderObj,
@@ -45,13 +46,12 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
-import { TableViewSkeleton } from '../Skeleton';
 import RenderItems from '../Pagination/RenderItems';
 
 export default function TabularFolderView({
   actionVarient,
 }: {
-  actionVarient: IAction;
+  actionVarient: TAction;
 }) {
   const {
     authState: { jwtToken },
@@ -67,7 +67,7 @@ export default function TabularFolderView({
   );
 
   const navigate = useNavigate();
-  const folders: Array<IBookmarkFolder> = response?.data.files ?? [];
+  const folders: Array<IFolder> = response?.data.files ?? [];
 
   const [filterValue, setFilterValue] = useState('');
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({});
@@ -154,13 +154,9 @@ export default function TabularFolderView({
 
   const sortedItems = useMemo(
     () =>
-      [...filteredItems].sort((a: IBookmarkFolder, b: IBookmarkFolder) => {
-        const first = a[
-          sortDescriptor.column as keyof IBookmarkFolder
-        ] as number;
-        const second = b[
-          sortDescriptor.column as keyof IBookmarkFolder
-        ] as number;
+      [...filteredItems].sort((a: IFolder, b: IFolder) => {
+        const first = a[sortDescriptor.column as keyof IFolder] as number;
+        const second = b[sortDescriptor.column as keyof IFolder] as number;
         // eslint-disable-next-line no-magic-numbers
         const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -178,8 +174,8 @@ export default function TabularFolderView({
     return sortedItems.slice(start, end);
   }, [page, sortedItems, ROWS_PER_PAGE]);
 
-  const renderCell = useCallback((folder: IBookmarkFolder, columnKey: Key) => {
-    const cellValue = folder[columnKey as keyof IBookmarkFolder];
+  const renderCell = useCallback((folder: IFolder, columnKey: Key) => {
+    const cellValue = folder[columnKey as keyof IFolder];
     const { day, month, year } = parseUTC(cellValue as string);
 
     switch (columnKey) {
@@ -266,7 +262,9 @@ export default function TabularFolderView({
           />
           <Button
             color="primary"
-            startContent={<IoMdAddCircleOutline className="text-xl" />}
+            startContent={
+              <IoMdAddCircleOutline className="text-xl hidden sm:block" />
+            }
             radius="sm"
             variant="bordered"
             onClick={() => onOpen()}
@@ -327,7 +325,7 @@ export default function TabularFolderView({
           emptyContent="No folders found"
           items={items}
           isLoading={isLoading}
-          loadingContent={<TableViewSkeleton />}
+          loadingContent={<Spinner />}
         >
           {(item) => (
             <TableRow key={`${item._id}_${item.name}`}>
