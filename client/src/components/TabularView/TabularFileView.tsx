@@ -39,7 +39,11 @@ import { IoSearch } from 'react-icons/io5';
 import { GoBookmarkSlash } from 'react-icons/go';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { AiOutlineFilePdf } from 'react-icons/ai';
-import { deleteFileObj, getFilesDataObj } from '@/utils/axiosReqObjects';
+import {
+  deleteFileObj,
+  getFilesDataObj,
+  togglePinObj,
+} from '@/utils/axiosReqObjects';
 import { IAction, IBookmarkFile } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
@@ -160,6 +164,37 @@ export default function TabularFileView({
     []
   );
 
+  const handleFilePin = useCallback(
+    async (fileId: string, action: 'PIN' | 'UNPIN') => {
+      const reqObj = togglePinObj({ fileId, action }, jwtToken);
+      if (!reqObj) {
+        toast.error('Something went wrong!', {
+          duration: 5000,
+        });
+        return;
+      }
+
+      try {
+        await fetcher(reqObj);
+      } catch (err) {
+        toast.error('Something went wrong!', {
+          description: `${err}`,
+          duration: 5000,
+        });
+        return;
+      }
+      mutate().then(() =>
+        toast.success(
+          `File ${action === 'PIN' ? 'Pinned' : 'Un-Pinned'} successfully!`,
+          {
+            duration: 5000,
+          }
+        )
+      );
+    },
+    []
+  );
+
   const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
 
   const sortedItems = useMemo(
@@ -188,7 +223,7 @@ export default function TabularFileView({
     const cellValue = file[columnKey as keyof IBookmarkFile];
     const { day, month, year } = parseUTC(cellValue as string);
     const [heading, code, semester, examYear] =
-      columnKey === 'filename' ? cellValue!.split(',') : [];
+      columnKey === 'filename' ? (cellValue as string)!.split(',') : [];
 
     switch (columnKey) {
       case 'filename':
@@ -260,9 +295,14 @@ export default function TabularFileView({
                   <DropdownItem
                     key="pinned"
                     startContent={<RiPushpinLine className={iconClasses} />}
-                    onClick={() => handleDelete(file.fileId, file.questionId)}
+                    onClick={() =>
+                      handleFilePin(
+                        file.fileId,
+                        file.isPinned! ? 'UNPIN' : 'PIN'
+                      )
+                    }
                   >
-                    Pin File
+                    {file.isPinned! ? 'Un-Pin File' : 'Pin File'}
                   </DropdownItem>
                 ) : (
                   (null as any)

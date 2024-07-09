@@ -26,9 +26,16 @@ export interface IBookmarkFolder {
 
 export interface IBookmarkFile {
   fileId: string;
+  questionId: string;
   filename: string;
   status: string;
-  questionId: string;
   createdAt: string;
+  updatedAt: string;
+  isPinned?: boolean;
+}
+
+export interface IPinnedFile {
+  name: string;
+  questionId: string;
   updatedAt: string;
 }

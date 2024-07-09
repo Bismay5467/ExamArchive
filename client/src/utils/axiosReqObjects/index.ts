@@ -17,6 +17,8 @@ import {
   createFolderObj,
   getFolderNameObj,
   deleteFolderObj,
+  getPinnedFilesObj,
+  togglePinObj,
 } from './folder';
 import {
   getCommentsObj,
@@ -49,6 +51,8 @@ export {
   createFolderObj,
   getFolderNameObj,
   deleteFolderObj,
+  getPinnedFilesObj,
+  togglePinObj,
   getCommentsObj,
   postCommentObj,
   deleteCommentObj,

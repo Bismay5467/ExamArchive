@@ -87,3 +87,39 @@ export const deleteFolderObj = (
 
   return axiosObj;
 };
+
+export const getPinnedFilesObj = (jwtToken: string | undefined) => {
+  const url = `${SERVER_ROUTES.FOLDER}/getPinFiles`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const togglePinObj = (
+  fileDetails: { fileId: string; action: 'PIN' | 'UNPIN' },
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.FOLDER}/pinFile`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: fileDetails },
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
