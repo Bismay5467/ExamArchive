@@ -1,6 +1,8 @@
+/* eslint-disable no-nested-ternary */
 import { NavLink } from 'react-router-dom';
 import React from 'react';
 import { cn } from '@nextui-org/theme';
+import { Chip } from '@nextui-org/react';
 import IconWrapper from './IconWrapper/IconWrapper';
 
 export default function NavCard({
@@ -18,6 +20,7 @@ export default function NavCard({
 }) {
   const activeClass = 'text-pink-600';
   const nonActiveClass = 'text-slate-600';
+  const disabledClass = 'text-slate-400';
   return (
     <NavLink
       to={link}
@@ -26,29 +29,25 @@ export default function NavCard({
       {({ isActive }) => (
         <>
           <IconWrapper
-            className={`self-center ${isActive ? activeClass : nonActiveClass}`}
+            className={`self-center ${isReady === false ? disabledClass : isActive ? activeClass : nonActiveClass}`}
           >
             {icon}
           </IconWrapper>
-          {isReady ? (
-            <p
-              className={`self-center my-auto text-base sm:hidden sm:group-hover:block ${isActive ? activeClass : nonActiveClass}`}
-            >
-              {name}
-            </p>
-          ) : (
-            <div className="py-2">
-              {/* <p
-                className={`self-center my-auto text-base hidden group-hover:block
-                ${isActive ? activeClass : nonActiveClass}`}
+          <p
+            className={`self-center my-auto text-base sm:hidden sm:group-hover:block ${isReady === false ? disabledClass : isActive ? activeClass : nonActiveClass}`}
+          >
+            {name}
+            {isReady === false && (
+              <Chip
+                size="sm"
+                radius="full"
+                className="ml-5 text-purple-500 border border-purple-500"
+                variant="bordered"
               >
-                {name}
-              </p> */}
-              <p className="self-center text-sm text-slate-400 sm:hidden sm:group-hover:block">
-                Comming Soon
-              </p>
-            </div>
-          )}
+                SOON
+              </Chip>
+            )}
+          </p>
         </>
       )}
     </NavLink>

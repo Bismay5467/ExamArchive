@@ -10,7 +10,7 @@ import {
   Spinner,
 } from '@nextui-org/react';
 import { useCallback, useMemo, useState } from 'react';
-import { IoMdPersonAdd } from 'react-icons/io';
+import { IoPersonAddOutline } from 'react-icons/io5';
 import { useAuth } from '@/hooks/useAuth';
 import { TModeratorRole } from '@/types/moderator';
 import { addModeratorObj } from '@/utils/axiosReqObjects';
@@ -78,31 +78,38 @@ export default function InviteModal({
   }, [email, username, role]);
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      placement="top-center"
+      radius="sm"
+      className="font-natosans"
+    >
       <ModalContent>
         {() => (
           <>
             <ModalHeader className="flex flex-row gap-x-4">
-              <IoMdPersonAdd className="self-center text-3xl text-[#595EFC]" />
+              <IoPersonAddOutline className="self-center text-xl" />
               <span className="self-center text-large">Invite new</span>
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-row gap-x-2">
                 <Input
-                  type="text"
-                  placeholder="Username"
-                  variant="bordered"
-                  className="h-full"
-                  radius="sm"
-                  onValueChange={setUsername}
-                />
-                <Input
                   isReadOnly
                   type="text"
                   value={role}
                   variant="bordered"
-                  className="h-full opacity-60"
+                  disabled
                   radius="sm"
+                />
+              </div>
+              <div className="flex flex-row gap-x-2">
+                <Input
+                  type="text"
+                  label="Username"
+                  variant="bordered"
+                  radius="sm"
+                  onValueChange={setUsername}
                 />
               </div>
               <div className="flex flex-row gap-x-2">
@@ -111,17 +118,24 @@ export default function InviteModal({
                   label="Email"
                   variant="bordered"
                   onValueChange={setEmail}
+                  radius="sm"
                 />
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button className="bg-slate-200 text-medium" onPress={onClose}>
+              <Button
+                onPress={onClose}
+                radius="sm"
+                color="default"
+                variant="bordered"
+              >
                 Cancel
               </Button>
               <Button
-                color="success"
+                color="primary"
+                radius="sm"
+                variant="bordered"
                 onPress={handleSubmit}
-                className="font-medium text-white tracking-wide bg-[#595EFC]"
                 isDisabled={isLoading}
                 {...(isLoading && {
                   endContent: <Spinner size="sm" color="secondary" />,

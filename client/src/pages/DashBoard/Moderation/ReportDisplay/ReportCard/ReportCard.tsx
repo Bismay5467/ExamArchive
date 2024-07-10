@@ -1,15 +1,7 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Chip,
-  Divider,
-  useDisclosure,
-} from '@nextui-org/react';
-import { IoDocument } from 'react-icons/io5';
-import { FaRegNoteSticky } from 'react-icons/fa6';
-import { SiGoogleclassroom } from 'react-icons/si';
-import { LuFileCode2 } from 'react-icons/lu';
+import { Card, CardBody, Chip, useDisclosure } from '@nextui-org/react';
+import { FaRegComment, FaRegFile } from 'react-icons/fa6';
+import { GoClock, GoPersonAdd } from 'react-icons/go';
+import { LuFileClock } from 'react-icons/lu';
 import { monthNames } from '@/constants/shared';
 import { IReportPreview } from '@/types/report';
 import { parseUTC } from '@/utils/helpers';
@@ -52,53 +44,60 @@ export default function ReportCard({
             'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
         }}
       >
-        <CardHeader className="flex gap-3 text-sm px-8 text-slate-700 bg-[#f7f7f7] sm:text-lg">
-          <div className="flex flex-row justify-between gap-x-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between">
-            <IoDocument className="self-center text-2xl text-slate-600" />
-            <span className="self-center text-sm sm:text-medium">
-              {docModel === 'Comment' ? 'Comment' : 'Post'}
-            </span>
-          </div>
-        </CardHeader>
-        <Divider />
-        <CardBody className="flex flex-col gap-y-3 px-8 text-slate-600 font-normal">
-          <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
+        <CardBody className="flex flex-col gap-y-3 px-8 text-slate-600 text-sm font-natosans">
+          <div className="flex mt-2 mb-1 whitespace-nowrap text-sm justify-between">
             <div className="flex flex-row gap-x-4">
-              <div className="self-center flex flex-row gap-x-2">
-                <LuFileCode2 className="self-center text-xl text-blue-600" />{' '}
-                <p>
-                  Created on :{' '}
-                  <span className="py-1">{`${monthNames[createMonth]} ${createDay}, ${createyear}`}</span>
-                </p>
+              <div className="self-center flex flex-row gap-x-2 text-slate-500 font-sm">
+                {docModel === 'Comment' && (
+                  <FaRegComment className="self-center text-lg" />
+                )}
+                {docModel === 'Question' && (
+                  <FaRegFile className="self-center text-lg" />
+                )}
+
+                <span className="self-center text-sm">
+                  {docModel === 'Comment' ? 'Comment' : 'Post'}
+                </span>
               </div>
-              <div className="self-center flex flex-row gap-x-2">
-                <FaRegNoteSticky className="self-center text-xl text-blue-600" />{' '}
-                <p>
-                  Last Reported :{' '}
-                  <span className="py-1">{`${monthNames[updateMonth]} ${updateDay}, ${updateyear}`}</span>
-                </p>
-              </div>
+            </div>
+            <div className="self-center flex flex-row gap-x-2 text-slate-500">
+              <GoClock className="self-center text-lg" />{' '}
+              <p className="text-sm">
+                Created on :{' '}
+                <span className="py-1">{`${monthNames[createMonth]} ${createDay}, ${createyear}`}</span>
+              </p>
+            </div>
+          </div>
+          <div className="flex mb-4 whitespace-nowrap sm:flex-row sm:justify-between">
+            <div className="self-center flex flex-row gap-x-2 text-blue-600">
+              <LuFileClock className="self-center text-lg" />{' '}
+              <p className="text-sm">
+                Last Reported :{' '}
+                <span className="py-1">{`${monthNames[updateMonth]} ${updateDay}, ${updateyear}`}</span>
+              </p>
             </div>
             <div className="hidden lg:flex lg:flex-row lg:gap-x-4">
-              <div className="self-center flex flex-row gap-x-2">
-                <SiGoogleclassroom className="self-center text-xl text-blue-600" />{' '}
-                <p className="text-blue-600">Report Count: {totalReport}</p>
+              <div className="self-center flex flex-row gap-x-2 text-pink-500">
+                <GoPersonAdd className="self-center text-lg" />{' '}
+                <p className="text-sm">Report Count: {totalReport}</p>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
+          <div className="flex flex-col mb-2 gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
             <div className="flex flex-row flex-wrap gap-2">
               {reasons.map(({ _id: reasonId, count, reason }) => (
                 <Chip
                   key={reasonId}
                   classNames={{
-                    base: 'bg-violet-100',
-                    content: 'text-violet-700',
+                    base: 'bg-pink-100 border border-pink-400',
+                    content: 'text-pink-600',
                   }}
+                  endContent={
+                    <span className="text-sm mr-2 px-2 text-pink-500 rounded-full">
+                      # {count}
+                    </span>
+                  }
                 >
-                  <span className="text-sm mr-2 px-2 bg-pink-300 rounded-full">
-                    {count}
-                  </span>
                   {reason}
                 </Chip>
               ))}

@@ -31,9 +31,9 @@ export type TFileType<T extends TAction> = {
   filename: string;
   createdAt: string;
   updatedAt: string;
-} & (T extends Exclude<TAction, 'UPLOAD'>
+} & (T extends 'UPLOAD'
   ? { status: string }
-  : T extends Exclude<TAction, 'BOOKMARK'>
+  : T extends 'BOOKMARK'
     ? { isPinned: boolean }
     : {});
 

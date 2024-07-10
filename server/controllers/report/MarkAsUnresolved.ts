@@ -12,7 +12,7 @@ import { ERROR_CODES, SUCCESS_CODES } from '../../constants/statusCode';
 
 const MarkAsUnresolved = asyncErrorHandler(
   async (req: Request, res: Response) => {
-    const { userId: adminId } = req.body as { userId: string };
+    // const { userId: adminId } = req.body as { userId: string };
     const { reportId, postId, contentType } = req.body.data as z.infer<
       typeof markAsUnresolvedInputSchema
     >;

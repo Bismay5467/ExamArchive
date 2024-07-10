@@ -109,12 +109,22 @@ export default function TagsSection({
             }}
           />
         ))}
-        <div
-          onClick={onOpen}
-          className="hover:cursor-pointer text-sm text-indigo-800 self-center"
-        >
-          +{tags.length - MAX_TAGS_TO_DISPLAY} more
-        </div>
+        {tags.length > MAX_TAGS_TO_DISPLAY && (
+          <div
+            onClick={onOpen}
+            className="hover:cursor-pointer text-sm text-indigo-800 self-center"
+          >
+            +{tags.length - MAX_TAGS_TO_DISPLAY} more
+          </div>
+        )}
+        {tags.length <= MAX_TAGS_TO_DISPLAY && (
+          <div
+            onClick={onOpen}
+            className="hover:cursor-pointer text-sm text-indigo-800 self-center"
+          >
+            Add more tags
+          </div>
+        )}
       </div>
       <Modal
         isOpen={isOpen}

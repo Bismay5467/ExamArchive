@@ -8,16 +8,13 @@ import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
 import { AUTH_TOKEN } from '@/constants/auth';
-import { TEMP_JWT_TOKEN_HARDCODED_ADMIN } from '@/constants/shared';
 import sidebarOptions from '@/constants/sidebarOptions';
 import NavCard from './NavCard/NavCard';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import MobileSidebar from './MobileSidebar/MobileSidebar';
 
 export default function Sidebar() {
-  const [token, setToken] = useState<string>(
-    Cookies.get(AUTH_TOKEN) ?? TEMP_JWT_TOKEN_HARDCODED_ADMIN
-  );
+  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
   // TODO: Remove Manual setting of cookie afterwards
   Cookies.set(AUTH_TOKEN, token);
   const {
@@ -27,8 +24,8 @@ export default function Sidebar() {
 
   return (
     <>
-      <nav className="fixed hidden sm:block z-50 group h-[700px] w-[70px] top-[50%] -translate-y-[50%] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[240px] hover:rounded-r-lg font-natosans">
-        <div className="bg-[#f7f7f7] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
+      <nav className="fixed hidden sm:block z-50 group h-screen max-h-screen md:max-h-[740px] w-[70px] top-[50%] -translate-y-[50%] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[250px] hover:rounded-r-lg font-natosans">
+        <div className="bg-[#f7f7f7] relative h-screen max-h-screen md:max-h-[740px] w-[250px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
               src={logo}

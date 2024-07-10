@@ -124,9 +124,11 @@ export default function ResultCard({
                 }}
               />
             ))}
-            <p className="text-sm self-center text-slate-500">
-              +{tags.length - MAX_TAGS_TO_DISPLAY} more
-            </p>
+            {tags.length > MAX_TAGS_TO_DISPLAY && (
+              <p className="text-sm self-center text-slate-500">
+                +{tags.length - MAX_TAGS_TO_DISPLAY} more
+              </p>
+            )}
           </div>
           <div className="hidden gap-x-4 text-md lg:flex lg:flex-row">
             <div className="self-center flex flex-row gap-x-2">
