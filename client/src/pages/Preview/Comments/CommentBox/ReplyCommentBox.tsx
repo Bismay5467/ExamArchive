@@ -4,7 +4,7 @@ import { BiSolidLike, BiSolidDislike, BiLike, BiDislike } from 'react-icons/bi';
 import { BsReply } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { IoFlagOutline } from 'react-icons/io5';
 import { Textarea } from '@/components/ui/textarea';
 import { IComment, ICommentMutations, IDropDownProps } from '@/types/comments';
@@ -32,7 +32,6 @@ export default function ReplyCommentBox({
   setOptimisticReplyCount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [toDelete, setToDelete] = useState<boolean>(false);
   const {
     authState: { userId },
   } = useAuth();
@@ -54,13 +53,6 @@ export default function ReplyCommentBox({
   const editClasses = isEditing ? 'bg-white' : 'bg-[#f7f7f7]';
   const iconClasses =
     'text-xl text-default-500 pointer-events-none flex-shrink-0';
-
-  useEffect(() => {
-    if (toDelete) {
-      handleDeleteComment(commentId);
-      setOptimisticReplyCount((prev) => prev - 1);
-    }
-  }, [toDelete]);
 
   const date = new Date(timestamp);
   const day = date.getUTCDate();
@@ -102,25 +94,33 @@ export default function ReplyCommentBox({
     setIsEditing(true);
   };
 
-  const dropdownMenu: IDropDownProps[] = [
-    {
-      icon: <CiEdit className={iconClasses} />,
-      value: 'Edit comment',
-      action: handleEdit,
-      itemClassName: isMutable,
-    },
-    {
-      icon: <RiDeleteBin6Line className={iconClasses} />,
-      value: 'Delete comment',
-      action: onWarningOpen,
-      itemClassName: isMutable,
-    },
-    {
-      icon: <IoFlagOutline className="text-lg pointer-events-none" />,
-      value: 'Report',
-      action: onReportOpen,
-    },
-  ];
+  const handleDelete = () => {
+    handleDeleteComment(commentId);
+    setOptimisticReplyCount((prev) => prev - 1);
+  };
+
+  const dropdownMenu: IDropDownProps[] = useMemo(
+    () => [
+      {
+        icon: <CiEdit className={iconClasses} />,
+        value: 'Edit comment',
+        action: handleEdit,
+        itemClassName: isMutable,
+      },
+      {
+        icon: <RiDeleteBin6Line className={iconClasses} />,
+        value: 'Delete comment',
+        action: onWarningOpen,
+        itemClassName: isMutable,
+      },
+      {
+        icon: <IoFlagOutline className="text-lg pointer-events-none" />,
+        value: 'Report',
+        action: onReportOpen,
+      },
+    ],
+    []
+  );
 
   return (
     <div className="p-4 flex flex-row gap-x-4">
@@ -223,7 +223,7 @@ export default function ReplyCommentBox({
         isOpen={isWarningOpen}
         onClose={onWarningClose}
         onOpenChange={onWarningOpenChange}
-        setEvent={setToDelete}
+        eventHandler={handleDelete}
         actionType="comment"
       />
     </div>

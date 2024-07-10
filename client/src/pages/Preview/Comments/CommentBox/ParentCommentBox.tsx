@@ -5,7 +5,7 @@ import { BsReply } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import { FaRegComment } from 'react-icons/fa6';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { IoFlagOutline } from 'react-icons/io5';
 import { IComment, ICommentMutations, IDropDownProps } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
@@ -35,7 +35,6 @@ export default function ParentCommentBox({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
-  const [toDelete, setToDelete] = useState<boolean>(false);
   const {
     isOpen: isReportOpen,
     onOpen: onReportOpen,
@@ -94,8 +93,7 @@ export default function ParentCommentBox({
 
   useEffect(() => {
     if (isReplying || showReplies) setStartFetching(true);
-    else if (toDelete) handleDeleteComment(commentId);
-  }, [isReplying, showReplies, toDelete]);
+  }, [isReplying, showReplies]);
 
   const replyData = response ? [...response] : [];
   const reducedReplyData = replyData
@@ -123,25 +121,32 @@ export default function ParentCommentBox({
     setIsEditing(true);
   };
 
-  const dropdownMenu: IDropDownProps[] = [
-    {
-      icon: <CiEdit className={iconClasses} />,
-      value: 'Edit comment',
-      action: handleEdit,
-      itemClassName: isMutable,
-    },
-    {
-      icon: <RiDeleteBin6Line className={iconClasses} />,
-      value: 'Delete comment',
-      action: onWarningOpen,
-      itemClassName: isMutable,
-    },
-    {
-      icon: <IoFlagOutline className="text-lg pointer-events-none" />,
-      value: 'Report',
-      action: onReportOpen,
-    },
-  ];
+  const handleDelete = () => {
+    handleDeleteComment(commentId);
+  };
+
+  const dropdownMenu: IDropDownProps[] = useMemo(
+    () => [
+      {
+        icon: <CiEdit className={iconClasses} />,
+        value: 'Edit comment',
+        action: handleEdit,
+        itemClassName: isMutable,
+      },
+      {
+        icon: <RiDeleteBin6Line className={iconClasses} />,
+        value: 'Delete comment',
+        action: onWarningOpen,
+        itemClassName: isMutable,
+      },
+      {
+        icon: <IoFlagOutline className="text-lg pointer-events-none" />,
+        value: 'Report',
+        action: onReportOpen,
+      },
+    ],
+    []
+  );
 
   return (
     <div>
@@ -288,7 +293,7 @@ export default function ParentCommentBox({
         isOpen={isWarningOpen}
         onClose={onWarningClose}
         onOpenChange={onWarningOpenChange}
-        setEvent={setToDelete}
+        eventHandler={handleDelete}
         actionType="comment"
       />
     </div>
