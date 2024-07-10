@@ -24,6 +24,7 @@ export default function SearchBar({ className }: { className?: string }) {
       placeholder="Enter comma separated values"
       onValueChange={handleSearch}
       startContent={<IoIosSearch className="text-xl font-bold" />}
+      autoFocus
     />
   );
 }

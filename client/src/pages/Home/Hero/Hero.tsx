@@ -1,7 +1,35 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import { TypewriterEffectSmooth } from '@/components/ui/typewriter-effect';
+import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-vanish-input';
 
 export default function Hero() {
+  const navigate = useNavigate();
+  const words = [
+    {
+      text: 'Get',
+    },
+    {
+      text: 'exam',
+    },
+    {
+      text: 'ready',
+    },
+    {
+      text: 'with',
+    },
+    {
+      text: 'ExamArchive!',
+      className: 'text-blue-500 dark:text-blue-500',
+    },
+  ];
+  const placeholders = [
+    "What's the first rule of Fight Club?",
+    'Who is Tyler Durden?',
+    'Where is Andrew Laeddis Hiding?',
+    'Write a Javascript method to reverse a string',
+    'How to assemble your own PC?',
+  ];
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
@@ -45,35 +73,21 @@ export default function Hero() {
         {/* Hero content */}
         <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1 className="h1 mb-4" data-aos="fade-up">
-              Landing template for startups
-            </h1>
-            <p
-              className="text-xl text-gray-400 mb-8"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              Our landing page template works on all devices, so you only have
-              to set it up once, and get beautiful results forever.
+          <div className="max-w-4xl mx-auto text-center pb-12 md:pb-16">
+            <p className="text-xl mb-2" data-aos="fade-up" data-aos-delay="200">
+              The road to greatness starts here!
             </p>
+            <div className="w-fit mx-auto">
+              <TypewriterEffectSmooth words={words} />
+            </div>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
-              <div data-aos="fade-up" data-aos-delay="400">
-                <Link
-                  className="btn text-white bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0"
-                  to={CLIENT_ROUTES.SEARCH}
-                >
-                  Start Searching
-                </Link>
-              </div>
-              <div data-aos="fade-up" data-aos-delay="600">
-                <a
-                  className="btn text-white bg-gray-700 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
-                  href="#0"
-                >
-                  Learn more
-                </a>
-              </div>
+              <Link to={CLIENT_ROUTES.SEARCH} className="w-full">
+                <PlaceholdersAndVanishInput
+                  placeholders={placeholders}
+                  onChange={() => navigate(CLIENT_ROUTES.SEARCH)}
+                  onSubmit={() => {}}
+                />
+              </Link>
             </div>
           </div>
         </div>
