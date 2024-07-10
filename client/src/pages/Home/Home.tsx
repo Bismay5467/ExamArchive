@@ -8,7 +8,7 @@ import 'aos/dist/aos.css';
 import Features from './Features/Features';
 import Zigzag from './Zigzag/Zigzag';
 import Testimonials from './Testimonials/Testimonials';
-import Newsletter from './Newsletter/Newsletter';
+// import Newsletter from './Newsletter/Newsletter';
 import Footer from '@/components/Footer/Footer';
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
     });
   });
   return (
-    <div className="min-h-screen overflow-hidden antialiased bg-gray-900 text-gray-200 tracking-tight">
+    <div className="min-h-screen overflow-hidden antialiased tracking-tight dark:bg-gray-900">
       <PageIllustration />
       <div className="flex flex-col">
         <Header />
@@ -29,7 +29,7 @@ export default function Home() {
         <Features />
         <Zigzag />
         <Testimonials />
-        <Newsletter />
+        {/* <Newsletter /> */}
         <Footer />
       </div>
     </div>

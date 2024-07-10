@@ -2,7 +2,7 @@ import {
   REPORT_CONTENT_TYPE_OPTIONS,
   REPORT_COUNT_OPTIONS,
   SORT_REPORT_OPTIONS,
-} from '@/constants/superAdmin';
+} from '@/constants/report';
 
 export type TContentType = 'COMMENT' | 'POST';
 
