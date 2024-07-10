@@ -2,7 +2,6 @@ import { Button } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
 import { IoIosRefresh, IoMdArrowRoundBack } from 'react-icons/io';
 
-/* eslint-disable react/no-unescaped-entities */
 export default function ForbiddenPage() {
   const navigate = useNavigate();
   return (
