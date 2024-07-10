@@ -47,6 +47,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
 import RenderItems from '../Pagination/RenderItems';
+import WarningModal from '../WarningModal/WarningModal';
 
 export default function TabularFolderView({
   actionVarient,
@@ -57,7 +58,14 @@ export default function TabularFolderView({
     authState: { jwtToken },
   } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isWarningOpen,
+    onOpen: onWarningOpen,
+    onClose: onWarningClose,
+    onOpenChange: onWarningOpenChange,
+  } = useDisclosure();
   const [folderName, setFolderName] = useState<string>();
+  const [deletefolderId, setDeleteFolderId] = useState<string>();
   const {
     data: response,
     mutate,
@@ -118,6 +126,13 @@ export default function TabularFolderView({
       })
     );
   }, []);
+  const handleDeleteWarning = () => {
+    if (deletefolderId) handleDelete(deletefolderId);
+  };
+  const deleteModalOpen = (id: string) => {
+    setDeleteFolderId(id);
+    onWarningOpen();
+  };
 
   const handleCreateFolder = async () => {
     if (folderName === undefined) return;
@@ -183,13 +198,8 @@ export default function TabularFolderView({
         return (
           <div className="min-w-[250px] flex flex-row gap-x-2 cursor-pointer">
             <FaFolderOpen className="self-center text-4xl text-[#fcba03]" />
-            <span className="flex flex-col">
-              <span className="font-medium text-sm min-w-[120px]">
-                {cellValue}
-              </span>
-              <span className="text-sm opacity-60">
-                File Count : {folder.noOfFiles}
-              </span>
+            <span className="self-center font-medium text-sm min-w-[120px]">
+              {cellValue}
             </span>
           </div>
         );
@@ -220,7 +230,7 @@ export default function TabularFolderView({
                 <DropdownItem
                   key="delete"
                   startContent={<RiDeleteBin6Line className={iconClasses} />}
-                  onClick={() => handleDelete(folder._id)}
+                  onPress={() => deleteModalOpen(folder._id)}
                 >
                   Delete Folder
                 </DropdownItem>
@@ -386,6 +396,14 @@ export default function TabularFolderView({
           )}
         </ModalContent>
       </Modal>
+      <WarningModal
+        actionText="Delete"
+        isOpen={isWarningOpen}
+        onClose={onWarningClose}
+        onOpenChange={onWarningOpenChange}
+        eventHandler={handleDeleteWarning}
+        actionType="folder"
+      />
     </div>
   );
 }
