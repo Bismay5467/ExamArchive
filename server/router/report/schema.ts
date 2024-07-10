@@ -36,3 +36,9 @@ export const markAsResolvedInputSchema = z.object({
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
   contentType: z.enum(['COMMENT', 'POST']),
 });
+
+export const markAsUnresolvedInputSchema = z.object({
+  reportId: z.string().refine((reportId) => Types.ObjectId.isValid(reportId)),
+  postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
+  contentType: z.enum(['COMMENT', 'POST']),
+});

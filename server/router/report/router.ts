@@ -7,12 +7,14 @@ import verifyUser from '../../middlewares/verifyUser';
 import {
   GetFlaggedComment,
   MarkAsResolved,
+  MarkAsUnresolved,
   ReportContent,
   ViewReport,
 } from '../../controllers/report';
 import {
   getCommentInputSchema,
   markAsResolvedInputSchema,
+  markAsUnresolvedInputSchema,
   reportContentInputSchema,
   viewReportInputSchema,
 } from './schema';
@@ -54,6 +56,15 @@ router.put(
     validate(markAsResolvedInputSchema, 'BODY'),
   ],
   MarkAsResolved
+);
+router.put(
+  '/markUnresolved',
+  [
+    verifyUser,
+    privilege([ROLE.SUPERADMIN]),
+    validate(markAsUnresolvedInputSchema, 'BODY'),
+  ],
+  MarkAsUnresolved
 );
 
 export default router;

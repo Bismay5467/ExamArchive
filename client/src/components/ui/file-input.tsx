@@ -18,7 +18,7 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
       <>
         <div
           className={cn(
-            'flex flex-col items-center py-8 relative border-2 rounded-lg max-h-[300px] overflow-y-auto',
+            'flex flex-col items-center py-8 relative border-2 rounded-lg max-h-[300px] overflow-y-auto no-scrollbar',
             className
           )}
         >

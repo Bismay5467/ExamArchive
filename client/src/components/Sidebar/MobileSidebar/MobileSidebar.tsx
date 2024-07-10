@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { IoMdClose } from 'react-icons/io';
 import React, { useEffect, useRef, useState } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
@@ -60,7 +59,7 @@ export default function MobileSidebar({
       <button
         type="button"
         ref={trigger}
-        className={`hamburger sm:hidden z-50 fixed bg-gray-300 p-4 rounded-full right-8 bottom-8 ${mobileNavOpen && 'active'}`}
+        className={`hamburger sm:hidden z-50 fixed bg-[#faf3de] p-4 rounded-full right-8 bottom-8 ${mobileNavOpen && 'active'}`}
         aria-controls="mobile-nav"
         aria-expanded={mobileNavOpen}
         onClick={() => setMobileNavOpen(!mobileNavOpen)}
@@ -71,30 +70,22 @@ export default function MobileSidebar({
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <rect y="4" width="24" height="2" rx="1" />
-          <rect y="11" width="24" height="2" rx="1" />
-          <rect y="18" width="24" height="2" rx="1" />
+          <rect y="4" width="24" height="2" rx="1" className="fill-pink-500" />
+          <rect y="11" width="24" height="2" rx="1" className="fill-pink-500" />
+          <rect y="18" width="24" height="2" rx="1" className="fill-pink-500" />
         </svg>
       </button>
       <nav
         id="mobile-sidebar"
         ref={mobileNav}
-        className="fixed sm:hidden z-50 group h-full overflow-x-hidden transition-all duration-300 ease-in-out font-natosans"
+        className="fixed sm:hidden z-50 group h-screen max-h-screen md:max-h-[740px] overflow-x-hidden transition-all duration-300 ease-in-out font-natosans"
         style={
           mobileNavOpen
             ? { maxWidth: mobileNav.current?.scrollWidth, opacity: 1 }
             : { maxWidth: 0, opacity: 0.8 }
         }
       >
-        <div className="bg-[#f7f7f7] relative h-full w-[240px] flex flex-col gap-y-16 p-3">
-          <button
-            type="button"
-            aria-label="close-btn"
-            className="absolute right-1 top-1 text-2xl"
-            onClick={() => setMobileNavOpen(false)}
-          >
-            <IoMdClose />
-          </button>
+        <div className="bg-[#f7f7f7] h-screen max-h-screen md:max-h-[740px] relative w-[280px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
               src={logo}

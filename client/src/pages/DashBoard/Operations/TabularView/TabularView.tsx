@@ -25,8 +25,14 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { FaEllipsisVertical } from 'react-icons/fa6';
-import { MdDelete } from 'react-icons/md';
-import { IoSearch, IoPersonAddOutline } from 'react-icons/io5';
+import {
+  IoSearch,
+  IoPersonAddOutline,
+  IoPersonRemoveOutline,
+} from 'react-icons/io5';
+import { BiUserCheck } from 'react-icons/bi';
+import { MdOutlineRefresh } from 'react-icons/md';
+import { CgSandClock } from 'react-icons/cg';
 import { getModeratorsObj, removeModeratorObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
@@ -39,9 +45,20 @@ import {
 import { OperationsEntryColumns } from '@/constants/operations';
 import InviteModal from './InviteModal/InviteModal';
 
-const statusColorMap: Record<string, ChipProps['color']> = {
-  ACCEPTED: 'success',
-  PENDING: 'warning',
+const statusMap: Record<string, Record<string, any>> = {
+  ACCEPTED: {
+    color: 'success',
+    icon: <BiUserCheck className="text-xl mr-1" />,
+  },
+  PENDING: {
+    color: 'warning',
+    icon: (
+      <CgSandClock
+        className="text-xl mr-1"
+        style={{ animation: 'spin 3s linear infinite' }}
+      />
+    ),
+  },
 };
 
 export default function TabularView({ varient }: { varient: TModeratorRole }) {
@@ -137,6 +154,8 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
     return sortedItems.slice(start, end);
   }, [page, sortedItems, ROWS_PER_PAGE]);
 
+  const iconClasses = 'text-xl pointer-events-none flex-shrink-0';
+
   const renderCell = useCallback(
     (moderator: IMderatorDetails, columnKey: Key) => {
       const cellValue = moderator[columnKey as keyof IMderatorDetails];
@@ -151,14 +170,19 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
             <div className="font-medium flex flex-row justify-between opacity-65">
               <span className="self-center">
                 <Chip
-                  color={statusColorMap[moderator.invitationStatus]}
+                  className="uppercase min-w-[100px] border border-transparent"
+                  color={
+                    statusMap[moderator.invitationStatus]
+                      .color as ChipProps['color']
+                  }
                   size="sm"
-                  variant="flat"
+                  variant="bordered"
+                  startContent={statusMap[moderator.invitationStatus].icon}
                 >
                   {cellValue}
                 </Chip>
               </span>
-              <Dropdown radius="sm">
+              <Dropdown radius="sm" className="font-natosans">
                 <DropdownTrigger>
                   <Button
                     variant="light"
@@ -172,9 +196,9 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
                 <DropdownMenu aria-label="Static Actions" variant="light">
                   <DropdownItem
                     key="delete"
-                    className="text-danger"
-                    color="danger"
-                    startContent={<MdDelete className="text-xl" />}
+                    startContent={
+                      <IoPersonRemoveOutline className={iconClasses} />
+                    }
                     onClick={() =>
                       handleDelete({
                         email: moderator.email,
@@ -210,7 +234,7 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
 
   const topContent = useMemo(
     () => (
-      <div className="flex flex-row justify-between gap-x-2">
+      <div className="flex flex-row justify-between gap-x-2 my-3">
         <Input
           isClearable
           radius="full"
@@ -220,16 +244,28 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
           value={filterValue}
           onClear={() => onClear()}
           onValueChange={onSearchChange}
-        />
-        <Button
-          color="secondary"
           variant="bordered"
-          startContent={<IoPersonAddOutline className="text-lg" />}
-          radius="sm"
-          onPress={onOpen}
-        >
-          Invite
-        </Button>
+        />
+        <div className="flex gap-x-5">
+          <Button
+            color="primary"
+            variant="bordered"
+            startContent={<MdOutlineRefresh className="text-xl" />}
+            radius="sm"
+            onClick={() => mutate()}
+          >
+            Refresh
+          </Button>
+          <Button
+            color="primary"
+            variant="bordered"
+            startContent={<IoPersonAddOutline className="text-lg" />}
+            radius="sm"
+            onPress={onOpen}
+          >
+            Invite
+          </Button>
+        </div>
       </div>
     ),
     [filterValue, onSearchChange, hasSearchFilter]

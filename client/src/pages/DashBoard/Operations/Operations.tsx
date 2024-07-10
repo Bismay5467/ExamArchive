@@ -5,7 +5,7 @@ import TabularView from './TabularView/TabularView';
 
 export default function Operations() {
   return (
-    <div className="max-w-[1200px] mx-auto bg-white min-h-[1000px] px-4">
+    <div className="max-w-[1200px] mx-auto min-h-[1000px] px-4 font-natosans">
       <Tabs
         aria-label="Operations"
         color="primary"
@@ -13,9 +13,9 @@ export default function Operations() {
         classNames={{
           tabList:
             'gap-6 w-full relative rounded-none p-0 border-b border-divider',
-          cursor: 'w-full bg-[#22d3ee]',
+          cursor: 'w-full bg-pink-600',
           tab: 'max-w-fit px-0 h-12',
-          tabContent: 'group-data-[selected=true]:text-[#06b6d4]',
+          tabContent: 'group-data-[selected=true]:text-pink-600',
         }}
       >
         <Tab

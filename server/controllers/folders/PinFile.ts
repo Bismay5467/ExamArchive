@@ -22,7 +22,7 @@ const PinFile = asyncErrorHandler(async (req: Request, res: Response) => {
     .exec();
   return res
     .status(SUCCESS_CODES.OK)
-    .json({ message: `File ${action === 'PIN' ? 'pinned' : 'un-pinned'}` });
+    .json({ message: action === 'PIN' ? 'File pinned' : 'File unpinned' });
 });
 
 export default PinFile;

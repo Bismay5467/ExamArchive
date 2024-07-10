@@ -1,6 +1,6 @@
 import { IoBookmarkOutline, IoCloudUploadOutline } from 'react-icons/io5';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
-import { MdAdminPanelSettings } from 'react-icons/md';
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 import { GoReport } from 'react-icons/go';
 import { LuFileSearch2 } from 'react-icons/lu';
 import { CLIENT_ROUTES } from '@/constants/routes';
@@ -41,7 +41,7 @@ const sidebarOptions = (role: string, userId: string) => {
   const superAdminRoutes = [
     {
       key: 'Operations',
-      icon: <MdAdminPanelSettings className="text-xl" />,
+      icon: <MdOutlineAdminPanelSettings className="text-xl" />,
       link: `${dashboardBaseRoute}/${CLIENT_ROUTES.DASHBOARD_OPERATIONS}`,
       isReady: true,
     },

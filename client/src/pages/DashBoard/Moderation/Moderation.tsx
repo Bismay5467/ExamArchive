@@ -1,11 +1,11 @@
 import { Tabs, Tab } from '@nextui-org/react';
 import { MdOutlinePendingActions } from 'react-icons/md';
-import { IoMdCloudDone } from 'react-icons/io';
+import { IoCloudDoneOutline } from 'react-icons/io5';
 import ReportDisplay from './ReportDisplay/ReportDisplay';
 
 export default function Moderation() {
   return (
-    <div className="flex max-w-[1200px] mx-auto flex-col">
+    <div className="flex max-w-[1200px] mx-auto flex-col font-natosans">
       <Tabs
         aria-label="Options"
         color="primary"
@@ -34,7 +34,7 @@ export default function Moderation() {
           key="resolved"
           title={
             <div className="flex items-center space-x-2">
-              <IoMdCloudDone className="text-2xl" />
+              <IoCloudDoneOutline className="text-2xl" />
               <span className="text-md font-medium">Resolved</span>
             </div>
           }

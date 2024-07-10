@@ -23,7 +23,7 @@ const tabOptions: ITabOption[] = [
 
 export default function FileUpload() {
   return (
-    <div className="flex max-w-[1200px] p-4 mx-auto flex-col">
+    <div className="flex max-w-[1200px] px-4 mx-auto flex-col">
       <Tabs
         aria-label="Options"
         color="primary"

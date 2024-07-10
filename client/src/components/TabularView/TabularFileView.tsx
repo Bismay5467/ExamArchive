@@ -275,10 +275,15 @@ export default function TabularFileView({
           return (
             <Chip
               className="uppercase min-w-[100px] border border-transparent"
-              color={statusMap[file.status].color as ChipProps['color']}
+              color={
+                statusMap[(file as TFileType<'UPLOAD'>).status]
+                  .color as ChipProps['color']
+              }
               size="sm"
               variant="bordered"
-              startContent={statusMap[file.status].icon}
+              startContent={
+                statusMap[(file as TFileType<'UPLOAD'>).status].icon
+              }
             >
               {cellValue}
             </Chip>
@@ -322,11 +327,15 @@ export default function TabularFileView({
                         handleFilePin(
                           file.fileId,
                           file.questionId,
-                          file.isPinned ? 'UNPIN' : 'PIN'
+                          (file as TFileType<'BOOKMARK'>).isPinned
+                            ? 'UNPIN'
+                            : 'PIN'
                         )
                       }
                     >
-                      {file.isPinned ? 'Un-Pin File' : 'Pin File'}
+                      {(file as TFileType<'BOOKMARK'>).isPinned
+                        ? 'Un-Pin File'
+                        : 'Pin File'}
                     </DropdownItem>
                   ) : (
                     (null as any)

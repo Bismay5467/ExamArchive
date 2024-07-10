@@ -13,6 +13,9 @@ import Home from './pages/Home/Home.tsx';
 import Root from './Root.tsx';
 import Search from './pages/Search/Search.tsx';
 import './index.css';
+import ProtectedRoute from './components/ProtectedRoute.tsx';
+import { ROLES } from './constants/auth.ts';
+import ForbiddenPage from './pages/Forbidden.tsx';
 
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
 const Signup = React.lazy(() => import('./pages/Auth/Signup/Signup.tsx'));
@@ -50,33 +53,45 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<Error />}>
       <Route path="" element={<Home />} />
-      <Route path="search" element={<Search />} />
+      <Route path="/forbidden" element={<ForbiddenPage />} />
+      <Route
+        element={
+          <ProtectedRoute roles={[ROLES.ADMIN, ROLES.USER, ROLES.GUEST]} />
+        }
+      >
+        <Route path="/search" element={<Search />} />
+      </Route>
       <Route path="preview/:paperid" element={<Preview />} />
       <Route path="dashboard/:userid/" element={<DashBoard />}>
         <Route path="" element={<DashHome />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="operations" element={<Operations />} />
-        <Route path="moderation" element={<Moderation />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="bookmarks" element={<Bookmarks />}>
-          <Route
-            path=""
-            element={<TabularFolderView actionVarient="BOOKMARK" />}
-          />
-          <Route
-            path=":folderId"
-            element={<TabularFileView actionVarient="BOOKMARK" />}
-          />
+        <Route element={<ProtectedRoute roles={[ROLES.SUPERADMIN]} />}>
+          <Route path="operations" element={<Operations />} />
+          <Route path="moderation" element={<Moderation />} />
         </Route>
-        <Route path="fileupload" element={<FileUpload />}>
-          <Route
-            path=""
-            element={<TabularFolderView actionVarient="UPLOAD" />}
-          />
-          <Route
-            path=":folderId"
-            element={<TabularFileView actionVarient="UPLOAD" />}
-          />
+        <Route element={<ProtectedRoute roles={[ROLES.ADMIN, ROLES.USER]} />}>
+          <Route path="bookmarks" element={<Bookmarks />}>
+            <Route
+              path=""
+              element={<TabularFolderView actionVarient="BOOKMARK" />}
+            />
+            <Route
+              path=":folderId"
+              element={<TabularFileView actionVarient="BOOKMARK" />}
+            />
+          </Route>
+        </Route>
+        <Route element={<ProtectedRoute roles={[ROLES.ADMIN]} />}>
+          <Route path="fileupload" element={<FileUpload />}>
+            <Route
+              path=""
+              element={<TabularFolderView actionVarient="UPLOAD" />}
+            />
+            <Route
+              path=":folderId"
+              element={<TabularFileView actionVarient="UPLOAD" />}
+            />
+          </Route>
         </Route>
         <Route path="analytics" element={<Analytics />} />
       </Route>
