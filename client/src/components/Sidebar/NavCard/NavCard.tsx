@@ -2,7 +2,6 @@
 import { NavLink } from 'react-router-dom';
 import React from 'react';
 import { cn } from '@nextui-org/theme';
-import { Chip } from '@nextui-org/react';
 import IconWrapper from './IconWrapper/IconWrapper';
 
 export default function NavCard({
@@ -37,15 +36,10 @@ export default function NavCard({
             className={`self-center my-auto text-base sm:hidden sm:group-hover:block ${isReady === false ? disabledClass : isActive ? activeClass : nonActiveClass}`}
           >
             {name}
-            {isReady === false && (
-              <Chip
-                size="sm"
-                radius="full"
-                className="ml-5 text-purple-500 border border-purple-500"
-                variant="bordered"
-              >
+            {!isReady && (
+              <span className=" text-purple-500 border border-purple-500 text-xs px-2 py-1 rounded-full ml-4">
                 SOON
-              </Chip>
+              </span>
             )}
           </p>
         </>

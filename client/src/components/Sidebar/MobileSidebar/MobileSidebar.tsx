@@ -78,14 +78,14 @@ export default function MobileSidebar({
       <nav
         id="mobile-sidebar"
         ref={mobileNav}
-        className="fixed sm:hidden z-50 group h-screen max-h-screen md:max-h-[740px] overflow-x-hidden transition-all duration-300 ease-in-out font-natosans"
+        className="fixed sm:hidden z-50 group h-screen overflow-x-hidden transition-all duration-300 ease-in-out font-natosans"
         style={
           mobileNavOpen
             ? { maxWidth: mobileNav.current?.scrollWidth, opacity: 1 }
             : { maxWidth: 0, opacity: 0.8 }
         }
       >
-        <div className="bg-[#f7f7f7] h-screen max-h-screen md:max-h-[740px] relative w-[280px] flex flex-col gap-y-16 p-3">
+        <div className="bg-[#f7f7f7] h-screen max-h-screen md:max-h-[740px] relative w-[230px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
               src={logo}

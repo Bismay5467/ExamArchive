@@ -453,7 +453,12 @@ export default function TabularFileView({
         loadingContent={<Spinner />}
       >
         {(item) => (
-          <TableRow key={item.questionId}>
+          <TableRow
+            key={item.questionId}
+            {...((item as TFileType<'UPLOAD'>).status === 'Processing' && {
+              className: 'pointer-events-none opacity-50',
+            })}
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
