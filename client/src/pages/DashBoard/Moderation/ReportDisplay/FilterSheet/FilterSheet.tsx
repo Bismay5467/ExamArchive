@@ -14,7 +14,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import OptionGroup from './OptionGroup/OptionGroup';
-import { REPORT_FILTTER_OPTIONS } from '@/constants/superAdmin';
+import { REPORT_FILTTER_OPTIONS } from '@/constants/report';
 import { IReportFilterFields, TReportAction } from '@/types/report';
 
 export function FilterSheet({
