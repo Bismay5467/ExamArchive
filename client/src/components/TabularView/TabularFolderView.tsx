@@ -202,9 +202,9 @@ export default function TabularFolderView({
               <span className="self-center font-medium text-sm min-w-[120px]">
                 {cellValue}
               </span>
-              {folder.noOfFiles && (
+              {actionVarient === 'UPLOAD' && (
                 <span className="text-sm opacity-55">
-                  File count: {folder.noOfFiles}
+                  File count: {folder.noOfFiles ?? 0}
                 </span>
               )}
             </div>

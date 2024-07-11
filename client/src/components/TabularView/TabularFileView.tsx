@@ -83,8 +83,8 @@ export default function TabularFileView({
   const urlParts = window.location.href.split('/');
   const folderInfo = urlParts.pop() ?? '';
   const getFolderInfo = (info: string) => {
-    const [folderId, folderName] = info.split('_');
-    return [folderId, decodeURIComponent(folderName)];
+    const [folderId, ...folderName] = info.split('_');
+    return [folderId, decodeURIComponent(folderName.join('_'))];
   };
   const [folderId, folderName] = getFolderInfo(folderInfo);
 
