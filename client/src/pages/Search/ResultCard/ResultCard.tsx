@@ -113,7 +113,7 @@ export default function ResultCard({
           </div>
         </div>
         <div className="flex flex-col pb-2 gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
-          <div className="flex flex- row gap-x-2">
+          <div className="flex flex-row gap-x-2">
             {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
               <Tag
                 key={idx}
@@ -124,9 +124,11 @@ export default function ResultCard({
                 }}
               />
             ))}
-            <p className="text-sm self-center text-slate-500">
-              +{tags.length - MAX_TAGS_TO_DISPLAY} more
-            </p>
+            {tags.length > MAX_TAGS_TO_DISPLAY && (
+              <p className="text-sm self-center text-slate-500">
+                +{tags.length - MAX_TAGS_TO_DISPLAY} more
+              </p>
+            )}
           </div>
           <div className="hidden gap-x-4 text-md lg:flex lg:flex-row">
             <div className="self-center flex flex-row gap-x-2">

@@ -22,7 +22,8 @@ import {
 import { toast } from 'sonner';
 
 import useSWR from 'swr';
-import { MdCreateNewFolder } from 'react-icons/md';
+import { RiDeleteBin6Line, RiFolderAddLine } from 'react-icons/ri';
+import { CiFolderOn } from 'react-icons/ci';
 import { EXAM_TYPES } from '@/constants/shared';
 import { FileInput } from '@/components/ui/file-input';
 import { TFileUploadFormFields } from '@/types/upload';
@@ -37,17 +38,17 @@ import { useAuth } from '@/hooks/useAuth';
 export default function Upload({
   register,
   errors,
-  fileName,
-  setFileName,
+  setFile,
   setValue,
   clearErrors,
+  file,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
   setValue: UseFormSetValue<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
   clearErrors: UseFormClearErrors<TFileUploadFormFields>;
-  fileName: string | undefined;
-  setFileName: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  file: File | null;
 }) {
   const {
     authState: { jwtToken },
@@ -58,28 +59,17 @@ export default function Upload({
   const folderNames: Array<{ name: string; _id: string }> =
     data?.data?.data ?? undefined;
 
-  const pdfToBase64 = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-
     if (files && files?.length > 0) {
       const [fileToLoad] = files;
       if (fileToLoad.size > MAX_FILE_SIZE) {
-        toast('File size exeeded 5MB!', {
+        toast.error('File size exeeded 5MB!', {
           duration: 5000,
         });
-        return;
-      }
-      setFileName(fileToLoad.name);
-      const fileReader = new FileReader();
-
-      fileReader.onload = (fileLoadedEvent) => {
-        const dataURI = fileLoadedEvent.target?.result as string;
-        setValue('file', { dataURI, name: fileToLoad.name });
-      };
-
-      fileReader.readAsDataURL(fileToLoad);
+      } else setFile(fileToLoad);
     } else {
-      toast('Please upload a file!', {
+      toast.error('Please upload a file!', {
         duration: 5000,
       });
     }
@@ -119,34 +109,55 @@ export default function Upload({
   };
 
   return (
-    <section className="px-[205px] flex flex-col gap-y-4 items-center">
+    <section className="py-4 flex flex-col gap-y-6 items-center font-natosans">
       <FileInput
-        filename={fileName}
-        className="w-full"
-        onChange={(e) => pdfToBase64(e)}
-        onFocus={() => errors.file?.dataURI && clearErrors('file.dataURI')}
+        file={file}
+        className={`w-full ${errors.file ? 'border-red-500' : ''}`}
+        onChange={handleUploadFile}
+        onFocus={() => errors.file && clearErrors('file')}
       />
-      {errors && (
-        <p className="text-red-500 text-sm">{errors.file?.dataURI?.message}</p>
+      {errors.file && (
+        <p className="text-red-500 text-sm">
+          {errors.file?.message ??
+            errors.file?.dataURI?.message ??
+            errors.file?.name?.message}
+        </p>
       )}
-      <div className="w-full flex flex-col gap-y-1">
-        <div className="w-full flex flex-row gap-x-4">
-          <Select
-            label="Exam Type"
-            className="w-[50%]"
-            {...register('examType')}
-            isRequired
-            isInvalid={errors.examType !== undefined}
-            errorMessage="*Required"
-            onFocus={() => errors.examType && clearErrors('examType')}
-          >
-            {Object.entries(EXAM_TYPES.INSTITUTIONAL).map(([_, value]) => (
-              <SelectItem key={value}>{value}</SelectItem>
-            ))}
-          </Select>
+      <Button
+        variant="bordered"
+        color="danger"
+        startContent={<RiDeleteBin6Line className="text-xl" />}
+        radius="sm"
+        isDisabled={file === null}
+        className="w-full text-medium"
+        onPress={() => setFile(null)}
+      >
+        Delete
+      </Button>
+      <div className="w-full flex flex-col sm:flex-row gap-x-4">
+        <Select
+          label="Exam Type"
+          size="sm"
+          radius="sm"
+          className="self-center sm:w-1/2 font-natosans"
+          {...register('examType')}
+          isRequired
+          variant="bordered"
+          isInvalid={errors.examType !== undefined}
+          errorMessage="*Required"
+          onFocus={() => errors.examType && clearErrors('examType')}
+        >
+          {Object.entries(EXAM_TYPES.INSTITUTIONAL).map(([_, value]) => (
+            <SelectItem key={value}>{value}</SelectItem>
+          ))}
+        </Select>
+        <div className="flex flex-row gap-x-4 w-full sm:w-1/2 self-center">
           <Autocomplete
-            label="Select a collection"
-            className="w-[50%]"
+            label="Select a folder"
+            size="sm"
+            radius="sm"
+            variant="bordered"
+            className="self-center"
             onSelectionChange={(e) => setValue('folderId', e as string)}
             isRequired
             isInvalid={errors.folderId !== undefined}
@@ -159,41 +170,58 @@ export default function Upload({
               </AutocompleteItem>
             ))}
           </Autocomplete>
+          <Button
+            onPress={onOpen}
+            radius="sm"
+            size="lg"
+            variant="bordered"
+            color="primary"
+            isIconOnly
+          >
+            <RiFolderAddLine className="text-xl" />
+          </Button>
         </div>
-        <Button
-          onPress={onOpen}
-          color="primary"
-          className="self-end"
-          endContent={<MdCreateNewFolder className="text-xl" />}
-        >
-          Create new collection
-        </Button>
       </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        radius="sm"
+        className="font-natosans"
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Create a new Collection
+              <ModalHeader className="flex flex-row gap-4">
+                <CiFolderOn className="text-2xl" />{' '}
+                <span> Create a new folder</span>
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="mt-4">
                 <Input
                   autoFocus
-                  label="Collection Name"
+                  radius="sm"
+                  label="Folder Name"
                   variant="bordered"
                   isInvalid={folderNames.some(
                     ({ name }) => name === collectionName
                   )}
-                  errorMessage="Collection already exists!"
+                  errorMessage="Folder already exists!"
                   onValueChange={(e) => setCollectionName(e)}
                 />
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
+                <Button
+                  color="default"
+                  variant="bordered"
+                  onPress={onClose}
+                  radius="sm"
+                >
                   Cancel
                 </Button>
                 <Button
                   color="primary"
+                  radius="sm"
+                  variant="bordered"
                   onClick={() => {
                     onClose();
                     handleCreateFolder();

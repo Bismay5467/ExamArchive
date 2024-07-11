@@ -1,5 +1,7 @@
 import express from 'express';
 
+import { ROLE } from '../../constants/constants/auth';
+import privilege from '../../middlewares/previlege';
 import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
@@ -22,24 +24,40 @@ const router = express.Router();
 
 router.post(
   '/create',
-  [verifyUser, validate(createFolderInputSchema, 'BODY')],
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN, ROLE.USER]),
+    validate(createFolderInputSchema, 'BODY'),
+  ],
   CreateFolder
 );
 router.get(
   '/get',
-  [verifyUser, validate(getFilesInputSchema, 'QUERY')],
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN, ROLE.USER]),
+    validate(getFilesInputSchema, 'QUERY'),
+  ],
   GetFiles
 );
 router.get('/getPinFiles', verifyUser, GetPinnedFiles);
 router.put('/pinFile', [verifyUser, validate(pinFileSchema, 'BODY')], PinFile);
 router.get(
   '/getFolderNames',
-  [verifyUser, validate(getFolderNamesSchema, 'QUERY')],
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN, ROLE.USER]),
+    validate(getFolderNamesSchema, 'QUERY'),
+  ],
   GetFolderNames
 );
 router.delete(
   '/delete',
-  [verifyUser, validate(deleteFolderInputSchema, 'BODY')],
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN, ROLE.USER]),
+    validate(deleteFolderInputSchema, 'BODY'),
+  ],
   DeleteFolder
 );
 

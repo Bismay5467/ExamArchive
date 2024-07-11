@@ -6,7 +6,6 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
-import React from 'react';
 import { MdDeleteOutline } from 'react-icons/md';
 
 interface IWarningModalProps {
@@ -15,7 +14,7 @@ interface IWarningModalProps {
   onOpenChange: () => void;
   actionText: string;
   actionType: string;
-  setEvent: React.Dispatch<React.SetStateAction<boolean>>;
+  eventHandler: () => void;
 }
 
 export default function WarningModal({
@@ -24,10 +23,10 @@ export default function WarningModal({
   onOpenChange,
   actionText,
   actionType,
-  setEvent,
+  eventHandler,
 }: IWarningModalProps) {
   const handleSubmit = () => {
-    setEvent(true);
+    eventHandler();
     onClose();
   };
 
@@ -43,7 +42,7 @@ export default function WarningModal({
           <>
             <ModalHeader className="flex flex-row gap-x-2 text-lg text-red-500">
               <MdDeleteOutline className="self-center text-2xl" />
-              Delete comment
+              Delete {actionType.toLowerCase()}
             </ModalHeader>
             <ModalBody className="font-sm">
               Are you sure you want to {actionText.toLowerCase()} this{' '}

@@ -24,6 +24,7 @@ import {
   ModalFooter,
   useDisclosure,
   BreadcrumbItem,
+  Spinner,
 } from '@nextui-org/react';
 import { Key, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
@@ -36,7 +37,7 @@ import { CiFolderOn } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { folderColumns, monthNames } from '@/constants/shared';
-import { IAction, IBookmarkFolder } from '@/types/folder';
+import { TAction, IFolder } from '@/types/folder';
 import {
   createFolderObj,
   deleteFolderObj,
@@ -45,19 +46,26 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
-import { TableViewSkeleton } from '../Skeleton';
 import RenderItems from '../Pagination/RenderItems';
+import WarningModal from '../WarningModal/WarningModal';
 
 export default function TabularFolderView({
   actionVarient,
 }: {
-  actionVarient: IAction;
+  actionVarient: TAction;
 }) {
   const {
     authState: { jwtToken },
   } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isWarningOpen,
+    onOpen: onWarningOpen,
+    onClose: onWarningClose,
+    onOpenChange: onWarningOpenChange,
+  } = useDisclosure();
   const [folderName, setFolderName] = useState<string>();
+  const [deletefolderId, setDeleteFolderId] = useState<string>();
   const {
     data: response,
     mutate,
@@ -67,7 +75,7 @@ export default function TabularFolderView({
   );
 
   const navigate = useNavigate();
-  const folders: Array<IBookmarkFolder> = response?.data.files ?? [];
+  const folders: Array<IFolder> = response?.data.files ?? [];
 
   const [filterValue, setFilterValue] = useState('');
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({});
@@ -118,6 +126,13 @@ export default function TabularFolderView({
       })
     );
   }, []);
+  const handleDeleteWarning = () => {
+    if (deletefolderId) handleDelete(deletefolderId);
+  };
+  const deleteModalOpen = (id: string) => {
+    setDeleteFolderId(id);
+    onWarningOpen();
+  };
 
   const handleCreateFolder = async () => {
     if (folderName === undefined) return;
@@ -154,13 +169,9 @@ export default function TabularFolderView({
 
   const sortedItems = useMemo(
     () =>
-      [...filteredItems].sort((a: IBookmarkFolder, b: IBookmarkFolder) => {
-        const first = a[
-          sortDescriptor.column as keyof IBookmarkFolder
-        ] as number;
-        const second = b[
-          sortDescriptor.column as keyof IBookmarkFolder
-        ] as number;
+      [...filteredItems].sort((a: IFolder, b: IFolder) => {
+        const first = a[sortDescriptor.column as keyof IFolder] as string;
+        const second = b[sortDescriptor.column as keyof IFolder] as string;
         // eslint-disable-next-line no-magic-numbers
         const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -178,34 +189,36 @@ export default function TabularFolderView({
     return sortedItems.slice(start, end);
   }, [page, sortedItems, ROWS_PER_PAGE]);
 
-  const renderCell = useCallback((folder: IBookmarkFolder, columnKey: Key) => {
-    const cellValue = folder[columnKey as keyof IBookmarkFolder];
+  const renderCell = useCallback((folder: IFolder, columnKey: Key) => {
+    const cellValue = folder[columnKey as keyof IFolder];
     const { day, month, year } = parseUTC(cellValue as string);
 
     switch (columnKey) {
       case 'name':
         return (
-          <div className="flex flex-row gap-x-2 cursor-pointer">
+          <div className="min-w-[250px] flex flex-row gap-x-2 cursor-pointer">
             <FaFolderOpen className="self-center text-4xl text-[#fcba03]" />
-            <span className="flex flex-col">
-              <span className="font-medium text-sm min-w-[120px]">
+            <div className="flex flex-col self-center">
+              <span className="self-center font-medium text-sm min-w-[120px]">
                 {cellValue}
               </span>
-              <span className="text-sm opacity-60">
-                File Count : {folder.noOfFiles}
-              </span>
-            </span>
+              {actionVarient === 'UPLOAD' && (
+                <span className="text-sm opacity-55">
+                  File count: {folder.noOfFiles ?? 0}
+                </span>
+              )}
+            </div>
           </div>
         );
       case 'createdAt':
         return (
-          <div className="font-medium opacity-65">
+          <div className="min-w-[100px] font-medium opacity-65">
             {monthNames[month]} {day}, {year}
           </div>
         );
       default:
         return (
-          <div className="font-medium flex flex-row justify-between opacity-65">
+          <div className="font-medium min-w-[120px] flex flex-row justify-between opacity-65">
             <span className="self-center">
               {monthNames[month]} {day}, {year}
             </span>
@@ -224,7 +237,7 @@ export default function TabularFolderView({
                 <DropdownItem
                   key="delete"
                   startContent={<RiDeleteBin6Line className={iconClasses} />}
-                  onClick={() => handleDelete(folder._id)}
+                  onPress={() => deleteModalOpen(folder._id)}
                 >
                   Delete Folder
                 </DropdownItem>
@@ -266,7 +279,9 @@ export default function TabularFolderView({
           />
           <Button
             color="primary"
-            startContent={<IoMdAddCircleOutline className="text-xl" />}
+            startContent={
+              <IoMdAddCircleOutline className="text-xl hidden sm:block" />
+            }
             radius="sm"
             variant="bordered"
             onClick={() => onOpen()}
@@ -327,7 +342,7 @@ export default function TabularFolderView({
           emptyContent="No folders found"
           items={items}
           isLoading={isLoading}
-          loadingContent={<TableViewSkeleton />}
+          loadingContent={<Spinner />}
         >
           {(item) => (
             <TableRow key={`${item._id}_${item.name}`}>
@@ -388,6 +403,14 @@ export default function TabularFolderView({
           )}
         </ModalContent>
       </Modal>
+      <WarningModal
+        actionText="Delete"
+        isOpen={isWarningOpen}
+        onClose={onWarningClose}
+        onOpenChange={onWarningOpenChange}
+        eventHandler={handleDeleteWarning}
+        actionType="folder"
+      />
     </div>
   );
 }

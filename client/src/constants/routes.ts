@@ -9,6 +9,9 @@ export const CLIENT_ROUTES = Object.freeze({
   DASHBOARD_FILEUPLOAD: 'fileupload',
   DASHBOARD_ANALYTICS: 'analytics',
   DASHBOARD_BOOKMARKS: 'bookmarks',
+  DASHBOARD_OPERATIONS: 'operations',
+  DASHBOARD_MODERATION: 'moderation',
+  FORBIDDEN: '/forbidden',
 });
 
 export const SERVER_ROUTES = Object.freeze({
@@ -23,4 +26,5 @@ export const SERVER_ROUTES = Object.freeze({
   BOOKMARK: '/api/v1/bookmark',
   UPDATE_CACHE: '/api/v1/superAdmin/update',
   COMMENT: '/api/v1/comment',
+  SUPER_ADMIN: '/api/v1/superAdmin',
 });

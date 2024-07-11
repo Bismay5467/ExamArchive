@@ -6,12 +6,19 @@ import {
   updateRatingObj,
   editTagsObj,
 } from './file';
-import { reportObj } from './report';
+import {
+  reportObj,
+  resolveReportObj,
+  viewReportsObj,
+  getCommentBody,
+} from './report';
 import {
   getFilesDataObj,
   createFolderObj,
   getFolderNameObj,
   deleteFolderObj,
+  getPinnedFilesObj,
+  togglePinObj,
 } from './folder';
 import {
   getCommentsObj,
@@ -20,24 +27,39 @@ import {
   editCommentObj,
   reactToCommentObj,
 } from './comments';
+import {
+  getModeratorsObj,
+  removeModeratorObj,
+  addModeratorObj,
+} from './superadmin';
+import fileUploadObj from './fileUpload';
 
 export {
   getSearchRequestObj,
+  fileUploadObj,
   getSignInObj,
   getSignUpObj,
   getResetObj,
   getFileObj,
   reportObj,
+  getCommentBody,
+  resolveReportObj,
+  viewReportsObj,
   deleteFileObj,
   editTagsObj,
   getFilesDataObj,
   createFolderObj,
   getFolderNameObj,
   deleteFolderObj,
+  getPinnedFilesObj,
+  togglePinObj,
   getCommentsObj,
   postCommentObj,
   deleteCommentObj,
   editCommentObj,
   reactToCommentObj,
   updateRatingObj,
+  getModeratorsObj,
+  removeModeratorObj,
+  addModeratorObj,
 };

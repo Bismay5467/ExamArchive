@@ -23,7 +23,7 @@ export default function Search() {
     : [];
 
   return (
-    <div className="max-w-[1200px] bg-white mx-auto p-4">
+    <div className="max-w-[1200px] mx-auto p-4">
       <div className="flex flex-row justify-center gap-x-2">
         <SearchBar className="max-w-[500px] focus:border-blue-500" />
         <SearchFilterSheet />

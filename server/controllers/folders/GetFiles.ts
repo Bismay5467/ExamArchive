@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable indent */
 import mongoose from 'mongoose';
 import { z } from 'zod';
@@ -27,7 +28,9 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
         };
   const projection =
     parentId === ''
-      ? { name: 1, _id: 1, noOfFiles: 1, createdAt: 1, updatedAt: 1 }
+      ? action === 'BOOKMARK'
+        ? { name: 1, _id: 1, createdAt: 1, updatedAt: 1 }
+        : { name: 1, _id: 1, noOfFiles: 1, createdAt: 1, updatedAt: 1 }
       : {
           'metadata._id': 1,
           'metadata.createdAt': 1,

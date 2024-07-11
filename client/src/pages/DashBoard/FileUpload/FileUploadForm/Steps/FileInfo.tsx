@@ -1,30 +1,48 @@
+/* eslint-disable function-paren-newline */
 import {
   FieldErrors,
   UseFormClearErrors,
   UseFormRegister,
+  UseFormSetValue,
 } from 'react-hook-form';
-import { Input, Select, SelectItem, Textarea } from '@nextui-org/react';
+import { Input, Select, SelectItem } from '@nextui-org/react';
 
+import { useEffect, useMemo, useState } from 'react';
 import { SEMESTER } from '@/constants/shared';
 import { TFileUploadFormFields } from '@/types/upload';
+import TagsEditor from '@/components/TagsEditor/TagsEditor';
 
 export default function FileInfo({
   register,
   errors,
   clearErrors,
+  setValue,
 }: {
   register: UseFormRegister<TFileUploadFormFields>;
   errors: FieldErrors<TFileUploadFormFields>;
   clearErrors: UseFormClearErrors<TFileUploadFormFields>;
+  setValue: UseFormSetValue<TFileUploadFormFields>;
 }) {
+  const [tags, setTags] = useState<Array<string>>([]);
+  useEffect(() => {
+    setValue('tags', tags.join(','));
+  }, [tags]);
+  const yearOptions = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 15 }, (_, i) =>
+      (currentYear - i).toString()
+    );
+    return years;
+  }, []);
   return (
-    <section className="p-4 max-w-[600px] mx-auto">
-      <h1 className="text-3xl mb-6 font-bold text-gray-600">Tell us More!</h1>
-      <div className="grid grid-cols-8 grid-rows-4 gap-x-4">
+    <section className="py-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-8 font-natosans">
         <Input
           isRequired
+          radius="sm"
+          variant="bordered"
           type="text"
-          className="row-span-1 col-span-4"
+          className="col-span-2 sm:col-span-4"
           label="Subject Name"
           isInvalid={errors.subjectName !== undefined}
           errorMessage={errors.subjectName?.message}
@@ -33,8 +51,10 @@ export default function FileInfo({
         />
         <Input
           isRequired
+          radius="sm"
           type="text"
-          className="row-span-1 col-span-4"
+          variant="bordered"
+          className="col-span-2 sm:col-span-4"
           label="Subject Code"
           isInvalid={errors.subjectCode !== undefined}
           errorMessage={errors.subjectCode?.message}
@@ -44,7 +64,9 @@ export default function FileInfo({
         <Select
           isRequired
           label="Semester"
-          className="row-span-1 col-span-5"
+          radius="sm"
+          variant="bordered"
+          className="col-span-1 sm:col-span-5"
           {...register('semester')}
           isInvalid={errors.semester !== undefined}
           errorMessage="*Required"
@@ -54,20 +76,27 @@ export default function FileInfo({
             <SelectItem key={value}>{value}</SelectItem>
           ))}
         </Select>
-        <Input
+        <Select
           isRequired
-          type="text"
-          className="row-span-1 col-span-3"
+          variant="bordered"
+          className="col-span-1 sm:col-span-3"
+          radius="sm"
           label="Year"
           {...register('year')}
           isInvalid={errors.year !== undefined}
-          errorMessage={errors.year && errors.year?.message}
-          onFocus={() => clearErrors('year')}
-        />
+          errorMessage="*Required"
+          onFocus={() => errors.year && clearErrors('year')}
+        >
+          {yearOptions.map((val) => (
+            <SelectItem key={val}>{val}</SelectItem>
+          ))}
+        </Select>
         <Input
           isRequired
+          radius="sm"
+          variant="bordered"
           type="text"
-          className="row-span-1 col-span-3"
+          className="col-span-2 sm:col-span-3"
           label="Branch"
           {...register('branch')}
           isInvalid={errors.branch !== undefined}
@@ -76,7 +105,9 @@ export default function FileInfo({
         />
         <Select
           isRequired
-          className="row-span-1 col-span-5"
+          className="col-span-2 sm:col-span-5"
+          radius="sm"
+          variant="bordered"
           label="Institution"
           {...register('institution')}
           isInvalid={errors.institution !== undefined}
@@ -87,17 +118,17 @@ export default function FileInfo({
             National Institute of Technology karnataka
           </SelectItem>
         </Select>
-        <Textarea
-          isRequired
-          type="text"
-          className="row-span-1 col-span-8"
-          label="Tags"
-          placeholder="Comma Separated with no spaces"
-          {...register('tags')}
-          isInvalid={errors.tags !== undefined}
-          errorMessage={errors.tags?.message}
-          onFocus={() => errors.tags && clearErrors('tags')}
+        <TagsEditor
+          isDeletable
+          tags={tags}
+          setTags={setTags}
+          className="col-span-2 sm:col-span-8"
         />
+        {errors && (
+          <p className="text-red-500 text-sm col-span-2 sm:col-span-8 text-center">
+            {errors.tags?.message}
+          </p>
+        )}
       </div>
     </section>
   );

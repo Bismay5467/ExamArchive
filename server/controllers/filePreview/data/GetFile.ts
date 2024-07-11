@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 
 import { DOC_INFO_TTL_IN_SECONDS } from '../../../constants/constants/filePreview';
 import { ErrorHandler } from '../../../utils/errors/errorHandler';
+import { FILE_UPLOAD_STATUS } from '../../../constants/constants/upload';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import Question from '../../../models/question';
 import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
@@ -21,7 +22,10 @@ const GetFile = asyncErrorHandler(async (req: Request, res: Response) => {
       return res.status(SUCCESS_CODES.OK).json({ data: docInfo });
     }
   }
-  const docInfo = await Question.findOne({ _id: postId })
+  const docInfo = await Question.findOne({
+    _id: postId,
+    status: FILE_UPLOAD_STATUS.UPLOADED,
+  })
     .populate({ path: 'uploadedBy', select: { username: 1, _id: 1 } })
     .select({
       'noOfDownloads.userIds': 0,
@@ -30,7 +34,6 @@ const GetFile = asyncErrorHandler(async (req: Request, res: Response) => {
       'noOfViews.ips': 0,
       'file.filename': 0,
       'file.publicId': 0,
-      isFlagged: 0,
     })
     .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
     .lean()

@@ -6,7 +6,7 @@ import { MdSunny } from 'react-icons/md';
 import { useEffect } from 'react';
 import { GrSystem } from 'react-icons/gr';
 import { useTheme } from '@/hooks/useTheme';
-import IconWrapper from './Sidebar/IconWrapper/IconWrapper';
+import IconWrapper from './Sidebar/NavCard/IconWrapper/IconWrapper';
 import { THEME } from '@/constants/shared';
 
 export default function ModeToggle({ className }: { className?: string }) {
