@@ -1,7 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { FaHeart } from 'react-icons/fa';
-import { LinkedIn } from '@/constants/shared.ts';
 import LogoBanner from '../../assets/LogoBanner.png';
+import { AnimatedTooltip } from '../ui/animated-tooltip';
+
+const people = [
+  {
+    id: 1,
+    name: 'Arkojeet Bera',
+    designation: 'Software Engineer',
+    image:
+      'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80',
+  },
+  {
+    id: 2,
+    name: 'Bismay Purkayastha',
+    designation: 'Software Engineer',
+    image:
+      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60',
+  },
+];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -40,30 +57,15 @@ export default function Footer() {
           </ul>
         </div>
         <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © {currentYear}{' '}
-          <a href="#" className="hover:underline">
-            ExamArchive™
-          </a>
-          . Made with <FaHeart className="inline text-xl text-red-600" /> by{' '}
-          <a
-            className="font-semibold"
-            href={LinkedIn.Arkojeet}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Arkojeet
-          </a>{' '}
-          &{' '}
-          <a
-            className="font-semibold"
-            href={LinkedIn.Bismay}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Bismay
-          </a>
-        </span>
+        <div className="flex flex-col sm:flex-row text-sm text-gray-500 gap-x-2 justify-center sm:text-center dark:text-gray-400">
+          <span className="self-center">
+            © {currentYear} ExamArchive™ . Made with{' '}
+            <FaHeart className="inline text-xl text-red-600" /> by{' '}
+          </span>
+          <div className="flex flex-row self-center items-center justify-center w-fit">
+            <AnimatedTooltip items={people} />
+          </div>
+        </div>
       </div>
     </footer>
   );

@@ -13,9 +13,7 @@ export default function Testimonials() {
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
             <h2 className="h2 mb-4">Don't take our word for it</h2>
             <p className="text-xl text-gray-400">
-              Vitae aliquet nec ullamcorper sit amet risus nullam eget felis
-              semper quis lectus nulla at volutpat diam ut venenatis tellus—in
-              ornare.
+              They say the end user's voice speeks more!
             </p>
           </div>
 
@@ -23,7 +21,7 @@ export default function Testimonials() {
           <div className="max-w-sm mx-auto grid gap-8 lg:grid-cols-3 lg:gap-6 items-start lg:max-w-none">
             {/* 1st testimonial */}
             <div
-              className="flex flex-col h-full p-6 bg-gray-800"
+              className="flex relative flex-col h-full p-6 bg-gray-800"
               data-aos="fade-up"
             >
               <div>
