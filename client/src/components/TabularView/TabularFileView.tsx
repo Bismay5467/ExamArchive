@@ -1,5 +1,3 @@
-/* eslint-disable indent */
-/* eslint-disable no-confusing-arrow */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-nested-ternary */
