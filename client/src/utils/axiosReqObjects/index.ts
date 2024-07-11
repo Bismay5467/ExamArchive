@@ -32,11 +32,12 @@ import {
   removeModeratorObj,
   addModeratorObj,
 } from './superadmin';
-import fileUploadObj from './fileUpload';
+import { fileUploadObj, getUploadStatsObj } from './fileUpload';
 
 export {
   getSearchRequestObj,
   fileUploadObj,
+  getUploadStatsObj,
   getSignInObj,
   getSignUpObj,
   getResetObj,

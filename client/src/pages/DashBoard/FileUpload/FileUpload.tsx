@@ -1,9 +1,13 @@
 import { Tabs, Tab } from '@nextui-org/react';
 import { PiFiles } from 'react-icons/pi';
+import { PieChart } from '@mui/x-charts/PieChart';
 import { IoCloudUploadOutline } from 'react-icons/io5';
 import { Outlet } from 'react-router-dom';
+import useSWR from 'swr';
 import FileUploadForm from './FileUploadForm/FileUploadForm';
 import { ITabOption } from '@/types/upload';
+import { getUploadStatsObj } from '@/utils/axiosReqObjects';
+import { useAuth } from '@/hooks/useAuth';
 
 const tabOptions: ITabOption[] = [
   {
@@ -22,8 +26,46 @@ const tabOptions: ITabOption[] = [
 ];
 
 export default function FileUpload() {
+  const {
+    authState: { jwtToken },
+  } = useAuth();
+  const { data: response } = useSWR(getUploadStatsObj(jwtToken));
+  const {
+    totalDownloadCount,
+    totalViewsCount,
+  }: { totalDownloadCount: number; totalViewsCount: number } = response?.data
+    ?.stats ?? { totalDownloadCount: 0, totalViewsCount: 0 };
+
   return (
-    <div className="flex max-w-[1200px] px-4 mx-auto flex-col">
+    <div className="flex max-w-[1200px] gap-y-4 px-4 mx-auto flex-col font-natosans sm:gap-y-0">
+      <span className="w-fit sm:self-end relative sm:top-5">
+        <p className="absolute bottom-2 left-10 opacity-60 text-medium font-semibold">
+          Total activity: {totalDownloadCount + totalViewsCount}
+        </p>
+        <PieChart
+          colors={['red', 'blue', 'green']}
+          series={[
+            {
+              data: [
+                { value: totalViewsCount, label: 'Views' },
+                { value: totalDownloadCount, label: 'Downloads' },
+              ],
+              highlightScope: { faded: 'global', highlighted: 'item' },
+              innerRadius: 100,
+              outerRadius: 90,
+              paddingAngle: 5,
+              cornerRadius: 4,
+              startAngle: -90,
+              endAngle: 90,
+              cx: 100,
+              cy: 100,
+            },
+          ]}
+          height={100}
+          width={350}
+          className="w-fit"
+        />
+      </span>
       <Tabs
         aria-label="Options"
         color="primary"
