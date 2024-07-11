@@ -24,8 +24,8 @@ export default function Sidebar() {
 
   return (
     <>
-      <nav className="fixed hidden sm:block z-50 group w-[70px] top-[50%] -translate-y-[50%] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[260px] hover:rounded-r-lg font-natosans">
-        <div className="bg-[#f7f7f7] relative h-[740px] w-[260px] flex flex-col gap-y-16 p-3">
+      <nav className="fixed hidden bg-[#f7f7f7] sm:block z-50 group w-[70px] top-[50%] -translate-y-[50%] rounded-r-xl overflow-x-hidden transition-all duration-300 ease-in-out hover:w-[260px] hover:rounded-r-lg font-natosans">
+        <div className="relative h-[700px] w-[260px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
               src={logo}

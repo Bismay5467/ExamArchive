@@ -170,8 +170,8 @@ export default function TabularFolderView({
   const sortedItems = useMemo(
     () =>
       [...filteredItems].sort((a: IFolder, b: IFolder) => {
-        const first = a[sortDescriptor.column as keyof IFolder] as number;
-        const second = b[sortDescriptor.column as keyof IFolder] as number;
+        const first = a[sortDescriptor.column as keyof IFolder] as string;
+        const second = b[sortDescriptor.column as keyof IFolder] as string;
         // eslint-disable-next-line no-magic-numbers
         const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -198,9 +198,16 @@ export default function TabularFolderView({
         return (
           <div className="min-w-[250px] flex flex-row gap-x-2 cursor-pointer">
             <FaFolderOpen className="self-center text-4xl text-[#fcba03]" />
-            <span className="self-center font-medium text-sm min-w-[120px]">
-              {cellValue}
-            </span>
+            <div className="flex flex-col self-center">
+              <span className="self-center font-medium text-sm min-w-[120px]">
+                {cellValue}
+              </span>
+              {folder.noOfFiles && (
+                <span className="text-sm opacity-55">
+                  File count: {folder.noOfFiles}
+                </span>
+              )}
+            </div>
           </div>
         );
       case 'createdAt':

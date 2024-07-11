@@ -10,12 +10,14 @@ export default function NavCard({
   name,
   className,
   isReady,
+  setMobileNavOpen,
 }: {
   link: string;
   className: string;
   name: string;
   icon: React.ReactNode;
   isReady: boolean;
+  setMobileNavOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const activeClass = 'text-pink-600';
   const nonActiveClass = 'text-slate-600';
@@ -24,6 +26,7 @@ export default function NavCard({
     <NavLink
       to={link}
       className={cn(className, `${isReady ? '' : 'pointer-events-none'}`)}
+      {...(setMobileNavOpen && { onClick: () => setMobileNavOpen(false) })}
     >
       {({ isActive }) => (
         <>

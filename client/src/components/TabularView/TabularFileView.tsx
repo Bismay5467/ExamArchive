@@ -134,40 +134,6 @@ export default function TabularFileView({
 
   const pages = Math.max(Math.ceil(filteredItems.length / ROWS_PER_PAGE), 0);
 
-  const handleDelete = useCallback(
-    async (fileId: string, questionId: string) => {
-      const reqObj = isBookmark
-        ? removeBookmarkObj({ fileId, folderId: folderId! }, jwtToken)
-        : deleteFileObj(questionId, jwtToken);
-      if (!reqObj) {
-        toast.error('Something went wrong!', {
-          duration: 5000,
-        });
-        return;
-      }
-
-      try {
-        await fetcher(reqObj);
-      } catch (err) {
-        toast.error('Something went wrong!', {
-          description: `${err}`,
-          duration: 5000,
-        });
-        return;
-      }
-      mutate().then(() =>
-        isBookmark
-          ? toast.success('Bookmark removed successfully!', {
-              duration: 5000,
-            })
-          : toast.success('File removed successfully!', {
-              duration: 5000,
-            })
-      );
-    },
-    []
-  );
-
   const handleFilePin = useCallback(
     async (fileId: string, questionId: string, action: 'PIN' | 'UNPIN') => {
       const isFilePinned =
@@ -207,6 +173,43 @@ export default function TabularFileView({
       );
     },
     [pinnedFiles]
+  );
+
+  const handleDelete = useCallback(
+    async (fileId: string, questionId: string) => {
+      const reqObj = isBookmark
+        ? removeBookmarkObj({ fileId, folderId: folderId! }, jwtToken)
+        : deleteFileObj(questionId, jwtToken);
+      if (!reqObj) {
+        toast.error('Something went wrong!', {
+          duration: 5000,
+        });
+        return;
+      }
+
+      try {
+        await fetcher(reqObj);
+      } catch (err) {
+        toast.error('Something went wrong!', {
+          description: `${err}`,
+          duration: 5000,
+        });
+        return;
+      }
+      mutate().then(() => {
+        if (isBookmark) {
+          toast.success('Bookmark removed successfully!', {
+            duration: 5000,
+          });
+          handleFilePin(fileId, questionId, 'UNPIN');
+        } else {
+          toast.success('File removed successfully!', {
+            duration: 5000,
+          });
+        }
+      });
+    },
+    []
   );
 
   const iconClasses = 'text-xl pointer-events-none flex-shrink-0';

@@ -2,21 +2,14 @@ import { Card, CardBody, Chip, useDisclosure } from '@nextui-org/react';
 import { FaRegComment, FaRegFile } from 'react-icons/fa6';
 import { GoClock, GoPersonAdd } from 'react-icons/go';
 import { LuFileClock } from 'react-icons/lu';
+import { useMemo } from 'react';
 import { monthNames } from '@/constants/shared';
 import { IReportPreview, TReportAction } from '@/types/report';
 import { parseUTC } from '@/utils/helpers';
 import ResolveModal from './resolveModal/resolveModal';
 
 export default function ReportCard({
-  reportData: {
-    docModel,
-    createdAt,
-    updatedAt,
-    reasons,
-    totalReport,
-    postId,
-    _id,
-  },
+  reportData: { docModel, createdAt, updatedAt, reasons, postId, _id },
   action,
 }: {
   reportData: IReportPreview;
@@ -28,6 +21,11 @@ export default function ReportCard({
     month: createMonth,
     year: createyear,
   } = parseUTC(createdAt);
+
+  const reportCount = useMemo(
+    () => reasons.reduce((acc, { count }) => acc + count, 0),
+    [reasons]
+  );
 
   const {
     day: updateDay,
@@ -81,7 +79,7 @@ export default function ReportCard({
             <div className="hidden lg:flex lg:flex-row lg:gap-x-4">
               <div className="self-center flex flex-row gap-x-2 text-pink-500">
                 <GoPersonAdd className="self-center text-lg" />{' '}
-                <p className="text-sm">Report Count: {totalReport}</p>
+                <p className="text-sm">Report Count: {reportCount}</p>
               </div>
             </div>
           </div>

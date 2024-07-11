@@ -15,6 +15,7 @@ import { getCommentBody, resolveReportObj } from '@/utils/axiosReqObjects';
 import { TContentType, TReportAction } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import { CLIENT_ROUTES } from '@/constants/routes';
 
 interface IReportModalProps {
   isOpen: boolean;
@@ -79,34 +80,6 @@ export default function ResolveModal({
     onClose();
   };
 
-  // const handleDelete = async () => {
-  //   const reqObject =
-  //     contentType === 'COMMENT'
-  //       ? deleteCommentObj({ commentId: postId }, jwtToken)
-  //       : deleteFileObj(postId, jwtToken);
-  //   if (!reqObject) {
-  //     toast.error('Somthing went wrong!', {
-  //       duration: 5000,
-  //     });
-  //     return;
-  //   }
-  //   setIsDeleting(true);
-  //   try {
-  //     await fetcher(reqObject);
-  //   } catch (err: any) {
-  //     toast.error('Somthing went wrong!', {
-  //       description: `${err.response.data.message}`,
-  //       duration: 5000,
-  //     });
-  //     setIsDeleting(false);
-  //     return;
-  //   }
-  //   toast.success('Content deleted successfully!', {
-  //     duration: 5000,
-  //   });
-  //   setIsDeleting(false);
-  // };
-
   const renderContent = useMemo(() => {
     switch (contentType) {
       case 'POST':
@@ -115,7 +88,9 @@ export default function ResolveModal({
             radius="sm"
             color="default"
             variant="bordered"
-            onPress={onClose}
+            onPress={() =>
+              window.open(`${CLIENT_ROUTES.FILE_PREVIEW}/${postId}`, '_blank')
+            }
           >
             Show Post
           </Button>
@@ -143,20 +118,6 @@ export default function ResolveModal({
             </ModalHeader>
             <ModalBody>{renderContent}</ModalBody>
             <ModalFooter>
-              {/* <Button
-                radius="sm"
-                color="primary"
-                variant="bordered"
-                onPress={() =>
-                  handleDelete().then(() => handleMarkAsResolved())
-                }
-                {...((isDeleting || isResolving) && {
-                  startContent: <Spinner color="secondary" size="sm" />,
-                })}
-                isDisabled={isResolving || isDeleting}
-              >
-                Delete & Mark Resolved
-              </Button> */}
               <Button
                 radius="sm"
                 color="primary"

@@ -1,9 +1,18 @@
 import { Button } from '@nextui-org/react';
-import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useNavigate, useRouteError } from 'react-router-dom';
 import { IoIosRefresh, IoMdArrowRoundBack } from 'react-icons/io';
 
 export default function ForbiddenPage() {
   const navigate = useNavigate();
+  const error: any = useRouteError();
+  // console.log(error.message);
+
+  toast.error('Somthing went wrong!', {
+    description: error.message,
+    duration: 5000,
+  });
+
   return (
     <div className="flex flex-col gap-y-3 font-natosans text-lg justify-center items-center">
       <img
@@ -42,7 +51,7 @@ export default function ForbiddenPage() {
           startContent={<IoIosRefresh />}
           onClick={() => window.location.reload()}
         >
-          Go to home page
+          Refresh
         </Button>
       </div>
     </div>
