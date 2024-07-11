@@ -13,7 +13,10 @@ import { CLIENT_ROUTES } from './constants/routes.ts';
 
 export default function Root() {
   const currentLocation = useLocation();
-  const isHome = currentLocation.pathname === CLIENT_ROUTES.HOME;
+  const showSidebar = !(
+    currentLocation.pathname === CLIENT_ROUTES.HOME ||
+    currentLocation.pathname.startsWith(CLIENT_ROUTES.AUTH)
+  );
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -27,7 +30,7 @@ export default function Root() {
         >
           <SearchProvider>
             <main className="box-border min-h-screen">
-              {!isHome && <Sidebar />}
+              {showSidebar && <Sidebar />}
               <Suspense fallback={<Loading />}>
                 <Outlet />
               </Suspense>
