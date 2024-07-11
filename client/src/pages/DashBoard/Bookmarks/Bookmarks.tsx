@@ -92,7 +92,7 @@ export default function Bookmarks() {
           ? Array.from({ length: 3 }, (_, index) => (
               <PinCardShimmer key={index} />
             ))
-          : pinnedFiles.map(({ name, questionId, updatedAt }) => {
+          : pinnedFiles.map(({ name, questionId, fileId, updatedAt }) => {
               const { day, month, year } = parseUTC(updatedAt);
               const [subjectName] = name.split(',');
               return (
@@ -140,7 +140,7 @@ export default function Bookmarks() {
                             startContent={
                               <RiPushpinLine className={iconClasses} />
                             }
-                            onClick={() => handleFilePin(questionId, 'UNPIN')}
+                            onClick={() => handleFilePin(fileId, 'UNPIN')}
                           >
                             Un-Pin File
                           </DropdownItem>

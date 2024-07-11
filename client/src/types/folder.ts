@@ -41,4 +41,5 @@ export interface IPinnedFile {
   name: string;
   questionId: string;
   updatedAt: string;
+  fileId: string;
 }

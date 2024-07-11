@@ -413,6 +413,7 @@ export default function TabularFileView({
           radius="full"
           renderItem={RenderItems}
           variant="light"
+          onChange={setPage}
         />
       </div>
     ),
