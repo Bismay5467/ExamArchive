@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
-import { IoAddCircleOutline } from 'react-icons/io5';
 import { Button, Spinner } from '@nextui-org/react';
 import FileInfo from './Steps/FileInfo';
 import { TFileUploadFormFields } from '@/types/upload';
@@ -147,17 +146,17 @@ export default function FileUploadForm() {
     setActiveStep(0);
   };
 
-  const onAddAnother: SubmitHandler<TFileUploadFormFields> = (formData) => {
-    // TODO: Bring all data from local storage
-    const storedData = localStorage.getItem(UPLOAD_FILE_KEY);
-    if (!storedData) {
-      localStorage.setItem('formData', JSON.stringify([formData]));
-    } else {
-      const currFormData: Array<TFileUploadFormFields> = JSON.parse(storedData);
-      currFormData.push(formData);
-      localStorage.setItem('formData', JSON.stringify(currFormData));
-    }
-  };
+  // const onAddAnother: SubmitHandler<TFileUploadFormFields> = (formData) => {
+  //   // TODO: Bring all data from local storage
+  //   const storedData = localStorage.getItem(UPLOAD_FILE_KEY);
+  //   if (!storedData) {
+  //     localStorage.setItem('formData', JSON.stringify([formData]));
+  //   } else {
+  //     const currFormData: Array<TFileUploadFormFields> = JSON.parse(storedData);
+  //     currFormData.push(formData);
+  //     localStorage.setItem('formData', JSON.stringify(currFormData));
+  //   }
+  // };
 
   const handleNext = () => {
     triggerValidate().then(
@@ -173,16 +172,18 @@ export default function FileUploadForm() {
     if (activeStep !== 0) setActiveStep((prev) => prev - 1);
   };
 
-  const handleAddAnother = () => {
-    triggerValidate().then((res) => {
-      if (res) {
-        handleSubmit(onAddAnother)();
-        reset();
-        setFile(null);
-        setActiveStep(0);
-      }
-    });
-  };
+  // TODO : process files in batches
+
+  // const handleAddAnother = () => {
+  //   triggerValidate().then((res) => {
+  //     if (res) {
+  //       handleSubmit(onAddAnother)();
+  //       reset();
+  //       setFile(null);
+  //       setActiveStep(0);
+  //     }
+  //   });
+  // };
 
   return (
     <form
@@ -200,16 +201,17 @@ export default function FileUploadForm() {
               {activeStep === 0 ? (
                 <span />
               ) : (
-                <Button
-                  onPress={handleAddAnother}
-                  color="secondary"
-                  variant="bordered"
-                  radius="sm"
-                  className="w-[100%] mb-5"
-                  startContent={<IoAddCircleOutline className="text-2xl" />}
-                >
-                  Add Another
-                </Button>
+                // <Button
+                //   onPress={handleAddAnother}
+                //   color="secondary"
+                //   variant="bordered"
+                //   radius="sm"
+                //   className="w-[100%] mb-5"
+                //   startContent={<IoAddCircleOutline className="text-2xl" />}
+                // >
+                //   Add Another
+                // </Button>
+                <div />
               )}
               <div
                 className={`flex flex-row ${index > 0 ? 'justify-between' : 'justify-end'}`}

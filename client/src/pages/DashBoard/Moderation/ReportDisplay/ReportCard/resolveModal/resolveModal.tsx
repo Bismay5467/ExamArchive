@@ -11,13 +11,8 @@ import {
 import { toast } from 'sonner';
 import { CiFlag1 } from 'react-icons/ci';
 import useSWR from 'swr';
-import {
-  deleteCommentObj,
-  deleteFileObj,
-  getCommentBody,
-  resolveReportObj,
-} from '@/utils/axiosReqObjects';
-import { TContentType } from '@/types/report';
+import { getCommentBody, resolveReportObj } from '@/utils/axiosReqObjects';
+import { TContentType, TReportAction } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 
@@ -28,6 +23,7 @@ interface IReportModalProps {
   contentType: TContentType;
   postId: string;
   reportId: string;
+  action: TReportAction;
 }
 
 export default function ResolveModal({
@@ -37,8 +33,8 @@ export default function ResolveModal({
   contentType,
   postId,
   reportId,
+  action,
 }: IReportModalProps) {
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isResolving, setIsResolving] = useState<boolean>(false);
 
   const {
@@ -49,9 +45,14 @@ export default function ResolveModal({
     contentType === 'COMMENT' ? getCommentBody(postId, jwtToken) : null
   );
 
-  const handleMarkAsResolved = async () => {
+  const handleClick = async () => {
     const reqObject = resolveReportObj(
-      { contentType, postId, reportId },
+      {
+        contentType,
+        postId,
+        reportId,
+        action: action === 'PENDING' ? 'RESOLVE' : 'UNRESOLVE',
+      },
       jwtToken
     );
     if (!reqObject) {
@@ -78,33 +79,33 @@ export default function ResolveModal({
     onClose();
   };
 
-  const handleDelete = async () => {
-    const reqObject =
-      contentType === 'COMMENT'
-        ? deleteCommentObj({ commentId: postId }, jwtToken)
-        : deleteFileObj(postId, jwtToken);
-    if (!reqObject) {
-      toast.error('Somthing went wrong!', {
-        duration: 5000,
-      });
-      return;
-    }
-    setIsDeleting(true);
-    try {
-      await fetcher(reqObject);
-    } catch (err: any) {
-      toast.error('Somthing went wrong!', {
-        description: `${err.response.data.message}`,
-        duration: 5000,
-      });
-      setIsDeleting(false);
-      return;
-    }
-    toast.success('Content deleted successfully!', {
-      duration: 5000,
-    });
-    setIsDeleting(false);
-  };
+  // const handleDelete = async () => {
+  //   const reqObject =
+  //     contentType === 'COMMENT'
+  //       ? deleteCommentObj({ commentId: postId }, jwtToken)
+  //       : deleteFileObj(postId, jwtToken);
+  //   if (!reqObject) {
+  //     toast.error('Somthing went wrong!', {
+  //       duration: 5000,
+  //     });
+  //     return;
+  //   }
+  //   setIsDeleting(true);
+  //   try {
+  //     await fetcher(reqObject);
+  //   } catch (err: any) {
+  //     toast.error('Somthing went wrong!', {
+  //       description: `${err.response.data.message}`,
+  //       duration: 5000,
+  //     });
+  //     setIsDeleting(false);
+  //     return;
+  //   }
+  //   toast.success('Content deleted successfully!', {
+  //     duration: 5000,
+  //   });
+  //   setIsDeleting(false);
+  // };
 
   const renderContent = useMemo(() => {
     switch (contentType) {
@@ -142,7 +143,7 @@ export default function ResolveModal({
             </ModalHeader>
             <ModalBody>{renderContent}</ModalBody>
             <ModalFooter>
-              <Button
+              {/* <Button
                 radius="sm"
                 color="primary"
                 variant="bordered"
@@ -155,18 +156,20 @@ export default function ResolveModal({
                 isDisabled={isResolving || isDeleting}
               >
                 Delete & Mark Resolved
-              </Button>
+              </Button> */}
               <Button
                 radius="sm"
                 color="primary"
                 variant="bordered"
-                onPress={handleMarkAsResolved}
+                onPress={handleClick}
                 {...(isResolving && {
                   startContent: <Spinner color="secondary" size="sm" />,
                 })}
                 isDisabled={isResolving}
               >
-                Mark as Resolved
+                {action === 'PENDING'
+                  ? 'Mark as Resolved'
+                  : 'Mark as Unresolved'}
               </Button>
             </ModalFooter>
           </>

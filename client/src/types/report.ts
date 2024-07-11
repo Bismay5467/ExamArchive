@@ -5,6 +5,7 @@ import {
 } from '@/constants/report';
 
 export type TContentType = 'COMMENT' | 'POST';
+export type TModerationAction = 'RESOLVE' | 'UNRESOLVE';
 
 export interface IReportContent {
   postId: string;
@@ -16,6 +17,7 @@ export interface IResolveReport {
   reportId: string;
   postId: string;
   contentType: TContentType;
+  action: TModerationAction;
 }
 
 export interface IReportPreview {

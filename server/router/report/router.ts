@@ -6,16 +6,14 @@ import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
   GetFlaggedComment,
-  MarkAsResolved,
-  MarkAsUnresolved,
   ReportContent,
+  TakeAction,
   ViewReport,
 } from '../../controllers/report';
 import {
   getCommentInputSchema,
-  markAsResolvedInputSchema,
-  markAsUnresolvedInputSchema,
   reportContentInputSchema,
+  takeActionInputSchema,
   viewReportInputSchema,
 } from './schema';
 
@@ -49,22 +47,13 @@ router.get(
   GetFlaggedComment
 );
 router.put(
-  '/markResolved',
+  '/takeAction',
   [
     verifyUser,
     privilege([ROLE.SUPERADMIN]),
-    validate(markAsResolvedInputSchema, 'BODY'),
+    validate(takeActionInputSchema, 'BODY'),
   ],
-  MarkAsResolved
-);
-router.put(
-  '/markUnresolved',
-  [
-    verifyUser,
-    privilege([ROLE.SUPERADMIN]),
-    validate(markAsUnresolvedInputSchema, 'BODY'),
-  ],
-  MarkAsUnresolved
+  TakeAction
 );
 
 export default router;

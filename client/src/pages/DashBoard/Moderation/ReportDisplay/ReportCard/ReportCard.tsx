@@ -3,7 +3,7 @@ import { FaRegComment, FaRegFile } from 'react-icons/fa6';
 import { GoClock, GoPersonAdd } from 'react-icons/go';
 import { LuFileClock } from 'react-icons/lu';
 import { monthNames } from '@/constants/shared';
-import { IReportPreview } from '@/types/report';
+import { IReportPreview, TReportAction } from '@/types/report';
 import { parseUTC } from '@/utils/helpers';
 import ResolveModal from './resolveModal/resolveModal';
 
@@ -17,8 +17,10 @@ export default function ReportCard({
     postId,
     _id,
   },
+  action,
 }: {
   reportData: IReportPreview;
+  action: TReportAction;
 }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const {
@@ -112,6 +114,7 @@ export default function ReportCard({
         onClose={onClose}
         onOpenChange={onOpenChange}
         postId={postId}
+        action={action}
       />
     </>
   );

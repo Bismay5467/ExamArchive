@@ -30,7 +30,7 @@ export const resolveReportObj = (
   reportData: IResolveReport,
   jwtToken: string | undefined
 ) => {
-  const url = `${SERVER_ROUTES.REPORT}/markResolved`;
+  const url = `${SERVER_ROUTES.REPORT}/takeAction`;
   if (!jwtToken) return null;
   const axiosObj: AxiosRequestConfig<any> = {
     url,

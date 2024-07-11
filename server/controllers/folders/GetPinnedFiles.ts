@@ -31,7 +31,7 @@ const GetPinnedFiles = asyncErrorHandler(
         { $match: { 'metadata.isFlagged': { $ne: true } } },
         { $sort: { updatedAt: -1 } },
         { $limit: MAX_FILE_PIN_LIMIT },
-        { $project: { _id: 0, name: 1, updatedAt: 1, 'metadata._id': 1 } },
+        { $project: { _id: 1, name: 1, updatedAt: 1, 'metadata._id': 1 } },
       ],
       { maxTimeMS: MONGO_READ_QUERY_TIMEOUT, lean: true }
     ).exec();

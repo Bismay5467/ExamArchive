@@ -25,35 +25,28 @@ export const getFolderIds = async ({
   postId: string;
   session: mongoose.mongo.ClientSession;
 }) => {
-  let [uploadFolderIds, bookmarkFolderIds] = (await Promise.all([
-    UploadedFiles.find({ metadata: postId, fileType: FILE_TYPE.FILE })
+  const uploadFolderIds = (
+    (await UploadedFiles.find({
+      metadata: postId,
+      fileType: FILE_TYPE.FILE,
+    })
       .select({ _id: 0, parentId: 1 })
       .session(session)
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
-      .exec(),
-    BookMarkedFile.find({ metadata: postId, fileType: FILE_TYPE.FILE })
-      .select({ _id: 0, parentId: 1 })
-      .session(session)
-      .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
-      .lean()
-      .exec(),
-  ])) as [any[], any[]];
-  uploadFolderIds = uploadFolderIds.map(({ parentId }) => parentId);
-  bookmarkFolderIds = bookmarkFolderIds.map(({ parentId }) => parentId);
-  return { uploadFolderIds, bookmarkFolderIds };
+      .exec()) as any[]
+  ).map(({ parentId }) => parentId);
+  return { uploadFolderIds };
 };
 
 export const decreaseFileCountInFolder = ({
   uploadFolderIds,
-  bookmarkFolderIds,
   session,
 }: {
   uploadFolderIds: any[];
-  bookmarkFolderIds: any[];
   session: mongoose.mongo.ClientSession;
-}) => [
-  ...uploadFolderIds.map((folderId) =>
+}) =>
+  uploadFolderIds.map((folderId) =>
     UploadedFiles.findOneAndUpdate(
       { _id: folderId, fileType: FILE_TYPE.DIRECTORY },
       { $inc: { noOfFiles: -1 } },
@@ -63,19 +56,7 @@ export const decreaseFileCountInFolder = ({
       .session(session)
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
       .lean()
-  ),
-  ...bookmarkFolderIds.map((folderId) =>
-    BookMarkedFile.findOneAndUpdate(
-      { _id: folderId, fileType: FILE_TYPE.DIRECTORY },
-      { $inc: { noOfFiles: -1 } },
-      { upsert: false, new: false }
-    )
-      .select({ _id: 1 })
-      .session(session)
-      .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
-      .lean()
-  ),
-];
+  );
 
 export const sendMailToOwner = async ({
   questionInfo,

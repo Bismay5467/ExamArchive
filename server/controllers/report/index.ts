@@ -1,13 +1,6 @@
 import GetFlaggedComment from './GetFlaggedComment';
-import MarkAsResolved from './MarkAsResolved';
-import MarkAsUnresolved from './MarkAsUnresolved';
 import ReportContent from './ReportContent';
+import TakeAction from './TakeAction';
 import ViewReport from './ViewReport';
 
-export {
-  ReportContent,
-  ViewReport,
-  MarkAsResolved,
-  GetFlaggedComment,
-  MarkAsUnresolved,
-};
+export { ReportContent, ViewReport, GetFlaggedComment, TakeAction };

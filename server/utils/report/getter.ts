@@ -1,8 +1,11 @@
+/* eslint-disable no-magic-numbers */
+/* eslint-disable indent */
 /* eslint-disable no-nested-ternary */
-import { SortOrder } from 'mongoose';
 import { render } from '@react-email/render';
+import mongoose, { SortOrder } from 'mongoose';
 
-import { MAIL_EVENT_NAME } from '../../constants/constants/shared';
+import ContentTakeDownEmail from '../../emails/ContentTakeDown';
+import { FILE_TYPE } from '../../constants/constants/upload';
 import ReportNotificationEmail from '../../emails/ReportNotification';
 import { getFilePreviewLink } from '../../constants/constants/filePreview';
 import getSuperAdminInfo from '../superadmin/getSuperAdminInfo';
@@ -17,6 +20,12 @@ import {
   SORT_FILTERS,
   reasonsForReport,
 } from '../../constants/constants/report';
+import { Comment, Question, Report, UploadedFiles } from '../../models';
+import {
+  MAIL_EVENT_NAME,
+  MONGO_READ_QUERY_TIMEOUT,
+  MONGO_WRITE_QUERY_TIMEOUT,
+} from '../../constants/constants/shared';
 
 export const getQuery = ({
   action,
@@ -107,4 +116,141 @@ export const sendNotificationHelper = async ({
       }),
     ]);
   }
+};
+
+export const getEmailPayload = (data: any, contentType: 'COMMENT' | 'POST') => {
+  if (contentType === 'POST') {
+    const {
+      uploadedBy,
+      file: { url },
+    } = data;
+    if (!uploadedBy) return null;
+    const { username, email } = uploadedBy;
+    const emailHTML = render(
+      ContentTakeDownEmail({ userFirstname: username, fileLink: url }),
+      { pretty: true }
+    );
+    return { to: [email], subject: 'Your post was reported', html: emailHTML };
+  }
+  const { _id, userId, postId, message } = data;
+  if (!userId) return null;
+  const { username, email } = userId;
+  const postLink = `${process.env.DOMAIN_URL}/filePreview/${postId}#${_id.toString()}`;
+  const emailHTML = render(
+    ContentTakeDownEmail({
+      userFirstname: username,
+      comment: { message, postLink },
+    }),
+    { pretty: true }
+  );
+  return { to: [email], subject: 'Your post was reported', html: emailHTML };
+};
+
+export const GET = ({
+  contentType,
+  action,
+  adminId,
+}: {
+  contentType: (typeof CONTENT_TYPE)[number];
+  action: 'RESOLVE' | 'UNRESOLVE';
+  adminId: string;
+}) => ({
+  dataPopulation:
+    contentType === 'COMMENT'
+      ? {
+          path: 'userId',
+          select: { username: 1, email: 1, _id: 0 },
+          strictPopulate: false,
+        }
+      : {
+          path: 'uploadedBy',
+          select: { username: 1, email: 1, _id: 0 },
+          strictPopulate: false,
+        },
+  projection:
+    contentType === 'COMMENT'
+      ? { _id: 1, userId: 1, postId: 1, message: 1 }
+      : { _id: 1, uploadedBy: 1, 'file.url': 1 },
+  reportUpdate:
+    action === 'RESOLVE'
+      ? { resolved: { isResolved: true, adminId } }
+      : { resolved: { isResolved: false } },
+});
+
+export const readDBPromises = async ({ postId }: { postId: string }) => {
+  const info = await UploadedFiles.findOne({ metadata: postId })
+    .select({ _id: 0, parentId: 1 })
+    .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
+    .lean()
+    .exec();
+  if (info === null) return undefined;
+  return info.parentId;
+};
+
+export const writeDBPromises = ({
+  action,
+  reportId,
+  contentType,
+  adminId,
+  session,
+  postId,
+  folderId,
+}: {
+  action: 'RESOLVE' | 'UNRESOLVE';
+  reportId: string;
+  contentType: (typeof CONTENT_TYPE)[number];
+  adminId: string;
+  postId: string;
+  session: mongoose.ClientSession;
+  folderId?: string;
+}) => {
+  const { dataPopulation, projection, reportUpdate } = GET({
+    contentType,
+    action,
+    adminId,
+  });
+  const Collection: any = contentType === 'COMMENT' ? Comment : Question;
+  const writePromises = [
+    Report.findOneAndUpdate(
+      {
+        _id: reportId,
+      },
+      reportUpdate,
+      {
+        upsert: false,
+        new: true,
+      }
+    )
+      .select({ _id: 1 })
+      .session(session)
+      .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
+      .lean()
+      .exec(),
+    Collection.findOneAndUpdate(
+      { _id: postId, isFlagged: action === 'UNRESOLVE' },
+      { isFlagged: action === 'RESOLVE' },
+      { upsert: false, new: true }
+    )
+      .populate(dataPopulation)
+      .select(projection)
+      .session(session)
+      .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
+      .lean()
+      .exec(),
+  ];
+  if (contentType === 'POST') {
+    writePromises.push(
+      UploadedFiles.findOneAndUpdate(
+        { _id: folderId, fileType: FILE_TYPE.DIRECTORY },
+        { $inc: { noOfFiles: action === 'RESOLVE' ? -1 : 1 } },
+        { upsert: false, new: true }
+      )
+        .select({ _id: 1 })
+        .session(session)
+        .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
+        .lean()
+        .exec()
+    );
+  }
+  return writePromises;
 };

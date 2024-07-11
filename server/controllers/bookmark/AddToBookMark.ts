@@ -47,48 +47,29 @@ const AddToBookMarks = asyncErrorHandler(
           ERROR_CODES['NOT FOUND']
         );
       } else {
-        const [isFileAdded, isCountChanged] = await Promise.all([
-          BookMarkedFile.findOneAndUpdate(
-            {
+        const isFileAdded = await BookMarkedFile.findOneAndUpdate(
+          {
+            metadata: fileId,
+            userId,
+            fileType: FILE_TYPE.FILE,
+            parentId: folderId,
+          },
+          {
+            $setOnInsert: {
               metadata: fileId,
               userId,
               fileType: FILE_TYPE.FILE,
               parentId: folderId,
+              name: fileName,
             },
-            {
-              $setOnInsert: {
-                metadata: fileId,
-                userId,
-                fileType: FILE_TYPE.FILE,
-                parentId: folderId,
-                name: fileName,
-              },
-            },
-            { upsert: true, new: true }
-          )
-            .select({ _id: 1 })
-            .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
-            .session(session)
-            .lean()
-            .exec(),
-          BookMarkedFile.findOneAndUpdate(
-            { _id: folderId, fileType: FILE_TYPE.DIRECTORY, userId },
-            { $inc: { noOfFiles: 1 } },
-            { upsert: false, new: true }
-          )
-            .select({ _id: 1 })
-            .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
-            .session(session)
-            .lean()
-            .exec(),
-        ]);
-        if (isCountChanged === null) {
-          await session.abortTransaction();
-          throw new ErrorHandler(
-            'It seems the folder does not exits',
-            ERROR_CODES['NOT FOUND']
-          );
-        }
+          },
+          { upsert: true, new: true }
+        )
+          .select({ _id: 1 })
+          .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
+          .session(session)
+          .lean()
+          .exec();
         if (isFileAdded === null) {
           await session.abortTransaction();
           throw new ErrorHandler(

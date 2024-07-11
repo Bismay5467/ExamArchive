@@ -62,7 +62,7 @@ export default function ReportDisplay({ action }: { action: TReportAction }) {
           </div>
         )}
         {reportDataList.map((val) => (
-          <ReportCard reportData={val} key={val._id} />
+          <ReportCard reportData={val} key={val._id} action={action} />
         ))}
       </div>
     </div>

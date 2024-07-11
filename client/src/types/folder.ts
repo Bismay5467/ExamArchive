@@ -16,13 +16,12 @@ export interface IGetFilesData {
   parentId: string;
 }
 
-export interface IFolder {
+export type TFolder = {
   _id: string;
   name: string;
-  noOfFiles: number;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type TFileType<T extends TAction> = {
   type: T;

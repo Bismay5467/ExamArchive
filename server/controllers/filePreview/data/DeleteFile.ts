@@ -53,7 +53,7 @@ const DeleteFile = asyncErrorHandler(async (req: Request, res: Response) => {
         SERVER_ERROR['INTERNAL SERVER ERROR']
       );
     }
-    const { uploadFolderIds, bookmarkFolderIds } = await getFolderIds({
+    const { uploadFolderIds } = await getFolderIds({
       postId,
       session,
     });
@@ -61,7 +61,6 @@ const DeleteFile = asyncErrorHandler(async (req: Request, res: Response) => {
       ...deleteFileFromDBPromises({ postId, session }),
       ...decreaseFileCountInFolder({
         uploadFolderIds,
-        bookmarkFolderIds,
         session,
       }),
       redisClient.del(`post:${postId}`),

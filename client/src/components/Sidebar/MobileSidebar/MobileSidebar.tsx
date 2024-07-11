@@ -85,7 +85,7 @@ export default function MobileSidebar({
             : { maxWidth: 0, opacity: 0.8 }
         }
       >
-        <div className="bg-[#f7f7f7] h-screen max-h-screen md:max-h-[740px] relative w-[230px] flex flex-col gap-y-16 p-3">
+        <div className="bg-[#f7f7f7] h-screen relative w-[260px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
               src={logo}
