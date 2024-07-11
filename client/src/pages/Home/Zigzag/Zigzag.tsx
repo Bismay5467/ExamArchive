@@ -1,7 +1,7 @@
 import { Image } from '@nextui-org/react';
-import FeatImage01 from '@/assets/images/features-03-image-01.png';
-import FeatImage02 from '@/assets/images/features-03-image-02.png';
-import FeatImage03 from '@/assets/images/features-03-image-03.png';
+import FeatImage01 from '@/assets/images/feature-img-01.jpg';
+import FeatImage02 from '@/assets/images/feature-img-02.jpg';
+import FeatImage03 from '@/assets/images/feature-img-03.jpg';
 
 export default function Zigzag() {
   return (
@@ -15,8 +15,7 @@ export default function Zigzag() {
             </div>
             <h1 className="h2 mb-4">One product, unlimited solutions</h1>
             <p className="text-xl text-gray-400">
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-              officia deserunt mollit laborum — semper quis lectus nulla.
+              Dont&apos;t get lost at this overwhelming time
             </p>
           </div>
 
@@ -31,9 +30,9 @@ export default function Zigzag() {
               >
                 <Image
                   className="max-w-full mx-auto md:max-w-none h-auto"
+                  isZoomed
                   src={FeatImage01}
                   width={540}
-                  height={405}
                   alt="Features 01"
                 />
               </div>
@@ -96,7 +95,8 @@ export default function Zigzag() {
                 data-aos="fade-up"
               >
                 <Image
-                  className="max-w-full mx-auto md:max-w-none h-auto"
+                  className="max-w-full mx-auto md:max-w-none"
+                  isZoomed
                   src={FeatImage02}
                   width={540}
                   height={405}
@@ -163,6 +163,7 @@ export default function Zigzag() {
               >
                 <Image
                   className="max-w-full mx-auto md:max-w-none h-auto"
+                  isZoomed
                   src={FeatImage03}
                   width={540}
                   height={405}
