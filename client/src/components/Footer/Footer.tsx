@@ -8,16 +8,14 @@ const people = [
     id: 1,
     name: 'Arkojeet Bera',
     designation: 'Software Engineer',
-    image:
-      'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80',
+    image: 'https://avatars.githubusercontent.com/u/73406774?v=4',
     redirectURL: 'https://www.linkedin.com/in/arkojeet-bera/',
   },
   {
     id: 2,
     name: 'Bismay Purkayastha',
     designation: 'Software Engineer',
-    image:
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60',
+    image: 'https://avatars.githubusercontent.com/u/54050465?v=4',
     redirectURL: 'https://www.linkedin.com/in/bismay-purkayastha-4a63a6179/',
   },
 ];
