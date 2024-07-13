@@ -71,7 +71,7 @@ const Reset = asyncErrorHandler(async (req: Request, res: Response) => {
           SERVER_ERROR['INTERNAL SERVER ERROR']
         );
       }
-      const resetLink = `${process.env.DOMAIN_URL}${'/auth/reset'}?${AUTH_TOKEN}=${resetToken}`;
+      const resetLink = `${process.env.DOMAIN_URL}${'/auth/login'}?${AUTH_TOKEN}=${resetToken}`;
       const emailHTML = render(
         ResetPasswordEmail({
           userFirstname: (doesUserExists as any).username,

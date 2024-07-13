@@ -12,10 +12,9 @@ import { SearchProvider } from './hooks/useSearch.tsx';
 import { CLIENT_ROUTES } from './constants/routes.ts';
 
 export default function Root() {
-  const currentLocation = useLocation();
+  const { pathname } = useLocation();
   const showSidebar = !(
-    currentLocation.pathname === CLIENT_ROUTES.HOME ||
-    currentLocation.pathname.startsWith(CLIENT_ROUTES.AUTH)
+    pathname === CLIENT_ROUTES.HOME || pathname.startsWith(CLIENT_ROUTES.AUTH)
   );
 
   return (

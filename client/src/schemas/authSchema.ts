@@ -7,8 +7,11 @@ function getValues<T extends Record<string, any>>(obj: T) {
 }
 
 export const newUserInputSchema = z.object({
-  email: z.string().email(),
-  username: z.string().min(1).max(10),
+  email: z.string().email({ message: '*Envalid email' }),
+  username: z
+    .string()
+    .min(1, { message: '*Username must contain atleast 1 character!' })
+    .max(10, { message: '*Username must contain atmost 10 characters!' }),
   password: z
     .string()
     .min(6, { message: '*Password must contain atleast 6 character(s)!' })
@@ -30,7 +33,9 @@ export const newUserInputSchema = z.object({
 });
 
 export const signInUserInputSchema = z.object({
-  username: z.string(),
+  username: z
+    .string()
+    .min(1, { message: '*Username must contain atleast 1 character!' }),
   password: z
     .string()
     .min(6, { message: '*Password must contain atleast 6 character(s)!' })
@@ -46,7 +51,7 @@ export const signInUserInputSchema = z.object({
 });
 
 export const resetInputSchema = z.object({
-  email: z.string().email().optional(),
+  email: z.string().email({ message: '*Envalid email' }).optional(),
   password: z
     .string()
     .min(6, { message: '*Password must contain atleast 6 character(s)!' })
