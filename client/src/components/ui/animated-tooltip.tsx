@@ -16,6 +16,7 @@ export const AnimatedTooltip = ({
     name: string;
     designation: string;
     image: string;
+    redirectURL: string;
   }[];
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -69,9 +70,13 @@ export const AnimatedTooltip = ({
               >
                 <div className="absolute inset-x-10 z-30 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent h-px " />
                 <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px " />
-                <div className="font-bold text-white relative z-30 text-base">
+                <a
+                  href={item.redirectURL}
+                  target="_blank"
+                  className="font-bold text-white relative z-30 text-base"
+                >
                   {item.name}
-                </div>
+                </a>
                 <div className="text-white text-xs">{item.designation}</div>
               </motion.div>
             )}
