@@ -1,4 +1,3 @@
-/* eslint-disable no-confusing-arrow */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import {
