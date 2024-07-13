@@ -1,24 +1,16 @@
 import { NavLink } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
 import logo from '@/assets/Logo.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
-import { AUTH_TOKEN } from '@/constants/auth';
 import sidebarOptions from '@/constants/sidebarOptions';
 import NavCard from './NavCard/NavCard';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import MobileSidebar from './MobileSidebar/MobileSidebar';
 
 export default function Sidebar() {
-  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
-  // TODO: Remove Manual setting of cookie afterwards
-  useEffect(() => {
-    if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
-  }, [token]);
   const {
     authState: { userId, role },
   } = useAuth();
@@ -69,13 +61,13 @@ export default function Sidebar() {
               </p>
             </div>
             <div className="flex px-1 py-2 flex-row justify-between">
-              <UserAvatar setToken={setToken} />
+              <UserAvatar sideBarClasses="sm:hidden sm:group-hover:block" />
               <ModeToggle className="hover:cursor-pointer self-center" />
             </div>
           </div>
         </div>
       </nav>
-      <MobileSidebar setToken={setToken} />
+      <MobileSidebar />
     </>
   );
 }

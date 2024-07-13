@@ -7,12 +7,13 @@ import SignUp from './SignUp/SignUp';
 export default function AuthTabs({ route }: { route: string }) {
   const navigate = useNavigate();
   return (
-    <Card className="max-w-full w-[340px] h-[400px]">
+    <Card className="max-w-full w-[350px] h-[400px]" radius="sm">
       <CardBody className="overflow-hidden">
         <Tabs
           fullWidth
           size="md"
-          aria-label="Tabs form"
+          radius="sm"
+          aria-label="Auth form"
           selectedKey={route}
           onSelectionChange={(key) => navigate(key as string)}
         >

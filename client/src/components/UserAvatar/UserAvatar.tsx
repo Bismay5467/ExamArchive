@@ -7,23 +7,31 @@ import {
 } from '@nextui-org/react';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { LiaSignOutAltSolid } from 'react-icons/lia';
-import React from 'react';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { useAuth } from '@/hooks/useAuth';
 import {
   TEMP_JWT_TOKEN_HARDCODED_USER,
   TEMP_JWT_TOKEN_HARDCODED_ADMIN,
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
+import { AUTH_TOKEN } from '@/constants/auth';
 
 export default function UserAvatar({
-  setToken,
+  sideBarClasses,
 }: {
-  setToken: React.Dispatch<React.SetStateAction<string>>;
+  sideBarClasses?: string;
 }) {
+  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
+  // TODO: Remove Manual setting of cookie afterwards
+  useEffect(() => {
+    if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
+  }, [token]);
   const {
     authState: { username, role },
     RESET,
   } = useAuth();
+
   const iconClasses =
     'text-xl text-slate-700 pointer-events-none flex-shrink-0';
   return (
@@ -36,10 +44,10 @@ export default function UserAvatar({
             src="https://i.pravatar.cc/150?u=a04258114e29026302d"
           />
           <div>
-            <p className="self-center text-sm sm:hidden sm:group-hover:block">
+            <p className={`self-center text-sm ${sideBarClasses}`}>
               {username}
             </p>
-            <p className="self-center text-sm opacity-60 sm:hidden sm:group-hover:block">
+            <p className={`self-center text-sm opacity-60 ${sideBarClasses}`}>
               @{role.toLowerCase()}
             </p>
           </div>

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
 import logo from '@/assets/Logo.png';
@@ -12,11 +12,7 @@ import UserAvatar from '../../UserAvatar/UserAvatar';
 
 const ESC_KEY_CODE = 27;
 
-export default function MobileSidebar({
-  setToken,
-}: {
-  setToken: React.Dispatch<React.SetStateAction<string>>;
-}) {
+export default function MobileSidebar() {
   const {
     authState: { userId, role },
   } = useAuth();
@@ -126,7 +122,7 @@ export default function MobileSidebar({
               </p>
             </div>
             <div className="flex px-1 py-2 flex-row justify-between">
-              <UserAvatar setToken={setToken} />
+              <UserAvatar sideBarClasses="sm:hidden sm:group-hover:block" />
               <ModeToggle className="hover:cursor-pointer self-center" />
             </div>
           </div>

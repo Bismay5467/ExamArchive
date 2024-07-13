@@ -2,9 +2,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@nextui-org/react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import Logo from '@/assets/Logo.png';
+import { useAuth } from '@/hooks/useAuth';
+import UserAvatar from '@/components/UserAvatar/UserAvatar';
+import ModeToggle from '@/components/ModeToggle';
 
 export default function Header() {
   const navigate = useNavigate();
+  const {
+    authState: { isAuth },
+  } = useAuth();
   return (
     <header className="absolute w-full z-30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -25,30 +31,39 @@ export default function Header() {
           <nav className="flex grow">
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li>
-                <Button
-                  color="primary"
-                  radius="sm"
-                  variant="light"
-                  onPress={() => {
-                    navigate(CLIENT_ROUTES.AUTH_LOGIN);
-                  }}
-                >
-                  Sign in
-                </Button>
-              </li>
-              <li>
-                <Button
-                  color="primary"
-                  radius="sm"
-                  variant="bordered"
-                  onPress={() => {
-                    navigate(CLIENT_ROUTES.AUTH_SIGNUP);
-                  }}
-                >
-                  Sign Up
-                </Button>
-              </li>
+              {isAuth ? (
+                <li className="flex flex-row gap-x-2">
+                  <UserAvatar />
+                  <ModeToggle className="hover:cursor-pointer self-center" />
+                </li>
+              ) : (
+                <>
+                  <li>
+                    <Button
+                      color="primary"
+                      radius="sm"
+                      variant="light"
+                      onPress={() => {
+                        navigate(CLIENT_ROUTES.AUTH_LOGIN);
+                      }}
+                    >
+                      Sign in
+                    </Button>
+                  </li>
+                  <li>
+                    <Button
+                      color="primary"
+                      radius="sm"
+                      variant="bordered"
+                      onPress={() => {
+                        navigate(CLIENT_ROUTES.AUTH_SIGNUP);
+                      }}
+                    >
+                      Sign Up
+                    </Button>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         </div>
