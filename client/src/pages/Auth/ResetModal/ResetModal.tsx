@@ -147,7 +147,7 @@ export default function ResetModal({
                   })}
                   isDisabled={isSubmitting}
                 >
-                  {authToken ? 'Update' : 'Send Mail'}
+                  {authToken ? 'Update' : 'Send OTP'}
                 </Button>
               </ModalFooter>
             </form>
