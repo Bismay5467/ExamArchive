@@ -52,6 +52,7 @@
     "react-hook-form": "^7.51.5",
     "react-icons": "^5.1.0",
     "react-router-dom": "^6.23.0",
+    "react-top-loading-bar": "^2.3.1",
     "sonner": "^1.4.41",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
