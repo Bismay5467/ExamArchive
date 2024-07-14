@@ -14,6 +14,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CiUnlock } from 'react-icons/ci';
 import { resetInputSchema } from '@/schemas/authSchema';
 import { AUTH_TOKEN } from '@/constants/auth';
 import { IResetJwtPayload, TResetFormFields } from '@/types/auth';
@@ -121,6 +122,7 @@ export default function ResetModal({
         {() => (
           <>
             <ModalHeader className="flex flex-row gap-x-3">
+              <CiUnlock className="text-2xl" />{' '}
               <span>
                 Enter your {authToken ? 'new password' : 'details to recover'}
               </span>

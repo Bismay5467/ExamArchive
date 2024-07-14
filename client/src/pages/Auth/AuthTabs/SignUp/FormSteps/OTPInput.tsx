@@ -22,7 +22,7 @@ export default function OTPInput({
 }) {
   return (
     <div className="flex flex-col justify-center items-center gap-y-4">
-      <h1 className="text-lg opacity-70">Enter your OTP</h1>
+      <h1 className="text-medium text-slate-500">Enter your OTP</h1>
       <InputOTP
         maxLength={6}
         onChange={(e) => setValue('enteredOTP', e)}

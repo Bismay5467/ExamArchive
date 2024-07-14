@@ -1,8 +1,12 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable indent */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Button, Spinner } from '@nextui-org/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { GrFormNextLink } from 'react-icons/gr';
+import { RiLoginCircleLine } from 'react-icons/ri';
 import { newUserInputSchema } from '@/schemas/authSchema';
 import { TSignUpFormFields } from '@/types/auth';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
@@ -64,20 +68,39 @@ export default function SignUp() {
   };
 
   return (
-    <form className="flex flex-col gap-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="flex flex-col gap-y-4 px-8 pt-2"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       {step}
       <Button
         type="submit"
         fullWidth
         color="primary"
-        {...(isSubmitting && {
-          startContent: <Spinner color="secondary" size="sm" />,
-        })}
+        {...(isSubmitting
+          ? {
+              startContent: <Spinner color="default" size="sm" />,
+            }
+          : isFirstStep()
+            ? { endContent: <GrFormNextLink className="text-lg" /> }
+            : { endContent: <RiLoginCircleLine className="text-lg" /> })}
         isDisabled={isSubmitting}
         variant="bordered"
         radius="sm"
+        className="mt-5 py-5"
       >
         {isFirstStep() ? 'Next' : 'Sign Up'}
+      </Button>
+      <Button
+        fullWidth
+        color="default"
+        variant="bordered"
+        radius="sm"
+        className="border-transparent"
+        onClick={() => navigate(CLIENT_ROUTES.AUTH_LOGIN)}
+      >
+        <span className="text-slate-500">Already have an account? </span>
+        <span className="text-blue-600">Sign In here!</span>
       </Button>
     </form>
   );

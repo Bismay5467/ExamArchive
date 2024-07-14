@@ -18,7 +18,7 @@ export default function DashBoard() {
         description: 'Authorization Required',
         duration: 5000,
       });
-      navigate(CLIENT_ROUTES.HOME, { replace: true });
+      navigate(CLIENT_ROUTES.AUTH_LOGIN, { replace: true });
     }
   }, [isAuth]);
 

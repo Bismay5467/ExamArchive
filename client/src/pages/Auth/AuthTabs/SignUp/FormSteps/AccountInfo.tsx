@@ -4,6 +4,9 @@ import {
   UseFormRegister,
 } from 'react-hook-form';
 import { Input } from '@nextui-org/react';
+import { IoPersonOutline } from 'react-icons/io5';
+import { CiMail } from 'react-icons/ci';
+import { MdOutlineLockPerson } from 'react-icons/md';
 import { TSignUpFormFields } from '@/types/auth';
 
 export default function AccountInfo({
@@ -19,18 +22,19 @@ export default function AccountInfo({
     <>
       <Input
         isRequired
-        label="Name"
-        variant="bordered"
+        label="Username"
+        variant="underlined"
         radius="sm"
         type="text"
         isInvalid={errors.username !== undefined}
         errorMessage={errors.username?.message}
         onFocus={() => errors.username && clearErrors('username')}
         {...register('username')}
+        endContent={<IoPersonOutline className="text-2xl text-slate-500" />}
       />
       <Input
         isRequired
-        variant="bordered"
+        variant="underlined"
         radius="sm"
         label="Email"
         type="email"
@@ -38,17 +42,19 @@ export default function AccountInfo({
         errorMessage={errors.email?.message}
         onFocus={() => errors.email && clearErrors('email')}
         {...register('email')}
+        endContent={<CiMail className="text-2xl text-slate-500" />}
       />
       <Input
         isRequired
         label="Password"
-        variant="bordered"
+        variant="underlined"
         radius="sm"
         type="password"
         isInvalid={errors.password !== undefined}
         errorMessage={errors.password?.message}
         onFocus={() => errors.password && clearErrors('password')}
         {...register('password')}
+        endContent={<MdOutlineLockPerson className="text-2xl text-slate-500" />}
       />
     </>
   );

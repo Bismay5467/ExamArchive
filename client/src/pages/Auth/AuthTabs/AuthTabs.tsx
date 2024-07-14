@@ -7,7 +7,7 @@ import SignUp from './SignUp/SignUp';
 export default function AuthTabs({ route }: { route: string }) {
   const navigate = useNavigate();
   return (
-    <Card className="max-w-full w-[350px] h-[400px]" radius="sm">
+    <Card className="max-w-full w-[450px] h-[500px] font-natosans" radius="sm">
       <CardBody className="overflow-hidden">
         <Tabs
           fullWidth
@@ -15,7 +15,15 @@ export default function AuthTabs({ route }: { route: string }) {
           radius="sm"
           aria-label="Auth form"
           selectedKey={route}
+          variant="underlined"
           onSelectionChange={(key) => navigate(key as string)}
+          classNames={{
+            tabList:
+              'gap-6 w-full relative rounded-none p-0 border-b border-divider',
+            cursor: 'w-full bg-pink-600',
+            tab: 'py-3',
+            tabContent: 'group-data-[selected=true]:text-pink-600',
+          }}
         >
           <Tab key={CLIENT_ROUTES.AUTH_LOGIN} title="Login" className="h-full">
             <Login />
