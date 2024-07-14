@@ -110,21 +110,19 @@ export default function TagsSection({
           />
         ))}
         {tags.length > MAX_TAGS_TO_DISPLAY && (
-          <div
-            onClick={onOpen}
-            className="hover:cursor-pointer text-sm text-indigo-800 self-center"
-          >
+          <div className="text-sm text-indigo-800 self-center">
             +{tags.length - MAX_TAGS_TO_DISPLAY} more
           </div>
         )}
-        {tags.length <= MAX_TAGS_TO_DISPLAY && (
-          <div
-            onClick={onOpen}
-            className="hover:cursor-pointer text-sm text-indigo-800 self-center"
-          >
-            Add more tags
-          </div>
-        )}
+      </div>
+      <div className="text-sm mt-3 text-slate-500">
+        If you wish to view all tags or add more tags{' '}
+        <span
+          onClick={onOpen}
+          className="hover:cursor-pointer text-blue-700 self-center"
+        >
+          click here
+        </span>
       </div>
       <Modal
         isOpen={isOpen}

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-nested-ternary */
@@ -70,6 +71,8 @@ const statusMap: Record<string, Record<string, any>> = {
     icon: <Spinner size="sm" color="default" className="mr-1" />,
   },
 };
+
+const MAX_CHAR_DISPLAY = 40;
 
 export default function TabularFileView({
   actionVarient,
@@ -256,7 +259,10 @@ export default function TabularFileView({
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
               <span className="flex flex-col">
                 <span className="text-sm min-w-[120px]">
-                  {heading} {isBookmark && <span>({code})</span>}
+                  {heading.length > MAX_CHAR_DISPLAY
+                    ? heading.substring(0, MAX_CHAR_DISPLAY).concat(' ...')
+                    : heading}{' '}
+                  {isBookmark && <span>({code})</span>}
                 </span>
                 {isBookmark && (
                   <span className="text-sm opacity-60">
@@ -430,7 +436,11 @@ export default function TabularFileView({
       topContent={topContent}
       topContentPlacement="outside"
       selectionMode="single"
-      onRowAction={(key) => navigate(`${CLIENT_ROUTES.FILE_PREVIEW}/${key}`)}
+      onRowAction={(key) => {
+        const [id, status] = (key as string).split('_');
+        if (status === 'Processing') return;
+        return navigate(`${CLIENT_ROUTES.FILE_PREVIEW}/${id}`);
+      }}
       radius="sm"
       onSortChange={setSortDescriptor}
       className="font-natosans"
@@ -454,18 +464,19 @@ export default function TabularFileView({
         isLoading={isLoading || isValidating}
         loadingContent={<Spinner />}
       >
-        {(item) => (
-          <TableRow
-            key={item.questionId}
-            {...((item as TFileType<'UPLOAD'>).status === 'Processing' && {
-              className: 'pointer-events-none opacity-50',
-            })}
-          >
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
+        {(item) => {
+          const key =
+            actionVarient === 'UPLOAD'
+              ? `${item.questionId}_${(item as TFileType<'UPLOAD'>).status}`
+              : `${item.questionId}_${''}`;
+          return (
+            <TableRow key={key}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          );
+        }}
       </TableBody>
     </Table>
   );
