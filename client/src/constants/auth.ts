@@ -6,3 +6,6 @@ export const ROLES = Object.freeze({
 });
 
 export const AUTH_TOKEN = 'auth-token';
+
+export const getAvatar = (username: string) =>
+  `https://ui-avatars.com/api/?background=random&name=${username}`;

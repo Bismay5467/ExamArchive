@@ -8,6 +8,7 @@ import {
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { LiaSignOutAltSolid } from 'react-icons/lia';
 import { useEffect, useState } from 'react';
+import { IoPersonOutline } from 'react-icons/io5';
 import Cookies from 'js-cookie';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -15,7 +16,7 @@ import {
   TEMP_JWT_TOKEN_HARDCODED_ADMIN,
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
-import { AUTH_TOKEN } from '@/constants/auth';
+import { AUTH_TOKEN, getAvatar } from '@/constants/auth';
 
 export default function UserAvatar({
   sideBarClasses,
@@ -41,7 +42,8 @@ export default function UserAvatar({
           <Avatar
             isBordered
             radius="sm"
-            src="https://i.pravatar.cc/150?u=a04258114e29026302d"
+            src={getAvatar(username ?? 'G')}
+            fallback={<IoPersonOutline className="text-xl" />}
           />
           <div>
             <p className={`self-center text-sm ${sideBarClasses}`}>
