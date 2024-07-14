@@ -35,8 +35,8 @@ export default function DisplayAllFiles() {
 
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col gap-y-4 font-natosans">
-      <div className="flex mt-5 mb-2 text-xl gap-x-10">
-        <div className="text-lg text-slate-500 flex gap-x-5 font-bold">
+      <div className="flex mt-5 mb-2 text-base gap-x-10">
+        <div className="text-slate-500 flex gap-x-5">
           <IoIosStats className="text-2xl" />
           <span>Your stats : </span>
         </div>
@@ -47,7 +47,6 @@ export default function DisplayAllFiles() {
               'linear-gradient(101.2deg, rgb(247, 0, 0) -21.9%, rgb(164, 50, 237) 92.2%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            fontWeight: 'bold',
           }}
         >
           <IoCloudDownloadOutline className="text-2xl text-red-700" />
@@ -61,7 +60,6 @@ export default function DisplayAllFiles() {
               'linear-gradient(101.2deg, rgb(247, 0, 0) -21.9%, rgb(164, 50, 237) 92.2%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            fontWeight: 'bold',
           }}
         >
           <VscEye className="text-2xl text-red-700" />

@@ -1,6 +1,5 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable indent */
-/* eslint-disable react/jsx-indent */
+
 /* eslint-disable require-await */
 /* eslint-disable function-paren-newline */
 import { Outlet, useNavigate } from 'react-router-dom';

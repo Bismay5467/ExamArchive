@@ -96,8 +96,8 @@ export default function TagsSection({
   }, [isOpen, tags]);
 
   return (
-    <div className="flex flex-col gap-y-2 font-natosans">
-      <h2>Tags:</h2>
+    <div className="flex flex-row gap-x-4 font-natosans">
+      <div>Tags: </div>
       <div className="flex flex-row flex-wrap gap-x-2">
         {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
           <Tag
@@ -109,20 +109,12 @@ export default function TagsSection({
             }}
           />
         ))}
-        {tags.length > MAX_TAGS_TO_DISPLAY && (
-          <div className="text-sm text-indigo-800 self-center">
-            +{tags.length - MAX_TAGS_TO_DISPLAY} more
-          </div>
-        )}
-      </div>
-      <div className="text-sm mt-3 text-slate-500">
-        If you wish to view all tags or add more tags{' '}
-        <span
+        <div
+          className="pl-3 text-sm text-blue-600 self-center hover:cursor-pointer"
           onClick={onOpen}
-          className="hover:cursor-pointer text-blue-700 self-center"
         >
-          click here
-        </span>
+          Show more
+        </div>
       </div>
       <Modal
         isOpen={isOpen}
