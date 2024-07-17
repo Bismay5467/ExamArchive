@@ -7,13 +7,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiLoginCircleLine } from 'react-icons/ri';
 import { IoPersonOutline } from 'react-icons/io5';
-import { MdOutlineLockPerson } from 'react-icons/md';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { signInUserInputSchema } from '@/schemas/authSchema';
 import { TSignInFormFields } from '@/types/auth';
 import { getSignInObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { useAuth } from '@/hooks/useAuth';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import { useState } from 'react';
 
 export default function Login() {
   const {
@@ -24,6 +25,7 @@ export default function Login() {
   } = useForm<TSignInFormFields>({
     resolver: zodResolver(signInUserInputSchema),
   });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
   const from = state?.from || CLIENT_ROUTES.HOME;
@@ -67,12 +69,24 @@ export default function Login() {
         label="Password"
         radius="sm"
         variant="underlined"
-        type="password"
+        type={isPasswordVisible ? 'text' : 'password'}
         isInvalid={errors.password !== undefined}
         errorMessage={errors.password?.message}
         onFocus={() => errors.password && clearErrors('password')}
         {...register('password')}
-        endContent={<MdOutlineLockPerson className="text-2xl text-slate-500" />}
+        endContent={
+          <button
+            className="focus:outline-none"
+            type="button"
+            onClick={() => setIsPasswordVisible((prev) => !prev)}
+          >
+            {isPasswordVisible ? (
+              <FaEye className="text-2xl text-default-400 pointer-events-none" />
+            ) : (
+              <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
+            )}
+          </button>
+        }
       />
       <button
         type="button"
@@ -96,17 +110,6 @@ export default function Login() {
         className="mt-5 py-5"
       >
         Log in
-      </Button>
-      <Button
-        fullWidth
-        color="default"
-        variant="bordered"
-        radius="sm"
-        className="border-transparent"
-        onClick={() => navigate(CLIENT_ROUTES.AUTH_SIGNUP)}
-      >
-        <span className="text-slate-500">Don't have an account? </span>
-        <span className="text-blue-600">Sign Up here!</span>
       </Button>
     </form>
   );

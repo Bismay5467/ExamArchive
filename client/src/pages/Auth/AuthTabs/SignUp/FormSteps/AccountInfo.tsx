@@ -6,7 +6,8 @@ import {
 import { Input } from '@nextui-org/react';
 import { IoPersonOutline } from 'react-icons/io5';
 import { CiMail } from 'react-icons/ci';
-import { MdOutlineLockPerson } from 'react-icons/md';
+import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { TSignUpFormFields } from '@/types/auth';
 
 export default function AccountInfo({
@@ -18,6 +19,7 @@ export default function AccountInfo({
   errors: FieldErrors<TSignUpFormFields>;
   clearErrors: UseFormClearErrors<TSignUpFormFields>;
 }) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   return (
     <>
       <Input
@@ -49,12 +51,24 @@ export default function AccountInfo({
         label="Password"
         variant="underlined"
         radius="sm"
-        type="password"
+        type={isPasswordVisible ? 'text' : 'password'}
         isInvalid={errors.password !== undefined}
         errorMessage={errors.password?.message}
         onFocus={() => errors.password && clearErrors('password')}
         {...register('password')}
-        endContent={<MdOutlineLockPerson className="text-2xl text-slate-500" />}
+        endContent={
+          <button
+            className="focus:outline-none"
+            type="button"
+            onClick={() => setIsPasswordVisible((prev) => !prev)}
+          >
+            {isPasswordVisible ? (
+              <FaEye className="text-2xl text-default-400 pointer-events-none" />
+            ) : (
+              <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
+            )}
+          </button>
+        }
       />
     </>
   );

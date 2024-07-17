@@ -140,6 +140,7 @@ export default function ReportModal({
                   startContent: <Spinner color="secondary" size="sm" />,
                 })}
                 isDisabled={isLoading}
+                type="submit"
               >
                 Report
               </Button>

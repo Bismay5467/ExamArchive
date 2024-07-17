@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IoPersonOutline } from 'react-icons/io5';
-import { MdOutlineLockPerson } from 'react-icons/md';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { jwtDecode } from 'jwt-decode';
 import { RiLoginCircleLine } from 'react-icons/ri';
@@ -14,8 +13,11 @@ import { AUTH_TOKEN } from '@/constants/auth';
 import { getResetObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Reset() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const authToken = searchParams.get(AUTH_TOKEN);
@@ -92,13 +94,23 @@ export default function Reset() {
                 label="New Password"
                 radius="sm"
                 variant="underlined"
-                type="password"
+                type={isPasswordVisible ? 'text' : 'password'}
                 isInvalid={errors.password !== undefined}
                 errorMessage={errors.password?.message}
                 onFocus={() => errors.password && clearErrors('password')}
                 {...register('password')}
                 endContent={
-                  <MdOutlineLockPerson className="text-2xl text-slate-500" />
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={() => setIsPasswordVisible((prev) => !prev)}
+                  >
+                    {isPasswordVisible ? (
+                      <FaEye className="text-2xl text-default-400 pointer-events-none" />
+                    ) : (
+                      <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
+                    )}
+                  </button>
                 }
               />
             )}

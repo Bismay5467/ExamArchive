@@ -91,17 +91,6 @@ export default function SignUp() {
       >
         {isFirstStep() ? 'Next' : 'Sign Up'}
       </Button>
-      <Button
-        fullWidth
-        color="default"
-        variant="bordered"
-        radius="sm"
-        className="border-transparent"
-        onClick={() => navigate(CLIENT_ROUTES.AUTH_LOGIN)}
-      >
-        <span className="text-slate-500">Already have an account? </span>
-        <span className="text-blue-600">Sign In here!</span>
-      </Button>
     </form>
   );
 }
