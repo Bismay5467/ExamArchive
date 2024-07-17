@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -12,7 +12,7 @@ import {
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { CiFlag1 } from 'react-icons/ci';
-import { reportReasons } from '@/constants/shared';
+import { KEY_CODES, reportReasons } from '@/constants/shared';
 import { reportObj } from '@/utils/axiosReqObjects';
 import { TContentType } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
@@ -85,13 +85,18 @@ export default function ReportModal({
     onClose();
   };
 
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      placement="top-center"
+      placement="center"
       className="font-natosans"
       radius="sm"
+      onKeyDown={handleKeyEvent}
     >
       <ModalContent>
         {() => (
@@ -132,6 +137,7 @@ export default function ReportModal({
                 Cancel
               </Button>
               <Button
+                id="sexy"
                 radius="sm"
                 color="primary"
                 variant="bordered"

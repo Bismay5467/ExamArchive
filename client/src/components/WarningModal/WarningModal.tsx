@@ -6,7 +6,9 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
+import React from 'react';
 import { MdDeleteOutline } from 'react-icons/md';
+import { KEY_CODES } from '@/constants/shared';
 
 interface IWarningModalProps {
   isOpen: boolean;
@@ -30,12 +32,18 @@ export default function WarningModal({
     onClose();
   };
 
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
+      placement="center"
       radius="sm"
       className="font-natosans"
+      onKeyDown={handleKeyEvent}
     >
       <ModalContent>
         {() => (

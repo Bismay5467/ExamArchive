@@ -12,7 +12,7 @@ import {
   Spinner,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { KeyedMutator } from 'swr';
 import { FaHashtag } from 'react-icons/fa';
@@ -21,6 +21,7 @@ import { editTagsObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 import Tag from '@/components/Tags';
+import { KEY_CODES } from '@/constants/shared';
 
 const MAX_TAGS_TO_DISPLAY = 3;
 
@@ -95,32 +96,40 @@ export default function TagsSection({
     setCurrentTags(tags);
   }, [isOpen, tags]);
 
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <div className="flex flex-row gap-x-4 font-natosans">
       <div>Tags: </div>
-      <div className="flex flex-row flex-wrap gap-x-2">
+      <div className="flex flex-row flex-wrap gap-2">
         {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
           <Tag
             val={val}
             key={idx}
             classNames={{
-              base: 'bg-violet-100 border-small border-violet-700',
+              base: 'bg-violet-100 self-center border-small border-violet-700',
               content: 'text-violet-700',
             }}
           />
         ))}
-        <div
+        <Button
           className="pl-3 text-sm text-blue-600 self-center hover:cursor-pointer"
+          size="sm"
+          variant="light"
           onClick={onOpen}
         >
           Show more
-        </div>
+        </Button>
       </div>
       <Modal
         isOpen={isOpen}
+        placement="center"
         onOpenChange={onOpenChange}
         radius="sm"
         className="font-natosans"
+        onKeyDown={handleKeyEvent}
       >
         <ModalContent>
           {() => (

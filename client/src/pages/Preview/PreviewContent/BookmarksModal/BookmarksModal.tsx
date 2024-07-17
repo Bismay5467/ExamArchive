@@ -10,7 +10,7 @@ import {
   CheckboxGroup,
   Checkbox,
 } from '@nextui-org/react';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { CiBookmark } from 'react-icons/ci';
 import useSWR from 'swr';
@@ -23,6 +23,7 @@ import {
 } from '@/utils/axiosReqObjects/folder';
 import fetcher from '@/utils/fetcher/fetcher';
 import { addToBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
+import { KEY_CODES } from '@/constants/shared';
 
 export default function BookmarksModal({
   isOpen,
@@ -63,47 +64,47 @@ export default function BookmarksModal({
     }
   }, [isOpen]);
 
-  const createBookmarks = (ids: Array<string>) => {
-    const filenameForBookmark = `${subjectName},${subjectCode},${semester},${year}`;
-    ids.map(async (id) => {
-      const bookmarkReqObj = addToBookmarkObj(
-        { fileId: paperid, folderId: id, fileName: filenameForBookmark },
-        jwtToken
-      );
-      if (!bookmarkReqObj) {
-        toast.error('Somthing went wrong!', {
+  const handleAddToBookmark = useCallback(
+    (ids?: Array<string>) => {
+      const idsToAdd = [...collectionIDs, ...(ids || [])];
+      if (idsToAdd.length === 0) {
+        toast.error('No collection(s) selected!', {
           duration: 5000,
         });
         return;
       }
-      try {
-        await fetcher(bookmarkReqObj);
-      } catch (err) {
-        toast.error('Somthing went wrong!', {
-          description: `${err}`,
-          duration: 5000,
+      onClose();
+      const filenameForBookmark = `${subjectName},${subjectCode},${semester},${year}`;
+      idsToAdd.map(async (id) => {
+        const bookmarkReqObj = addToBookmarkObj(
+          { fileId: paperid, folderId: id, fileName: filenameForBookmark },
+          jwtToken
+        );
+        if (!bookmarkReqObj) {
+          toast.error('Somthing went wrong!', {
+            duration: 5000,
+          });
+          return;
+        }
+        try {
+          await fetcher(bookmarkReqObj);
+        } catch (err) {
+          toast.error('Somthing went wrong!', {
+            description: `${err}`,
+            duration: 5000,
+          });
+        }
+        toast.success('File bookmarked successfully!', {
+          description: `Added to folder: ${collectionList?.find(({ _id }) => _id === id)?.name ?? collectionName}`,
+          duration: 2000,
         });
-      }
-      toast.success('File bookmarked successfully!', {
-        description: `Added to folder: ${collectionList?.find(({ _id }) => _id === id)?.name ?? collectionName}`,
-        duration: 2000,
       });
-    });
-  };
+      setCollectionIDs([]);
+    },
+    [collectionIDs]
+  );
 
-  const handleBookmark = useCallback(() => {
-    if (collectionIDs.length === 0) {
-      toast.error('No collection(s) selected!', {
-        duration: 5000,
-      });
-      return;
-    }
-    onClose();
-    createBookmarks(collectionIDs);
-    setCollectionIDs([]);
-  }, [collectionIDs]);
-
-  const handleCreateNew = useCallback(async () => {
+  const handleCreateNewCollection = useCallback(async () => {
     if (!isCreatingFolder) {
       setIsCreatingFolder(true);
       return;
@@ -131,7 +132,7 @@ export default function BookmarksModal({
     onClose();
     try {
       const res = await fetcher(folderDetails);
-      createBookmarks([res.data.data._id as string]);
+      handleAddToBookmark([res.data.data._id as string]);
     } catch (err: any) {
       toast('Somthing went wrong!', {
         description: `${err.response.data.message}`,
@@ -148,13 +149,23 @@ export default function BookmarksModal({
     setCollectionName('');
   }, [collectionName]);
 
+  const handleSubmit = () => {
+    if (collectionIDs.length === 0) handleCreateNewCollection();
+    else handleAddToBookmark();
+  };
+
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      placement="top-center"
+      placement="center"
       radius="sm"
       className="font-natosans"
+      onKeyDown={handleKeyEvent}
     >
       <ModalContent>
         {() => (
@@ -171,12 +182,12 @@ export default function BookmarksModal({
               >
                 <div className="max-h-[200px] overflow-y-auto no-scrollbar flex flex-col gap-y-4">
                   {collectionList?.map(({ _id, name }) => (
-                    <div className="flex flex-row justify-between">
+                    <div className="flex flex-row justify-between" key={_id}>
                       <div className="flex flex-row gap-x-3">
                         <FaFolderOpen className="self-center text-2xl text-[#fcba03]" />
                         {name}
                       </div>
-                      <Checkbox radius="full" value={_id} key={_id} />
+                      <Checkbox radius="full" value={_id} />
                     </div>
                   ))}
                 </div>
@@ -205,26 +216,19 @@ export default function BookmarksModal({
               >
                 Cancel
               </Button>
-              {collectionIDs.length === 0 ? (
-                <Button
-                  radius="sm"
-                  color="primary"
-                  variant="bordered"
-                  onClick={handleCreateNew}
-                  startContent={<MdAddCircleOutline className="text-xl" />}
-                >
-                  Create {!isCreatingFolder && 'new'}
-                </Button>
-              ) : (
-                <Button
-                  radius="sm"
-                  color="primary"
-                  variant="bordered"
-                  onClick={handleBookmark}
-                >
-                  Add
-                </Button>
-              )}
+              <Button
+                radius="sm"
+                color="primary"
+                variant="bordered"
+                onPress={handleSubmit}
+                {...(collectionIDs.length === 0 && {
+                  endContent: <MdAddCircleOutline className="text-xl" />,
+                })}
+              >
+                {collectionIDs.length === 0
+                  ? `Create ${!isCreatingFolder ? 'new' : ''}`
+                  : 'Add'}
+              </Button>
             </ModalFooter>
           </>
         )}

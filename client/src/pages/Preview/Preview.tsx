@@ -21,7 +21,7 @@ export default function Preview() {
           variant="bordered"
           color="default"
           radius="sm"
-          className="w-[100%] font-natosans py-3 mt-20 text-medium"
+          className="w-full font-natosans py-3 mt-10 text-medium"
           onClick={() => setShowComments(true)}
           startContent={<FaRegComments className="text-xl" />}
         >

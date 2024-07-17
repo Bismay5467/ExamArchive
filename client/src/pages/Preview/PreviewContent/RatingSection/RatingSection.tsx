@@ -11,11 +11,12 @@ import {
   Button,
   useDisclosure,
 } from '@nextui-org/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { KeyedMutator } from 'swr';
 import { updateRatingObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import { KEY_CODES } from '@/constants/shared';
 
 export default function RatingSection({
   postId,
@@ -95,6 +96,11 @@ export default function RatingSection({
       })
     );
   };
+
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
@@ -148,6 +154,8 @@ export default function RatingSection({
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        placement="center"
+        onKeyDown={handleKeyEvent}
         isDismissable={false}
         isKeyboardDismissDisabled={false}
         radius="sm"

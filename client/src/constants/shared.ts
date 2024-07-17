@@ -113,3 +113,7 @@ export const THEME = Object.freeze({
   DARK: 'dark',
   SYSTEM: 'system',
 });
+
+export const KEY_CODES = Object.freeze({
+  ENTER: 'Enter',
+});
