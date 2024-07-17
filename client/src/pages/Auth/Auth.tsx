@@ -8,7 +8,7 @@ export default function Signup() {
   return (
     <div className="h-screen lg:grid lg:grid-cols-2 lg:gap-x-4">
       <div className="hidden bg-login-banner bg-no-repeat bg-cover bg-right lg:block lg:col-span-1 lg:rounded-3xl" />
-      <div className="h-full flex flex-col gap-y-4 justify-center items-center lg:col-span-1">
+      <div className="h-full px-4 flex flex-col gap-y-4 justify-center items-center lg:col-span-1">
         <Image
           width={250}
           alt="Logo Banner"

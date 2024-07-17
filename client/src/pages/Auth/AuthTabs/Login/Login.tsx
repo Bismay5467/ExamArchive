@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Button, Input, Spinner, useDisclosure } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiLoginCircleLine } from 'react-icons/ri';
@@ -14,7 +14,6 @@ import { getSignInObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { useAuth } from '@/hooks/useAuth';
 import { CLIENT_ROUTES } from '@/constants/routes';
-import ResetModal from '../../ResetModal/ResetModal';
 
 export default function Login() {
   const {
@@ -25,7 +24,6 @@ export default function Login() {
   } = useForm<TSignInFormFields>({
     resolver: zodResolver(signInUserInputSchema),
   });
-  const { onOpen, onClose, onOpenChange, isOpen } = useDisclosure();
   const { state } = useLocation();
   const navigate = useNavigate();
   const from = state?.from || CLIENT_ROUTES.HOME;
@@ -49,77 +47,67 @@ export default function Login() {
   };
 
   return (
-    <>
-      <form
-        className="flex flex-col gap-y-4 px-8 pt-2"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Input
-          isRequired
-          label="Email or username"
-          radius="sm"
-          variant="underlined"
-          isInvalid={errors.username !== undefined}
-          errorMessage={errors.username?.message}
-          onFocus={() => errors.username && clearErrors('username')}
-          {...register('username')}
-          endContent={<IoPersonOutline className="text-2xl text-slate-500" />}
-        />
-        <Input
-          isRequired
-          label="Password"
-          radius="sm"
-          variant="underlined"
-          type="password"
-          isInvalid={errors.password !== undefined}
-          errorMessage={errors.password?.message}
-          onFocus={() => errors.password && clearErrors('password')}
-          {...register('password')}
-          endContent={
-            <MdOutlineLockPerson className="text-2xl text-slate-500" />
-          }
-        />
-        <button
-          type="button"
-          className="text-xs w-fit self-end text-slate-600 cursor-pointer hover:underline"
-          onClick={onOpen}
-        >
-          Recover Password
-        </button>
-        <Button
-          type="submit"
-          fullWidth
-          color="primary"
-          {...(isSubmitting
-            ? {
-                startContent: <Spinner color="default" size="sm" />,
-              }
-            : { endContent: <RiLoginCircleLine className="text-lg" /> })}
-          isDisabled={isSubmitting}
-          variant="bordered"
-          radius="sm"
-          className="mt-5 py-5"
-        >
-          Log in
-        </Button>
-        <Button
-          fullWidth
-          color="default"
-          variant="bordered"
-          radius="sm"
-          className="border-transparent"
-          onClick={() => navigate(CLIENT_ROUTES.AUTH_SIGNUP)}
-        >
-          <span className="text-slate-500">Don't have an account? </span>
-          <span className="text-blue-600">Sign Up here!</span>
-        </Button>
-      </form>
-      <ResetModal
-        isOpen={isOpen}
-        onClose={onClose}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
+    <form
+      className="flex flex-col gap-y-4 px-8 pt-2"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <Input
+        isRequired
+        label="Email or username"
+        radius="sm"
+        variant="underlined"
+        isInvalid={errors.username !== undefined}
+        errorMessage={errors.username?.message}
+        onFocus={() => errors.username && clearErrors('username')}
+        {...register('username')}
+        endContent={<IoPersonOutline className="text-2xl text-slate-500" />}
       />
-    </>
+      <Input
+        isRequired
+        label="Password"
+        radius="sm"
+        variant="underlined"
+        type="password"
+        isInvalid={errors.password !== undefined}
+        errorMessage={errors.password?.message}
+        onFocus={() => errors.password && clearErrors('password')}
+        {...register('password')}
+        endContent={<MdOutlineLockPerson className="text-2xl text-slate-500" />}
+      />
+      <button
+        type="button"
+        className="text-xs w-fit self-end text-slate-600 cursor-pointer hover:underline"
+        onClick={() => navigate(CLIENT_ROUTES.AUTH_RESET)}
+      >
+        Recover Password
+      </button>
+      <Button
+        type="submit"
+        fullWidth
+        color="primary"
+        {...(isSubmitting
+          ? {
+              startContent: <Spinner color="default" size="sm" />,
+            }
+          : { endContent: <RiLoginCircleLine className="text-lg" /> })}
+        isDisabled={isSubmitting}
+        variant="bordered"
+        radius="sm"
+        className="mt-5 py-5"
+      >
+        Log in
+      </Button>
+      <Button
+        fullWidth
+        color="default"
+        variant="bordered"
+        radius="sm"
+        className="border-transparent"
+        onClick={() => navigate(CLIENT_ROUTES.AUTH_SIGNUP)}
+      >
+        <span className="text-slate-500">Don't have an account? </span>
+        <span className="text-blue-600">Sign Up here!</span>
+      </Button>
+    </form>
   );
 }

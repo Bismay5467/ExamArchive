@@ -20,6 +20,7 @@ import { CLIENT_ROUTES } from './constants/routes.ts';
 
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
 const Auth = React.lazy(() => import('./pages/Auth/Auth.tsx'));
+const Reset = React.lazy(() => import('./pages/Auth/Reset/Reset.tsx'));
 const AuthTabs = React.lazy(() => import('./pages/Auth/AuthTabs/AuthTabs.tsx'));
 const DashBoard = React.lazy(() => import('@/pages/DashBoard/DashBoard.tsx'));
 const Profile = React.lazy(
@@ -104,6 +105,7 @@ const router = createBrowserRouter(
           path="signup"
           element={<AuthTabs route={CLIENT_ROUTES.AUTH_SIGNUP} />}
         />
+        <Route path="reset" element={<Reset />} />
       </Route>
     </Route>
   )
