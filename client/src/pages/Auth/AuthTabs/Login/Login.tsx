@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable indent */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -8,13 +7,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { RiLoginCircleLine } from 'react-icons/ri';
 import { IoPersonOutline } from 'react-icons/io5';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useState } from 'react';
 import { signInUserInputSchema } from '@/schemas/authSchema';
 import { TSignInFormFields } from '@/types/auth';
 import { getSignInObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { useAuth } from '@/hooks/useAuth';
 import { CLIENT_ROUTES } from '@/constants/routes';
-import { useState } from 'react';
 
 export default function Login() {
   const {

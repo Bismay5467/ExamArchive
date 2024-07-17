@@ -7,14 +7,14 @@ import { IoPersonOutline } from 'react-icons/io5';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { jwtDecode } from 'jwt-decode';
 import { RiLoginCircleLine } from 'react-icons/ri';
+import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IResetJwtPayload, TResetFormFields } from '@/types/auth';
 import { resetInputSchema } from '@/schemas/authSchema';
 import { AUTH_TOKEN } from '@/constants/auth';
 import { getResetObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { CLIENT_ROUTES } from '@/constants/routes';
-import { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Reset() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
