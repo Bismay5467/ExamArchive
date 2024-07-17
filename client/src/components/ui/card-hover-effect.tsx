@@ -56,12 +56,12 @@ export const HoverEffect = ({
             data-aos-delay={aosDelay}
             data-aos-anchor="[data-aos-id-blocks]"
           >
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+            <CardHeader className="pb-0 px-4 flex flex-row justify-center">
               <span className="p-4 rounded-full bg-purple-600 text-purple-100">
                 {icon}
               </span>
             </CardHeader>
-            <CardBody className="overflow-visible py-2">
+            <CardBody className="py-2 text-center">
               <h4 className="h4 mb-2">{title}</h4>
               {description}
             </CardBody>

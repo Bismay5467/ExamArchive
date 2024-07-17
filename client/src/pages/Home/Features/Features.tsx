@@ -46,7 +46,7 @@ export const cards = [
   {
     title: 'Microsoft',
     description:
-      'A multinational technology company that develops, manufactures, licenses, supports, and sells computer software, consumer electronics, personal computers, and related services.',
+      'A multinational technology company that develops, manufactures, licenses, ',
     link: 'https://pornhub.com',
     icon: <FaStarAndCrescent className="text-3xl" />,
     aosDelay: 500,
