@@ -5,7 +5,7 @@ import {
 } from '@/constants/report';
 
 export type TContentType = 'COMMENT' | 'POST';
-export type TModerationAction = 'RESOLVE' | 'UNRESOLVE';
+export type TModerationAction = 'MARK AS SPAM' | 'FLAG' | 'UNRESOLVE';
 
 export interface IReportContent {
   postId: string;

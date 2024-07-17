@@ -41,14 +41,17 @@ const TakeAction = asyncErrorHandler(async (req: Request, res: Response) => {
         folderId,
       })
     );
-    if (!(isReportMarked && isContentFlagChanged)) {
+    if (
+      isReportMarked === null ||
+      (action !== 'MARK AS SPAM' && isContentFlagChanged === null)
+    ) {
       await session.abortTransaction();
       throw new ErrorHandler(
         'No document found matching the specified id',
         ERROR_CODES['NOT FOUND']
       );
     }
-    if (action === 'RESOLVE') {
+    if (action === 'FLAG') {
       if (redisClient === null) {
         await session.abortTransaction();
         throw new ErrorHandler(

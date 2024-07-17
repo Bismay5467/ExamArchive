@@ -10,6 +10,7 @@ import {
 export type TSignUpFormFields = z.infer<typeof newUserInputSchema>;
 export type TSignInFormFields = z.infer<typeof signInUserInputSchema>;
 export type TResetFormFields = z.infer<typeof resetInputSchema>;
+export type TRole = keyof typeof ROLES;
 
 export interface IAuthState {
   isAuth: boolean;
@@ -17,7 +18,7 @@ export interface IAuthState {
   username: string | undefined;
   email: string | undefined;
   userId: string | undefined;
-  role: keyof typeof ROLES;
+  role: TRole;
 }
 
 export interface IAuthContext {
@@ -30,7 +31,7 @@ export interface ISignInJwtPayload {
   email: string;
   exp: number;
   iat: number;
-  role: keyof typeof ROLES;
+  role: TRole;
   userId: string;
   username: string;
 }

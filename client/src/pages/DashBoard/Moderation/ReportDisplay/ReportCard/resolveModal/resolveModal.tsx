@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
 import {
   Modal,
@@ -12,7 +14,7 @@ import { toast } from 'sonner';
 import { CiFlag1 } from 'react-icons/ci';
 import useSWR from 'swr';
 import { getCommentBody, resolveReportObj } from '@/utils/axiosReqObjects';
-import { TContentType, TReportAction } from '@/types/report';
+import { TContentType, TModerationAction, TReportAction } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 import { CLIENT_ROUTES } from '@/constants/routes';
@@ -36,7 +38,11 @@ export default function ResolveModal({
   reportId,
   action,
 }: IReportModalProps) {
-  const [isResolving, setIsResolving] = useState<boolean>(false);
+  const [isResolving, setIsResolving] = useState<{
+    spam: boolean;
+    report: boolean;
+    unresolve: boolean;
+  }>({ spam: false, report: false, unresolve: false });
 
   const {
     authState: { jwtToken },
@@ -46,13 +52,13 @@ export default function ResolveModal({
     contentType === 'COMMENT' ? getCommentBody(postId, jwtToken) : null
   );
 
-  const handleClick = async () => {
+  const handleClick = async ({ event }: { event: TModerationAction }) => {
     const reqObject = resolveReportObj(
       {
         contentType,
         postId,
         reportId,
-        action: action === 'PENDING' ? 'RESOLVE' : 'UNRESOLVE',
+        action: event,
       },
       jwtToken
     );
@@ -62,7 +68,11 @@ export default function ResolveModal({
       });
       return;
     }
-    setIsResolving(true);
+    event === 'MARK AS SPAM'
+      ? setIsResolving((prevState) => ({ ...prevState, spam: true }))
+      : event === 'FLAG'
+        ? setIsResolving((prevState) => ({ ...prevState, report: true }))
+        : setIsResolving((prevState) => ({ ...prevState, unresolve: true }));
     try {
       await fetcher(reqObject);
     } catch (err: any) {
@@ -70,13 +80,27 @@ export default function ResolveModal({
         description: `${err.response.data.message}`,
         duration: 5000,
       });
-      setIsResolving(false);
+      event === 'MARK AS SPAM'
+        ? setIsResolving((prevState) => ({ ...prevState, spam: false }))
+        : event === 'FLAG'
+          ? setIsResolving((prevState) => ({ ...prevState, report: false }))
+          : setIsResolving((prevState) => ({ ...prevState, unresolve: false }));
       return;
     }
-    toast.success('Report Resolved', {
+    const message =
+      event === 'UNRESOLVE'
+        ? 'Report unresolved for further srcutiny'
+        : event === 'MARK AS SPAM'
+          ? 'Marked as spam'
+          : 'Report resolved';
+    toast.success(message, {
       duration: 5000,
     });
-    setIsResolving(false);
+    event === 'MARK AS SPAM'
+      ? setIsResolving((prevState) => ({ ...prevState, spam: false }))
+      : event === 'FLAG'
+        ? setIsResolving((prevState) => ({ ...prevState, report: false }))
+        : setIsResolving((prevState) => ({ ...prevState, unresolve: false }));
     onClose();
   };
 
@@ -118,20 +142,48 @@ export default function ResolveModal({
             </ModalHeader>
             <ModalBody>{renderContent}</ModalBody>
             <ModalFooter>
-              <Button
-                radius="sm"
-                color="primary"
-                variant="bordered"
-                onPress={handleClick}
-                {...(isResolving && {
-                  startContent: <Spinner color="secondary" size="sm" />,
-                })}
-                isDisabled={isResolving}
-              >
-                {action === 'PENDING'
-                  ? 'Mark as Resolved'
-                  : 'Mark as Unresolved'}
-              </Button>
+              {action === 'RESOLVED' && (
+                <Button
+                  radius="sm"
+                  color="primary"
+                  variant="bordered"
+                  onPress={() => handleClick({ event: 'UNRESOLVE' })}
+                  {...(isResolving.unresolve && {
+                    startContent: <Spinner color="secondary" size="sm" />,
+                  })}
+                  isDisabled={isResolving.unresolve}
+                >
+                  Mark as Unresolved
+                </Button>
+              )}
+              {action === 'PENDING' && (
+                <>
+                  <Button
+                    radius="sm"
+                    color="default"
+                    variant="bordered"
+                    onPress={() => handleClick({ event: 'MARK AS SPAM' })}
+                    {...(isResolving.spam && {
+                      startContent: <Spinner color="secondary" size="sm" />,
+                    })}
+                    isDisabled={isResolving.spam}
+                  >
+                    Mark as spam
+                  </Button>
+                  <Button
+                    radius="sm"
+                    color="primary"
+                    variant="bordered"
+                    onPress={() => handleClick({ event: 'FLAG' })}
+                    {...(isResolving.report && {
+                      startContent: <Spinner color="secondary" size="sm" />,
+                    })}
+                    isDisabled={isResolving.report}
+                  >
+                    Flag content
+                  </Button>
+                </>
+              )}
             </ModalFooter>
           </>
         )}

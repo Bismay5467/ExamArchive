@@ -78,7 +78,6 @@ export default function PreviewContent({
       description: error?.response?.data?.message,
       duration: 5000,
     });
-    throw Error(error?.response?.data?.message);
   }
 
   return (

@@ -17,4 +17,5 @@ export const ROLE = Object.freeze({
   USER: 'USER',
   ADMIN: 'ADMIN',
   SUPERADMIN: 'SUPERADMIN',
+  GUEST: 'GUEST',
 });
