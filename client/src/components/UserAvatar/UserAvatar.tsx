@@ -7,9 +7,10 @@ import {
 } from '@nextui-org/react';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { LiaSignOutAltSolid } from 'react-icons/lia';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { IoPersonOutline } from 'react-icons/io5';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import {
   TEMP_JWT_TOKEN_HARDCODED_USER,
@@ -17,6 +18,7 @@ import {
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
 import { AUTH_TOKEN, getAvatar } from '@/constants/auth';
+import quickLinks from '@/constants/quickLinks';
 
 export default function UserAvatar({
   sideBarClasses,
@@ -29,9 +31,10 @@ export default function UserAvatar({
     if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
   }, [token]);
   const {
-    authState: { username, role },
+    authState: { username, role, userId },
     RESET,
   } = useAuth();
+  const navigate = useNavigate();
 
   const iconClasses =
     'text-xl text-slate-700 pointer-events-none flex-shrink-0';
@@ -86,6 +89,18 @@ export default function UserAvatar({
         >
           Super Admin
         </DropdownItem>
+        {
+          quickLinks(role, userId!).map(({ key, link, icon }) => (
+            <DropdownItem
+              key={key}
+              onClick={() => navigate(link)}
+              className="sm:hidden"
+              startContent={icon}
+            >
+              {key}
+            </DropdownItem>
+          )) as unknown as JSX.Element
+        }
         <DropdownItem
           key="signout"
           startContent={<LiaSignOutAltSolid className={iconClasses} />}

@@ -5,11 +5,12 @@ import Logo from '@/assets/Logo.png';
 import { useAuth } from '@/hooks/useAuth';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ModeToggle from '@/components/ModeToggle';
+import quickLinks from '@/constants/quickLinks';
 
 export default function Header() {
   const navigate = useNavigate();
   const {
-    authState: { isAuth },
+    authState: { isAuth, role, userId },
   } = useAuth();
   return (
     <header className="absolute w-full z-30">
@@ -31,6 +32,13 @@ export default function Header() {
           <nav className="flex grow">
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
+              <li className="mr-6 hidden flex-row gap-x-4 text-sm font-semibold opacity-70 sm:flex">
+                {quickLinks(role, userId!).map(({ key, link }) => (
+                  <Link to={link} key={key} className="hover:underline">
+                    {key}
+                  </Link>
+                ))}
+              </li>
               {isAuth ? (
                 <li className="flex flex-row gap-x-2">
                   <UserAvatar />
