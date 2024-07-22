@@ -7,7 +7,9 @@ export default function Signup() {
   const navigate = useNavigate();
   return (
     <div className="h-screen lg:grid lg:grid-cols-2 lg:gap-x-4">
-      <div className="hidden bg-login-banner bg-no-repeat bg-cover bg-right lg:block lg:col-span-1 lg:rounded-3xl" />
+      <div className="hidden lg:flex lg:flex-col lg:justify-center lg:col-span-1 p-4">
+        <Image src="https://res.cloudinary.com/dzorpsnmn/image/upload/v1718026209/EXAM-ARCHIVE-ASSETS/qrid8c6h4buu5vxzvdob.jpg" />
+      </div>
       <div className="h-full px-4 flex flex-col gap-y-4 justify-center items-center lg:col-span-1">
         <Image
           width={250}
