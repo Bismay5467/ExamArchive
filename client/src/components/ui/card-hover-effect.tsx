@@ -51,18 +51,18 @@ export const HoverEffect = ({
             )}
           </AnimatePresence>
           <Card
-            className="relative flex flex-col items-center gap-y-2 z-50 h-full"
+            className="relative flex flex-col items-center p-4 gap-y-2 z-50 h-full"
             data-aos="fade-up"
             data-aos-delay={aosDelay}
             data-aos-anchor="[data-aos-id-blocks]"
           >
-            <CardHeader className="pb-0 px-4 flex flex-row justify-center">
-              <span className="p-4 rounded-full bg-purple-600 text-purple-100">
+            <CardHeader className="px-4 pb-0 flex flex-row gap-x-4">
+              <span className="p-4 rounded-full bg-purple-600 text-purple-100 self-center">
                 {icon}
               </span>
+              <h4 className="h4 mb-2 self-center">{title}</h4>
             </CardHeader>
-            <CardBody className="py-2 text-center">
-              <h4 className="h4 mb-2">{title}</h4>
+            <CardBody className="px-4 text-sm text-justify">
               {description}
             </CardBody>
           </Card>
