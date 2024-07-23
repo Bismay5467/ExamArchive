@@ -6,11 +6,9 @@ import { getPreviousYears } from '../helpers';
 export default (searchInputs: ISearchInputs, page: number) => {
   const sanitizedParams = {
     ...searchInputs,
-    ...(searchInputs.searchParams && {
-      searchParams: searchInputs.searchParams
-        .split(',')
-        .map((item: any) => item.trim()),
-    }),
+    searchParams:
+      searchInputs.searchParams.split(',').map((item: any) => item.trim()) ||
+      [],
     ...(searchInputs.year && { year: getPreviousYears(searchInputs.year) }),
     page: page.toString(),
   };

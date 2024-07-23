@@ -1,11 +1,17 @@
 /* eslint-disable require-await */
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useSWRInfinite, {
   SWRInfiniteKeyLoader,
   SWRInfiniteResponse,
 } from 'swr/infinite';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 import { IFilterInputs, ISearchContext, ISearchInputs } from '@/types/search';
 import { getSearchRequestObj } from '@/utils/axiosReqObjects';
 
@@ -24,6 +30,7 @@ const defaultSWRResponseState: SWRInfiniteResponse<any, any> = {
 const SearchContext = createContext<ISearchContext>({
   searchInputs: { searchParams: '' },
   swrResponse: defaultSWRResponseState,
+  isEmptySearch: true,
   setFilters: (_filters) => {},
   setSearchParam: (_query: string) => {},
   clearFilters: () => {},
@@ -34,12 +41,16 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [searchInputs, setSearchInputs] = useState<ISearchInputs>({
     searchParams: '',
   });
+  const isEmptySearch = useMemo(
+    () => isEqual(searchInputs, { searchParams: '' }),
+    [searchInputs]
+  );
 
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     // TODO: Content of previousPageData needs further testing
 
     if (previousPageData && !previousPageData.data.hasMore) return null;
-    if (searchInputs.searchParams.length === 0) return null;
+    if (isEmptySearch) return null;
     return getSearchRequestObj(searchInputs, pageIndex + 1);
   };
   const swrResponse = useSWRInfinite(getKey);
@@ -84,6 +95,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         searchInputs,
+        isEmptySearch,
         setFilters,
         setSearchParam,
         swrResponse,

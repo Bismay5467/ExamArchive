@@ -12,6 +12,7 @@ export default function Search() {
   const {
     swrResponse: { data: response, isLoading },
     searchInputs,
+    isEmptySearch,
   } = useSearch();
   const searchResults = response ? [...response] : [];
   const reducedSearchResults = searchResults
@@ -37,7 +38,7 @@ export default function Search() {
           </>
         ) : (
           <>
-            {searchInputs.searchParams.length === 0 && <InitialDisplay />}
+            {isEmptySearch && <InitialDisplay />}
             {searchInputs.searchParams && data.length === 0 && <NoResults />}
             {data.map((searchData) => (
               <ResultCard data={searchData} key={searchData._id} />
