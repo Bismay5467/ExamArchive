@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@nextui-org/react';
 import { CLIENT_ROUTES } from '@/constants/routes';
-import Logo from '@/assets/Logo.png';
+import Logo from '@/assets/logo-dark-no-bg.png';
 import { useAuth } from '@/hooks/useAuth';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ModeToggle from '@/components/ModeToggle';
@@ -24,7 +24,7 @@ export default function Header() {
               className="block"
               aria-label="Exam-Archive"
             >
-              <img src={Logo} alt="banner" className="w-10" />
+              <img src={Logo} alt="banner" className="w-[300px]" />
             </Link>
           </div>
 
@@ -32,7 +32,7 @@ export default function Header() {
           <nav className="flex grow">
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li className="mr-6 hidden flex-row gap-x-4 text-sm font-semibold opacity-70 sm:flex">
+              <li className="mr-12 hidden flex-row gap-x-8 text-base opacity-70 sm:flex">
                 {quickLinks(role, userId!).map(({ key, link }) => (
                   <Link to={link} key={key} className="hover:underline">
                     {key}

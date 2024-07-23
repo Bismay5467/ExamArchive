@@ -61,7 +61,9 @@ export default function Features() {
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="h2 mb-4 leading-snug">
-              The majority of students don&apos;t understand exactly{' '}
+              The majority of students don&apos;t understand exactly
+            </h2>
+            <h2 className="h2 mb-4 leading-snug">
               <Highlight className="px-2">what to study?</Highlight>
             </h2>
           </div>
