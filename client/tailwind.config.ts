@@ -33,7 +33,7 @@ module.exports = {
       },
       fontFamily: {
         natosans: ['Noto Sans JP', 'sans-serif'],
-        mukta: ['Mukta', 'sans-serif'],
+        niramit: ['Niramit', 'sans-serif'],
       },
       keyframes: {
         meteor: {

@@ -57,12 +57,12 @@ export const HoverEffect = ({
             data-aos-anchor="[data-aos-id-blocks]"
           >
             <CardHeader className="px-4 pb-0 flex flex-row gap-x-4">
-              <span className="p-4 rounded-full bg-purple-600 text-purple-100 self-center">
+              <span className="p-2 text-purple-700 self-center">
                 {icon}
               </span>
-              <h4 className="h4 mb-2 self-center">{title}</h4>
+              <h4 className="h4 self-center">{title}</h4>
             </CardHeader>
-            <CardBody className="px-4 text-sm text-justify">
+            <CardBody className="px-3 text-base text-justify">
               {description}
             </CardBody>
           </Card>

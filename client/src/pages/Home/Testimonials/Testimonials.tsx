@@ -12,7 +12,7 @@ const testimonials = [
   {
     avatarImg: 'https://avatars.githubusercontent.com/u/73980183?v=4',
     description:
-      'Exam Archive has been a game-changer for my exam preparation. The ability to access previous year question papers from various exams is incredibly convenient. The bookmark feature allows me to save important papers for quick reference while the comment section fosters valuable discussions. Highly recommended!',
+      'Exam Archive has been a game-changer for my exam preparation. The ability to access previous year question papers from various exams is incredibly convenient. The bookmark feature allows me to save important papers for quick reference while the comment section fosters valuable discussions.',
     name: 'Biplaw Kumar Singh',
     designation: 'NITK',
   },
