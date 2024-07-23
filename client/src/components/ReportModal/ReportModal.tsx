@@ -12,11 +12,13 @@ import {
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { CiFlag1 } from 'react-icons/ci';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { KEY_CODES, reportReasons } from '@/constants/shared';
 import { reportObj } from '@/utils/axiosReqObjects';
 import { TContentType } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 interface IReportModalProps {
   isOpen: boolean;
@@ -35,12 +37,17 @@ export default function ReportModal({
 }: IReportModalProps) {
   const [reportRank, setReportRank] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const {
-    authState: { jwtToken },
+    authState: { jwtToken, isAuth },
   } = useAuth();
 
   const handleSubmit = async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!reportRank) {
       toast.error('Please select one of the provided options!', {
         duration: 5000,

@@ -14,10 +14,12 @@ import {
 } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { KeyedMutator } from 'swr';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { updateRatingObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 import { KEY_CODES } from '@/constants/shared';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 export default function RatingSection({
   postId,
@@ -45,8 +47,10 @@ export default function RatingSection({
   ] = rating;
 
   const {
-    authState: { jwtToken },
+    authState: { jwtToken, isAuth },
   } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -58,6 +62,9 @@ export default function RatingSection({
   };
 
   const handleSubmit = async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!helpfull || !standard || !relevance) {
       toast.error('Please rate all the fields!', {
         duration: 5000,
