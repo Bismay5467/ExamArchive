@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
-import logo from '@/assets/Logo.png';
+import logo from '@/assets/logo-dark-no-bg.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
@@ -24,11 +24,8 @@ export default function Sidebar() {
             <img
               src={logo}
               alt="LOGO"
-              className="mix-blend-multiply w-[45px]"
+              className="mix-blend-multiply w-[250px]"
             />
-            <h1 className="self-center text-xl font-semibold text-[#545454] hidden group-hover:block">
-              EXAM ARCHIVE
-            </h1>
           </NavLink>
           {sidebarOptions(role, userId!).map((routeGroup, idx) => (
             <div className="flex flex-col gap-y-1" key={idx}>

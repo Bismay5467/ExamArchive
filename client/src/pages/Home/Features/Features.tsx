@@ -9,23 +9,23 @@ export const cards = [
     description:
       'Discover our comprehensive collection of papers on operating systems, featuring in-depth insights.',
     link: 'https://pornhub.com',
-    icon: <FaLinux className="text-3xl" />,
+    icon: <FaLinux className="text-2xl " />,
     aosDelay: 300,
   },
   {
     title: 'Networking',
     description:
-      'A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.',
+      'Discover our comprehensive collection of papers on computer networks, featuring in-depth insights.',
     link: 'https://pornhub.com',
-    icon: <FaNetworkWired className="text-3xl" />,
+    icon: <FaNetworkWired className="text-2xl" />,
     aosDelay: 400,
   },
   {
     title: 'DBMS',
     description:
-      'A multinational technology company that develops, manufactures, licenses, ',
+      'Discover our comprehensive collection of papers on database management systems, featuring in-depth insights.',
     link: 'https://pornhub.com',
-    icon: <FaDatabase className="text-3xl" />,
+    icon: <FaDatabase className="text-2xl" />,
     aosDelay: 500,
   },
 ];
@@ -38,7 +38,9 @@ export default function Features() {
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="h2 mb-4 leading-snug">
-              The majority of students don&apos;t understand exactly{' '}
+              The majority of students don&apos;t understand exactly
+            </h2>
+            <h2 className="h2 mb-4 leading-snug">
               <Highlight className="px-2">what to study?</Highlight>
             </h2>
           </div>

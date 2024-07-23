@@ -1,36 +1,27 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Image, Card, CardHeader, CardBody } from '@nextui-org/react';
-import TestimonialImage01 from '@/assets/images/testimonial-01.jpg';
-import TestimonialImage02 from '@/assets/images/testimonial-02.jpg';
-import TestimonialImage03 from '@/assets/images/testimonial-03.jpg';
 
 const testimonials = [
   {
-    avatarImg: TestimonialImage01,
-    description: `Open PRO lets me quickly get the insights I care about so
-    that I can focus on my productive work. I've had Open PRO for
-    about 24 hours now and I honestly don't know how I functioned
-    without it before.`,
-    name: 'Dane Greelish',
-    designation: 'BX Designer',
+    avatarImg: 'https://avatars.githubusercontent.com/u/58584158?v=4',
+    description:
+      'Exam Archive is a fantastic resource for accessing previous year question papers across various exams. The bookmark feature allows me to save important papers for quick access later, and the moderation ensures high-quality, relevant content. Highly recommended for efficient and effective exam preparation!',
+    name: 'Srijita P K',
+    designation: 'NITK',
   },
   {
-    avatarImg: TestimonialImage02,
-    description: `Open PRO lets me quickly get the insights I care about so
-    that I can focus on my productive work. I've had Open PRO for
-    about 24 hours now and I honestly don't know how I functioned
-    without it before.`,
-    name: 'Harry Potter',
-    designation: 'BX Designer',
+    avatarImg: 'https://avatars.githubusercontent.com/u/73980183?v=4',
+    description:
+      'Exam Archive has been a game-changer for my exam preparation. The ability to access previous year question papers from various exams is incredibly convenient. The bookmark feature allows me to save important papers for quick reference while the comment section fosters valuable discussions.',
+    name: 'Biplaw Kumar Singh',
+    designation: 'NITK',
   },
   {
-    avatarImg: TestimonialImage03,
-    description: `Open PRO lets me quickly get the insights I care about so
-    that I can focus on my productive work. I've had Open PRO for
-    about 24 hours now and I honestly don't know how I functioned
-    without it before.`,
+    avatarImg: 'https://avatars.githubusercontent.com/u/123952063?v=4',
+    description:
+      'Exam Archive is a fantastic resource for exam prep. Accessing past question papers is easy, and the bookmark feature helps keep important papers handy. The comment section allows for insightful discussions with fellow students, and the moderation ensures reliable content. Highly recommended!',
     name: 'Rahul Maity',
-    designation: 'Rahul Maity',
+    designation: 'NITK',
   },
 ];
 
@@ -52,7 +43,7 @@ export default function Testimonials() {
             {testimonials.map(
               ({ avatarImg, description, designation, name }, idx) => (
                 <Card
-                  className="py-4 dark:bg-gray-800"
+                  className="px-6 py-4 dark:bg-gray-800 text-justify"
                   data-aos="fade-up"
                   key={idx}
                 >
@@ -74,12 +65,12 @@ export default function Testimonials() {
                       </svg>
                     </div>
                   </CardHeader>
-                  <CardBody className="overflow-visible py-2">
-                    <blockquote className="text-lg dark:text-gray-400 grow">
+                  <CardBody className="overflow-visible">
+                    <blockquote className="text-base dark:text-gray-400 grow text-justify">
                       — {description}
                     </blockquote>
                     <div className="dark:text-gray-700 font-medium mt-6 pt-5 border-t dark:border-gray-700">
-                      <cite className="dark:text-gray-200 not-italic">
+                      <cite className="dark:text-gray-200 text-slate-500 not-italic">
                         {name}
                       </cite>{' '}
                       -{' '}
