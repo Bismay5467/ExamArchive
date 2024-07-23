@@ -79,11 +79,11 @@ export default function Preview() {
   }
 
   return (
-    <section className="min-h-[600px] max-w-[1250px] bg-white p-4 mx-auto">
+    <section className="min-h-[600px] max-w-[1250px] p-4 mx-auto">
       {isLoading ? (
         <WFullSekelton className="w-3/5 h-8 rounded-lg" />
       ) : (
-        <h1 className="text-xl font-medium p-4 sm:text-4xl font-natosans text-slate-800">
+        <h1 className="text-xl font-medium p-4 sm:text-4xl font-natosans dark:text-slate-500 text-slate-800">
           <p>
             {formattedSubjectName} ({fileData?.subjectCode})
           </p>

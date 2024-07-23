@@ -14,7 +14,7 @@ export default function InitialDisplay() {
       />
       {loaded === true && (
         <>
-          <p className="text-slate-800 text-sm text-center sm:text-medium">
+          <p className="dark:text-slate-400 text-slate-800 text-sm text-center sm:text-medium">
             Enter comma seperated tags to see relevant results here
           </p>
           <p className="text-slate-500 text-sm text-center sm:text-medium">

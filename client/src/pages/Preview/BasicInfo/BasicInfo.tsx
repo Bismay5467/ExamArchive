@@ -89,7 +89,7 @@ export default function BasicInfo({
   ];
   return (
     <div className={className}>
-      <div className="flex flex-row justify-between text-blue-600">
+      <div className="flex flex-row justify-between dark:text-blue-500 text-blue-600">
         <div className="flex flex-row gap-x-8">
           <span className="flex flex-row gap-x-3">
             <IoBookOutline className="self-center text-xl" />{' '}
@@ -110,7 +110,7 @@ export default function BasicInfo({
           <CustomDropDown menu={dropdownMenu} />
         </div>
       </div>
-      <div className="flex flex-row gap-x-8 text-pink-600">
+      <div className="flex flex-row gap-x-8 dark:text-pink-500 text-pink-600">
         <span className="flex flex-row gap-x-3">
           <IoPersonOutline className="self-center text-xl" />{' '}
           <p>{uploadedBy.username ?? 'ExamArchive user'}</p>
@@ -120,11 +120,11 @@ export default function BasicInfo({
           <p className="self-center">{examType}</p>
         </span>
       </div>
-      <div className="flex flex-row gap-x-3 text-slate-700">
+      <div className="flex flex-row gap-x-3 dark:text-slate-500 text-slate-700">
         <HiOutlineAcademicCap className="self-center text-xl" />
         <p>{institutionName}</p>
       </div>
-      <div className="flex flex-row gap-x-3 text-slate-700">
+      <div className="flex flex-row gap-x-3 dark:text-slate-500 text-slate-700">
         <SiGoogleclassroom className="self-center text-xl" />
         <p>{branch}</p>
       </div>

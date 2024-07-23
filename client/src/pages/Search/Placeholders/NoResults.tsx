@@ -15,7 +15,7 @@ export default function NoResults() {
       />
       {loaded === true && (
         <>
-          <p className="text-slate-800 text-sm text-center sm:text-medium">
+          <p className="dark:text-slate-400 text-slate-800 text-sm text-center sm:text-medium">
             Couldn't find any results with the specified tag(s)
           </p>
           <p className="text-slate-500 text-sm text-center sm:text-medium">

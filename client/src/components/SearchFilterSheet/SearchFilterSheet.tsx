@@ -23,6 +23,7 @@ import { IFilterInputs, TFilterOption } from '@/types/search';
 import { SEARCH_FILTTER_OPTIONS as CONST_SEARCH_FILTTER_OPTIONS } from '@/constants/search';
 import OptionGroup from './OptionGroup/OptionGroup';
 import fetcher from '@/utils/fetcher/fetcher';
+import { useTheme } from '@/hooks/useTheme';
 
 export function SearchFilterSheet() {
   const { setFilters, searchInputs, clearFilters } = useSearch();
@@ -80,6 +81,7 @@ export function SearchFilterSheet() {
   const handleClearFilters = () => {
     clearFilters();
   };
+  const { theme } = useTheme();
 
   return (
     <Sheet>
@@ -93,7 +95,10 @@ export function SearchFilterSheet() {
           <TbFilterSearch className="text-lg" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col gap-y-4 w-[320px] font-natosans">
+      <SheetContent
+        className="flex flex-col gap-y-4 w-[320px] font-natosans"
+        style={{ backgroundColor: theme === 'light' ? '' : '#191919' }}
+      >
         <SheetHeader>
           <SheetTitle className="flex flex-row gap-x-4">
             <IoFilter className="text-2xl font-bold" /> FILTER OPTIONS
@@ -107,7 +112,7 @@ export function SearchFilterSheet() {
                   key={key}
                   aria-label={key}
                   title={
-                    <p className="text-base font-bold text-slate-600">
+                    <p className="text-base font-bold dark:text-slate-400 text-slate-600">
                       {label}
                     </p>
                   }

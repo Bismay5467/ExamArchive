@@ -9,6 +9,7 @@ import Notification from '../../Notification/Notification';
 import sidebarOptions from '@/constants/sidebarOptions';
 import NavCard from '../NavCard/NavCard';
 import UserAvatar from '../../UserAvatar/UserAvatar';
+import { useTheme } from '@/hooks/useTheme';
 
 const ESC_KEY_CODE = 27;
 
@@ -16,7 +17,9 @@ export default function MobileSidebar() {
   const {
     authState: { userId, role },
   } = useAuth();
-  const nonActiveClass = 'text-slate-600';
+  const { theme } = useTheme();
+  const nonActiveClass =
+    theme === 'light' ? 'text-slate-600' : 'text-slate-400';
 
   const [mobileNavOpen, setMobileNavOpen] = useState<boolean>(false);
 
@@ -74,7 +77,7 @@ export default function MobileSidebar() {
       <nav
         id="mobile-sidebar"
         ref={mobileNav}
-        className="fixed sm:hidden bg-[#f7f7f7] z-50 group h-screen overflow-x-hidden transition-all duration-300 ease-in-out font-natosans"
+        className="fixed sm:hidden dark:bg-[#191919] bg-[#f7f7f7] z-50 group h-screen overflow-x-hidden transition-all duration-300 ease-in-out font-natosans"
         style={
           mobileNavOpen
             ? { maxWidth: mobileNav.current?.scrollWidth, opacity: 1 }
@@ -83,11 +86,7 @@ export default function MobileSidebar() {
       >
         <div className="h-screen relative w-[240px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
-            <img
-              src={LogoBanner}
-              alt="LOGO"
-              className="mix-blend-multiply w-[250px]"
-            />
+            <img src={LogoBanner} alt="LOGO" className="w-[250px]" />
           </NavLink>
           {sidebarOptions(role, userId!).map((routeGroup, idx) => (
             <div className="flex flex-col gap-y-1" key={idx}>

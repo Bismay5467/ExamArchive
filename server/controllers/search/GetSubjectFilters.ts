@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
@@ -8,6 +9,8 @@ import redisClient from '../../config/redisConfig';
 import { SERVER_ERROR, SUCCESS_CODES } from '../../constants/statusCode';
 
 const REDIS_KEY = 'SUBJECT_FILTERS';
+
+const REDIS_TTL = 24 * 60 * 60;
 
 const GetSubjectFilters = asyncErrorHandler(
   async (_req: Request, res: Response) => {
@@ -26,7 +29,7 @@ const GetSubjectFilters = asyncErrorHandler(
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .exec();
-    await redisClient.set(REDIS_KEY, JSON.stringify(result));
+    await redisClient.set(REDIS_KEY, JSON.stringify(result), 'EX', REDIS_TTL);
     return res.status(SUCCESS_CODES.OK).json({ data: result });
   }
 );

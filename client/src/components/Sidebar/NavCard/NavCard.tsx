@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import React from 'react';
 import { cn } from '@nextui-org/theme';
 import IconWrapper from './IconWrapper/IconWrapper';
+import { useTheme } from '@/hooks/useTheme';
 
 export default function NavCard({
   link,
@@ -19,9 +20,11 @@ export default function NavCard({
   isReady: boolean;
   setMobileNavOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { theme } = useTheme();
   const activeClass = 'text-pink-600';
-  const nonActiveClass = 'text-slate-600';
-  const disabledClass = 'text-slate-400';
+  const nonActiveClass =
+    theme === 'light' ? 'text-slate-600' : 'text-slate-400';
+  const disabledClass = theme === 'light' ? 'text-slate-400' : 'text-slate-600';
   return (
     <NavLink
       to={link}
