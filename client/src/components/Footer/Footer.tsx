@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { FaHeart } from 'react-icons/fa';
-import LogoBanner from '../../assets/logo-dark-no-bg.png';
+import LogoBanner from '../../assets/logo-banner-no-bg.png';
 import { AnimatedTooltip } from '../ui/animated-tooltip';
 
 const people = [

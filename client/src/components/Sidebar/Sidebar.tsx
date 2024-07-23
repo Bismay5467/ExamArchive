@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
-import logo from '@/assets/logo-dark-no-bg.png';
+import LogoBanner from '@/assets/logo-banner-no-bg.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
@@ -22,7 +22,7 @@ export default function Sidebar() {
         <div className="relative h-[700px] w-[260px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
-              src={logo}
+              src={LogoBanner}
               alt="LOGO"
               className="mix-blend-multiply w-[250px]"
             />

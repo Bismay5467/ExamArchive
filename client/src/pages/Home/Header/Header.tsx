@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@nextui-org/react';
+import { Button, Image } from '@nextui-org/react';
 import { CLIENT_ROUTES } from '@/constants/routes';
-import Logo from '@/assets/logo-dark-no-bg.png';
+import LogoBanner from '@/assets/logo-banner-no-bg.png';
+import Logo from '@/assets/logo-no-bg.png';
 import { useAuth } from '@/hooks/useAuth';
 import UserAvatar from '@/components/UserAvatar/UserAvatar';
 import ModeToggle from '@/components/ModeToggle';
@@ -24,7 +25,12 @@ export default function Header() {
               className="block"
               aria-label="Exam-Archive"
             >
-              <img src={Logo} alt="banner" className="w-[300px]" />
+              <Image
+                src={LogoBanner}
+                alt="banner"
+                className="hidden w-[300px] lg:block"
+              />
+              <Image src={Logo} alt="banner" className="w-[40px] lg:hidden" />
             </Link>
           </div>
 

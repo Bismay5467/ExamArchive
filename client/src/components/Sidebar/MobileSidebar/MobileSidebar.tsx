@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
-import logo from '@/assets/Logo.png';
+import LogoBanner from '@/assets/logo-banner-no-bg.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../../ModeToggle';
 import Notification from '../../Notification/Notification';
@@ -84,13 +84,10 @@ export default function MobileSidebar() {
         <div className="h-screen relative w-[240px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
-              src={logo}
+              src={LogoBanner}
               alt="LOGO"
-              className="mix-blend-multiply w-[45px]"
+              className="mix-blend-multiply w-[250px]"
             />
-            <h1 className="self-center text-xl font-semibold text-[#545454]">
-              EXAM ARCHIVE
-            </h1>
           </NavLink>
           {sidebarOptions(role, userId!).map((routeGroup, idx) => (
             <div className="flex flex-col gap-y-1" key={idx}>
