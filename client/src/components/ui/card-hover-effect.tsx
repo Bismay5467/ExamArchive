@@ -21,7 +21,7 @@ export const HoverEffect = ({
   return (
     <div
       className={cn(
-        'grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-4',
+        'grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-4 font-natosans',
         className
       )}
     >
@@ -60,7 +60,7 @@ export const HoverEffect = ({
               <span className="p-2 text-purple-700 self-center">{icon}</span>
               <h4 className="h4 self-center">{title}</h4>
             </CardHeader>
-            <CardBody className="px-3 text-base sm:text-justify">
+            <CardBody className="px-3 text-sm dark:text-slate-400 text-slate-700">
               {description}
             </CardBody>
           </Card>
