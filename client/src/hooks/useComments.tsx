@@ -3,7 +3,7 @@
 /* eslint-disable function-paren-newline */
 import useSWRInfinite, { SWRInfiniteKeyLoader } from 'swr/infinite';
 import { toast } from 'sonner';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   getCommentsObj,
@@ -21,12 +21,15 @@ import {
 import { RETRACE_VOTE, TEMP_COMMENT_ID, VOTE } from '@/constants/shared';
 import { useAuth } from './useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 export const useComments = (commentType: TCommentType, parentId?: string) => {
   const {
-    authState: { username, userId, jwtToken },
+    authState: { username, userId, jwtToken, isAuth },
   } = useAuth();
   const { paperid: postId } = useParams();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [startFetching, setStartFetching] = useState<boolean>(false);
   const [isLastPage, setIsLastPage] = useState<boolean>(false);
 
@@ -275,6 +278,9 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
   });
 
   const handleCreateComment = async (message: string) => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!postId) {
       toast.error('Somthing went wrong!', {
         description: 'Unknown error',
@@ -305,6 +311,9 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
   };
 
   const handleDeleteComment = async (commentId: string) => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!postId) {
       toast.error('Somthing went wrong!', {
         description: 'Unknown error',
@@ -334,6 +343,9 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
   };
 
   const handleEditComment = async (commentId: string, message: string) => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!postId) {
       toast.error('Somthing went wrong!', {
         description: 'Unknown error',
@@ -366,6 +378,9 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
     commentId: string,
     reaction: TReaction
   ) => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!postId) {
       toast.error('Somthing went wrong!', {
         description: 'Unknown error',
@@ -402,6 +417,9 @@ export const useComments = (commentType: TCommentType, parentId?: string) => {
     commentId: string,
     reaction: TReaction
   ) => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!postId) {
       toast.error('Somthing went wrong!', {
         description: 'Unknown error',

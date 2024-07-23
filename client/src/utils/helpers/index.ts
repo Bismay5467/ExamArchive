@@ -1,5 +1,6 @@
 /* eslint-disable function-paren-newline */
 import { TYear } from '@/types/search';
+import { IsUserAuthenticated } from './IsUserAuthenticated';
 
 export const parseUTC = (timeStamp: string) => {
   const date = new Date(timeStamp);
@@ -18,3 +19,5 @@ export const getPreviousYears = (yearFilter: TYear) => {
   );
   return years;
 };
+
+export { IsUserAuthenticated };

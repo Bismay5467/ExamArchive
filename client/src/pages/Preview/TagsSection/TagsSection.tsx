@@ -13,12 +13,14 @@ import React, { useEffect, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { KeyedMutator } from 'swr';
 import { FaHashtag } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TagsEditor from '@/components/TagsEditor/TagsEditor';
 import { editTagsObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 import Tag from '@/components/Tags';
 import { KEY_CODES } from '@/constants/shared';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 const MAX_TAGS_TO_DISPLAY = 3;
 
@@ -38,10 +40,15 @@ export default function TagsSection({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
-    authState: { jwtToken, userId },
+    authState: { jwtToken, userId, isAuth },
   } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const isDeletable = userId === uploaderId;
   const handleSubmit = async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!isEditing) {
       setIsEditing(true);
       return;
