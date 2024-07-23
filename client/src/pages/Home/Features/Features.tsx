@@ -1,54 +1,31 @@
-import { FaStarAndCrescent } from 'react-icons/fa6';
+import { FaNetworkWired } from 'react-icons/fa6';
+import { FaDatabase, FaLinux } from 'react-icons/fa';
 import { Highlight } from '@/components/ui/hero-highlight';
 import { HoverEffect } from '@/components/ui/card-hover-effect';
 
 export const cards = [
   {
-    title: 'Stripe',
+    title: 'Operating systems',
     description:
-      'A technology company that builds economic infrastructure for the internet.',
+      'Discover our comprehensive collection of papers on operating systems, featuring in-depth insights.',
     link: 'https://pornhub.com',
-    icon: <FaStarAndCrescent className="text-3xl" />,
-    aosDelay: 0,
-  },
-  {
-    title: 'Netflix',
-    description:
-      'A streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.',
-    link: 'https://pornhub.com',
-    icon: <FaStarAndCrescent className="text-3xl" />,
-    aosDelay: 100,
-  },
-  {
-    title: 'Google',
-    description:
-      'A multinational technology company that specializes in Internet-related services and products.',
-    link: 'https://pornhub.com',
-    icon: <FaStarAndCrescent className="text-3xl" />,
-    aosDelay: 200,
-  },
-  {
-    title: 'Meta',
-    description:
-      "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
-    link: 'https://pornhub.com',
-    icon: <FaStarAndCrescent className="text-3xl" />,
+    icon: <FaLinux className="text-3xl" />,
     aosDelay: 300,
   },
   {
-    title: 'Amazon',
+    title: 'Networking',
     description:
       'A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.',
     link: 'https://pornhub.com',
-    icon: <FaStarAndCrescent className="text-3xl" />,
+    icon: <FaNetworkWired className="text-3xl" />,
     aosDelay: 400,
   },
   {
-    title: 'Microsoft',
+    title: 'DBMS',
     description:
       'A multinational technology company that develops, manufactures, licenses, ',
     link: 'https://pornhub.com',
-    icon: <FaStarAndCrescent className="text-3xl" />,
+    icon: <FaDatabase className="text-3xl" />,
     aosDelay: 500,
   },
 ];
