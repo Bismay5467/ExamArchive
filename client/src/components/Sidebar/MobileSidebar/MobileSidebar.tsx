@@ -93,7 +93,7 @@ export default function MobileSidebar() {
               {routeGroup.map(({ icon, isReady, key, link }) => (
                 <NavCard
                   icon={icon}
-                  className="flex flex-row gap-x-4 py-2 px-1 rounded-lg hover:bg-white"
+                  className="flex flex-row gap-x-4 py-2 px-1 rounded-lg"
                   setMobileNavOpen={setMobileNavOpen}
                   link={link}
                   isReady={isReady}
@@ -104,7 +104,7 @@ export default function MobileSidebar() {
             </div>
           ))}
           <div className="flex flex-col gap-y-2 mt-auto">
-            <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg hover:bg-white hover:cursor-pointer">
+            <div className="flex flex-row gap-x-4 py-2 px-1 rounded-lg hover:cursor-pointer">
               <IconWrapper className="self-center">
                 <Notification
                   applicationIdentifier={
