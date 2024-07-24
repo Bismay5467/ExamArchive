@@ -4,9 +4,8 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { IoFilter } from 'react-icons/io5';
 import { TbFilterSearch } from 'react-icons/tb';
-import useSWR from 'swr';
 import { AxiosRequestConfig } from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { LuCheckCircle } from 'react-icons/lu';
 import { MdClear } from 'react-icons/md';
 import {
@@ -20,15 +19,12 @@ import {
 } from '@/components/ui/sheet';
 import { SERVER_ROUTES } from '@/constants/routes';
 import { useSearch } from '@/hooks/useSearch';
-import { IFilterInputs } from '@/types/search';
-import { SEARCH_FILTTER_OPTIONS } from '@/constants/search';
+import { IFilterInputs, TFilterOption } from '@/types/search';
+import { SEARCH_FILTTER_OPTIONS as CONST_SEARCH_FILTTER_OPTIONS } from '@/constants/search';
 import OptionGroup from './OptionGroup/OptionGroup';
+import fetcher from '@/utils/fetcher/fetcher';
 
 export function SearchFilterSheet() {
-  const requestObj: AxiosRequestConfig<any> = {
-    url: `${SERVER_ROUTES.SEARCH}/getSubjectFilters`,
-    method: 'GET',
-  };
   const { setFilters, searchInputs, clearFilters } = useSearch();
   const [filter, setFilter] = useState<IFilterInputs>({
     subjectName: undefined,
@@ -36,11 +32,20 @@ export function SearchFilterSheet() {
     year: undefined,
     sortFilter: undefined,
   });
-  const { data: response } = useSWR(requestObj);
+  // eslint-disable-next-line camelcase
+  const [SEARCH_FILTTER_OPTIONS, setSEARCH_FILTTER_OPTIONS] = useState<
+    Array<TFilterOption>
+  >(CONST_SEARCH_FILTTER_OPTIONS);
 
-  useEffect(() => {
-    if (response) {
-      SEARCH_FILTTER_OPTIONS.push({
+  const handleGetSubjectFilters = useCallback(async () => {
+    const requestObj: AxiosRequestConfig<any> = {
+      url: `${SERVER_ROUTES.SEARCH}/getSubjectFilters`,
+      method: 'GET',
+    };
+
+    try {
+      const response = await fetcher(requestObj);
+      const newOptions: TFilterOption = {
         component: 'autocomplete',
         key: 'subjectName',
         label: 'Subject Name',
@@ -53,9 +58,16 @@ export function SearchFilterSheet() {
             .join(' '),
         })),
         multiple: false,
-      });
+      };
+      setSEARCH_FILTTER_OPTIONS((prev) => [...prev, newOptions]);
+    } catch (err: any) {
+      console.warn(err);
     }
-  }, [JSON.stringify(response)]);
+  }, []);
+
+  useEffect(() => {
+    handleGetSubjectFilters();
+  }, []);
 
   useEffect(() => {
     const { subjectName, examType, year, sortFilter } = searchInputs;

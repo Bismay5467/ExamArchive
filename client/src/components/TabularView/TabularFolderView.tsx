@@ -309,6 +309,7 @@ export default function TabularFolderView({
           className="gap-2"
           radius="full"
           renderItem={RenderItems}
+          onChange={setPage}
           variant="light"
         />
       </div>

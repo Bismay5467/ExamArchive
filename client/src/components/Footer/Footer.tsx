@@ -1,13 +1,30 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { FaHeart } from 'react-icons/fa';
-import { LinkedIn } from '@/constants/shared.ts';
-import LogoBanner from '../../assets/LogoBanner.png';
+import LogoBanner from '../../assets/logo-banner-no-bg.png';
+import { AnimatedTooltip } from '../ui/animated-tooltip';
+
+const people = [
+  {
+    id: 1,
+    name: 'Arkojeet Bera',
+    designation: 'Software Engineer',
+    image: 'https://avatars.githubusercontent.com/u/73406774?v=4',
+    redirectURL: 'https://www.linkedin.com/in/arkojeet-bera/',
+  },
+  {
+    id: 2,
+    name: 'Bismay Purkayastha',
+    designation: 'Software Engineer',
+    image: 'https://avatars.githubusercontent.com/u/54050465?v=4',
+    redirectURL: 'https://www.linkedin.com/in/bismay-purkayastha-4a63a6179/',
+  },
+];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
+    <footer className="bg-white rounded-lg shadow-lg dark:bg-gray-900 m-4">
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <a
@@ -40,30 +57,15 @@ export default function Footer() {
           </ul>
         </div>
         <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © {currentYear}{' '}
-          <a href="#" className="hover:underline">
-            ExamArchive™
-          </a>
-          . Made with <FaHeart className="inline text-xl text-red-600" /> by{' '}
-          <a
-            className="font-semibold"
-            href={LinkedIn.Arkojeet}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Arkojeet
-          </a>{' '}
-          &{' '}
-          <a
-            className="font-semibold"
-            href={LinkedIn.Bismay}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Bismay
-          </a>
-        </span>
+        <div className="flex flex-col sm:flex-row text-sm text-gray-500 gap-x-2 justify-center sm:text-center dark:text-gray-400">
+          <span className="self-center">
+            © {currentYear} ExamArchive™ . Made with{' '}
+            <FaHeart className="inline text-xl text-red-600" /> by{' '}
+          </span>
+          <div className="flex flex-row self-center items-center justify-center w-fit">
+            <AnimatedTooltip items={people} />
+          </div>
+        </div>
       </div>
     </footer>
   );

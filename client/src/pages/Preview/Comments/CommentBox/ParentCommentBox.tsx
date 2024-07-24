@@ -6,7 +6,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import { FaRegComment } from 'react-icons/fa6';
 import { useEffect, useMemo, useState } from 'react';
-import { IoFlagOutline } from 'react-icons/io5';
+import { IoFlagOutline, IoPersonOutline } from 'react-icons/io5';
 import { IComment, ICommentMutations, IDropDownProps } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
 import { useAuth } from '@/hooks/useAuth';
@@ -19,6 +19,7 @@ import ReplyCommentForm from '../CommentForm/ReplyCommentForm';
 import WarningModal from '@/components/WarningModal/WarningModal';
 import CommentShimmer from '../../Shimmer/Shimmer';
 import CustomDropDown from '@/components/Dropdown';
+import { getAvatar } from '@/constants/auth';
 
 export default function ParentCommentBox({
   commentData,
@@ -156,8 +157,9 @@ export default function ParentCommentBox({
             <Avatar
               isBordered
               radius="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              src={getAvatar(username)}
               className="h-7 w-7 sm:h-9 sm:w-9"
+              fallback={<IoPersonOutline className="text-xl" />}
             />
             <span className="self-center font-medium sm:text-medium">
               {username}

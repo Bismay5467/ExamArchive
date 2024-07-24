@@ -37,6 +37,7 @@ export interface ISearchInputs extends IFilterInputs {
 
 export interface ISearchContext {
   searchInputs: ISearchInputs;
+  isEmptySearch: boolean;
   swrResponse: SWRInfiniteResponse<any, any>;
   setSearchParam(_query: string): void;
   setFilters(_filters: IFilterInputs): void;

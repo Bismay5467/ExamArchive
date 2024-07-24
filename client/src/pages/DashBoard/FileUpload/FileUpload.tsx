@@ -1,15 +1,15 @@
 import { Tabs, Tab } from '@nextui-org/react';
 import { PiFiles } from 'react-icons/pi';
 import { IoCloudUploadOutline } from 'react-icons/io5';
-import { Outlet } from 'react-router-dom';
 import FileUploadForm from './FileUploadForm/FileUploadForm';
 import { ITabOption } from '@/types/upload';
+import DisplayAllFiles from './DisplayFiles';
 
 const tabOptions: ITabOption[] = [
   {
     key: 'display',
     title: { icon: <PiFiles className="text-2xl" />, title: 'All Files' },
-    children: <Outlet />,
+    children: <DisplayAllFiles />,
   },
   {
     key: 'upload',
@@ -23,7 +23,7 @@ const tabOptions: ITabOption[] = [
 
 export default function FileUpload() {
   return (
-    <div className="flex max-w-[1200px] px-4 mx-auto flex-col">
+    <div className="flex max-w-[1200px] gap-y-4 px-4 mx-auto flex-col font-natosans sm:gap-y-0">
       <Tabs
         aria-label="Options"
         color="primary"

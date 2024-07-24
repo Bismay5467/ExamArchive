@@ -24,18 +24,17 @@ export default function Hero() {
     },
   ];
   const placeholders = [
-    "What's the first rule of Fight Club?",
-    'Who is Tyler Durden?',
-    'Where is Andrew Laeddis Hiding?',
-    'Write a Javascript method to reverse a string',
-    'How to assemble your own PC?',
+    'Paging, Segmentation',
+    'Lan, Networks',
+    'Variance, Mean, Median',
+    'Normalisation, Transitive Property',
   ];
   return (
     <section>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+      <div className="max-w-6xl mx-auto px-4 relative sm:px-6 flex flex-col justify-center min-h-[700px]">
         {/* Illustration behind hero content */}
         <div
-          className="absolute left-0 bottom-0 -ml-20 hidden lg:block pointer-events-none"
+          className="absolute left-0 top-0 -ml-20 hidden lg:block pointer-events-none"
           aria-hidden="true"
           data-aos="fade-up"
           data-aos-delay="400"
@@ -71,7 +70,7 @@ export default function Hero() {
         </div>
 
         {/* Hero content */}
-        <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
+        <div className="relative pt-32 pb-10 md:pt-40 md:pb-16 my-auto">
           {/* Section header */}
           <div className="max-w-4xl mx-auto text-center pb-12 md:pb-16">
             <p className="text-xl mb-2" data-aos="fade-up" data-aos-delay="200">

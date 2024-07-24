@@ -12,13 +12,15 @@ export const getQuery = ({
   examType?: Array<string>;
   searchParams: Array<string>;
 }) => {
-  const tags = searchParams;
+  const tags = searchParams.filter(Boolean);
   const query = {
-    tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
     isFlagged: false,
     status: FILE_UPLOAD_STATUS.UPLOADED,
   };
   Object.assign(query, {
+    ...(tags.length > 0 && {
+      tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
+    }),
     ...(examType && examType.length > 0 && { examType: { $in: examType } }),
     ...(subjectName && { subjectName: new RegExp(`^${subjectName}$`, 'i') }),
     ...(year && year.length > 0 && { year: { $in: year } }),

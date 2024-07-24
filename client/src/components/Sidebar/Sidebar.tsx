@@ -1,22 +1,16 @@
 import { NavLink } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { useState } from 'react';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import IconWrapper from '@/components/Sidebar/NavCard/IconWrapper/IconWrapper';
-import logo from '@/assets/Logo.png';
+import LogoBanner from '@/assets/logo-banner-no-bg.png';
 import { useAuth } from '@/hooks/useAuth';
 import ModeToggle from '../ModeToggle';
 import Notification from '../Notification/Notification';
-import { AUTH_TOKEN } from '@/constants/auth';
 import sidebarOptions from '@/constants/sidebarOptions';
 import NavCard from './NavCard/NavCard';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import MobileSidebar from './MobileSidebar/MobileSidebar';
 
 export default function Sidebar() {
-  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
-  // TODO: Remove Manual setting of cookie afterwards
-  Cookies.set(AUTH_TOKEN, token);
   const {
     authState: { userId, role },
   } = useAuth();
@@ -28,13 +22,10 @@ export default function Sidebar() {
         <div className="relative h-[700px] w-[260px] flex flex-col gap-y-16 p-3">
           <NavLink to={CLIENT_ROUTES.HOME} className="flex flex-row gap-x-2">
             <img
-              src={logo}
+              src={LogoBanner}
               alt="LOGO"
-              className="mix-blend-multiply w-[45px]"
+              className="mix-blend-multiply w-[250px]"
             />
-            <h1 className="self-center text-xl font-semibold text-[#545454] hidden group-hover:block">
-              EXAM ARCHIVE
-            </h1>
           </NavLink>
           {sidebarOptions(role, userId!).map((routeGroup, idx) => (
             <div className="flex flex-col gap-y-1" key={idx}>
@@ -67,13 +58,13 @@ export default function Sidebar() {
               </p>
             </div>
             <div className="flex px-1 py-2 flex-row justify-between">
-              <UserAvatar setToken={setToken} />
+              <UserAvatar sideBarClasses="sm:hidden sm:group-hover:block" />
               <ModeToggle className="hover:cursor-pointer self-center" />
             </div>
           </div>
         </div>
       </nav>
-      <MobileSidebar setToken={setToken} />
+      <MobileSidebar />
     </>
   );
 }

@@ -1,7 +1,10 @@
 import { Avatar, Button } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React from 'react';
+import { IoPersonOutline } from 'react-icons/io5';
 import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/hooks/useAuth';
+import { getAvatar } from '@/constants/auth';
 // import { useComments } from '@/hooks/useComments';
 
 interface commentFormInput {
@@ -20,6 +23,9 @@ export default function ReplyCommentForm({
   handleCreateComment: (_message: string) => Promise<void>;
 }) {
   const { register, handleSubmit, reset } = useForm<commentFormInput>();
+  const {
+    authState: { username },
+  } = useAuth();
 
   const onSubmit: SubmitHandler<commentFormInput> = (formData) => {
     handleCreateComment(formData.message);
@@ -36,7 +42,8 @@ export default function ReplyCommentForm({
         radius="sm"
         size="sm"
         className="self-start"
-        src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+        src={getAvatar(username ?? 'G')}
+        fallback={<IoPersonOutline className="text-xl" />}
       />
       <div className="w-full">
         <form

@@ -13,7 +13,7 @@ import { CiBookmarkPlus } from 'react-icons/ci';
 import { useState } from 'react';
 import useSWR from 'swr';
 import ReportModal from '@/components/ReportModal/ReportModal';
-import BookmarksModal from '../BookmarksModal/BookmarksModal';
+import BookmarksModal from './BookmarksModal/BookmarksModal';
 import { IFileData } from '@/types/file';
 import CustomDropDown from '@/components/Dropdown';
 import { IDropDownProps } from '@/types/comments';

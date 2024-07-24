@@ -5,7 +5,7 @@ import { BsReply } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { CiEdit } from 'react-icons/ci';
 import React, { useMemo, useState } from 'react';
-import { IoFlagOutline } from 'react-icons/io5';
+import { IoFlagOutline, IoPersonOutline } from 'react-icons/io5';
 import { Textarea } from '@/components/ui/textarea';
 import { IComment, ICommentMutations, IDropDownProps } from '@/types/comments';
 import { monthNames } from '@/constants/shared';
@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import ReportModal from '@/components/ReportModal/ReportModal';
 import WarningModal from '@/components/WarningModal/WarningModal';
 import CustomDropDown from '@/components/Dropdown';
+import { getAvatar } from '@/constants/auth';
 
 export default function ReplyCommentBox({
   replyCommentData,
@@ -129,7 +130,8 @@ export default function ReplyCommentBox({
         radius="sm"
         size="md"
         className="self-start mt-2 h-7 w-7 sm:h-9 sm:w-9"
-        src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+        src={getAvatar(username)}
+        fallback={<IoPersonOutline className="text-xl" />}
       />
 
       <div className="w-full flex flex-col gap-y-4">

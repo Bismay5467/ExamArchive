@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   Modal,
   ModalContent,
@@ -12,15 +9,18 @@ import {
   Spinner,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { KeyedMutator } from 'swr';
 import { FaHashtag } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TagsEditor from '@/components/TagsEditor/TagsEditor';
 import { editTagsObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
 import Tag from '@/components/Tags';
+import { KEY_CODES } from '@/constants/shared';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 const MAX_TAGS_TO_DISPLAY = 3;
 
@@ -40,10 +40,15 @@ export default function TagsSection({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
-    authState: { jwtToken, userId },
+    authState: { jwtToken, userId, isAuth },
   } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const isDeletable = userId === uploaderId;
   const handleSubmit = async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!isEditing) {
       setIsEditing(true);
       return;
@@ -95,42 +100,40 @@ export default function TagsSection({
     setCurrentTags(tags);
   }, [isOpen, tags]);
 
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
-    <div className="flex flex-col gap-y-2 font-natosans">
-      <h2>Tags:</h2>
-      <div className="flex flex-row flex-wrap gap-x-2">
+    <div className="flex flex-row gap-x-4 font-natosans">
+      <div>Tags: </div>
+      <div className="flex flex-row flex-wrap gap-2">
         {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (
           <Tag
             val={val}
             key={idx}
             classNames={{
-              base: 'bg-violet-100 border-small border-violet-700',
+              base: 'bg-violet-100 self-center border-small border-violet-700',
               content: 'text-violet-700',
             }}
           />
         ))}
-        {tags.length > MAX_TAGS_TO_DISPLAY && (
-          <div
-            onClick={onOpen}
-            className="hover:cursor-pointer text-sm text-indigo-800 self-center"
-          >
-            +{tags.length - MAX_TAGS_TO_DISPLAY} more
-          </div>
-        )}
-        {tags.length <= MAX_TAGS_TO_DISPLAY && (
-          <div
-            onClick={onOpen}
-            className="hover:cursor-pointer text-sm text-indigo-800 self-center"
-          >
-            Add more tags
-          </div>
-        )}
+        <Button
+          className="pl-3 text-sm text-blue-600 self-center hover:cursor-pointer"
+          size="sm"
+          variant="light"
+          onClick={onOpen}
+        >
+          Show more
+        </Button>
       </div>
       <Modal
         isOpen={isOpen}
+        placement="center"
         onOpenChange={onOpenChange}
         radius="sm"
         className="font-natosans"
+        onKeyDown={handleKeyEvent}
       >
         <ModalContent>
           {() => (

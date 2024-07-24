@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -12,11 +12,13 @@ import {
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { CiFlag1 } from 'react-icons/ci';
-import { reportReasons } from '@/constants/shared';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { KEY_CODES, reportReasons } from '@/constants/shared';
 import { reportObj } from '@/utils/axiosReqObjects';
 import { TContentType } from '@/types/report';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 interface IReportModalProps {
   isOpen: boolean;
@@ -35,12 +37,17 @@ export default function ReportModal({
 }: IReportModalProps) {
   const [reportRank, setReportRank] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const {
-    authState: { jwtToken },
+    authState: { jwtToken, isAuth },
   } = useAuth();
 
   const handleSubmit = async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!reportRank) {
       toast.error('Please select one of the provided options!', {
         duration: 5000,
@@ -85,13 +92,18 @@ export default function ReportModal({
     onClose();
   };
 
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      placement="top-center"
+      placement="center"
       className="font-natosans"
       radius="sm"
+      onKeyDown={handleKeyEvent}
     >
       <ModalContent>
         {() => (
@@ -132,6 +144,7 @@ export default function ReportModal({
                 Cancel
               </Button>
               <Button
+                id="sexy"
                 radius="sm"
                 color="primary"
                 variant="bordered"
@@ -140,6 +153,7 @@ export default function ReportModal({
                   startContent: <Spinner color="secondary" size="sm" />,
                 })}
                 isDisabled={isLoading}
+                type="submit"
               >
                 Report
               </Button>

@@ -7,23 +7,35 @@ import {
 } from '@nextui-org/react';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { LiaSignOutAltSolid } from 'react-icons/lia';
-import React from 'react';
+import { JSX, useEffect, useState } from 'react';
+import { IoPersonOutline } from 'react-icons/io5';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import {
   TEMP_JWT_TOKEN_HARDCODED_USER,
   TEMP_JWT_TOKEN_HARDCODED_ADMIN,
   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 } from '@/constants/shared';
+import { AUTH_TOKEN, getAvatar } from '@/constants/auth';
+import quickLinks from '@/constants/quickLinks';
 
 export default function UserAvatar({
-  setToken,
+  sideBarClasses,
 }: {
-  setToken: React.Dispatch<React.SetStateAction<string>>;
+  sideBarClasses?: string;
 }) {
+  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
+  // TODO: Remove Manual setting of cookie afterwards
+  useEffect(() => {
+    if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
+  }, [token]);
   const {
-    authState: { username, role },
+    authState: { username, role, userId },
     RESET,
   } = useAuth();
+  const navigate = useNavigate();
+
   const iconClasses =
     'text-xl text-slate-700 pointer-events-none flex-shrink-0';
   return (
@@ -33,13 +45,14 @@ export default function UserAvatar({
           <Avatar
             isBordered
             radius="sm"
-            src="https://i.pravatar.cc/150?u=a04258114e29026302d"
+            src={getAvatar(username ?? 'G')}
+            fallback={<IoPersonOutline className="text-xl" />}
           />
           <div>
-            <p className="self-center text-sm sm:hidden sm:group-hover:block">
+            <p className={`self-center text-sm ${sideBarClasses}`}>
               {username}
             </p>
-            <p className="self-center text-sm opacity-60 sm:hidden sm:group-hover:block">
+            <p className={`self-center text-sm opacity-60 ${sideBarClasses}`}>
               @{role.toLowerCase()}
             </p>
           </div>
@@ -76,6 +89,18 @@ export default function UserAvatar({
         >
           Super Admin
         </DropdownItem>
+        {
+          quickLinks(role, userId!).map(({ key, link, icon }) => (
+            <DropdownItem
+              key={key}
+              onClick={() => navigate(link)}
+              className="sm:hidden"
+              startContent={icon}
+            >
+              {key}
+            </DropdownItem>
+          )) as unknown as JSX.Element
+        }
         <DropdownItem
           key="signout"
           startContent={<LiaSignOutAltSolid className={iconClasses} />}

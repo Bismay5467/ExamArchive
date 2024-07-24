@@ -10,7 +10,7 @@ export function PDFViewer({ pdfURL }: { pdfURL: string }) {
   const { EnterFullScreenButton } = fullScreenPluginInstance;
   return (
     <Worker workerUrl={PDF_WORKER_URL}>
-      <div className="h-[750px] drop-shadow-lg overflow-y-hidden">
+      <div className="h-[700px] sm:h-[750px] drop-shadow-lg overflow-y-hidden">
         <div
           style={{
             alignItems: 'center',

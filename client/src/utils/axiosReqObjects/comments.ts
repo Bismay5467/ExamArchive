@@ -12,14 +12,20 @@ export const getCommentsObj = (
   { postId, page, parentId, commentType }: IGetComments,
   jwtToken: string | undefined
 ) => {
-  const params = { postId, page, commentType, ...(parentId && { parentId }) };
-  if (!jwtToken) return null;
+  const params = {
+    postId,
+    page,
+    commentType,
+    ...(parentId && { parentId }),
+  };
+  // if (!jwtToken) return null;
   const requestObj: AxiosRequestConfig<any> = {
     url: `${SERVER_ROUTES.COMMENT}/get`,
     params,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwtToken}`,
+      ...(jwtToken && { Authorization: `Bearer ${jwtToken}` }),
+      // Authorization: `Bearer ${jwtToken}`,
     },
     method: 'GET',
   };

@@ -92,9 +92,9 @@ export default function Upload({
     }
     try {
       await fetcher(folderDetails);
-    } catch (err) {
+    } catch (err: any) {
       toast('Somthing went wrong!', {
-        description: `${err}`,
+        description: `${err.response.data.message}`,
         duration: 5000,
       });
       setCollectionName('');

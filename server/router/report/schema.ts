@@ -35,5 +35,5 @@ export const takeActionInputSchema = z.object({
   reportId: z.string().refine((reportId) => Types.ObjectId.isValid(reportId)),
   postId: z.string().refine((postId) => Types.ObjectId.isValid(postId)),
   contentType: z.enum(['COMMENT', 'POST']),
-  action: z.enum(['RESOLVE', 'UNRESOLVE']),
+  action: z.enum(['FLAG', 'MARK AS SPAM', 'UNRESOLVE']),
 });

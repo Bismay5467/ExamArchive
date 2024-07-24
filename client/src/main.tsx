@@ -16,11 +16,12 @@ import './index.css';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import { ROLES } from './constants/auth.ts';
 import ForbiddenPage from './pages/Forbidden.tsx';
+import { CLIENT_ROUTES } from './constants/routes.ts';
 
 const Preview = React.lazy(() => import('./pages/Preview/Preview.tsx'));
-const Signup = React.lazy(() => import('./pages/Auth/Signup/Signup.tsx'));
-const Login = React.lazy(() => import('./pages/Auth/Login/Login.tsx'));
+const Auth = React.lazy(() => import('./pages/Auth/Auth.tsx'));
 const Reset = React.lazy(() => import('./pages/Auth/Reset/Reset.tsx'));
+const AuthTabs = React.lazy(() => import('./pages/Auth/AuthTabs/AuthTabs.tsx'));
 const DashBoard = React.lazy(() => import('@/pages/DashBoard/DashBoard.tsx'));
 const Profile = React.lazy(
   () => import('@/pages/DashBoard/Profile/Profile.tsx')
@@ -95,9 +96,17 @@ const router = createBrowserRouter(
         </Route>
         <Route path="analytics" element={<Analytics />} />
       </Route>
-      <Route path="auth/login" element={<Login />} />
-      <Route path="auth/signup" element={<Signup />} />
-      <Route path="auth/reset" element={<Reset />} />
+      <Route path="auth" element={<Auth />}>
+        <Route
+          path="login"
+          element={<AuthTabs route={CLIENT_ROUTES.AUTH_LOGIN} />}
+        />
+        <Route
+          path="signup"
+          element={<AuthTabs route={CLIENT_ROUTES.AUTH_SIGNUP} />}
+        />
+        <Route path="reset" element={<Reset />} />
+      </Route>
     </Route>
   )
 );

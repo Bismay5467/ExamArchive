@@ -1,7 +1,10 @@
 import express from 'express';
 
+import { ROLE } from '../../../constants/constants/auth';
+import privilege from '../../../middlewares/previlege';
 import validate from '../../../middlewares/validate';
 import verifyUser from '../../../middlewares/verifyUser';
+import verifyUserOrPassNull from '../../../middlewares/verifyUserOrPassNull';
 import {
   DeleteComment,
   EditComment,
@@ -21,7 +24,11 @@ const router = express.Router();
 
 router.get(
   '/get',
-  [verifyUser, validate(getCommentsInputSchema, 'QUERY')],
+  [
+    verifyUserOrPassNull,
+    privilege([ROLE.ADMIN, ROLE.GUEST, ROLE.USER]),
+    validate(getCommentsInputSchema, 'QUERY'),
+  ],
   GetComments
 );
 router.post(

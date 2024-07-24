@@ -11,7 +11,7 @@ import { getCommentsInputSchema } from '../../../router/filePreview/comments/sch
 
 const getSanitizedComments = (
   comments: any,
-  currentUserId: mongoose.Types.ObjectId
+  currentUserId: mongoose.Types.ObjectId | null
 ) => {
   const sanitizedComments = comments
     .filter(
@@ -46,10 +46,10 @@ const getSanitizedComments = (
       };
 
       const hasUpVoted = !!upVotes.voters.find(
-        (id: string) => id.toString() === currentUserId.toString()
+        (id: string) => id.toString() === (currentUserId ?? '').toString()
       );
       const hasDownVoted = !!downVotes.voters.find(
-        (id: string) => id.toString() === currentUserId.toString()
+        (id: string) => id.toString() === (currentUserId ?? '').toString()
       );
       Object.assign(commentObj, {
         isEdited,
@@ -64,7 +64,7 @@ const getSanitizedComments = (
 };
 
 const GetComments = asyncErrorHandler(async (req: Request, res: Response) => {
-  const { userId } = req.body as { userId: string };
+  const { userId } = req.body as { userId: string | undefined };
   const { postId, page, parentId, commentType } =
     req.query as unknown as z.infer<typeof getCommentsInputSchema>;
   const skipCount = (Number(page) - 1) * MAX_COMMENT_FETCH_LIMIT;
@@ -97,7 +97,7 @@ const GetComments = asyncErrorHandler(async (req: Request, res: Response) => {
 
   const sanitizedComments = getSanitizedComments(
     comments,
-    new mongoose.Types.ObjectId(userId)
+    userId ? new mongoose.Types.ObjectId(userId) : null
   );
   const totalPages = Math.ceil(Number(totalComments) / MAX_COMMENT_FETCH_LIMIT);
   const hasMore = totalPages > Number(page);

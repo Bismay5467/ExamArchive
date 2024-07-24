@@ -11,11 +11,14 @@ import {
   Button,
   useDisclosure,
 } from '@nextui-org/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { KeyedMutator } from 'swr';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { updateRatingObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import fetcher from '@/utils/fetcher/fetcher';
+import { KEY_CODES } from '@/constants/shared';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 export default function RatingSection({
   postId,
@@ -43,8 +46,10 @@ export default function RatingSection({
   ] = rating;
 
   const {
-    authState: { jwtToken },
+    authState: { jwtToken, isAuth },
   } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -56,6 +61,9 @@ export default function RatingSection({
   };
 
   const handleSubmit = async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!helpfull || !standard || !relevance) {
       toast.error('Please rate all the fields!', {
         duration: 5000,
@@ -95,6 +103,11 @@ export default function RatingSection({
       })
     );
   };
+
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.code === KEY_CODES.ENTER) handleSubmit();
+  };
+
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
@@ -148,6 +161,8 @@ export default function RatingSection({
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        placement="center"
+        onKeyDown={handleKeyEvent}
         isDismissable={false}
         isKeyboardDismissDisabled={false}
         radius="sm"

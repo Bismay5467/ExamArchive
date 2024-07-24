@@ -152,7 +152,7 @@ export const GET = ({
   adminId,
 }: {
   contentType: (typeof CONTENT_TYPE)[number];
-  action: 'RESOLVE' | 'UNRESOLVE';
+  action: 'FLAG' | 'MARK AS SPAM' | 'UNRESOLVE';
   adminId: string;
 }) => ({
   dataPopulation:
@@ -172,7 +172,7 @@ export const GET = ({
       ? { _id: 1, userId: 1, postId: 1, message: 1 }
       : { _id: 1, uploadedBy: 1, 'file.url': 1 },
   reportUpdate:
-    action === 'RESOLVE'
+    action === 'FLAG' || action === 'MARK AS SPAM'
       ? { resolved: { isResolved: true, adminId } }
       : { resolved: { isResolved: false } },
 });
@@ -196,7 +196,7 @@ export const writeDBPromises = ({
   postId,
   folderId,
 }: {
-  action: 'RESOLVE' | 'UNRESOLVE';
+  action: 'FLAG' | 'MARK AS SPAM' | 'UNRESOLVE';
   reportId: string;
   contentType: (typeof CONTENT_TYPE)[number];
   adminId: string;
@@ -209,6 +209,8 @@ export const writeDBPromises = ({
     action,
     adminId,
   });
+  const query =
+    action === 'FLAG' ? { _id: postId, isFlagged: false } : { _id: postId };
   const Collection: any = contentType === 'COMMENT' ? Comment : Question;
   const writePromises = [
     Report.findOneAndUpdate(
@@ -226,23 +228,27 @@ export const writeDBPromises = ({
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
       .lean()
       .exec(),
-    Collection.findOneAndUpdate(
-      { _id: postId, isFlagged: action === 'UNRESOLVE' },
-      { isFlagged: action === 'RESOLVE' },
-      { upsert: false, new: true }
-    )
-      .populate(dataPopulation)
-      .select(projection)
-      .session(session)
-      .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
-      .lean()
-      .exec(),
   ];
+  if (action !== 'MARK AS SPAM') {
+    writePromises.push(
+      Collection.findOneAndUpdate(
+        query,
+        { isFlagged: action === 'FLAG' },
+        { upsert: false, new: true }
+      )
+        .populate(dataPopulation)
+        .select(projection)
+        .session(session)
+        .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
+        .lean()
+        .exec()
+    );
+  }
   if (contentType === 'POST') {
     writePromises.push(
       UploadedFiles.findOneAndUpdate(
         { _id: folderId, fileType: FILE_TYPE.DIRECTORY },
-        { $inc: { noOfFiles: action === 'RESOLVE' ? -1 : 1 } },
+        { $inc: { noOfFiles: action === 'FLAG' ? -1 : 1 } },
         { upsert: false, new: true }
       )
         .select({ _id: 1 })
