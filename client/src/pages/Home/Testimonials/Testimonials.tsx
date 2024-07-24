@@ -6,7 +6,7 @@ const testimonials = [
     avatarImg: 'https://avatars.githubusercontent.com/u/58584158?v=4',
     description:
       'Exam Archive is a fantastic resource for accessing previous year question papers across various exams. The bookmark feature allows me to save important papers for quick access later, and the moderation ensures high-quality, relevant content. Highly recommended for efficient and effective exam preparation!',
-    name: 'Srijita Sarkar',
+    name: 'Sam Sarkar',
     designation: 'NITK',
   },
   {
