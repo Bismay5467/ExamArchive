@@ -49,7 +49,7 @@ export function NotifyUserOnBeingAdminEmail({
       <Head />
       <Body style={main}>
         <Container style={container}>
-          <Img src={LOGO_URL} width="100%" height="100" alt="Exam Archive" />
+          <Img src={LOGO_URL} width="100%" height="130" alt="Exam Archive" />
           <Section>
             <Text style={{ ...text, textAlign: 'justify' }}>
               {`Hi ${username},`}

@@ -128,7 +128,7 @@ export default function Reset() {
               radius="sm"
               className="mt-5 py-5"
             >
-              {authToken ? 'Reset' : 'Send OTP'}
+              {authToken ? 'Reset' : 'Send Link'}
             </Button>
           </form>
         </CardBody>

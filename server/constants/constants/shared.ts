@@ -28,4 +28,4 @@ export const SEMESTER = Object.freeze({
 });
 
 export const LOGO_URL =
-  'https://res.cloudinary.com/dzorpsnmn/image/upload/v1710307765/EXAM:WKhU72luie:ARCHIVE/izmmduii2snt5fz5pcuk.png';
+  'https://res.cloudinary.com/dzorpsnmn/image/upload/v1721808767/EXAM-ARCHIVE-ASSETS/seffnzyni2xotb8nxmof.png';
