@@ -84,7 +84,7 @@ export default function Bookmarks() {
 
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col p-4 gap-y-4 font-natosans">
-      <div className="text-xl flex flex-row gap-x-2 font-semibold text-slate-700">
+      <div className="text-xl flex flex-row gap-x-2 font-semibold dark:text-slate-400 text-slate-700">
         <span>Pinned</span> <RiPushpinLine className="self-center text-2xl" />
       </div>
       <div className="flex gap-4 flex-col sm:flex-row">
@@ -115,7 +115,9 @@ export default function Bookmarks() {
                     <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
                   </div>
                   <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-                    <span className="text-slate-700">{subjectName}</span>
+                    <span className="dark:text-slate-300 text-slate-700">
+                      {subjectName}
+                    </span>
                     <span className="text-sm text-slate-500">
                       Added on: {`${monthNames[month - 1]} ${day}, ${year}`}
                     </span>

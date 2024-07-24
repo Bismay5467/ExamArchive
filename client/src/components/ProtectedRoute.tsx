@@ -16,7 +16,7 @@ function ProtectedRoute({
     authState: { isAuth, role },
   } = useAuth();
   if (role === 'GUEST' && roles.includes(role)) return <Outlet />;
-  if (isAuth === false) return <Navigate to={redirectUrl} />;
+  if (isAuth === false) return <Navigate to={redirectUrl} replace />;
   if (isAuth && roles.includes(role) === false) {
     return <Navigate to={unAuthRedirectURl} replace />;
   }

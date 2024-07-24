@@ -16,11 +16,7 @@ export default function CustomDropDown({ menu }: { menu: IDropDownProps[] }) {
           <FaEllipsisVertical className="text-lg" />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu
-        aria-label="Static Actions"
-        variant="light"
-        className="text-slate-700"
-      >
+      <DropdownMenu aria-label="Static Actions" variant="light">
         {
           menu.map(({ icon, value, action, itemClassName }, idx) => (
             <DropdownItem

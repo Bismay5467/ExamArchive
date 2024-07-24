@@ -21,7 +21,7 @@ export default function Home() {
     });
   });
   return (
-    <div className="min-h-screen overflow-hidden antialiased tracking-tight dark:bg-gray-900 font-niramit">
+    <div className="min-h-screen overflow-hidden antialiased tracking-tight dark:bg-black font-niramit">
       <PageIllustration />
       <div className="flex flex-col">
         <Header />

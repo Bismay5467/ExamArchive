@@ -19,7 +19,7 @@ export default function ForbiddenPage() {
       />
       {loaded === true && (
         <>
-          <p className="text-slate-800 text-sm text-center sm:text-medium">
+          <p className="dark:text-slate-300 text-slate-800 text-sm text-center sm:text-medium">
             Oops! Looks like you don't have the keys to this door.
           </p>
           <p className="text-slate-500 text-sm text-center sm:text-medium">

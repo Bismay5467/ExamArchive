@@ -1,5 +1,6 @@
 /* eslint-disable function-paren-newline */
 import Rating from '@mui/material/Rating';
+import StarIcon from '@mui/icons-material/Star';
 import { toast } from 'sonner';
 import { IoIosStarOutline } from 'react-icons/io';
 import {
@@ -111,7 +112,7 @@ export default function RatingSection({
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-row gap-x-4">
-        <p className="self-center text-black">
+        <p className="self-center dark:text-slate-500 text-slate-900">
           Ratings{' '}
           <span className="text-slate-500">
             {`( ${getRatingCount()} voted )`}
@@ -126,13 +127,14 @@ export default function RatingSection({
           Rate Here
         </Button>
       </div>
-      <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit text-slate-700">
+      <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit dark:text-slate-500 text-slate-700">
         <p>Helpful</p>
         <Rating
           name="helpful-read-only"
           value={parseFloat(helpfullRate.toFixed(1))}
           precision={0.1}
           readOnly
+          emptyIcon={<StarIcon style={{ color: 'grey' }} fontSize="inherit" />}
         />
         <p className="text-center sm:text-left">
           {parseFloat(helpfullRate.toFixed(1))} / 5
@@ -143,6 +145,7 @@ export default function RatingSection({
           value={parseFloat(standardRate.toFixed(1))}
           precision={0.1}
           readOnly
+          emptyIcon={<StarIcon style={{ color: 'grey' }} fontSize="inherit" />}
         />
         <p className="text-center sm:text-left">
           {parseFloat(standardRate.toFixed(1))} / 5
@@ -153,6 +156,7 @@ export default function RatingSection({
           value={parseFloat(relevanceRate.toFixed(1))}
           precision={0.1}
           readOnly
+          emptyIcon={<StarIcon style={{ color: 'grey' }} fontSize="inherit" />}
         />
         <p className="text-center sm:text-left">
           {parseFloat(relevanceRate.toFixed(1))} / 5
@@ -176,7 +180,7 @@ export default function RatingSection({
                 <p className="text-lg">Rate this paper</p>
               </ModalHeader>
               <ModalBody>
-                <p className="mt-1 mb-2 text-slate-700">
+                <p className="mt-1 mb-2 dark:text-slate-500 text-slate-700">
                   Let us know how you feel about this paper!
                 </p>
                 <div className="grid grid-cols-2 grid-rows-3 gap-y-2 w-fit">
@@ -187,6 +191,9 @@ export default function RatingSection({
                     onChange={(_, newValue) => {
                       setHelpfull(newValue || 0);
                     }}
+                    emptyIcon={
+                      <StarIcon style={{ color: 'grey' }} fontSize="inherit" />
+                    }
                   />
                   <h3>Standard :</h3>
                   <Rating
@@ -195,6 +202,9 @@ export default function RatingSection({
                     onChange={(_, newValue) => {
                       setStandard(newValue || 0);
                     }}
+                    emptyIcon={
+                      <StarIcon style={{ color: 'grey' }} fontSize="inherit" />
+                    }
                   />
                   <h3>Relevance :</h3>
                   <Rating
@@ -203,6 +213,9 @@ export default function RatingSection({
                     onChange={(_, newValue) => {
                       setRelevance(newValue || 0);
                     }}
+                    emptyIcon={
+                      <StarIcon style={{ color: 'grey' }} fontSize="inherit" />
+                    }
                   />
                 </div>
               </ModalBody>

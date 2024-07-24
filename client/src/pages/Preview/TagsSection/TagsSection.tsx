@@ -113,8 +113,8 @@ export default function TagsSection({
             val={val}
             key={idx}
             classNames={{
-              base: 'bg-violet-100 self-center border-small border-violet-700',
-              content: 'text-violet-700',
+              base: 'dark:bg-violet-400/20 bg-violet-100 self-center border-small border-violet-700',
+              content: 'dark:text-violet-400 text-violet-500',
             }}
           />
         ))}
@@ -161,8 +161,8 @@ export default function TagsSection({
                           val={val}
                           key={idx}
                           classNames={{
-                            base: 'bg-violet-100 border-small border-violet-700',
-                            content: 'text-violet-700',
+                            base: 'dark:bg-violet-400/20 bg-violet-100 border-small border-violet-700',
+                            content: 'dark:text-violet-400 text-violet-500',
                           }}
                         />
                       ))}

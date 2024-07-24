@@ -38,7 +38,7 @@ export default function Header() {
           <nav className="flex grow">
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li className="mr-12 hidden flex-row gap-x-8 text-base opacity-70 sm:flex">
+              <li className="mr-12 hidden flex-row gap-x-8 text-base dark:text-slate-300 text-slate-700 sm:flex">
                 {quickLinks(role, userId!).map(({ key, link }) => (
                   <Link to={link} key={key} className="hover:underline">
                     {key}

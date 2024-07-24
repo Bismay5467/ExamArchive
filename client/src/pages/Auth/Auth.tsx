@@ -1,6 +1,6 @@
 import { Image } from '@nextui-org/react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import LogoBanner from '@/assets/LogoBanner.png';
+import LogoBanner from '@/assets/logo-banner-no-bg.png';
 import { CLIENT_ROUTES } from '@/constants/routes';
 
 export default function Signup() {

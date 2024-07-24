@@ -66,9 +66,9 @@ export default function ResultCard({
         navigate(`${CLIENT_ROUTES.FILE_PREVIEW}/${_id}`);
       }}
     >
-      <CardHeader className="flex gap-3 text-sm px-8 text-slate-700 bg-[#f7f7f7] sm:text-lg">
-        <div className="flex flex-row justify-between gap-x-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between">
-          <IoDocument className="self-center text-2xl text-slate-600" />
+      <CardHeader className="flex gap-3 text-sm px-8 dark:bg-[#191919] bg-[#f7f7f7] sm:text-lg">
+        <div className="flex flex-row justify-between gap-x-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between dark:text-slate-400 text-slate-600">
+          <IoDocument className="self-center text-2xl" />
           <span className="self-center text-sm sm:text-medium">
             {subjectName
               .toLowerCase()
@@ -80,13 +80,13 @@ export default function ResultCard({
       <CardBody className="flex flex-col gap-y-3 px-8 text-slate-600 font-normal">
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between">
           <div className="flex flex-row gap-x-4">
-            <div className="self-center flex flex-row gap-x-2">
-              <LuFileCode2 className="self-center text-xl text-blue-600" />{' '}
-              <p className="text-blue-600">{subjectCode}</p>
+            <div className="self-center flex flex-row gap-x-2 dark:text-blue-500 text-blue-600">
+              <LuFileCode2 className="self-center text-xl" />{' '}
+              <p>{subjectCode}</p>
             </div>
-            <div className="self-center flex flex-row gap-x-2">
-              <FaRegNoteSticky className="self-center text-xl text-blue-600" />{' '}
-              <p className="text-blue-600">{examType}</p>
+            <div className="self-center flex flex-row gap-x-2 dark:text-blue-500 text-blue-600">
+              <FaRegNoteSticky className="self-center text-xl" />{' '}
+              <p>{examType}</p>
             </div>
             <div className="self-center flex flex-row gap-x-2 text-pink-600">
               <LuCalendarClock className="self-center text-lg" />{' '}
@@ -94,16 +94,16 @@ export default function ResultCard({
             </div>
           </div>
           <div className="hidden lg:flex lg:flex-row lg:gap-x-4">
-            <div className="self-center flex flex-row gap-x-2">
-              <SiGoogleclassroom className="self-center text-xl text-blue-600" />{' '}
-              <p className="text-blue-600">{branch}</p>
+            <div className="self-center flex flex-row gap-x-2 dark:text-blue-500 text-blue-600">
+              <SiGoogleclassroom className="self-center text-xl" />{' '}
+              <p>{branch}</p>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-y-2 whitespace-nowrap text-sm sm:text-sm lg:text-medium sm:flex-row sm:justify-between py-1">
-          <div className="flex flex-row gap-x-2 w-fit rounded-full bg-pink-100 px-3 py-1">
-            <MdOutlineSchool className="self-center text-xl text-pink-600" />{' '}
-            <p className="self-center text-pink-600">{institutionName}</p>
+          <div className="flex flex-row gap-x-2 w-fit rounded-full dark:bg-pink-400/10 bg-pink-100 px-3 py-1 dark:text-pink-500 text-pink-600">
+            <MdOutlineSchool className="self-center text-xl" />{' '}
+            <p className="self-center">{institutionName}</p>
           </div>
           <div className="self-center hidden gap-x-2 text-sm text-slate-500 lg:flex lg:flex-row">
             <p>
@@ -119,8 +119,8 @@ export default function ResultCard({
                 key={idx}
                 val={val}
                 classNames={{
-                  base: 'bg-violet-100',
-                  content: 'text-violet-700',
+                  base: 'dark:bg-violet-400/20 bg-violet-100',
+                  content: 'dark:text-violet-500 text-violet-700',
                 }}
               />
             ))}
