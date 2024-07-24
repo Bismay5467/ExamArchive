@@ -10,6 +10,7 @@ import {
   IReportPreview,
   TReportAction,
 } from '@/types/report';
+import Cartoon from '@/assets/no_report_no_bg.png';
 
 export default function ReportDisplay({ action }: { action: TReportAction }) {
   const {
@@ -44,17 +45,17 @@ export default function ReportDisplay({ action }: { action: TReportAction }) {
             <img
               width={400}
               height={400}
-              src="https://res.cloudinary.com/dzorpsnmn/image/upload/v1720576016/EXAM-ARCHIVE-ASSETS/arzkmrwebjixzk9k4ceq.jpg"
+              src={Cartoon}
               alt="No content found"
             />
             {action === 'PENDING' && (
-              <p className="text-slate-800 text-sm text-center sm:text-medium">
+              <p className="dark:text-slate-300 text-slate-800 text-sm text-center sm:text-medium">
                 It seems all the previous issues are resolved and everything is
                 going well now
               </p>
             )}
             {action === 'RESOLVED' && (
-              <p className="text-slate-800 text-sm text-center sm:text-medium">
+              <p className="dark:text-slate-300 text-slate-800 text-sm text-center sm:text-medium">
                 Either everything is going great or you are two lazy to resolve
                 pending issues
               </p>

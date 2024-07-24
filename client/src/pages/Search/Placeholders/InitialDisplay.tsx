@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Cartoon from '@/assets/initial_display_no_bg.png';
 
 export default function InitialDisplay() {
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -7,7 +8,7 @@ export default function InitialDisplay() {
       <img
         width={400}
         height={300}
-        src="https://res.cloudinary.com/dzorpsnmn/image/upload/v1719864150/EXAM-ARCHIVE-ASSETS/w294za0tvklwsrustgwn.jpg"
+        src={Cartoon}
         // fallbackSrc="https://via.placeholder.com/300x200"
         alt="Search"
         onLoad={() => setLoaded(true)}

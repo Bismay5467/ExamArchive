@@ -2,6 +2,7 @@ import { Button } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useState } from 'react';
+import Cartoon from '@/assets/forbidden-no-bg.png';
 
 /* eslint-disable react/no-unescaped-entities */
 export default function ForbiddenPage() {
@@ -12,7 +13,7 @@ export default function ForbiddenPage() {
       <img
         width={700}
         height={700}
-        src="https://res.cloudinary.com/dzorpsnmn/image/upload/v1720588011/EXAM-ARCHIVE-ASSETS/eplcmuduo6c3fbthznbk.jpg"
+        src={Cartoon}
         alt="Forbidden"
         className="mb-7"
         onLoad={() => setLoaded(true)}

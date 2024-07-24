@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { useState } from 'react';
+import Cartoon from '@/assets/no_result_no_bg.png';
 
 export default function NoResults() {
   const [loaded, setloaded] = useState<boolean>(false);
@@ -9,7 +10,7 @@ export default function NoResults() {
       <img
         width={400}
         height={300}
-        src="https://res.cloudinary.com/dzorpsnmn/image/upload/v1719865549/EXAM-ARCHIVE-ASSETS/fdixjd7edbsqna7jow4c.jpg"
+        src={Cartoon}
         alt="Not found"
         onLoad={() => setloaded(true)}
       />
