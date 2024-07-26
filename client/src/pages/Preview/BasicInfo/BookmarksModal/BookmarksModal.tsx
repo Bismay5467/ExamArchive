@@ -16,6 +16,7 @@ import { CiBookmark } from 'react-icons/ci';
 import useSWR from 'swr';
 import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import {
   createFolderObj,
@@ -24,6 +25,7 @@ import {
 import fetcher from '@/utils/fetcher/fetcher';
 import { addToBookmarkObj } from '@/utils/axiosReqObjects/bookmarks';
 import { KEY_CODES } from '@/constants/shared';
+import { IsUserAuthenticated } from '@/utils/helpers';
 
 export default function BookmarksModal({
   isOpen,
@@ -48,13 +50,15 @@ export default function BookmarksModal({
   const [isCreatingFolder, setIsCreatingFolder] = useState<boolean>(false);
   const [collectionIDs, setCollectionIDs] = useState<Array<string>>([]);
   const {
-    authState: { jwtToken },
+    authState: { jwtToken, isAuth },
   } = useAuth();
   const { data: collection, mutate: mutateCollection } = useSWR(
     getFolderNameObj('BOOKMARK', jwtToken)
   );
   const collectionList: Array<{ _id: string; name: string }> | undefined =
     collection?.data?.data ?? undefined;
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (!isOpen) {
@@ -105,6 +109,9 @@ export default function BookmarksModal({
   );
 
   const handleCreateNewCollection = useCallback(async () => {
+    if (!IsUserAuthenticated(isAuth, navigate, pathname)) {
+      return;
+    }
     if (!isCreatingFolder) {
       setIsCreatingFolder(true);
       return;
