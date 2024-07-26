@@ -174,7 +174,7 @@ export default function ParentCommentBox({
         </span>
         <Textarea
           value={textMessage}
-          className={cn('w-full h-fit resize-none', editClasses)}
+          className={cn('w-full h-fit resize-none dark:bg-black', editClasses)}
           disabled={!isEditing}
           onChange={(e) => setTextMessage(e.target.value)}
         />

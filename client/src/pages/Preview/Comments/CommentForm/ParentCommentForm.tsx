@@ -20,7 +20,7 @@ export default function ParentCommentForm({
 
   return (
     <div
-      className="pb-4 pt-2 rounded-lg flex flex-col gap-y-4"
+      className="pb-4 pt-2 rounded-lg flex flex-col gap-y-4 dark:bg-[#191919]"
       style={{
         boxShadow:
           'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
@@ -29,7 +29,7 @@ export default function ParentCommentForm({
       <form onSubmit={handleSubmit(onSubmit)}>
         <Textarea
           placeholder="Type your comment here..."
-          className="resize-none min-h-[50px]"
+          className="resize-none min-h-[50px] dark:bg-[#191919]"
           {...register('message')}
         />
 
