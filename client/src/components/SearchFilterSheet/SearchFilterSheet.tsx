@@ -23,7 +23,6 @@ import { IFilterInputs, TFilterOption } from '@/types/search';
 import { SEARCH_FILTTER_OPTIONS as CONST_SEARCH_FILTTER_OPTIONS } from '@/constants/search';
 import OptionGroup from './OptionGroup/OptionGroup';
 import fetcher from '@/utils/fetcher/fetcher';
-import { useTheme } from '@/hooks/useTheme';
 
 export function SearchFilterSheet() {
   const { setFilters, searchInputs, clearFilters } = useSearch();
@@ -39,6 +38,13 @@ export function SearchFilterSheet() {
   >(CONST_SEARCH_FILTTER_OPTIONS);
 
   const handleGetSubjectFilters = useCallback(async () => {
+    if (
+      SEARCH_FILTTER_OPTIONS.find(({ key }) => key === 'subjectName') !==
+      undefined
+    ) {
+      return;
+    }
+
     const requestObj: AxiosRequestConfig<any> = {
       url: `${SERVER_ROUTES.SEARCH}/getSubjectFilters`,
       method: 'GET',
@@ -81,7 +87,6 @@ export function SearchFilterSheet() {
   const handleClearFilters = () => {
     clearFilters();
   };
-  const { theme } = useTheme();
 
   return (
     <Sheet>
@@ -95,13 +100,11 @@ export function SearchFilterSheet() {
           <TbFilterSearch className="text-lg" />
         </Button>
       </SheetTrigger>
-      <SheetContent
-        className="flex flex-col gap-y-4 w-[320px] font-natosans"
-        style={{ backgroundColor: theme === 'light' ? '' : '#191919' }}
-      >
+      <SheetContent className="flex flex-col gap-y-4 w-[320px] font-natosans dark:bg-[#191919]">
         <SheetHeader>
-          <SheetTitle className="flex flex-row gap-x-4">
-            <IoFilter className="text-2xl font-bold" /> FILTER OPTIONS
+          <SheetTitle className="flex flex-row gap-x-4 ">
+            <IoFilter className="text-2xl font-bold text-slate-400" />{' '}
+            <span className="text-slate-400">FILTER OPTIONS</span>
           </SheetTitle>
         </SheetHeader>
         <div className="no-scrollbar overflow-y-auto h-[100%]">

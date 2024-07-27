@@ -135,7 +135,7 @@ export default function ReplyCommentBox({
       />
 
       <div className="w-full flex flex-col gap-y-4">
-        <div className="w-full self-start bg-[#f7f7f7] p-2 rounded-lg flex flex-col gap-y-2">
+        <div className="w-full self-start bg-[#f7f7f7] p-2 rounded-lg flex flex-col gap-y-2 dark:bg-[#191919]">
           <div className="flex flex-row justify-between">
             <span className="font-medium text-sm self-center sm:text-medium">
               {username}
@@ -149,7 +149,10 @@ export default function ReplyCommentBox({
           </div>
           <Textarea
             value={textMessage}
-            className={cn('w-full h-fit resize-none', editClasses)}
+            className={cn(
+              'w-full h-fit resize-none dark:bg-[#191919]',
+              editClasses
+            )}
             disabled={!isEditing}
             onChange={(e) => setTextMessage(e.target.value)}
           />
