@@ -5,19 +5,19 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from '@nextui-org/react';
-import { FaRegCircleUser } from 'react-icons/fa6';
+// import { FaRegCircleUser } from 'react-icons/fa6';
 import { LiaSignOutAltSolid } from 'react-icons/lia';
-import { JSX, useEffect, useState } from 'react';
+import { JSX } from 'react';
 import { IoPersonOutline } from 'react-icons/io5';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import {
-  TEMP_JWT_TOKEN_HARDCODED_USER,
-  TEMP_JWT_TOKEN_HARDCODED_ADMIN,
-  TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
-} from '@/constants/shared';
-import { AUTH_TOKEN, getAvatar } from '@/constants/auth';
+// import {
+//   TEMP_JWT_TOKEN_HARDCODED_USER,
+//   TEMP_JWT_TOKEN_HARDCODED_ADMIN,
+//   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
+// } from '@/constants/shared';
+import { getAvatar } from '@/constants/auth';
 import quickLinks from '@/constants/quickLinks';
 
 export default function UserAvatar({
@@ -25,11 +25,11 @@ export default function UserAvatar({
 }: {
   sideBarClasses?: string;
 }) {
-  const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
+  // const [token, setToken] = useState<string>(Cookies.get(AUTH_TOKEN) ?? '');
   // TODO: Remove Manual setting of cookie afterwards
-  useEffect(() => {
-    if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
-  }, [token]);
+  // useEffect(() => {
+  //   if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
+  // }, [token]);
   const {
     authState: { username, role, userId },
     RESET,
@@ -59,7 +59,7 @@ export default function UserAvatar({
         </div>
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions" variant="light">
-        <DropdownItem
+        {/* <DropdownItem
           key="user"
           startContent={<FaRegCircleUser className={iconClasses} />}
           onClick={() => {
@@ -88,7 +88,7 @@ export default function UserAvatar({
           }}
         >
           Super Admin
-        </DropdownItem>
+        </DropdownItem> */}
         {
           quickLinks(role, userId!).map(({ key, link, icon }) => (
             <DropdownItem
