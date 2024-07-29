@@ -6,8 +6,6 @@ import { z } from 'zod';
 import { Request, Response } from 'express';
 
 import {
-  AUTH_TOKEN,
-  COOKIES_TTL,
   JWT_MAX_AGE,
   REGISTRATION_OTP_TTL_SECONDS,
 } from '../../constants/constants/auth';
@@ -118,15 +116,15 @@ const NewUser = asyncErrorHandler(async (req: Request, res: Response) => {
         );
       }
       await Promise.all([user.save(), redisClient.del(redisKey)]);
-      res.cookie(AUTH_TOKEN, token, {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: COOKIES_TTL,
-        path: '/',
-      });
+      // res.cookie(AUTH_TOKEN, token, {
+      //   secure: process.env.NODE_ENV === 'production',
+      //   sameSite: 'strict',
+      //   maxAge: COOKIES_TTL,
+      //   path: '/',
+      // });
       return res
         .status(SUCCESS_CODES.CREATED)
-        .json({ message: 'Welcome onboard' });
+        .json({ message: 'Welcome onboard', token });
     default:
       throw new ErrorHandler('Invalid action type', ERROR_CODES['BAD REQUEST']);
   }

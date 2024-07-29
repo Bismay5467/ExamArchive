@@ -12,16 +12,11 @@ import redisClient from '../../config/redisConfig';
 import { signInUserInputSchema } from '../../router/auth/schema';
 import { signTokens } from '../../utils/auth/jsonwebtokens';
 import {
-  AUTH_TOKEN,
-  COOKIES_TTL,
-  INVITATION_STATUS,
-  JWT_MAX_AGE,
-} from '../../constants/constants/auth';
-import {
   ERROR_CODES,
   SERVER_ERROR,
   SUCCESS_CODES,
 } from '../../constants/statusCode';
+import { INVITATION_STATUS, JWT_MAX_AGE } from '../../constants/constants/auth';
 
 const SignIn = asyncErrorHandler(async (req: Request, res: Response) => {
   const { username, password } = req.body.data as z.infer<
@@ -29,6 +24,7 @@ const SignIn = asyncErrorHandler(async (req: Request, res: Response) => {
   >;
   const email = isEmail(username) ? username : undefined;
   const session = await mongoose.startSession();
+  const resObj = {};
   await session.withTransaction(async () => {
     const user = (await User.findOne({
       $or: [{ email }, { username }],
@@ -81,17 +77,18 @@ const SignIn = asyncErrorHandler(async (req: Request, res: Response) => {
         redisClient?.del(user.role),
       ]);
     }
-    res.cookie(AUTH_TOKEN, token, {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: COOKIES_TTL,
-      path: '/',
-    });
+    Object.assign(resObj, { token });
+    // res.cookie(AUTH_TOKEN, token, {
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    //   maxAge: COOKIES_TTL,
+    //   path: '/',
+    // });
   });
   await session.endSession();
   return res
     .status(SUCCESS_CODES.OK)
-    .json({ message: 'Nice to see you again!' });
+    .json({ message: 'Nice to see you again!', ...resObj });
 });
 
 export default SignIn;

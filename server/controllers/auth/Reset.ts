@@ -8,7 +8,6 @@ import { Request, Response } from 'express';
 
 import {
   AUTH_TOKEN,
-  COOKIES_TTL,
   JWT_MAX_AGE,
   RESET_LINK_EXP_TIME,
 } from '../../constants/constants/auth';
@@ -132,15 +131,15 @@ const Reset = asyncErrorHandler(async (req: Request, res: Response) => {
           SERVER_ERROR['INTERNAL SERVER ERROR']
         );
       }
-      res.cookie(AUTH_TOKEN, token, {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: COOKIES_TTL,
-        path: '/',
-      });
+      // res.cookie(AUTH_TOKEN, token, {
+      //   secure: process.env.NODE_ENV === 'production',
+      //   sameSite: 'strict',
+      //   maxAge: COOKIES_TTL,
+      //   path: '/',
+      // });
       return res
         .status(SUCCESS_CODES.CREATED)
-        .json({ message: 'Password successfully changed' });
+        .json({ message: 'Password successfully changed', token });
     default:
       throw new ErrorHandler('Invalid action type', ERROR_CODES['BAD REQUEST']);
   }
