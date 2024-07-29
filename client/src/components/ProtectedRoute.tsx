@@ -1,4 +1,5 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { ROLES } from '../constants/auth';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,8 +16,15 @@ function ProtectedRoute({
   const {
     authState: { isAuth, role },
   } = useAuth();
+  const { pathname } = useLocation();
   if (role === 'GUEST' && roles.includes(role)) return <Outlet />;
-  if (isAuth === false) return <Navigate to={redirectUrl} replace />;
+  if (isAuth === false) {
+    toast.error('Whoops! You seem to be logged out!', {
+      description: 'Authorization required for this action',
+      duration: 6000,
+    });
+    return <Navigate to={redirectUrl} state={{ from: pathname }} />;
+  }
   if (isAuth && roles.includes(role) === false) {
     return <Navigate to={unAuthRedirectURl} replace />;
   }
