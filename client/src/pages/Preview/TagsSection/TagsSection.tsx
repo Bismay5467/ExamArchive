@@ -105,7 +105,7 @@ export default function TagsSection({
   };
 
   return (
-    <div className="flex flex-row gap-x-4 font-natosans">
+    <div className="flex flex-col sm:flex-row gap-4 font-natosans">
       <div>Tags: </div>
       <div className="flex flex-row flex-wrap gap-2">
         {tags.slice(0, MAX_TAGS_TO_DISPLAY).map((val, idx) => (

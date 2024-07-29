@@ -138,8 +138,9 @@ export function SearchFilterSheet() {
                           label: string;
                         }>
                       }
-                      className="border rounded-lg"
-                      renderInput={(params) => <TextField {...params} />}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Subject Name" />
+                      )}
                       value={{
                         label: filter[key as keyof IFilterInputs] ?? '',
                       }}

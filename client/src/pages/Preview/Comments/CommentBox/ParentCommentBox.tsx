@@ -207,9 +207,19 @@ export default function ParentCommentBox({
                 role="presentation"
               >
                 <FaRegComment className="self-center sm:text-lg" />{' '}
-                {showReplies
-                  ? 'Hide Replies'
-                  : `Show ${optimisticReplyCount} Replies`}
+                {showReplies ? (
+                  <>
+                    <span className="hidden sm:block">Hide Replies</span>
+                    <span className="sm:hidden">{optimisticReplyCount}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="hidden sm:block">
+                      Show {optimisticReplyCount} Replies
+                    </span>
+                    <span className="sm:hidden">{optimisticReplyCount}</span>
+                  </>
+                )}
               </span>
             )}
             <span
