@@ -7,21 +7,21 @@ const testimonials = [
     description:
       'Exam Archive is a fantastic resource for accessing previous year question papers across various exams. The bookmark feature allows me to save important papers for quick access later, and the moderation ensures high-quality, relevant content. Highly recommended for efficient and effective exam preparation!',
     name: 'Sam Sarkar',
-    designation: 'NITK',
+    designation: 'NITK Surathkal',
   },
   {
     avatarImg: 'https://avatars.githubusercontent.com/u/73980183?v=4',
     description:
       'Exam Archive has been a game-changer for my exam preparation. The ability to access previous year question papers from various exams is incredibly convenient. The bookmark feature allows me to save important papers for quick reference while the comment section fosters valuable discussions.',
     name: 'Biplaw Kumar Singh',
-    designation: 'NITK',
+    designation: 'NITK Surathkal',
   },
   {
     avatarImg: 'https://avatars.githubusercontent.com/u/123952063?v=4',
     description:
       'Exam Archive is a fantastic resource for exam prep. Accessing past question papers is easy, and the bookmark feature helps keep important papers handy. The comment section allows for insightful discussions with fellow students, and the moderation ensures reliable content. Highly recommended!',
     name: 'Rahul Maity',
-    designation: 'NITK',
+    designation: 'NITK Surathkal',
   },
 ];
 
