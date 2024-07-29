@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import { zodResolver } from '@hookform/resolvers/zod';
+import Cookies from 'js-cookie';
 import { toast } from 'sonner';
 import { Button, Input, Spinner } from '@nextui-org/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,6 +15,7 @@ import { getSignInObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { useAuth } from '@/hooks/useAuth';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import { AUTH_TOKEN } from '@/constants/auth';
 
 export default function Login() {
   const {
@@ -32,7 +34,8 @@ export default function Login() {
   const onSubmit: SubmitHandler<TSignInFormFields> = async (formData) => {
     const reqObj = getSignInObj(formData);
     try {
-      await fetcher(reqObj);
+      const res = await fetcher(reqObj);
+      Cookies.set(AUTH_TOKEN, res.data.token);
     } catch (err: any) {
       toast.error('Somthing went wrong!', {
         description: `${err.response.data.message}`,
