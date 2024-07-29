@@ -50,7 +50,10 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">
+              <a
+                href="mailto:@contact.examarchive@gmail.com"
+                className="hover:underline me-4 md:me-6"
+              >
                 Contact
               </a>
             </li>
