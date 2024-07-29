@@ -73,13 +73,7 @@ export default function Testimonials() {
                       <cite className="dark:text-gray-200 text-slate-500 not-italic">
                         {name}
                       </cite>{' '}
-                      -{' '}
-                      <a
-                        className="text-purple-600 hover:text-gray-200 transition duration-150 ease-in-out"
-                        href="#0"
-                      >
-                        {designation}
-                      </a>
+                      - <span className="text-purple-600">{designation}</span>
                     </div>
                   </CardBody>
                 </Card>
