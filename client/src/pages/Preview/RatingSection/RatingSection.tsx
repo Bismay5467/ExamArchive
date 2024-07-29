@@ -127,7 +127,7 @@ export default function RatingSection({
           Rate Here
         </Button>
       </div>
-      <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit dark:text-slate-500 text-slate-700">
+      <div className="grid grid-cols-3 grid-rows-3 sm:gap-x-4 gap-y-2 w-fit dark:text-slate-400 text-slate-700">
         <p>Helpful</p>
         <Rating
           name="helpful-read-only"

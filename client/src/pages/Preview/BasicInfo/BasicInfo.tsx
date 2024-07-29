@@ -120,11 +120,11 @@ export default function BasicInfo({
           <p className="self-center">{examType}</p>
         </span>
       </div>
-      <div className="flex flex-row gap-x-3 dark:text-slate-500 text-slate-700">
+      <div className="flex flex-row gap-x-3 dark:text-slate-400 text-slate-700">
         <HiOutlineAcademicCap className="self-center text-xl" />
         <p>{institutionName}</p>
       </div>
-      <div className="flex flex-row gap-x-3 dark:text-slate-500 text-slate-700">
+      <div className="flex flex-row gap-x-3 dark:text-slate-400 text-slate-700">
         <SiGoogleclassroom className="self-center text-xl" />
         <p>{branch}</p>
       </div>
