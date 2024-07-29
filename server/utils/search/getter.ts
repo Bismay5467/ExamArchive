@@ -19,7 +19,7 @@ export const getQuery = ({
   };
   Object.assign(query, {
     ...(tags.length > 0 && {
-      tags: { $in: tags.map((tag) => new RegExp(`^${tag}$`, 'i')) },
+      tags: { $in: tags.map((tag) => new RegExp(tag, 'i')) },
     }),
     ...(examType && examType.length > 0 && { examType: { $in: examType } }),
     ...(subjectName && { subjectName: new RegExp(`^${subjectName}$`, 'i') }),
