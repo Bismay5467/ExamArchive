@@ -80,7 +80,7 @@ export default function Hero() {
               <TypewriterEffectSmooth words={words} />
             </div>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
-              <Link to={CLIENT_ROUTES.SEARCH} className="w-full">
+              <Link to={CLIENT_ROUTES.SEARCH} className="w-[500px]">
                 <PlaceholdersAndVanishInput
                   placeholders={placeholders}
                   onChange={() => navigate(CLIENT_ROUTES.SEARCH)}
