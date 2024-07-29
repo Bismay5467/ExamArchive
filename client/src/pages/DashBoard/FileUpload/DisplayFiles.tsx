@@ -35,8 +35,8 @@ export default function DisplayAllFiles() {
 
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col gap-y-4 font-natosans">
-      <div className="flex mt-5 mb-2 text-base gap-x-10">
-        <div className="text-slate-500 flex gap-x-5">
+      <div className="flex flex-col sm:flex-row sm:mt-2 text-base gap-x-10 gap-y-4">
+        <div className="text-slate-500 gap-x-5 hidden sm:flex">
           <IoIosStats className="text-2xl" />
           <span>Your stats : </span>
         </div>
