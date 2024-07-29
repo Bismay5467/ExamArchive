@@ -8,7 +8,6 @@ import { MONGO_WRITE_QUERY_TIMEOUT } from '../../../constants/constants/shared';
 import { NOVU_MILESTONE_ACHIEVED } from '../../../constants/constants/filePreview';
 import { Question } from '../../../models';
 import asyncErrorHandler from '../../../utils/errors/asyncErrorHandler';
-import redisClient from '../../../config/redisConfig';
 import sendNotification from '../../../utils/notification/sendNotification';
 import { updateDownloadCountInputSchema } from '../../../router/filePreview/data/schema';
 import { SERVER_ERROR, SUCCESS_CODES } from '../../../constants/statusCode';
@@ -35,14 +34,12 @@ const DownloadCount = asyncErrorHandler(async (req: Request, res: Response) => {
         $addToSet: { 'noOfDownloads.ips': ip },
       };
   const options = { upsert: false, new: true };
-  const redisKey = `post:${postId}`;
   const [result] = await Promise.all([
     Question.findOneAndUpdate(filter, update, options)
       .select({ _id: 1, uploadedBy: 1, noOfDownloads: 1 })
       .maxTimeMS(MONGO_WRITE_QUERY_TIMEOUT)
       .lean()
       .exec(),
-    redisClient?.del(redisKey),
   ]);
   if (result === null) return res.status(SUCCESS_CODES['NO CONTENT']);
   const {
