@@ -12,6 +12,9 @@ function getValues<T extends Record<string, any>>(obj: T) {
 export const sanitizeInput = (params: string) =>
   params.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
+export const sanitizeSubjectName = (params: string) =>
+  params.toUpperCase().replace(/[^A-Z0-9]/g, ' ');
+
 const baseSchema = z.object({
   file: z.object({
     dataURI: z.string().refine((dataURI) => isBase64(dataURI.split(',')[1])),
@@ -63,7 +66,7 @@ export const uploadFilesInputSchema = z.array(
           .trim()
           .min(1)
           .max(50)
-          .transform((subjectName) => sanitizeInput(subjectName)),
+          .transform((subjectName) => sanitizeSubjectName(subjectName)),
         tags: z
           .string()
           .trim()
