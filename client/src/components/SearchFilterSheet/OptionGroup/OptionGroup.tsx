@@ -31,7 +31,7 @@ function OptionGroup({
         aria-label={filterKey}
         value={
           multiple
-            ? (filter[filterKey as keyof IFilterInputs]?.split(',') ?? [])
+            ? filter[filterKey as keyof IFilterInputs]?.split(',') ?? []
             : [filter[filterKey as keyof IFilterInputs] ?? '']
         }
         onChange={handleChange}
