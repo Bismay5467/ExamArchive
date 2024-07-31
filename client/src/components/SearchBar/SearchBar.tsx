@@ -21,7 +21,7 @@ export default function SearchBar({ className }: { className?: string }) {
       variant="bordered"
       radius="full"
       className={className}
-      placeholder="Enter comma separated values"
+      placeholder="Enter subject name, subject code or comma separated tags"
       onValueChange={handleSearch}
       startContent={<IoIosSearch className="text-xl font-bold" />}
       autoFocus
