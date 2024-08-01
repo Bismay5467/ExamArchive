@@ -34,10 +34,15 @@ export default ({
       }
       if (action === 'UPLOAD') {
         if (Array.isArray(metadata) && metadata.length === 0) return {};
+
         const {
           _id: questionId,
           file: { filename },
           createdAt,
+          semester,
+          subjectName,
+          subjectCode,
+          year,
           updatedAt,
           status,
         } = metadata[0];
@@ -45,6 +50,10 @@ export default ({
           fileId,
           questionId,
           filename,
+          semester,
+          subjectName,
+          subjectCode,
+          year,
           createdAt,
           updatedAt,
           status: status ?? FILE_UPLOAD_STATUS.UPLOADED,

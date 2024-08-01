@@ -26,3 +26,5 @@ export const getAvatar = (username: string) => {
   const idx = (total % 10) % NO_OF_AVAILABLE_AVATARS;
   return avatars[Math.max(0, Math.min(idx, NO_OF_AVAILABLE_AVATARS - 1))];
 };
+
+export const JWT_MAX_AGE = 30;

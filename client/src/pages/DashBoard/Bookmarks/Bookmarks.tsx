@@ -23,7 +23,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { IPinnedFile } from '@/types/folder';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import fetcher from '@/utils/fetcher/fetcher';
-import { parseUTC } from '@/utils/helpers';
+import { parseUTC, toCamelCase, wordShortner } from '@/utils/helpers';
 import { monthNames } from '@/constants/shared';
 import { IPinContext } from '@/types/bookmarks';
 import { PinCardShimmer } from './Shimmer/Shimmer';
@@ -116,10 +116,10 @@ export default function Bookmarks() {
                   </div>
                   <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
                     <span className="dark:text-slate-300 text-slate-700">
-                      {subjectName}
+                      {toCamelCase(wordShortner(subjectName))}
                     </span>
                     <span className="text-sm text-slate-500">
-                      Added on: {`${monthNames[month - 1]} ${day}, ${year}`}
+                      Added on: {`${monthNames[month]} ${day}, ${year}`}
                     </span>
                   </div>
                   <span className="w-fit h-fit ">
