@@ -7,7 +7,7 @@ import { SiGoogleclassroom } from 'react-icons/si';
 import { MdOutlineSchool } from 'react-icons/md';
 import { LuCalendarClock, LuDownload, LuFileCode2 } from 'react-icons/lu';
 import { ISearchData } from '@/types/search';
-import { parseUTC } from '@/utils/helpers';
+import { parseUTC, toCamelCase } from '@/utils/helpers';
 import { monthNames } from '@/constants/shared';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import Tag from '@/components/Tags';
@@ -70,9 +70,7 @@ export default function ResultCard({
         <div className="flex flex-row justify-between gap-x-2 whitespace-nowrap text-sm sm:text-medium sm:flex-row sm:justify-between dark:text-slate-400 text-slate-600">
           <IoDocument className="self-center text-2xl" />
           <span className="self-center text-sm sm:text-medium">
-            {subjectName
-              .toLowerCase()
-              .replace(/\b\w/g, (char) => char.toUpperCase())}
+            {toCamelCase(subjectName)}
           </span>
         </div>
       </CardHeader>

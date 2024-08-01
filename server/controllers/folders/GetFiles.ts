@@ -35,6 +35,10 @@ const GetFiles = asyncErrorHandler(async (req: Request, res: Response) => {
           'metadata._id': 1,
           'metadata.createdAt': 1,
           'metadata.updatedAt': 1,
+          'metadata.year': 1,
+          'metadata.semester': 1,
+          'metadata.subjectCode': 1,
+          'metadata.subjectName': 1,
           _id: 1,
         };
   if (parentId && action === 'BOOKMARK') {

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable consistent-return */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable function-paren-newline */
@@ -45,7 +46,7 @@ import {
 } from '@/utils/axiosReqObjects';
 import { TAction, TFileType } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
-import { parseUTC } from '@/utils/helpers';
+import { parseUTC, toCamelCase, wordShortner } from '@/utils/helpers';
 import {
   bookmarkFileColumns,
   uploadFileColumns,
@@ -71,8 +72,6 @@ const statusMap: Record<string, Record<string, any>> = {
     icon: <Spinner size="sm" color="default" className="mr-1" />,
   },
 };
-
-const MAX_CHAR_DISPLAY = 40;
 
 export default function TabularFileView({
   actionVarient,
@@ -118,7 +117,9 @@ export default function TabularFileView({
   const ROWS_PER_PAGE = 10;
 
   const filteredItems = useMemo(() => {
-    let filteredFiles = [...files];
+    let filteredFiles = [...files].filter(
+      (file) => file !== null && Object.keys(file).length > 0
+    );
 
     if (hasSearchFilter) {
       filteredFiles = filteredFiles.filter((file) =>
@@ -250,7 +251,16 @@ export default function TabularFileView({
         file[columnKey as keyof TFileType<typeof actionVarient>];
       const { day, month, year } = parseUTC(cellValue as string);
       const [heading, code, semester, examYear] =
-        columnKey === 'filename' ? (cellValue as string)!.split(',') : [];
+        columnKey === 'filename'
+          ? actionVarient === 'BOOKMARK'
+            ? (cellValue as string)!.split(',')
+            : [
+                (file as TFileType<'UPLOAD'>).subjectName,
+                (file as TFileType<'UPLOAD'>).subjectCode,
+                (file as TFileType<'UPLOAD'>).semester,
+                (file as TFileType<'UPLOAD'>).year,
+              ]
+          : [];
 
       switch (columnKey) {
         case 'filename':
@@ -259,16 +269,12 @@ export default function TabularFileView({
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
               <span className="flex flex-col">
                 <span className="text-sm min-w-[120px]">
-                  {heading.length > MAX_CHAR_DISPLAY
-                    ? heading.substring(0, MAX_CHAR_DISPLAY).concat(' ...')
-                    : heading}{' '}
+                  {toCamelCase(wordShortner(heading))}{' '}
                   {isBookmark && <span>({code})</span>}
                 </span>
-                {isBookmark && (
-                  <span className="text-sm opacity-60">
-                    {semester}, {examYear}
-                  </span>
-                )}
+                <span className="text-sm opacity-60">
+                  {semester}, {examYear}
+                </span>
               </span>
             </div>
           );

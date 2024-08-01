@@ -17,11 +17,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   useDisclosure,
   BreadcrumbItem,
   Spinner,
@@ -33,21 +28,17 @@ import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { IoMdAddCircleOutline } from 'react-icons/io';
-import { CiFolderOn } from 'react-icons/ci';
 import { IoSearch } from 'react-icons/io5';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { folderColumns, monthNames } from '@/constants/shared';
 import { TAction, IFolder } from '@/types/folder';
-import {
-  createFolderObj,
-  deleteFolderObj,
-  getFilesDataObj,
-} from '@/utils/axiosReqObjects';
+import { deleteFolderObj, getFilesDataObj } from '@/utils/axiosReqObjects';
 import { useAuth } from '@/hooks/useAuth';
 import { parseUTC } from '@/utils/helpers';
 import fetcher from '@/utils/fetcher/fetcher';
 import RenderItems from '../Pagination/RenderItems';
 import WarningModal from '../WarningModal/WarningModal';
+import NewFolderModal from '../NewFolderModal/NewFolderModal';
 
 export default function TabularFolderView({
   actionVarient,
@@ -57,14 +48,18 @@ export default function TabularFolderView({
   const {
     authState: { jwtToken },
   } = useAuth();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isCreateFolderOpen,
+    onOpen: onCreateFolderOpen,
+    onClose: onCreateFolderClose,
+    onOpenChange: onCreateFolderOpenChange,
+  } = useDisclosure();
   const {
     isOpen: isWarningOpen,
     onOpen: onWarningOpen,
     onClose: onWarningClose,
     onOpenChange: onWarningOpenChange,
   } = useDisclosure();
-  const [folderName, setFolderName] = useState<string>();
   const [deletefolderId, setDeleteFolderId] = useState<string>();
   const {
     data: response,
@@ -132,39 +127,6 @@ export default function TabularFolderView({
   const deleteModalOpen = (id: string) => {
     setDeleteFolderId(id);
     onWarningOpen();
-  };
-
-  const handleCreateFolder = async () => {
-    if (folderName === undefined) return;
-    const folderDetails = createFolderObj(
-      {
-        folderName,
-        action: actionVarient,
-      },
-      jwtToken
-    );
-    if (!folderDetails) {
-      toast('Somthing went wrong!', {
-        duration: 5000,
-      });
-      return;
-    }
-    try {
-      await fetcher(folderDetails);
-    } catch (err) {
-      toast('Somthing went wrong!', {
-        description: `${err}`,
-        duration: 5000,
-      });
-      setFolderName('');
-      return;
-    }
-    mutate().then(() => {
-      toast.success(`${folderName} successfully created!`, {
-        duration: 5000,
-      });
-    });
-    setFolderName('');
   };
 
   const sortedItems = useMemo(
@@ -284,7 +246,7 @@ export default function TabularFolderView({
             }
             radius="sm"
             variant="bordered"
-            onClick={() => onOpen()}
+            onClick={() => onCreateFolderOpen()}
           >
             Create new
           </Button>
@@ -354,56 +316,14 @@ export default function TabularFolderView({
           )}
         </TableBody>
       </Table>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
-        radius="sm"
-        className="font-natosans"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-row gap-4">
-                <CiFolderOn className="text-2xl" />{' '}
-                <span> Create a new folder</span>
-              </ModalHeader>
-              <ModalBody className="mt-4">
-                <Input
-                  autoFocus
-                  radius="sm"
-                  label="Folder Name"
-                  variant="bordered"
-                  isInvalid={folders.some(({ name }) => name === folderName)}
-                  errorMessage="Folder already exists!"
-                  onValueChange={(e) => setFolderName(e)}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="default"
-                  variant="bordered"
-                  onPress={onClose}
-                  radius="sm"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  radius="sm"
-                  variant="bordered"
-                  onClick={() => {
-                    onClose();
-                    handleCreateFolder();
-                  }}
-                >
-                  Create
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <NewFolderModal
+        folderType={actionVarient}
+        isOpen={isCreateFolderOpen}
+        mutate={mutate}
+        onClose={onCreateFolderClose}
+        onOpenChange={onCreateFolderOpenChange}
+        folders={folders}
+      />
       <WarningModal
         actionText="Delete"
         isOpen={isWarningOpen}

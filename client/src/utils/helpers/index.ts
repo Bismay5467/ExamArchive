@@ -2,6 +2,8 @@
 import { TYear } from '@/types/search';
 import { IsUserAuthenticated } from './IsUserAuthenticated';
 
+export const MAX_CHAR_DISPLAY = 25;
+
 export const parseUTC = (timeStamp: string) => {
   const date = new Date(timeStamp);
   const day = date.getUTCDate();
@@ -19,5 +21,14 @@ export const getPreviousYears = (yearFilter: TYear) => {
   );
   return years;
 };
+
+export const toCamelCase = (word: string) =>
+  word.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+
+// eslint-disable-next-line no-confusing-arrow
+export const wordShortner = (word: string) =>
+  word.length > MAX_CHAR_DISPLAY
+    ? word.substring(0, MAX_CHAR_DISPLAY).concat('...')
+    : word;
 
 export { IsUserAuthenticated };
