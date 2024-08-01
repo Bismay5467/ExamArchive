@@ -33,7 +33,10 @@ export default function TagsEditor({
       });
       return;
     }
-    setTags((prev) => [...prev, newTagValue.toLowerCase()]);
+    setTags((prev) => [
+      ...prev,
+      ...newTagValue.trim().toLowerCase().split(',').filter(Boolean),
+    ]);
     setNewTagValue('');
   };
 
