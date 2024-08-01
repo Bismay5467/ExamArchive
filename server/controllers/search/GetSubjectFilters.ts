@@ -29,8 +29,18 @@ const GetSubjectFilters = asyncErrorHandler(
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .exec();
-    await redisClient.set(REDIS_KEY, JSON.stringify(result), 'EX', REDIS_TTL);
-    return res.status(SUCCESS_CODES.OK).json({ data: result });
+    const sanitizedResult = [
+      ...new Set(
+        result.map(({ subjectName }) => subjectName.trim().toLowerCase())
+      ),
+    ];
+    await redisClient.set(
+      REDIS_KEY,
+      JSON.stringify(sanitizedResult),
+      'EX',
+      REDIS_TTL
+    );
+    return res.status(SUCCESS_CODES.OK).json({ data: sanitizedResult });
   }
 );
 
