@@ -62,3 +62,15 @@ export const addModeratorObj = (
 
   return axiosObj;
 };
+
+export const updateModeratorCache = () => {
+  const url = `${SERVER_ROUTES.SUPER_ADMIN}/update`;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: {} },
+    method: 'PUT',
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
