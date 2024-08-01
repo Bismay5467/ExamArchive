@@ -8,9 +8,12 @@ import {
   ModalBody,
   ModalFooter,
   Spinner,
+  Tooltip,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import { CiFolderOn } from 'react-icons/ci';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
+import { HiOutlineFolderAdd } from 'react-icons/hi';
 import { KeyedMutator } from 'swr';
 import { IFolder, TAction } from '@/types/folder';
 import { createFolderObj } from '@/utils/axiosReqObjects';
@@ -86,9 +89,31 @@ export default function NewFolderModal({
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-row gap-4">
-              <CiFolderOn className="text-2xl" />{' '}
-              <span> Create a new folder</span>
+            <ModalHeader className="flex flex-row gap-x-4">
+              <CiFolderOn className="text-3xl self-center" />{' '}
+              <div className="flex flex-row gap-x-1">
+                <span className="self-center"> Create a new folder</span>
+                {folderType === 'UPLOAD' && (
+                  <Tooltip
+                    content={
+                      <div className="opacity-65">
+                        <p>
+                          We encourage that you adhere to the <br /> following
+                          format for folder naming:
+                        </p>
+                        <code>Subject-Code (Subject-Name)</code>
+                      </div>
+                    }
+                    radius="sm"
+                    placement="right"
+                    showArrow
+                  >
+                    <span className="self-center text-sm">
+                      <AiOutlineQuestionCircle />
+                    </span>
+                  </Tooltip>
+                )}
+              </div>
             </ModalHeader>
             <ModalBody className="mt-4">
               <Input
@@ -119,6 +144,7 @@ export default function NewFolderModal({
                   startContent: <Spinner color="secondary" size="sm" />,
                 })}
                 isDisabled={isLoading}
+                endContent={<HiOutlineFolderAdd className="text-xl" />}
               >
                 Create
               </Button>

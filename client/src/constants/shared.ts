@@ -65,6 +65,7 @@ export const bookmarkFileColumns = [
 
 export const uploadFileColumns = [
   { name: 'File name', uid: 'filename', sortable: false },
+  { name: 'Exam Type', uid: 'examType', sortable: true },
   { name: 'Status', uid: 'status', sortable: false },
   { name: 'Created at', uid: 'createdAt', sortable: true },
   { name: 'Last Modified', uid: 'updatedAt', sortable: true },
@@ -117,3 +118,6 @@ export const THEME = Object.freeze({
 export const KEY_CODES = Object.freeze({
   ENTER: 'Enter',
 });
+
+export const newFolderInstructions = `We encourage that you adhere to the following format for folder naming:\n
+<Subject-Code> (<Subject-Name>)`;
