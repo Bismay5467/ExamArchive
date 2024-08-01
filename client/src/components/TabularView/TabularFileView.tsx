@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable consistent-return */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable function-paren-newline */
@@ -72,7 +73,7 @@ const statusMap: Record<string, Record<string, any>> = {
   },
 };
 
-const MAX_CHAR_DISPLAY = 40;
+const MAX_CHAR_DISPLAY = 25;
 
 export default function TabularFileView({
   actionVarient,
@@ -118,7 +119,9 @@ export default function TabularFileView({
   const ROWS_PER_PAGE = 10;
 
   const filteredItems = useMemo(() => {
-    let filteredFiles = [...files];
+    let filteredFiles = [...files].filter(
+      (file) => file !== null && Object.keys(file).length > 0
+    );
 
     if (hasSearchFilter) {
       filteredFiles = filteredFiles.filter((file) =>
@@ -250,7 +253,16 @@ export default function TabularFileView({
         file[columnKey as keyof TFileType<typeof actionVarient>];
       const { day, month, year } = parseUTC(cellValue as string);
       const [heading, code, semester, examYear] =
-        columnKey === 'filename' ? (cellValue as string)!.split(',') : [];
+        columnKey === 'filename'
+          ? actionVarient === 'BOOKMARK'
+            ? (cellValue as string)!.split(',')
+            : [
+                (file as TFileType<'UPLOAD'>).subjectName,
+                (file as TFileType<'UPLOAD'>).subjectCode,
+                (file as TFileType<'UPLOAD'>).semester,
+                (file as TFileType<'UPLOAD'>).year,
+              ]
+          : [];
 
       switch (columnKey) {
         case 'filename':
@@ -264,11 +276,9 @@ export default function TabularFileView({
                     : heading}{' '}
                   {isBookmark && <span>({code})</span>}
                 </span>
-                {isBookmark && (
-                  <span className="text-sm opacity-60">
-                    {semester}, {examYear}
-                  </span>
-                )}
+                <span className="text-sm opacity-60">
+                  {semester}, {examYear}
+                </span>
               </span>
             </div>
           );

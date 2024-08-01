@@ -15,7 +15,7 @@ import { getSignInObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { useAuth } from '@/hooks/useAuth';
 import { CLIENT_ROUTES } from '@/constants/routes';
-import { AUTH_TOKEN } from '@/constants/auth';
+import { AUTH_TOKEN, JWT_MAX_AGE } from '@/constants/auth';
 
 export default function Login() {
   const {
@@ -35,7 +35,7 @@ export default function Login() {
     const reqObj = getSignInObj(formData);
     try {
       const res = await fetcher(reqObj);
-      Cookies.set(AUTH_TOKEN, res.data.token);
+      Cookies.set(AUTH_TOKEN, res.data.token, { expires: JWT_MAX_AGE });
     } catch (err: any) {
       toast.error('Somthing went wrong!', {
         description: `${err.response.data.message}`,

@@ -32,7 +32,13 @@ export type TFileType<T extends TAction> = {
   createdAt: string;
   updatedAt: string;
 } & (T extends 'UPLOAD'
-  ? { status: string }
+  ? {
+      status: string;
+      semester: string;
+      subjectCode: string;
+      year: string;
+      subjectName: string;
+    }
   : T extends 'BOOKMARK'
     ? { isPinned: boolean }
     : {});

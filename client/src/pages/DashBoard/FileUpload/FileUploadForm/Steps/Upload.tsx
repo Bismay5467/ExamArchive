@@ -57,7 +57,7 @@ export default function Upload({
   const [collectionName, setCollectionName] = useState<string>();
   const { data, mutate } = useSWR(getFolderNameObj('UPLOAD', jwtToken));
   const folderNames: Array<{ name: string; _id: string }> =
-    data?.data?.data ?? undefined;
+    data?.data?.data ?? [];
 
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
