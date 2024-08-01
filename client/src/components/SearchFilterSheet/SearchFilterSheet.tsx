@@ -52,17 +52,13 @@ export function SearchFilterSheet() {
 
     try {
       const response = await fetcher(requestObj);
+
       const newOptions: TFilterOption = {
         component: 'autocomplete',
         key: 'subjectName',
         label: 'Subject Name',
-        options: response.data.data.map((val: any) => ({
-          label: val.subjectName
-            .split(' ')
-            .map((word: string) =>
-              word.charAt(0).toUpperCase().concat(word.slice(1).toLowerCase())
-            )
-            .join(' '),
+        options: response.data.data.map((subjectName: any) => ({
+          label: subjectName,
         })),
         multiple: false,
       };
