@@ -274,19 +274,20 @@ export default function TabularFileView({
             <div className="flex min-w-[300px] flex-row gap-x-2 cursor-pointer">
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
               <span className="flex flex-col">
-                <span className="text-sm min-w-[120px]">
-                  <Tooltip
-                    content={toCamelCase(heading)}
-                    radius="sm"
-                    placement="right"
-                    delay={200}
-                    showArrow
-                    isDisabled={heading.length <= MAX_CHAR_DISPLAY}
-                  >
+                <Tooltip
+                  content={toCamelCase(heading)}
+                  className="text-sm min-w-[120px]"
+                  radius="sm"
+                  placement="right"
+                  delay={200}
+                  showArrow
+                  isDisabled={heading.length <= MAX_CHAR_DISPLAY}
+                >
+                  <span>
                     {toCamelCase(wordShortner(heading))}
-                  </Tooltip>
-                  {isBookmark && <span>({code})</span>}
-                </span>
+                    {isBookmark && <span>({code})</span>}
+                  </span>
+                </Tooltip>
                 <span className="text-sm opacity-60">
                   {semester}, {examYear}
                 </span>
