@@ -46,7 +46,7 @@ import {
 } from '@/utils/axiosReqObjects';
 import { TAction, TFileType } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
-import { parseUTC } from '@/utils/helpers';
+import { parseUTC, toCamelCase, wordShortner } from '@/utils/helpers';
 import {
   bookmarkFileColumns,
   uploadFileColumns,
@@ -72,8 +72,6 @@ const statusMap: Record<string, Record<string, any>> = {
     icon: <Spinner size="sm" color="default" className="mr-1" />,
   },
 };
-
-const MAX_CHAR_DISPLAY = 25;
 
 export default function TabularFileView({
   actionVarient,
@@ -271,9 +269,7 @@ export default function TabularFileView({
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
               <span className="flex flex-col">
                 <span className="text-sm min-w-[120px]">
-                  {heading.length > MAX_CHAR_DISPLAY
-                    ? heading.substring(0, MAX_CHAR_DISPLAY).concat(' ...')
-                    : heading}{' '}
+                  {toCamelCase(wordShortner(heading))}{' '}
                   {isBookmark && <span>({code})</span>}
                 </span>
                 <span className="text-sm opacity-60">

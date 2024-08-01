@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   FieldErrors,
   UseFormClearErrors,
@@ -8,14 +8,8 @@ import {
 import {
   Select,
   SelectItem,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
-  Input,
   Autocomplete,
   AutocompleteItem,
 } from '@nextui-org/react';
@@ -23,17 +17,15 @@ import { toast } from 'sonner';
 
 import useSWR from 'swr';
 import { RiDeleteBin6Line, RiFolderAddLine } from 'react-icons/ri';
-import { CiFolderOn } from 'react-icons/ci';
 import { EXAM_TYPES } from '@/constants/shared';
 import { FileInput } from '@/components/ui/file-input';
 import { TFileUploadFormFields } from '@/types/upload';
-import {
-  createFolderObj,
-  getFolderNameObj,
-} from '@/utils/axiosReqObjects/folder';
-import fetcher from '@/utils/fetcher/fetcher';
+import { getFolderNameObj } from '@/utils/axiosReqObjects/folder';
+
 import { MAX_FILE_SIZE } from '@/constants/upload';
 import { useAuth } from '@/hooks/useAuth';
+import NewFolderModal from '@/components/NewFolderModal/NewFolderModal';
+import { IFolder } from '@/types/folder';
 
 export default function Upload({
   register,
@@ -53,11 +45,15 @@ export default function Upload({
   const {
     authState: { jwtToken },
   } = useAuth();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [collectionName, setCollectionName] = useState<string>();
+  const {
+    isOpen: isCreateFolderOpen,
+    onOpen: onCreateFolderOpen,
+    onClose: onCreateFolderClose,
+    onOpenChange: onCreateFolderOpenChange,
+  } = useDisclosure();
   const { data, mutate } = useSWR(getFolderNameObj('UPLOAD', jwtToken));
-  const folderNames: Array<{ name: string; _id: string }> =
-    data?.data?.data ?? [];
+  // TODO: Ifolder API type needs to be consistent!
+  const folders: Array<IFolder> = data?.data?.data ?? [];
 
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -73,39 +69,6 @@ export default function Upload({
         duration: 5000,
       });
     }
-  };
-
-  const handleCreateFolder = async () => {
-    if (collectionName === undefined) return;
-    const folderDetails = createFolderObj(
-      {
-        folderName: collectionName,
-        action: 'UPLOAD',
-      },
-      jwtToken
-    );
-    if (!folderDetails) {
-      toast('Somthing went wrong!', {
-        duration: 5000,
-      });
-      return;
-    }
-    try {
-      await fetcher(folderDetails);
-    } catch (err: any) {
-      toast('Somthing went wrong!', {
-        description: `${err.response.data.message}`,
-        duration: 5000,
-      });
-      setCollectionName('');
-      return;
-    }
-    mutate().then(() => {
-      toast.success(`${collectionName} successfully created!`, {
-        duration: 5000,
-      });
-    });
-    setCollectionName('');
   };
 
   return (
@@ -164,14 +127,14 @@ export default function Upload({
             errorMessage="*Required"
             onFocus={() => errors.folderId && clearErrors('folderId')}
           >
-            {folderNames?.map(({ _id, name }) => (
+            {folders?.map(({ _id, name }) => (
               <AutocompleteItem key={_id} value={_id}>
                 {name}
               </AutocompleteItem>
             ))}
           </Autocomplete>
           <Button
-            onPress={onOpen}
+            onPress={onCreateFolderOpen}
             radius="sm"
             size="lg"
             variant="bordered"
@@ -182,58 +145,14 @@ export default function Upload({
           </Button>
         </div>
       </div>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
-        radius="sm"
-        className="font-natosans"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-row gap-4">
-                <CiFolderOn className="text-2xl" />{' '}
-                <span> Create a new folder</span>
-              </ModalHeader>
-              <ModalBody className="mt-4">
-                <Input
-                  autoFocus
-                  radius="sm"
-                  label="Folder Name"
-                  variant="bordered"
-                  isInvalid={folderNames.some(
-                    ({ name }) => name === collectionName
-                  )}
-                  errorMessage="Folder already exists!"
-                  onValueChange={(e) => setCollectionName(e)}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="default"
-                  variant="bordered"
-                  onPress={onClose}
-                  radius="sm"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  radius="sm"
-                  variant="bordered"
-                  onClick={() => {
-                    onClose();
-                    handleCreateFolder();
-                  }}
-                >
-                  Create
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <NewFolderModal
+        folderType="UPLOAD"
+        isOpen={isCreateFolderOpen}
+        mutate={mutate}
+        onClose={onCreateFolderClose}
+        onOpenChange={onCreateFolderOpenChange}
+        folders={folders}
+      />
     </section>
   );
 }
