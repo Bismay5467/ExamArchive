@@ -55,7 +55,15 @@ export const sanitizeInput = (
           semester,
           subjectCode,
           subjectName,
-          tags: [...new Set([...tags, branch, subjectCode, subjectName, year])],
+          tags: [
+            ...new Set([
+              ...tags.split(','),
+              branch,
+              subjectCode,
+              subjectName,
+              year,
+            ]),
+          ],
         });
         break;
       default:
