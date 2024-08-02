@@ -27,3 +27,9 @@ export const pinFileSchema = z.object({
   fileId: z.string().refine((parentId) => Types.ObjectId.isValid(parentId)),
   action: z.enum(['PIN', 'UNPIN']),
 });
+
+export const renameFolderSchema = z.object({
+  folderId: z.string().refine((id) => Types.ObjectId.isValid(id)),
+  newName: z.string().min(1).max(30),
+  action: z.enum(['BOOKMARK', 'UPLOAD']),
+});
