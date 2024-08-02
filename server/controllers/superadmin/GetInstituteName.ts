@@ -22,11 +22,12 @@ const GetInstituteNames = asyncErrorHandler(
       return res.status(SUCCESS_CODES.OK).json({ data: JSON.parse(data) });
     }
     let result = await User.find({ role: ROLE.ADMIN })
-      .select({ insituteName: 1, _id: 0 })
+      .select({ instituteName: 1, _id: 0 })
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .exec();
-    result = result.map(({ insituteName }) => insituteName);
+    result = [...new Set(result.map(({ instituteName }) => instituteName))];
+
     if (result.length > 0) {
       await redisClient.set(REDIS_KEY, JSON.stringify(result));
     }

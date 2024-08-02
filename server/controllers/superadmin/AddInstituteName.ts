@@ -14,18 +14,18 @@ export const REDIS_KEY = 'INSTITUTE_NAME';
 
 const AddInstituteName = asyncErrorHandler(
   async (req: Request, res: Response) => {
-    const { insituteName } = req.body.data as z.infer<
+    const { instituteName } = req.body.data as z.infer<
       typeof addInsitituteNameInputSchema
     >;
     let result = await User.find({ role: ROLE.ADMIN })
-      .select({ id: 0, instituteName: 1 })
+      .select({ instituteName: 1 })
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .exec();
     result = [
       ...new Set([
-        ...result.map(({ instituteName }) => instituteName),
-        insituteName,
+        ...result.map(({ instituteName: name }) => name),
+        instituteName,
       ]),
     ];
     if (redisClient === null) {

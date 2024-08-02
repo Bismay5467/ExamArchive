@@ -20,7 +20,7 @@ const updateHelper = async ({ role }: { role: TRole }) => {
           username: 1,
           email: 1,
           invitationStatus: 1,
-          insituteName: 1,
+          instituteName: 1,
         }
       : { _id: 1, username: 1, email: 1, invitationStatus: 1 }
   ) as Record<string, number>;
@@ -35,14 +35,14 @@ const updateHelper = async ({ role }: { role: TRole }) => {
       email,
       username,
       invitationStatus,
-      insituteName,
+      instituteName,
     } = info;
     return {
       userId,
       email,
       username,
       invitationStatus,
-      ...(role === 'ADMIN' && { insituteName }),
+      ...(role === 'ADMIN' && { instituteName }),
     };
   });
 

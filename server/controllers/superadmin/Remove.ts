@@ -37,7 +37,7 @@ const Remove = asyncErrorHandler(async (req: Request, res: Response) => {
     }
     const result = await User.findOneAndUpdate(
       { username, email },
-      { role: ROLE.USER },
+      { role: ROLE.USER, $unset: { instituteName: '' } },
       { upsert: false, new: true }
     )
       .select({ _id: 1 })

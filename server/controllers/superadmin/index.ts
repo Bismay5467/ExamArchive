@@ -1,7 +1,7 @@
 import Add from './Add';
 import AddInstituteName from './AddInstituteName';
 import Get from './Get';
-import GetInstituteNames from './GetInstituteNames';
+import GetInstituteNames from './GetInstituteName';
 import Remove from './Remove';
 import UpdateCache from './UpdateCache';
 
