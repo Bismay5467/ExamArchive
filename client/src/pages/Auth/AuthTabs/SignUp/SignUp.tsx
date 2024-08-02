@@ -7,12 +7,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { GrFormNextLink } from 'react-icons/gr';
 import { RiLoginCircleLine } from 'react-icons/ri';
+import { useCallback } from 'react';
 import { newUserInputSchema } from '@/schemas/authSchema';
 import { TSignUpFormFields } from '@/types/auth';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
 import AccountInfo from './FormSteps/AccountInfo';
 import OTPInput from './FormSteps/OTPInput';
-import { getSignUpObj } from '@/utils/axiosReqObjects';
+import { getSignUpObj, updateModeratorCache } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { CLIENT_ROUTES } from '@/constants/routes';
 
@@ -36,6 +37,14 @@ export default function SignUp() {
     />,
     <OTPInput setValue={setValue} errors={errors} clearErrors={clearErrors} />,
   ]);
+
+  const updateCache = useCallback(async () => {
+    try {
+      await fetcher(updateModeratorCache());
+    } catch (err: any) {
+      console.warn('Cache update failed!');
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<TSignUpFormFields> = async (formData) => {
     const reqObj = getSignUpObj({
@@ -63,6 +72,7 @@ export default function SignUp() {
         description: 'You can log in now!',
         duration: 5000,
       });
+      updateCache();
       navigate(CLIENT_ROUTES.AUTH_LOGIN);
     }
   };

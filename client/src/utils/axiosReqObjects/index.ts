@@ -31,6 +31,7 @@ import {
   getModeratorsObj,
   removeModeratorObj,
   addModeratorObj,
+  updateModeratorCache,
 } from './superadmin';
 import { fileUploadObj, getUploadStatsObj } from './fileUpload';
 
@@ -63,4 +64,5 @@ export {
   getModeratorsObj,
   removeModeratorObj,
   addModeratorObj,
+  updateModeratorCache,
 };

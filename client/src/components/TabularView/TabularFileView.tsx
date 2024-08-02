@@ -14,6 +14,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Tooltip,
   Input,
   Button,
   Pagination,
@@ -46,7 +47,12 @@ import {
 } from '@/utils/axiosReqObjects';
 import { TAction, TFileType } from '@/types/folder';
 import { useAuth } from '@/hooks/useAuth';
-import { parseUTC, toCamelCase, wordShortner } from '@/utils/helpers';
+import {
+  MAX_CHAR_DISPLAY,
+  parseUTC,
+  toCamelCase,
+  wordShortner,
+} from '@/utils/helpers';
 import {
   bookmarkFileColumns,
   uploadFileColumns,
@@ -268,14 +274,30 @@ export default function TabularFileView({
             <div className="flex min-w-[300px] flex-row gap-x-2 cursor-pointer">
               <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
               <span className="flex flex-col">
-                <span className="text-sm min-w-[120px]">
-                  {toCamelCase(wordShortner(heading))}{' '}
-                  {isBookmark && <span>({code})</span>}
-                </span>
+                <Tooltip
+                  content={toCamelCase(heading)}
+                  className="text-sm min-w-[120px]"
+                  radius="sm"
+                  placement="right"
+                  delay={200}
+                  showArrow
+                  isDisabled={heading.length <= MAX_CHAR_DISPLAY}
+                >
+                  <span>
+                    {toCamelCase(wordShortner(heading))}
+                    {isBookmark && <span>({code})</span>}
+                  </span>
+                </Tooltip>
                 <span className="text-sm opacity-60">
                   {semester}, {examYear}
                 </span>
               </span>
+            </div>
+          );
+        case 'examType':
+          return (
+            <div className="min-w-[100px] font-medium opacity-65">
+              {cellValue}
             </div>
           );
         case 'createdAt':

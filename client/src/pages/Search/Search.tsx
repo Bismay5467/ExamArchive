@@ -1,4 +1,6 @@
 /* eslint-disable no-underscore-dangle */
+import { useEffect, useMemo } from 'react';
+import { Spinner } from '@nextui-org/react';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import { SearchFilterSheet } from '@/components/SearchFilterSheet/SearchFilterSheet';
 import { useSearch } from '@/hooks/useSearch';
@@ -10,7 +12,7 @@ import NoResults from './Placeholders/NoResults';
 
 export default function Search() {
   const {
-    swrResponse: { data: response, isLoading },
+    swrResponse: { data: response, isLoading, isValidating, setSize },
     searchInputs,
     isEmptySearch,
   } = useSearch();
@@ -22,6 +24,27 @@ export default function Search() {
   const data: ISearchData[] = reducedSearchResults
     ? [].concat(...reducedSearchResults)
     : [];
+  const hasMore = useMemo(
+    () => response?.at(response.length - 1).data.hasMore ?? false,
+    [response]
+  );
+  const handleScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight ||
+      isLoading ||
+      isValidating
+    ) {
+      return;
+    }
+
+    if (hasMore) setSize((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoading]);
 
   return (
     <div className="max-w-[1200px] mx-auto p-4">
@@ -43,6 +66,12 @@ export default function Search() {
             {data.map((searchData) => (
               <ResultCard data={searchData} key={searchData._id} />
             ))}
+            {isValidating && hasMore && <Spinner size="md" color="secondary" />}
+            {!hasMore && (
+              <p className="text-slate-400 font-medium cursor-pointer w-fit self-center">
+                End of Results...
+              </p>
+            )}
           </>
         )}
       </div>
