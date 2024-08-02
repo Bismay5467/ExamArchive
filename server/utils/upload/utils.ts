@@ -36,7 +36,10 @@ export const sanitizeInput = (
       folderId,
     } = file;
     const fileObj = {
-      tags: tags.split(','),
+      tags: tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean),
       uploadedBy: userId,
       year,
       examType,
@@ -57,7 +60,10 @@ export const sanitizeInput = (
           subjectName,
           tags: [
             ...new Set([
-              ...tags.split(','),
+              ...tags
+                .split(',')
+                .map((tag) => tag.trim())
+                .filter(Boolean),
               branch,
               subjectCode,
               subjectName,
