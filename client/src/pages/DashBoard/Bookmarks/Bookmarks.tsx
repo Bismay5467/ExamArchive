@@ -12,6 +12,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Tooltip,
 } from '@nextui-org/react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiPushpinLine } from 'react-icons/ri';
@@ -23,7 +24,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { IPinnedFile } from '@/types/folder';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import fetcher from '@/utils/fetcher/fetcher';
-import { parseUTC, toCamelCase, wordShortner } from '@/utils/helpers';
+import {
+  MAX_CHAR_DISPLAY,
+  parseUTC,
+  toCamelCase,
+  wordShortner,
+} from '@/utils/helpers';
 import { monthNames } from '@/constants/shared';
 import { IPinContext } from '@/types/bookmarks';
 import { PinCardShimmer } from './Shimmer/Shimmer';
@@ -115,9 +121,17 @@ export default function Bookmarks() {
                     <AiOutlineFilePdf className="text-3xl text-[#e81a0c]" />
                   </div>
                   <div className="grow font-medium tracking-wide flex flex-col gap-y-1">
-                    <span className="dark:text-slate-300 text-slate-700">
+                    <Tooltip
+                      content={toCamelCase(subjectName)}
+                      className="dark:text-slate-300 text-slate-700"
+                      radius="sm"
+                      placement="top"
+                      delay={200}
+                      showArrow
+                      isDisabled={subjectName.length <= MAX_CHAR_DISPLAY}
+                    >
                       {toCamelCase(wordShortner(subjectName))}
-                    </span>
+                    </Tooltip>
                     <span className="text-sm text-slate-500">
                       Added on: {`${monthNames[month]} ${day}, ${year}`}
                     </span>
