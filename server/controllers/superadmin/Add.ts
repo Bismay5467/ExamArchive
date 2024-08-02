@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { render } from '@react-email/render';
@@ -21,7 +22,7 @@ import sendMail from '../../utils/emails/sendMail';
 import { SERVER_ERROR, SUCCESS_CODES } from '../../constants/statusCode';
 
 const Add = asyncErrorHandler(async (req: Request, res: Response) => {
-  const { username, email, role } = req.body.data as z.infer<
+  const { username, email, role, instituteName } = req.body.data as z.infer<
     typeof addInputSchema
   >;
   const session = await mongoose.startSession();
@@ -37,16 +38,24 @@ const Add = asyncErrorHandler(async (req: Request, res: Response) => {
     const saltStrength = 10;
     const salt = await bcrypt.genSalt(saltStrength);
     const hashedPassword = await bcrypt.hash(password as string, salt);
+    const update =
+      role === 'ADMIN'
+        ? {
+            password: hashedPassword,
+            invitationStatus: INVITATION_STATUS.PENDING,
+            instituteName,
+            role,
+          }
+        : {
+            password: hashedPassword,
+            invitationStatus: INVITATION_STATUS.PENDING,
+            role,
+          };
     const [result, doKeyExists] = await Promise.all([
-      User.findOneAndUpdate(
-        { username, email },
-        {
-          password: hashedPassword,
-          invitationStatus: INVITATION_STATUS.PENDING,
-          role,
-        },
-        { upsert: true, new: true }
-      )
+      User.findOneAndUpdate({ username, email }, update, {
+        upsert: true,
+        new: true,
+      })
         .select({ _id: 1, username: 1, email: 1, invitationStatus: 1 })
         .session(session)
         .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)

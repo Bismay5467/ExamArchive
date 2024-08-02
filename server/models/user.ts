@@ -38,6 +38,7 @@ const UserSchema: Schema = new mongoose.Schema(
         message: 'Password should contain atleast one digit and one symbol',
       },
     },
+    instituteName: { type: String, index: true },
     role: {
       type: String,
       enum: Object.values(ROLE),
