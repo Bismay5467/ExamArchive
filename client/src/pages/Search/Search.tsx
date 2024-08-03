@@ -67,7 +67,7 @@ export default function Search() {
               <ResultCard data={searchData} key={searchData._id} />
             ))}
             {isValidating && hasMore && <Spinner size="md" color="secondary" />}
-            {!hasMore && (
+            {!hasMore && !isEmptySearch && (
               <p className="text-slate-400 font-medium cursor-pointer w-fit self-center">
                 End of Results...
               </p>
