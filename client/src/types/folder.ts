@@ -10,6 +10,12 @@ export interface IDeleteFolder {
   folderId: string;
 }
 
+export interface IRenameFolder {
+  newName: string;
+  action: TAction;
+  folderId: string;
+}
+
 // Folder is also a file (parentId = "")
 export interface IGetFilesData {
   action: TAction;

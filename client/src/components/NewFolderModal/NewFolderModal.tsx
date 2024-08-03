@@ -69,7 +69,7 @@ export default function NewFolderModal({
       setIsLoading(false);
       return;
     }
-    mutate().then(() => {
+    await mutate().then(() => {
       toast.success(`${folderName} successfully created!`, {
         duration: 5000,
       });

@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { FaFolderOpen } from 'react-icons/fa';
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { IoMdAddCircleOutline } from 'react-icons/io';
+import { MdDriveFileRenameOutline } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { folderColumns, monthNames } from '@/constants/shared';
@@ -39,6 +40,7 @@ import fetcher from '@/utils/fetcher/fetcher';
 import RenderItems from '../Pagination/RenderItems';
 import WarningModal from '../WarningModal/WarningModal';
 import NewFolderModal from '../NewFolderModal/NewFolderModal';
+import RenameFolderModal from '../RenameFolderModal/RenameFolderModal';
 
 export default function TabularFolderView({
   actionVarient,
@@ -55,12 +57,23 @@ export default function TabularFolderView({
     onOpenChange: onCreateFolderOpenChange,
   } = useDisclosure();
   const {
+    isOpen: isRenameFolderOpen,
+    onOpen: onRenameFolderOpen,
+    onClose: onRenameFolderClose,
+    onOpenChange: onRenameFolderOpenChange,
+  } = useDisclosure();
+  const {
     isOpen: isWarningOpen,
     onOpen: onWarningOpen,
     onClose: onWarningClose,
     onOpenChange: onWarningOpenChange,
   } = useDisclosure();
+
   const [deletefolderId, setDeleteFolderId] = useState<string>();
+  const [renamefolderInfo, setRenamefolderInfo] = useState<{
+    folderId: string;
+    folderName: string;
+  }>();
   const {
     data: response,
     mutate,
@@ -127,6 +140,10 @@ export default function TabularFolderView({
   const deleteModalOpen = (id: string) => {
     setDeleteFolderId(id);
     onWarningOpen();
+  };
+  const renameModalOpen = (id: string, name: string) => {
+    setRenamefolderInfo({ folderId: id, folderName: name });
+    onRenameFolderOpen();
   };
 
   const sortedItems = useMemo(
@@ -202,6 +219,15 @@ export default function TabularFolderView({
                   onPress={() => deleteModalOpen(folder._id)}
                 >
                   Delete Folder
+                </DropdownItem>
+                <DropdownItem
+                  key="rename"
+                  startContent={
+                    <MdDriveFileRenameOutline className={iconClasses} />
+                  }
+                  onPress={() => renameModalOpen(folder._id, folder.name)}
+                >
+                  Rename Folder
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -316,6 +342,14 @@ export default function TabularFolderView({
           )}
         </TableBody>
       </Table>
+      <RenameFolderModal
+        folderType={actionVarient}
+        isOpen={isRenameFolderOpen}
+        mutate={mutate}
+        onClose={onRenameFolderClose}
+        onOpenChange={onRenameFolderOpenChange}
+        folderInfo={renamefolderInfo}
+      />
       <NewFolderModal
         folderType={actionVarient}
         isOpen={isCreateFolderOpen}
