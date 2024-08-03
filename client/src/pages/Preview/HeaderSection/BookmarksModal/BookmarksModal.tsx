@@ -92,16 +92,15 @@ export default function BookmarksModal({
         }
         try {
           await fetcher(bookmarkReqObj);
-        } catch (err) {
+        } catch (err: any) {
           toast.error('Somthing went wrong!', {
-            description: `${err}`,
+            description: `${err.response.data.message}`,
             duration: 5000,
           });
         }
-        toast.success('File bookmarked successfully!', {
-          description: `Added to folder: ${collectionList?.find(({ _id }) => _id === id)?.name ?? collectionName}`,
-          duration: 2000,
-        });
+      });
+      toast.success('File bookmarked successfully!', {
+        duration: 2000,
       });
       setCollectionIDs([]);
     },
@@ -153,7 +152,6 @@ export default function BookmarksModal({
         duration: 5000,
       });
     });
-    setCollectionName('');
   }, [collectionName]);
 
   const handleSubmit = () => {

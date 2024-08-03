@@ -22,8 +22,13 @@ export const getPreviousYears = (yearFilter: TYear) => {
   return years;
 };
 
-export const toCamelCase = (word: string) =>
-  word.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+export const toCamelCase = (line: string) =>
+  line
+    .split(' ')
+    .map((word) =>
+      word.charAt(0).toUpperCase().concat(word.slice(1).toLowerCase())
+    )
+    .join(' ');
 
 // eslint-disable-next-line no-confusing-arrow
 export const wordShortner = (word: string) =>

@@ -13,7 +13,7 @@ export default function CustomDropDown({ menu }: { menu: IDropDownProps[] }) {
     <Dropdown className="font-natosans" radius="sm">
       <DropdownTrigger>
         <Button variant="light" size="sm" isIconOnly className="self-center">
-          <FaEllipsisVertical className="text-lg" />
+          <FaEllipsisVertical className="text-medium sm:text-lg" />
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions" variant="light">
