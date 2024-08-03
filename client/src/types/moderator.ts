@@ -11,4 +11,5 @@ export interface IModerator {
   email: string;
   username: string;
   role: TModeratorRole;
+  instituteName: string;
 }

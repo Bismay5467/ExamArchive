@@ -102,7 +102,7 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
 
   const pages = Math.max(Math.ceil(filteredItems.length / ROWS_PER_PAGE), 0);
 
-  const handleDelete = useCallback(async (moderator: IModerator) => {
+  const handleDelete = useCallback(async (moderator: Partial<IModerator>) => {
     const reqObj = removeModeratorObj(moderator, jwtToken);
     if (!reqObj) {
       toast.error('Something went wrong!', {
@@ -330,6 +330,7 @@ export default function TabularView({ varient }: { varient: TModeratorRole }) {
         onClose={onClose}
         onOpenChange={onOpenChange}
         role={varient}
+        mutate={mutate}
       />
     </>
   );

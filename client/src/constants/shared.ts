@@ -121,3 +121,5 @@ export const KEY_CODES = Object.freeze({
 
 export const newFolderInstructions = `We encourage that you adhere to the following format for folder naming:\n
 <Subject-Code> (<Subject-Name>)`;
+
+export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

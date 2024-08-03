@@ -8,7 +8,7 @@ export const addInputSchema = z.object({
   email: z.string().email(),
   username: z.string().min(1).max(20),
   role: z.enum([ROLE.ADMIN, ROLE.SUPERADMIN]),
-  instituteName: z.string().trim().toLowerCase().min(5).max(200).optional(),
+  instituteName: z.string().trim().toLowerCase().min(5).max(200),
 });
 
 export const removeInputSchema = z.object({
