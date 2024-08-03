@@ -134,7 +134,7 @@ export default function HeaderSection({
           </span>
         </div>
       </div>
-      <div className="w-full h-0.5 bg-slate-200" />
+      <div className="w-full h-[1px] bg-slate-200" />
       <BookmarksModal
         isOpen={isBookmarkOpen}
         onClose={onBookmarkClose}
