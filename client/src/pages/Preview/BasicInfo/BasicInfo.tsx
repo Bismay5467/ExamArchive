@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { SiGoogleclassroom } from 'react-icons/si';
 import { HiOutlineAcademicCap } from 'react-icons/hi2';
 import { IoBookOutline, IoPersonOutline } from 'react-icons/io5';

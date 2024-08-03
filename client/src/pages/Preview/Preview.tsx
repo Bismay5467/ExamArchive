@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable function-paren-newline */
+
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
