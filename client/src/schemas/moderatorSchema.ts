@@ -1,4 +1,3 @@
-/* eslint-disable newline-per-chained-call */
 /* eslint-disable no-magic-numbers */
 import { z } from 'zod';
 
