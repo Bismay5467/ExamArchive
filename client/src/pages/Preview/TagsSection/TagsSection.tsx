@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import {
   Modal,
   ModalContent,
@@ -11,6 +12,7 @@ import {
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
+import { MdDriveFileRenameOutline } from 'react-icons/md';
 import { KeyedMutator } from 'swr';
 import { FaHashtag } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -185,7 +187,9 @@ export default function TagsSection({
                   onPress={handleSubmit}
                   radius="sm"
                   {...(!isEditing && {
-                    startContent: (
+                    startContent: isDeletable ? (
+                      <MdDriveFileRenameOutline className="text-xl font-semibold" />
+                    ) : (
                       <IoIosAddCircleOutline className="text-xl font-semibold" />
                     ),
                   })}
@@ -194,7 +198,11 @@ export default function TagsSection({
                   })}
                   isDisabled={isLoading}
                 >
-                  {isEditing ? 'Save and publish' : 'Add more'}
+                  {isEditing
+                    ? 'Save and publish'
+                    : isDeletable
+                      ? 'Edit'
+                      : 'Add more'}
                 </Button>
               </ModalFooter>
             </>
