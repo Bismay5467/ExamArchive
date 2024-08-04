@@ -7,11 +7,13 @@ import {
   Button,
   Input,
   Spinner,
+  Tooltip,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 import React, { useState } from 'react';
 import { MdDriveFileRenameOutline } from 'react-icons/md';
 import { KeyedMutator } from 'swr';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import { KEY_CODES } from '@/constants/shared';
 import { TAction } from '@/types/folder';
 import { renameFolderObj } from '@/utils/axiosReqObjects/folder';
@@ -112,7 +114,29 @@ export default function RenameFolderModal({
           <>
             <ModalHeader className="flex flex-row gap-x-3">
               <MdDriveFileRenameOutline className="self-center text-2xl" />
-              <span>Rename to?</span>
+              <div className="flex flex-row gap-x-1">
+                <span>Rename to?</span>
+                {folderType === 'UPLOAD' && (
+                  <Tooltip
+                    content={
+                      <div className="opacity-65">
+                        <p>
+                          We encourage that you adhere to the <br /> following
+                          format for folder naming:
+                        </p>
+                        <code>Subject-Code [Subject-Name]</code>
+                      </div>
+                    }
+                    radius="sm"
+                    placement="right"
+                    showArrow
+                  >
+                    <span className="self-center text-sm">
+                      <AiOutlineQuestionCircle />
+                    </span>
+                  </Tooltip>
+                )}
+              </div>
             </ModalHeader>
             <ModalBody className="font-sm">
               <Input

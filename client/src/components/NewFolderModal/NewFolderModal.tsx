@@ -101,7 +101,7 @@ export default function NewFolderModal({
                           We encourage that you adhere to the <br /> following
                           format for folder naming:
                         </p>
-                        <code>Subject-Code (Subject-Name)</code>
+                        <code>Subject-Code [Subject-Name]</code>
                       </div>
                     }
                     radius="sm"
