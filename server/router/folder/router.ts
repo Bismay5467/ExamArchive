@@ -11,6 +11,7 @@ import {
   GetFolderNames,
   GetPinnedFiles,
   PinFile,
+  RenameFolder,
 } from '../../controllers/folders';
 import {
   createFolderInputSchema,
@@ -18,6 +19,7 @@ import {
   getFilesInputSchema,
   getFolderNamesSchema,
   pinFileSchema,
+  renameFolderSchema,
 } from './schema';
 
 const router = express.Router();
@@ -50,6 +52,15 @@ router.get(
     validate(getFolderNamesSchema, 'QUERY'),
   ],
   GetFolderNames
+);
+router.put(
+  '/rename',
+  [
+    verifyUser,
+    privilege([ROLE.ADMIN, ROLE.USER]),
+    validate(renameFolderSchema, 'BODY'),
+  ],
+  RenameFolder
 );
 router.delete(
   '/delete',

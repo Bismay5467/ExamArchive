@@ -22,14 +22,31 @@ const Get = asyncErrorHandler(async (req: Request, res: Response) => {
     const parsedInfo = adminInfo.map((info) => JSON.parse(info));
     return res.status(SUCCESS_CODES.OK).json({ data: parsedInfo });
   }
+  const projection = (
+    role === 'ADMIN'
+      ? { _id: 1, username: 1, email: 1, invitationStatus: 1, instituteName: 1 }
+      : { _id: 1, username: 1, email: 1, invitationStatus: 1 }
+  ) as Record<string, number>;
   adminInfo = await User.find({ role })
-    .select({ _id: 1, username: 1, email: 1, invitationStatus: 1 })
+    .select(projection)
     .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
     .lean()
     .exec();
   const sanitizedInfo = adminInfo.map((info) => {
-    const { _id: userId, email, username, invitationStatus } = info;
-    return { userId, email, username, invitationStatus };
+    const {
+      _id: userId,
+      email,
+      username,
+      invitationStatus,
+      instituteName,
+    } = info;
+    return {
+      userId,
+      email,
+      username,
+      invitationStatus,
+      ...(role === 'ADMIN' && { instituteName }),
+    };
   });
 
   const saveInfoToCachePromises = sanitizedInfo.map((info) =>

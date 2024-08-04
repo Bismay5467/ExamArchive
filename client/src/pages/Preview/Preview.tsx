@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable function-paren-newline */
+
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
@@ -23,6 +23,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { getUpdateViewCountObj } from '@/utils/axiosReqObjects/file';
 import Comments from './Comments/Comments';
+import HeaderSection from './HeaderSection/HeaderSection';
 
 export default function Preview() {
   const [fileData, setFileData] = useState<IFileData>();
@@ -63,13 +64,6 @@ export default function Preview() {
     }
   }, [response, error]);
 
-  const formattedSubjectName = (fileData?.subjectName ?? '')
-    .split(' ')
-    .map((word) =>
-      word.charAt(0).toUpperCase().concat(word.slice(1).toLowerCase())
-    )
-    .join(' ');
-
   if (error) {
     toast.error(`${error?.message}`, {
       description: error?.response?.data?.message,
@@ -86,28 +80,28 @@ export default function Preview() {
 
   return (
     <section className="min-h-[600px] max-w-[1250px] p-4 mx-auto">
-      <div className="flex flex-col sm:flex-row gap-x-4">
+      <div className="">
         {isLoading ? (
-          <>
+          <div className="flex flex-col gap-y-2">
             <WFullShimmer className="w-3/5 sm:w-2/5 h-8 rounded-lg" />
-            <WFullShimmer className="sm:w-1/5 sm:h-8 rounded-lg" />
-          </>
+            <div className="flex flex-row justify-between">
+              <WFullShimmer className="sm:w-1/5 sm:h-8 rounded-lg" />
+              <div className="flex flex-row gap-x-1">
+                <WFullShimmer className="w-8 sm:w-20 sm:h-8 rounded-lg" />
+                <WFullShimmer className="sm:w-8 sm:h-8 rounded-lg" />
+                <WFullShimmer className="sm:w-8 sm:h-8 rounded-lg" />
+              </div>
+            </div>
+          </div>
         ) : (
-          <>
-            <h1 className="text-xl font-medium p-4 sm:text-4xl font-natosans dark:text-slate-400 text-slate-800">
-              {formattedSubjectName} ({fileData?.subjectCode})
-            </h1>
-            <Button
-              variant="bordered"
-              color="default"
-              radius="sm"
-              className="font-natosans py-3 sm:self-center hidden sm:inline-flex sm:mt-2 text-medium"
-              onClick={() => setShowComments(true)}
-              startContent={<FaRegComments className="text-xl" />}
-            >
-              Discussion Forum
-            </Button>
-          </>
+          fileData &&
+          paperid && (
+            <HeaderSection
+              fileData={fileData}
+              paperId={paperid}
+              setShowComments={setShowComments}
+            />
+          )
         )}
       </div>
       <div className="grid sm:mt-4 grid-cols-1 sm:grid-cols-6 sm:grid-rows-3 font-natosans">
@@ -126,7 +120,6 @@ export default function Preview() {
             <BasicInfo
               className="col-span-1 row-start-1 flex flex-col gap-y-2 text-sm sm:text-lg sm:col-span-3 sm:row-span-1 p-4"
               fileData={fileData}
-              paperId={paperid}
             />
           )
         )}

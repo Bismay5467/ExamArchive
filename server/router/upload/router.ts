@@ -7,6 +7,7 @@ import validate from '../../middlewares/validate';
 import verifyUser from '../../middlewares/verifyUser';
 import {
   AddNameToCache,
+  GetInstituteName,
   GetStats,
   NotificationWebhook,
   UploadFile,
@@ -35,7 +36,10 @@ router.put(
   ],
   AddNameToCache
 );
-
-// TODO : create a route to get instution names for suggestions
+router.get(
+  '/getInstituteName',
+  [verifyUser, privilege([ROLE.ADMIN])],
+  GetInstituteName
+);
 
 export default router;

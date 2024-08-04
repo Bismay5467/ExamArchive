@@ -1,5 +1,8 @@
+/* eslint-disable function-paren-newline */
 import { toast } from 'sonner';
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Input,
   Modal,
@@ -9,54 +12,62 @@ import {
   ModalHeader,
   Spinner,
 } from '@nextui-org/react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { IoPersonAddOutline } from 'react-icons/io5';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import useSWR, { KeyedMutator } from 'swr';
 import { useAuth } from '@/hooks/useAuth';
-import { TModeratorRole } from '@/types/moderator';
+import { IModerator, TModeratorRole } from '@/types/moderator';
 import { addModeratorObj } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
+import { toCamelCase } from '@/utils/helpers';
+import {
+  addInstitueNamesObj,
+  getInstitueNamesObj,
+} from '@/utils/axiosReqObjects/superadmin';
+import { addModeratorInputSchema } from '@/schemas/moderatorSchema';
 
 interface IInviteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
   role: TModeratorRole;
+  mutate: KeyedMutator<any>;
 }
-const MIN_USERNAME_LENGTH = 2;
 
 export default function InviteModal({
   isOpen,
   onClose,
   onOpenChange,
   role,
+  mutate,
 }: IInviteModalProps) {
-  const [email, setEmail] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    clearErrors,
+    formState: { errors },
+  } = useForm<IModerator>({ resolver: zodResolver(addModeratorInputSchema) });
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     authState: { jwtToken },
   } = useAuth();
-  const mailRegex = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, []);
 
-  const handleSubmit = useCallback(async () => {
-    if (email.length === 0 || !mailRegex.test(email)) {
-      toast.error('Please enter a valid mail!', {
-        duration: 5000,
-      });
-      return;
-    }
-    if (username.length < MIN_USERNAME_LENGTH) {
-      toast.error('Username should be of minimum 2 charaters', {
-        duration: 5000,
-      });
-      return;
-    }
-    const reqObj = addModeratorObj({ email, role, username }, jwtToken);
+  const { data: response, mutate: mutateInstituteNames } = useSWR(
+    getInstitueNamesObj(jwtToken)
+  );
+  const instituteNames: Array<string> = response?.data?.data ?? [];
+
+  const handleAddInstituteName = useCallback(async (name: string) => {
+    const reqObj = addInstitueNamesObj(name, jwtToken);
     if (!reqObj) {
       toast.error('Something went wrong!', {
         duration: 5000,
       });
-      onClose();
       return;
     }
     setIsLoading(true);
@@ -67,15 +78,50 @@ export default function InviteModal({
         duration: 5000,
       });
       setIsLoading(false);
-      onClose();
-      return;
     }
-    toast.success('Invitation sent successfully', {
+    toast.success('New Institute added 🚀', {
+      description: name,
       duration: 5000,
     });
+  }, []);
+
+  const onSubmit: SubmitHandler<IModerator> = async (formData) => {
+    const { instituteName } = formData;
+    if (!instituteNames.includes(instituteName)) {
+      await handleAddInstituteName(instituteName);
+    }
+    const reqObj = addModeratorObj(formData, jwtToken);
+    if (!reqObj) {
+      toast.error('Something went wrong!', {
+        duration: 5000,
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await fetcher(reqObj);
+    } catch (err: any) {
+      toast.error(`${err.response.data.message}`, {
+        duration: 5000,
+      });
+      setIsLoading(false);
+      return;
+    }
+    await mutate().then(() =>
+      toast.success('Invitation sent successfully', {
+        duration: 5000,
+      })
+    );
+    mutateInstituteNames();
     setIsLoading(false);
+    reset();
     onClose();
-  }, [email, username, role]);
+  };
+
+  const handleInvite = useCallback(() => {
+    setValue('role', role);
+    handleSubmit(onSubmit)();
+  }, []);
 
   return (
     <Modal
@@ -93,34 +139,70 @@ export default function InviteModal({
               <span className="self-center text-large">Invite new</span>
             </ModalHeader>
             <ModalBody>
-              <div className="flex flex-row gap-x-2">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="grid grid-cols-5 gap-2"
+              >
                 <Input
-                  isReadOnly
+                  isDisabled
+                  label="Privilage"
                   type="text"
-                  value={role}
+                  isRequired
+                  value={toCamelCase(role)}
+                  className="col-span-2"
                   variant="bordered"
-                  disabled
                   radius="sm"
                 />
-              </div>
-              <div className="flex flex-row gap-x-2">
                 <Input
                   type="text"
                   label="Username"
                   variant="bordered"
                   radius="sm"
-                  onValueChange={setUsername}
+                  {...register('username')}
+                  isInvalid={errors.username !== undefined}
+                  errorMessage={errors.username?.message}
+                  onFocus={() => errors.username && clearErrors('username')}
+                  isRequired
+                  className="col-span-3"
                 />
-              </div>
-              <div className="flex flex-row gap-x-2">
                 <Input
                   type="email"
                   label="Email"
                   variant="bordered"
-                  onValueChange={setEmail}
                   radius="sm"
+                  size="sm"
+                  {...register('email')}
+                  isInvalid={errors.email !== undefined}
+                  errorMessage={errors.email?.message}
+                  onFocus={() => errors.email && clearErrors('email')}
+                  isRequired
+                  className="col-span-full"
                 />
-              </div>
+                <Autocomplete
+                  label="Institute Name"
+                  allowsCustomValue
+                  size="sm"
+                  radius="sm"
+                  variant="bordered"
+                  className="col-span-full"
+                  onValueChange={(e) => setValue('instituteName', e as string)}
+                  onSelectionChange={(e) =>
+                    setValue('instituteName', e as string)
+                  }
+                  isRequired
+                  isInvalid={errors.instituteName !== undefined}
+                  errorMessage="*Required"
+                  onFocus={() =>
+                    errors.instituteName && clearErrors('instituteName')
+                  }
+                >
+                  {instituteNames?.map((val) => (
+                    <AutocompleteItem key={val} value={val}>
+                      {val}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
+              </form>
             </ModalBody>
             <ModalFooter>
               <Button
@@ -135,7 +217,7 @@ export default function InviteModal({
                 color="primary"
                 radius="sm"
                 variant="bordered"
-                onPress={handleSubmit}
+                onPress={handleInvite}
                 isDisabled={isLoading}
                 {...(isLoading && {
                   endContent: <Spinner size="sm" color="secondary" />,

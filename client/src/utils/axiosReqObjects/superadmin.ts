@@ -24,7 +24,7 @@ export const getModeratorsObj = (
 };
 
 export const removeModeratorObj = (
-  moderator: IModerator,
+  moderator: Partial<IModerator>,
   jwtToken: string | undefined
 ) => {
   const url = `${SERVER_ROUTES.SUPER_ADMIN}/remove`;
@@ -52,6 +52,43 @@ export const addModeratorObj = (
   const axiosObj: AxiosRequestConfig<any> = {
     url,
     data: { data: moderator },
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const getInstitueNamesObj = (jwtToken: string | undefined) => {
+  const url = `${SERVER_ROUTES.SUPER_ADMIN}/getInsituteName`;
+
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    withCredentials: true,
+  };
+
+  return axiosObj;
+};
+
+export const addInstitueNamesObj = (
+  instituteName: string,
+  jwtToken: string | undefined
+) => {
+  const url = `${SERVER_ROUTES.SUPER_ADMIN}/add`;
+  if (!jwtToken) return null;
+  const axiosObj: AxiosRequestConfig<any> = {
+    url,
+    data: { data: { instituteName } },
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

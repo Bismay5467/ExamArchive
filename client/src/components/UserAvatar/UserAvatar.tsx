@@ -31,7 +31,7 @@ export default function UserAvatar({
   //   if (token.length > 0) Cookies.set(AUTH_TOKEN, token);
   // }, [token]);
   const {
-    authState: { username, role, userId },
+    authState: { username, role, userId, isAuth },
     RESET,
   } = useAuth();
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ export default function UserAvatar({
   const iconClasses =
     'text-xl text-slate-700 pointer-events-none flex-shrink-0';
   return (
-    <Dropdown radius="sm" className="font-natosans">
+    <Dropdown radius="sm" className="font-natosans" isDisabled={!isAuth}>
       <DropdownTrigger>
         <div className="flex flex-row gap-x-4 cursor-pointer">
           <Avatar

@@ -4,7 +4,7 @@ import z from 'zod';
 
 export const createFolderInputSchema = z.object({
   action: z.enum(['UPLOAD', 'BOOKMARK']),
-  folderName: z.string().min(1).max(30),
+  folderName: z.string().min(1).max(50),
 });
 
 export const deleteFolderInputSchema = z.object({
@@ -26,4 +26,10 @@ export const getFolderNamesSchema = z.object({
 export const pinFileSchema = z.object({
   fileId: z.string().refine((parentId) => Types.ObjectId.isValid(parentId)),
   action: z.enum(['PIN', 'UNPIN']),
+});
+
+export const renameFolderSchema = z.object({
+  folderId: z.string().refine((id) => Types.ObjectId.isValid(id)),
+  newName: z.string().min(1).max(50),
+  action: z.enum(['BOOKMARK', 'UPLOAD']),
 });
