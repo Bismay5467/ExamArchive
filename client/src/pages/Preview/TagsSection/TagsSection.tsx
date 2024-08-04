@@ -24,7 +24,7 @@ import Tag from '@/components/Tags';
 import { KEY_CODES } from '@/constants/shared';
 import { IsUserAuthenticated } from '@/utils/helpers';
 
-const MAX_TAGS_TO_DISPLAY = 3;
+const MAX_TAGS_TO_DISPLAY = 9;
 
 export default function TagsSection({
   tags,
@@ -202,7 +202,7 @@ export default function TagsSection({
                     ? 'Save and publish'
                     : isDeletable
                       ? 'Edit'
-                      : 'Add more'}
+                      : 'Contribute'}
                 </Button>
               </ModalFooter>
             </>
