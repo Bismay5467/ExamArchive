@@ -84,7 +84,7 @@ export const addInstitueNamesObj = (
   instituteName: string,
   jwtToken: string | undefined
 ) => {
-  const url = `${SERVER_ROUTES.SUPER_ADMIN}/add`;
+  const url = `${SERVER_ROUTES.SUPER_ADMIN}/addInsitituteName`;
   if (!jwtToken) return null;
   const axiosObj: AxiosRequestConfig<any> = {
     url,

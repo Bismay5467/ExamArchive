@@ -63,7 +63,7 @@ export default function InviteModal({
   const instituteNames: Array<string> = response?.data?.data ?? [];
 
   const handleAddInstituteName = useCallback(async (name: string) => {
-    const reqObj = addInstitueNamesObj(name, jwtToken);
+    const reqObj = addInstitueNamesObj(name.trim().toLowerCase(), jwtToken);
     if (!reqObj) {
       toast.error('Something went wrong!', {
         duration: 5000,
@@ -78,6 +78,7 @@ export default function InviteModal({
         duration: 5000,
       });
       setIsLoading(false);
+      return;
     }
     toast.success('New Institute added 🚀', {
       description: name,
@@ -127,7 +128,7 @@ export default function InviteModal({
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      placement="top-center"
+      placement="center"
       radius="sm"
       className="font-natosans"
     >

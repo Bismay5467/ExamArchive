@@ -53,7 +53,7 @@ export default function RenameFolderModal({
       return;
     }
     const { folderId, folderName } = folderInfo;
-    if (newFolderName === folderName) {
+    if (newFolderName.length === 0 || newFolderName === folderName) {
       toast.error('Folder name is same!', {
         duration: 2000,
       });
@@ -90,6 +90,7 @@ export default function RenameFolderModal({
       });
     });
     setIsLoading(false);
+    setNewFolderName('');
     onClose();
   };
 
@@ -133,7 +134,7 @@ export default function RenameFolderModal({
               </Button>
               <Button
                 variant="bordered"
-                color="secondary"
+                color="primary"
                 type="submit"
                 onPress={handleSubmit}
                 radius="sm"

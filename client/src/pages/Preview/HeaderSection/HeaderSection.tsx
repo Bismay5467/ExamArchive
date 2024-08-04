@@ -91,7 +91,7 @@ export default function HeaderSection({
     []
   );
   return (
-    <div className="flex flex-col gap-y-1 p-4 font-natosans">
+    <div className="flex flex-col gap-y-1 px-4 font-natosans">
       <h1 className="text-xl font-medium sm:text-4xl dark:text-slate-400 text-slate-800">
         {toCamelCase(subjectName)} [{subjectCode}]
       </h1>
@@ -134,7 +134,7 @@ export default function HeaderSection({
           </span>
         </div>
       </div>
-      <div className="w-full h-[1px] bg-slate-200" />
+      <div className="w-full h-[1px] bg-slate-200 mt-2" />
       <BookmarksModal
         isOpen={isBookmarkOpen}
         onClose={onBookmarkClose}

@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
 import { MONGO_READ_QUERY_TIMEOUT } from '../../constants/constants/shared';
+import { REDIS_KEY } from './AddInstituteName';
 import { ROLE } from '../../constants/constants/auth';
 import { User } from '../../models';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
@@ -52,7 +53,7 @@ const Remove = asyncErrorHandler(async (req: Request, res: Response) => {
         SERVER_ERROR['INTERNAL SERVER ERROR']
       );
     }
-    await redisClient.del(role);
+    await Promise.all([redisClient.del(REDIS_KEY), redisClient.del(role)]);
   });
   await session.endSession();
   res.status(SUCCESS_CODES['NO CONTENT']).json({ message: 'Role changed' });
