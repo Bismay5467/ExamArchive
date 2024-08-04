@@ -6,11 +6,12 @@ import {
   DropdownTrigger,
 } from '@nextui-org/react';
 // import { FaRegCircleUser } from 'react-icons/fa6';
-import { LiaSignOutAltSolid } from 'react-icons/lia';
+import { MdLogin } from 'react-icons/md';
+import { CgLogOut } from 'react-icons/cg';
 import { JSX } from 'react';
 import { IoPersonOutline } from 'react-icons/io5';
 // import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 // import {
 //   TEMP_JWT_TOKEN_HARDCODED_USER,
@@ -19,6 +20,7 @@ import { useAuth } from '@/hooks/useAuth';
 // } from '@/constants/shared';
 import { getAvatar } from '@/constants/auth';
 import quickLinks from '@/constants/quickLinks';
+import { CLIENT_ROUTES } from '@/constants/routes';
 
 export default function UserAvatar({
   sideBarClasses,
@@ -35,11 +37,18 @@ export default function UserAvatar({
     RESET,
   } = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const handleAuth = () => {
+    if (isAuth) RESET();
+    else {
+      navigate(CLIENT_ROUTES.AUTH_LOGIN, { state: { from: pathname } });
+    }
+  };
 
   const iconClasses =
     'text-xl text-slate-700 pointer-events-none flex-shrink-0';
   return (
-    <Dropdown radius="sm" className="font-natosans" isDisabled={!isAuth}>
+    <Dropdown radius="sm" className="font-natosans">
       <DropdownTrigger>
         <div className="flex flex-row gap-x-4 cursor-pointer">
           <Avatar
@@ -103,10 +112,16 @@ export default function UserAvatar({
         }
         <DropdownItem
           key="signout"
-          startContent={<LiaSignOutAltSolid className={iconClasses} />}
-          onClick={() => RESET()}
+          startContent={
+            isAuth ? (
+              <CgLogOut className={iconClasses} />
+            ) : (
+              <MdLogin className={iconClasses} />
+            )
+          }
+          onPress={handleAuth}
         >
-          Sign Out
+          {isAuth ? 'Sign Out' : 'Sign In'}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

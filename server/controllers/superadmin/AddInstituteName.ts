@@ -24,8 +24,8 @@ const AddInstituteName = asyncErrorHandler(
       .exec();
     result = [
       ...new Set([
-        ...result.map(({ instituteName: name }) => name),
-        instituteName,
+        ...result.map(({ instituteName: name }) => name.trim().toLowerCase()),
+        instituteName.trim().toLowerCase(),
       ]),
     ];
     if (redisClient === null) {

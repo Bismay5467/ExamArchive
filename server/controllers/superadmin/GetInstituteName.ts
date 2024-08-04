@@ -26,7 +26,11 @@ const GetInstituteNames = asyncErrorHandler(
       .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
       .lean()
       .exec();
-    result = [...new Set(result.map(({ instituteName }) => instituteName))];
+    result = [
+      ...new Set(
+        result.map(({ instituteName }) => instituteName.trim().toLowerCase())
+      ),
+    ];
 
     if (result.length > 0) {
       await redisClient.set(REDIS_KEY, JSON.stringify(result));
