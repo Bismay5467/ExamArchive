@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 import { useEffect, useMemo } from 'react';
 import { Spinner } from '@nextui-org/react';
@@ -13,7 +14,6 @@ import NoResults from './Placeholders/NoResults';
 export default function Search() {
   const {
     swrResponse: { data: response, isLoading, isValidating, setSize },
-    searchInputs,
     isEmptySearch,
   } = useSearch();
   const searchResults = response ? [...response] : [];
@@ -61,13 +61,17 @@ export default function Search() {
           </>
         ) : (
           <>
-            {isEmptySearch && <InitialDisplay />}
-            {searchInputs.searchParams && data.length === 0 && <NoResults />}
-            {data.map((searchData) => (
-              <ResultCard data={searchData} key={searchData._id} />
-            ))}
+            {isEmptySearch ? (
+              <InitialDisplay />
+            ) : data.length === 0 ? (
+              <NoResults />
+            ) : (
+              data.map((searchData) => (
+                <ResultCard data={searchData} key={searchData._id} />
+              ))
+            )}
             {isValidating && hasMore && <Spinner size="md" color="secondary" />}
-            {!hasMore && !isEmptySearch && (
+            {!hasMore && data.length !== 0 && (
               <p className="text-slate-400 font-medium cursor-pointer w-fit self-center">
                 End of Results...
               </p>

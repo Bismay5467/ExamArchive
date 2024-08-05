@@ -195,12 +195,12 @@ export default function Zigzag() {
                         <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                       </svg>
                       <span>
-                        Hit us a mail{' '}
+                        Hit us a mail at{' '}
                         <a
                           href="mailto:@contact.examarchive@gmail.com"
                           className="hover:underline"
                         >
-                          @contact.examarchive@gmail.com
+                          contact.examarchive@gmail.com
                         </a>{' '}
                       </span>
                     </li>
@@ -222,7 +222,7 @@ export default function Zigzag() {
                       >
                         <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                       </svg>
-                      <span>Start making a difference</span>
+                      <span>Start contributing to the cause</span>
                     </li>
                   </ul>
                 </div>
