@@ -4,10 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Button, Spinner } from '@nextui-org/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GrFormNextLink } from 'react-icons/gr';
 import { RiLoginCircleLine } from 'react-icons/ri';
 import { useCallback } from 'react';
+import Cookies from 'js-cookie';
 import { newUserInputSchema } from '@/schemas/authSchema';
 import { TSignUpFormFields } from '@/types/auth';
 import useMultiStepForm from '@/hooks/useMultiStepForm';
@@ -16,9 +17,12 @@ import OTPInput from './FormSteps/OTPInput';
 import { getSignUpObj, updateModeratorCache } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import { AUTH_TOKEN, JWT_MAX_AGE } from '@/constants/auth';
 
 export default function SignUp() {
+  const { state } = useLocation();
   const navigate = useNavigate();
+  const from = state?.from || CLIENT_ROUTES.HOME;
   const {
     register,
     handleSubmit,
@@ -53,7 +57,10 @@ export default function SignUp() {
       actionType: isFirstStep() ? 'GENERATE' : 'VERIFY',
     });
     try {
-      await fetcher(reqObj);
+      const res = await fetcher(reqObj);
+      if (!isFirstStep()) {
+        Cookies.set(AUTH_TOKEN, res.data.token, { expires: JWT_MAX_AGE });
+      }
     } catch (err: any) {
       toast.error('Somthing went wrong!', {
         description: `${err.response.data.message}`,
@@ -69,11 +76,11 @@ export default function SignUp() {
       next();
     } else {
       toast.success('Account successfully created!', {
-        description: 'You can log in now!',
+        description: 'Welcome onBoard 🚀',
         duration: 5000,
       });
       updateCache();
-      navigate(CLIENT_ROUTES.AUTH_LOGIN);
+      navigate(from, { replace: true });
     }
   };
 
