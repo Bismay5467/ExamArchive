@@ -1,10 +1,8 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { FaMoon } from 'react-icons/fa';
 import { MdSunny } from 'react-icons/md';
 import { useEffect } from 'react';
-import { GrSystem } from 'react-icons/gr';
 import { useTheme } from '@/hooks/useTheme';
 import IconWrapper from './Sidebar/NavCard/IconWrapper/IconWrapper';
 import { THEME } from '@/constants/shared';
@@ -14,7 +12,6 @@ export default function ModeToggle({ className }: { className?: string }) {
 
   const changeTheme = () => {
     if (theme === THEME.LIGHT) setTheme(THEME.DARK);
-    else if (theme === THEME.DARK) setTheme(THEME.SYSTEM);
     else setTheme(THEME.LIGHT);
   };
 
@@ -33,10 +30,8 @@ export default function ModeToggle({ className }: { className?: string }) {
       <IconWrapper className="self-center">
         {theme === THEME.LIGHT ? (
           <MdSunny className="text-2xl" />
-        ) : theme === THEME.DARK ? (
-          <FaMoon className="text-xl" />
         ) : (
-          <GrSystem className="text-xl" />
+          <FaMoon className="text-xl" />
         )}
       </IconWrapper>
     </div>

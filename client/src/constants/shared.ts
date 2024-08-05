@@ -123,3 +123,5 @@ export const newFolderInstructions = `We encourage that you adhere to the follow
 <Subject-Code> (<Subject-Name>)`;
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+export const CTA_BANNER_KEY = 'display-no-cta';
