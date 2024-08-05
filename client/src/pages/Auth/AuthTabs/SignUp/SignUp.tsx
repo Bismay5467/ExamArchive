@@ -18,6 +18,7 @@ import { getSignUpObj, updateModeratorCache } from '@/utils/axiosReqObjects';
 import fetcher from '@/utils/fetcher/fetcher';
 import { CLIENT_ROUTES } from '@/constants/routes';
 import { AUTH_TOKEN, JWT_MAX_AGE } from '@/constants/auth';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SignUp() {
   const { state } = useLocation();
@@ -32,6 +33,7 @@ export default function SignUp() {
   } = useForm<TSignUpFormFields>({
     resolver: zodResolver(newUserInputSchema),
   });
+  const { SET } = useAuth();
 
   const { next, isFirstStep, step } = useMultiStepForm([
     <AccountInfo
@@ -60,6 +62,7 @@ export default function SignUp() {
       const res = await fetcher(reqObj);
       if (!isFirstStep()) {
         Cookies.set(AUTH_TOKEN, res.data.token, { expires: JWT_MAX_AGE });
+        SET();
       }
     } catch (err: any) {
       toast.error('Somthing went wrong!', {
