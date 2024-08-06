@@ -34,7 +34,7 @@ export default function Testimonials() {
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
             <h2 className="h2 mb-4">Don't take our word for it</h2>
             <p className="text-xl text-gray-400">
-              They say the end user's voice speeks more!
+              They say the end user's voice speaks more!
             </p>
           </div>
 

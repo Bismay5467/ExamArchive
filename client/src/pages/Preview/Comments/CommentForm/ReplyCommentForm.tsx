@@ -52,7 +52,7 @@ export default function ReplyCommentForm({
         >
           <Textarea
             placeholder="Type your comment here ..."
-            className="resize-none rounded-lg min-h-[60px] pt-4"
+            className="resize-none rounded-lg min-h-[60px] pt-4 dark:bg-[#191919]"
             style={{
               boxShadow:
                 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',

@@ -51,7 +51,7 @@ export default function ReplyCommentBox({
       ? ''
       : 'hidden'
     : 'hidden';
-  const editClasses = isEditing ? 'bg-white' : 'bg-[#f7f7f7]';
+  const editClasses = isEditing ? 'bg-white dark:bg-[#191919]' : 'bg-[#f7f7f7]';
   const iconClasses =
     'text-xl text-default-500 pointer-events-none flex-shrink-0';
 
@@ -135,7 +135,7 @@ export default function ReplyCommentBox({
       />
 
       <div className="w-full flex flex-col gap-y-4">
-        <div className="w-full self-start bg-[#f7f7f7] p-2 rounded-lg flex flex-col gap-y-2 dark:bg-[#191919]">
+        <div className="w-full self-start bg-[#f7f7f7] p-2 rounded-lg flex flex-col gap-y-2 dark:bg-black">
           <div className="flex flex-row justify-between">
             <span className="font-medium text-sm self-center sm:text-medium">
               {username}
@@ -150,7 +150,7 @@ export default function ReplyCommentBox({
           <Textarea
             value={textMessage}
             className={cn(
-              'w-full h-fit resize-none dark:bg-[#191919]',
+              'w-full h-fit resize-none dark:bg-black',
               editClasses
             )}
             disabled={!isEditing}

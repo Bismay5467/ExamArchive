@@ -7,17 +7,17 @@ import DisplayAllFiles from './DisplayFiles';
 
 const tabOptions: ITabOption[] = [
   {
-    key: 'display',
-    title: { icon: <PiFiles className="text-2xl" />, title: 'All Files' },
-    children: <DisplayAllFiles />,
-  },
-  {
     key: 'upload',
     title: {
       icon: <IoCloudUploadOutline className="text-2xl" />,
       title: 'Upload',
     },
     children: <FileUploadForm />,
+  },
+  {
+    key: 'display',
+    title: { icon: <PiFiles className="text-2xl" />, title: 'All Files' },
+    children: <DisplayAllFiles />,
   },
 ];
 

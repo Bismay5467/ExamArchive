@@ -1,7 +1,10 @@
 import { cn, Input } from '@nextui-org/react';
+import { IoAddCircleOutline } from 'react-icons/io5';
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
 import Tag from '../Tags';
+
+const MAX_TAG_LENGTH = 30;
 
 export default function TagsEditor({
   tags,
@@ -20,6 +23,19 @@ export default function TagsEditor({
     const tagsSection = document.querySelector('#tags-section');
     if (tagsSection) tagsSection.scrollTop = tagsSection.scrollHeight;
   }, [tags]);
+
+  const tagFilter = (tag: string) => {
+    if (tag.length === 0 || tag.length > MAX_TAG_LENGTH) {
+      toast.error('Invalid tag length', {
+        description: 'Length should be between 1 and 30 charaters',
+        duration: 5000,
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleAddNewTag = () => {
     if (newTagValue.length === 0) {
       toast.error('New tag value must contain atleast 1 charaters', {
@@ -35,7 +51,7 @@ export default function TagsEditor({
     }
     setTags((prev) => [
       ...prev,
-      ...newTagValue.trim().toLowerCase().split(',').filter(Boolean),
+      ...newTagValue.trim().toLowerCase().split(',').filter(tagFilter),
     ]);
     setNewTagValue('');
   };
@@ -63,9 +79,20 @@ export default function TagsEditor({
         ))}
       </div>
       <Input
-        isClearable
         value={newTagValue}
-        placeholder="Type a tag and press enter to add it to the list"
+        {...(newTagValue.length && {
+          endContent: (
+            <button
+              type="button"
+              aria-label="add-btn"
+              onClick={handleAddNewTag}
+              className="flex flex-row text-xs gap-x-1 border-1 border-slate-100 px-2 py-1 rounded-md"
+            >
+              Add <IoAddCircleOutline className="self-center text-sm" />
+            </button>
+          ),
+        })}
+        placeholder="Enter a new tag"
         radius="sm"
         size="md"
         variant="bordered"

@@ -113,7 +113,7 @@ export default function ReportModal({
               <span>Report this {contentType.toLowerCase()}</span>
             </ModalHeader>
             <ModalBody>
-              <div className="font-medium text-medium flex flex-row text-slate-700">
+              <div className="font-medium text-medium flex flex-row text-slate-700 dark:text-slate-300">
                 Help us understand why you are reporting this{' '}
                 {contentType.toLowerCase()}
               </div>
