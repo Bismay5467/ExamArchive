@@ -35,7 +35,7 @@ const SignIn = asyncErrorHandler(async (req: Request, res: Response) => {
     if (!user) {
       await session.abortTransaction();
       throw new ErrorHandler(
-        "Username doesn't exists",
+        "Username doesn't exist",
         ERROR_CODES['NOT FOUND']
       );
     }

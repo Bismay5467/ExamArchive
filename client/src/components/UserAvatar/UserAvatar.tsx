@@ -18,9 +18,10 @@ import { useAuth } from '@/hooks/useAuth';
 //   TEMP_JWT_TOKEN_HARDCODED_ADMIN,
 //   TEMP_JWT_TOKEN_HARDCODED_SUPERADMIN,
 // } from '@/constants/shared';
-import { getAvatar } from '@/constants/auth';
+import { getAvatar, ROLES } from '@/constants/auth';
 import quickLinks from '@/constants/quickLinks';
 import { CLIENT_ROUTES } from '@/constants/routes';
+import { toCamelCase } from '@/utils/helpers';
 
 export default function UserAvatar({
   sideBarClasses,
@@ -57,13 +58,13 @@ export default function UserAvatar({
             src={getAvatar(username ?? 'G')}
             fallback={<IoPersonOutline className="text-xl" />}
           />
-          <div>
-            <p className={`self-center text-sm ${sideBarClasses}`}>
-              {username}
-            </p>
-            <p className={`self-center text-sm opacity-60 ${sideBarClasses}`}>
-              @{role.toLowerCase()}
-            </p>
+          <div className="flex flex-col justify-center">
+            <p className={` text-sm ${sideBarClasses}`}>@{username}</p>
+            {role !== ROLES.USER && (
+              <p className={`self-center text-sm opacity-60 ${sideBarClasses}`}>
+                {toCamelCase(role)}
+              </p>
+            )}
           </div>
         </div>
       </DropdownTrigger>

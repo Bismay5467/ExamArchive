@@ -33,3 +33,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #e1e0e0;
 }
+
+input::-ms-clear,
+input::-ms-reveal {
+  display: none;
+}

@@ -110,7 +110,7 @@ export default function ParentCommentBox({
       ? ''
       : 'hidden'
     : 'hidden';
-  const editClasses = isEditing ? 'bg-slate-100' : '';
+  const editClasses = isEditing ? 'bg-slate-100 dark:bg-[#191919]' : '';
 
   const date = new Date(timestamp);
   const day = date.getUTCDate();

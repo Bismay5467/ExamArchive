@@ -201,7 +201,7 @@ export default function BookmarksModal({
                 <Input
                   radius="sm"
                   autoFocus
-                  label="Enter Collection Tiile"
+                  label="Enter Collection Title"
                   variant="bordered"
                   onValueChange={(e) => setCollectionName(e)}
                   isInvalid={collectionList

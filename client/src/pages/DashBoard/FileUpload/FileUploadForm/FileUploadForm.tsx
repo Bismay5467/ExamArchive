@@ -194,7 +194,7 @@ export default function FileUploadForm() {
         {steps.map(({ content, label }, index) => (
           <Step key={label}>
             <StepLabel>
-              <span className="text-medium">{label}</span>
+              <span className="text-medium dark:text-slate-200">{label}</span>
             </StepLabel>
             <StepContent>
               {content}

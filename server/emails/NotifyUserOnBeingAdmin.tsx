@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-one-expression-per-line */
 import * as React from 'react';
 import {
@@ -16,7 +17,7 @@ import { LOGO_URL } from '../constants/constants/shared';
 interface NotifyUserOnBeingAdminProps {
   username: string;
   email: string;
-  password: string;
+  password?: string;
 }
 
 const main = {
@@ -90,7 +91,7 @@ export function NotifyUserOnBeingAdminEmail({
                 textAlign: 'left',
               }}
             >
-              Password : {password}
+              {password && `Password: ${password}`}
             </Text>
             <Text
               style={{ ...text, fontStyle: 'italic', textAlign: 'justify' }}

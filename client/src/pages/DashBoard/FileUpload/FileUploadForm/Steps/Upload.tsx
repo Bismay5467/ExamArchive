@@ -12,6 +12,7 @@ import {
   useDisclosure,
   Autocomplete,
   AutocompleteItem,
+  Tooltip,
 } from '@nextui-org/react';
 import { toast } from 'sonner';
 
@@ -133,16 +134,23 @@ export default function Upload({
               </AutocompleteItem>
             ))}
           </Autocomplete>
-          <Button
-            onPress={onCreateFolderOpen}
+          <Tooltip
+            content="Create New Folder"
             radius="sm"
-            size="lg"
-            variant="bordered"
-            color="primary"
-            isIconOnly
+            placement="top"
+            showArrow
           >
-            <RiFolderAddLine className="text-xl" />
-          </Button>
+            <Button
+              onPress={onCreateFolderOpen}
+              radius="sm"
+              size="lg"
+              variant="bordered"
+              color="primary"
+              isIconOnly
+            >
+              <RiFolderAddLine className="text-xl" />
+            </Button>
+          </Tooltip>
         </div>
       </div>
       <NewFolderModal

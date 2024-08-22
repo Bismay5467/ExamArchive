@@ -1,5 +1,6 @@
 import { Button } from '@nextui-org/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 
 interface commentFormInput {
@@ -14,7 +15,14 @@ export default function ParentCommentForm({
   const { register, handleSubmit, reset } = useForm<commentFormInput>();
 
   const onSubmit: SubmitHandler<commentFormInput> = (formData) => {
-    handleCreateComment(formData.message);
+    const { message } = formData;
+    if (message.length === 0) {
+      toast.error('Message length cannot be zero!', {
+        duration: 5000,
+      });
+      return;
+    }
+    handleCreateComment(message);
     reset();
   };
 
