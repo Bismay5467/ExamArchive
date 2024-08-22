@@ -1,6 +1,8 @@
 /* eslint-disable no-magic-numbers */
+import bcrypt from 'bcrypt';
+
 const getRandomPassword = () => {
-  const PASSWORD_LENGTH = 8;
+  const PASSWORD_LENGTH = 10;
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const digitset = '0123456789';
   const symbolset = '!@#$%^&*()-_=+';
@@ -22,6 +24,13 @@ const getRandomPassword = () => {
     ),
   ].join('');
   return randomPassword;
+};
+
+export const getHashedPassword = async (password: string) => {
+  const saltStrength = 10;
+  const salt = await bcrypt.genSalt(saltStrength);
+  const hashedPassword = await bcrypt.hash(password as string, salt);
+  return hashedPassword;
 };
 
 export default getRandomPassword;

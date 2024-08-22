@@ -1,6 +1,5 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-underscore-dangle */
-import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { render } from '@react-email/render';
 import { z } from 'zod';
@@ -27,6 +26,7 @@ import { IUser } from '../../types/auth/types';
 import ResetPasswordEmail from '../../emails/ResetPassword';
 import User from '../../models/user';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
+import { getHashedPassword } from '../../utils/superadmin/getPassword';
 import { resetInputSchema } from '../../router/auth/schema';
 import sendMail from '../../utils/emails/sendMail';
 import { signTokens, verifyTokens } from '../../utils/auth/jsonwebtokens';
@@ -98,9 +98,7 @@ const Reset = asyncErrorHandler(async (req: Request, res: Response) => {
           ERROR_CODES.FORBIDDEN
         );
       }
-      const saltStrength = 10;
-      const salt = await bcrypt.genSalt(saltStrength);
-      const hashedPassword = await bcrypt.hash(password as string, salt);
+      const hashedPassword = await getHashedPassword(password);
       const user = await User.findOneAndUpdate(
         { email: userEmail },
         { password: hashedPassword },

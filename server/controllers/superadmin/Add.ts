@@ -1,7 +1,5 @@
 /* eslint-disable indent */
-import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
-import { render } from '@react-email/render';
 import { z } from 'zod';
 import { Request, Response } from 'express';
 
@@ -11,12 +9,10 @@ import {
 } from '../../constants/constants/shared';
 
 import { ErrorHandler } from '../../utils/errors/errorHandler';
-import { INVITATION_STATUS } from '../../constants/constants/auth';
-import NotifyUserOnBeingAdminEmail from '../../emails/NotifyUserOnBeingAdmin';
 import { User } from '../../models';
 import { addInputSchema } from '../../router/superadmin/schema';
 import asyncErrorHandler from '../../utils/errors/asyncErrorHandler';
-import getRandomPassword from '../../utils/superadmin/getPassword';
+import getUpdateInfo from '../../utils/superadmin/getUpdateInfo';
 import redisClient from '../../config/redisConfig';
 import sendMail from '../../utils/emails/sendMail';
 import { SERVER_ERROR, SUCCESS_CODES } from '../../constants/statusCode';
@@ -34,25 +30,22 @@ const Add = asyncErrorHandler(async (req: Request, res: Response) => {
         SERVER_ERROR['INTERNAL SERVER ERROR']
       );
     }
-    const password = getRandomPassword();
-    const saltStrength = 10;
-    const salt = await bcrypt.genSalt(saltStrength);
-    const hashedPassword = await bcrypt.hash(password as string, salt);
-    const update =
-      role === 'ADMIN'
-        ? {
-            password: hashedPassword,
-            invitationStatus: INVITATION_STATUS.PENDING,
-            instituteName,
-            role,
-          }
-        : {
-            password: hashedPassword,
-            invitationStatus: INVITATION_STATUS.PENDING,
-            role,
-          };
+    const doesUserExists = await User.findOne({
+      $or: [{ username }, { email }],
+    })
+      .select({ _id: 1 })
+      .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
+      .lean()
+      .exec();
+    const { updateInfo, emailHTML } = await getUpdateInfo({
+      doesUserExists: doesUserExists !== null,
+      role,
+      instituteName,
+      username,
+      email,
+    });
     const [result, doKeyExists] = await Promise.all([
-      User.findOneAndUpdate({ username, email }, update, {
+      User.findOneAndUpdate({ username, email }, updateInfo, {
         upsert: true,
         new: true,
       })
@@ -70,10 +63,6 @@ const Add = asyncErrorHandler(async (req: Request, res: Response) => {
         SERVER_ERROR['INTERNAL SERVER ERROR']
       );
     }
-    const emailHTML = render(
-      NotifyUserOnBeingAdminEmail({ username, email, password }),
-      { pretty: true }
-    );
     const [isMailSent] = await Promise.all([
       sendMail({
         eventName: MAIL_EVENT_NAME,

@@ -18,8 +18,7 @@ const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
   const { postId, tagsToAdd, tagsToRemove } = req.body.data as z.infer<
     typeof editTagsInputSchema
   >;
-  const query =
-    role === 'ADMIN' ? { _id: postId, uploadedBy: userId } : { _id: postId };
+  const query = { _id: postId };
   const docInfo = await Question.findOne(query)
     .maxTimeMS(MONGO_READ_QUERY_TIMEOUT)
     .exec();
@@ -27,8 +26,9 @@ const EditTags = asyncErrorHandler(async (req: Request, res: Response) => {
     throw new ErrorHandler('Post does not exists', ERROR_CODES['NOT FOUND']);
   }
   const { tags } = docInfo as unknown as { tags: string[] };
+  const uploadedBy = docInfo.uploadedBy as string;
   const updatedTags = new Set<string>([...(tagsToAdd ?? []), ...tags]);
-  if (role === 'ADMIN') {
+  if (role === 'ADMIN' && uploadedBy === userId) {
     (tagsToRemove ?? []).forEach((tag) => updatedTags.delete(tag));
   }
   (docInfo as any).tags = Array.from(updatedTags);

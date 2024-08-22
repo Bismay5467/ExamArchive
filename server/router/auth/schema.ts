@@ -1,15 +1,19 @@
 /* eslint-disable no-magic-numbers */
 import z from 'zod';
 
-import { ROLE } from '../../constants/constants/auth';
+import {
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  ROLE,
+} from '../../constants/constants/auth';
 
 export const newUserInputSchema = z.object({
   email: z.string().email(),
   username: z.string().min(1).max(10),
   password: z
     .string()
-    .min(6)
-    .max(8)
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
     .refine((password) => {
       const digitRegex = /\d/;
       const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
@@ -24,8 +28,8 @@ export const signInUserInputSchema = z.object({
   username: z.string(),
   password: z
     .string()
-    .min(6)
-    .max(8)
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
     .refine((password) => {
       const digitRegex = /\d/;
       const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
@@ -42,8 +46,8 @@ export const resetInputSchema = z.discriminatedUnion('action', [
       action: z.enum(['RESET']),
       password: z
         .string()
-        .min(6)
-        .max(8)
+        .min(PASSWORD_MIN_LENGTH)
+        .max(PASSWORD_MAX_LENGTH)
         .refine((password) => {
           const digitRegex = /\d/;
           const symbolRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;

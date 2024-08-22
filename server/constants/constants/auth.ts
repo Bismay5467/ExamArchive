@@ -19,3 +19,6 @@ export const ROLE = Object.freeze({
   SUPERADMIN: 'SUPERADMIN',
   GUEST: 'GUEST',
 });
+
+export const PASSWORD_MIN_LENGTH = 6;
+export const PASSWORD_MAX_LENGTH = 16;
