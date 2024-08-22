@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import mongoose from 'mongoose';
 import { z } from 'zod';
 import { Request, Response } from 'express';
