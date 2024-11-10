@@ -18,6 +18,13 @@ const people = [
     image: 'https://avatars.githubusercontent.com/u/54050465?v=4',
     redirectURL: 'https://www.linkedin.com/in/bismay-purkayastha-4a63a6179/',
   },
+  {
+    id: 3,
+    name: 'Biplaw Rajput',
+    designation: 'Software Engineer',
+    image: 'https://avatars.githubusercontent.com/u/73980183?v=4',
+    redirectURL: 'https://www.linkedin.com/in/biplaw-kumar-singh-bba95a188/',
+  }
 ];
 
 export default function Footer() {
